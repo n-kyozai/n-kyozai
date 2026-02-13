@@ -1,0 +1,1045 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四字熟語 教採過去問 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- サイト共通スタイル --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* コンテナ（クイズアプリを内包） */
+        .container {
+            width: 95%;
+            max-width: 800px; /* クイズ用に少し狭める */
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+        }
+
+        /* --- ここからクイズアプリ固有のCSS --- */
+        .quiz-game-area {
+            background-color: #f0f4f8; /* クイズエリアの背景 */
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .quiz-title, .quiz-subtitle {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .quiz-title { font-size: 1.6rem; }
+        .quiz-subtitle { font-size: 1.3rem; }
+
+        /* 画面制御 */
+        .screen {
+            display: none;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto; /* 中央寄せ */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ボタン共通 */
+        .quiz-btn {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .quiz-btn:active { transform: scale(0.98); }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 4px 0 #2980b9;
+        }
+        .btn-primary:hover { background-color: #2980b9; }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 5px;
+            box-shadow: 0 4px 0 #7f8c8d;
+        }
+        .btn-secondary:hover { background-color: #7f8c8d; }
+
+        .btn-accent {
+            background-color: #e67e22;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 4px 0 #d35400;
+            margin-top: 10px;
+        }
+        .btn-accent:hover { background-color: #d35400; }
+
+        /* スタート画面 */
+        .mode-toggle {
+            margin-bottom: 20px;
+            background: #ecf0f1;
+            padding: 5px;
+            border-radius: 10px;
+            display: flex;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .toggle-option.selected {
+            background: #fff;
+            color: #3498db;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .home-quiz-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px; /* 右上に配置 */
+            background: #e74c3c;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+            display: none; /* 初期は非表示 */
+            border: none;
+            cursor: pointer;
+        }
+        .home-quiz-btn:hover { background: #c0392b; }
+
+        /* クイズ画面 */
+        .quiz-progress {
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-weight: bold;
+        }
+
+        .question-box {
+            width: 100%;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative; /* ボタン配置用 */
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .yomigana-box {
+            height: 24px;
+            margin-bottom: 5px;
+            color: #e67e22;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .toggle-yomi-btn {
+            background: none;
+            border: 1px solid #bdc3c7;
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .toggle-yomi-btn:hover { background: #ecf0f1; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        @media (min-width: 480px) {
+            .options-grid.short-text {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            background: #fff;
+            border: 2px solid #ecf0f1;
+            padding: 15px;
+            font-size: 1rem;
+            border-radius: 10px;
+            color: #34495e;
+            transition: all 0.1s;
+            box-shadow: 0 2px 0 #bdc3c7;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            background: #f7f9fa;
+            border-color: #bdc3c7;
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+            box-shadow: none;
+        }
+
+        .option-btn.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+            box-shadow: none;
+        }
+
+        /* 結果画面 */
+        .score-display {
+            font-size: 3rem;
+            color: #3498db;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .wrong-list {
+            width: 100%;
+            margin: 20px 0;
+            text-align: left;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .wrong-item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .wrong-item:last-child { border-bottom: none; }
+
+        .wrong-idiom {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 1.1rem;
+        }
+        
+        .wrong-meaning {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 4px;
+        }
+
+        /* モーダル */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            width: 100px;
+            margin: 0;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <!-- サイドバー -->
+    <div class="overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="/n-kyozai/japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="/n-kyozai/ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="/n-kyozai/comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/general/index.html">一般教養</a> ＞ <a href="/n-kyozai/general/japanese/index.html">国語</a> ＞ 四字熟語
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">四字熟語 教採過去問</h1>
+        </div>
+
+        <div class="container">
+            <!-- クイズエリア -->
+            <div class="quiz-game-area">
+                
+                <!-- スタート画面 -->
+                <div id="start-screen" class="screen active">
+                    <h2 class="quiz-title">四字熟語マスター</h2>
+                    <p style="margin-bottom:20px; color:#7f8c8d;">教員採用試験対策</p>
+
+                    <div style="width:100%; max-width:300px; text-align:left; margin-bottom:5px; font-size:0.9rem; font-weight:bold; color:#34495e;">1. 選択問題 (5問)</div>
+                    <div class="mode-toggle">
+                        <div class="toggle-option selected" onclick="setQuizType('idiom_to_meaning', this)">熟語 → 意味</div>
+                        <div class="toggle-option" onclick="setQuizType('meaning_to_idiom', this)">意味 → 熟語</div>
+                    </div>
+                    <button class="quiz-btn btn-primary" onclick="startQuiz('selection')">選択問題スタート</button>
+
+                    <hr style="width:100%; border:0; border-top:1px solid #eee; margin:20px 0;">
+
+                    <div style="width:100%; max-width:300px; text-align:left; margin-bottom:5px; font-size:0.9rem; font-weight:bold; color:#34495e;">2. 確認テスト (10問)</div>
+                    <p style="font-size:0.8rem; color:#95a5a6; margin-bottom:10px; text-align:center;">穴埋めや読みを含むランダム出題</p>
+                    <button class="quiz-btn btn-accent" onclick="startQuiz('review')">確認テストスタート</button>
+                </div>
+
+                <!-- クイズ画面 -->
+                <div id="quiz-screen" class="screen">
+                    <button id="home-quiz-btn" class="home-quiz-btn" onclick="openHomeModal()">中断</button>
+                    <div class="quiz-progress" id="progress-text">第 1 / 5 問</div>
+                    
+                    <div class="question-box">
+                        <div class="yomigana-box" id="yomigana-display"></div>
+                        <div class="question-text" id="question-text"></div>
+                        <button class="toggle-yomi-btn" id="yomi-btn" onclick="toggleYomigana()">読みを表示</button>
+                    </div>
+
+                    <div class="options-grid" id="options-container">
+                        <!-- 選択肢 -->
+                    </div>
+                </div>
+
+                <!-- 結果画面 -->
+                <div id="result-screen" class="screen">
+                    <h2 class="quiz-subtitle">結果発表</h2>
+                    <div class="score-display" id="score-display">0点</div>
+                    <p id="score-comment" style="margin-bottom: 15px;">お疲れ様でした！</p>
+
+                    <div id="wrong-container" style="width:100%; display:none;">
+                        <h3 style="font-size:1rem; text-align:left; border-left:4px solid #e74c3c; padding-left:10px; margin-bottom:10px;">間違えた問題</h3>
+                        <div class="wrong-list" id="wrong-list"></div>
+                    </div>
+
+                    <button class="quiz-btn btn-accent" id="retry-wrong-btn" onclick="retryWrongOnly()" style="display:none;">間違えた問題だけ解き直す</button>
+                    <button class="quiz-btn btn-primary" onclick="startQuiz(lastMode)">もう一度同じモードで</button>
+                    <button class="quiz-btn btn-secondary" onclick="backToStart()">スタート画面へ</button>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 確認用モーダル -->
+    <div id="game-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 10px; font-size: 1.2rem;">確認</h3>
+            <p>スタート画面に戻りますか？<br><span style="font-size:0.85rem; color:#e74c3c;">※現在の進捗は失われます</span></p>
+            <div class="modal-buttons">
+                <button class="quiz-btn btn-secondary" onclick="closeHomeModal()">キャンセル</button>
+                <button class="quiz-btn btn-primary" onclick="confirmBackToStart()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        /* ============================
+           四字熟語クイズロジック
+           ============================ */
+        const idiomsData = [
+            { k: "曖昧模糊", y: "あいまいもこ", m: "あやふやで、はっきりしないこと。" },
+            { k: "偕老同穴", y: "かいろうどうけつ", m: "生きては共に老い、死んでは同じ墓に入る。夫婦の仲が非常によいこと。" },
+            { k: "一刀両断", y: "いっとうりょうだん", m: "物事をきっぱりと処理すること。" },
+            { k: "一字千金", y: "いちじせんきん", m: "筆跡や文章が非常に優れていること。" },
+            { k: "一朝一夕", y: "いっちょういっせき", m: "ごく短い期間。わずかな時間。" },
+            { k: "一日千秋", y: "いちじつせんしゅう", m: "一日が千年のように長く感じられるほど、待ち焦がれる気持ち。" },
+            { k: "韋編三絶", y: "いへんさんぜつ", m: "書物を綴じた紐が三度も切れるほど、熱心に読書すること。" },
+            { k: "悪事千里", y: "あくじせんり", m: "悪い行いは、またたく間に世間に知れ渡るということ。" },
+            { k: "悪戦苦闘", y: "あくせんくとう", m: "死にものぐるいで戦うこと。困難に打ち勝とうと努力すること。" },
+            { k: "阿鼻叫喚", y: "あびきょうかん", m: "非常な惨状の中で、泣き叫び救いを求める様子。" },
+            { k: "安心立命", y: "あんしんりつめい", m: "天命を悟り、心が安らかで動じない心境。" },
+            { k: "暗中模索", y: "あんちゅうもさく", m: "手がかりのないまま、あれこれとやってみること。" },
+            { k: "唯唯諾諾", y: "いいだくだく", m: "事の善悪に関わらず、他人の言いなりになること。" },
+            { k: "意気軒昂", y: "いきけんこう", m: "意気込みがすばらしく盛んなさま。" },
+            { k: "意気消沈", y: "いきしょうちん", m: "元気がなくなって沈んでしまうこと。" },
+            { k: "意気投合", y: "いきとうごう", m: "互いに気持ちがよく合うこと。" },
+            { k: "意気揚揚", y: "いきようよう", m: "得意げで威勢のよいさま。" },
+            { k: "異口同音", y: "いくどうおん", m: "多くの人がみな口を揃えて同じことを言うこと。" },
+            { k: "一部始終", y: "いちぶしじゅう", m: "初めから終わりまで。すべて。" },
+            { k: "一網打尽", y: "いちもうだじん", m: "一度に一味の者をすべて捕らえること。" },
+            { k: "一目瞭然", y: "いちもくりょうぜん", m: "一目見ただけではっきりとわかるさま。" },
+            { k: "一攫千金", y: "いっかくせんきん", m: "一度に巨額の利益を得ること。" },
+            { k: "一気呵成", y: "いっきかせい", m: "物事を一息に成し遂げること。" },
+            { k: "一騎当千", y: "いっきとうせん", m: "一人で千人の敵に対抗できるほど強いこと。" },
+            { k: "一挙両得", y: "いっきょりょうとく", m: "一つの行為で二つの利益を得ること。一石二鳥。" },
+            { k: "一刻千金", y: "いっこくせんきん", m: "わずかな時間が千金に値するほど貴重であること。" },
+            { k: "一瀉千里", y: "いっしゃせんり", m: "物事が一気にはかどること。弁舌がよどみないこと。" },
+            { k: "一触即発", y: "いっしょくそくはつ", m: "ちょっと触れればすぐ爆発しそうな危険な状態。" },
+            { k: "一心不乱", y: "いっしんふらん", m: "心を一つのことに集中して、他にそらさないこと。" },
+            { k: "一期一会", y: "いちごいちえ", m: "一生に一度だけの出会い。茶道の心得。" },
+            { k: "一世一代", y: "いっせいいちだい", m: "人の生涯の中でただ一度きりのこと。" },
+            { k: "以心伝心", y: "いしんでんしん", m: "言葉に出さなくても、心が通じ合っていること。" },
+            { k: "一言居士", y: "いちげんこじ", m: "何事にも一言意見を言わないと気が済まない人。" },
+            { k: "臥薪嘗胆", y: "がしんしょうたん", m: "目的を遂げるために苦心し努力すること。" },
+            { k: "佳人薄命", y: "かじんはくめい", m: "美人や優れた人は、とかく若死にしたり不運だったりすること。" },
+            { k: "花鳥風月", y: "かちょうふうげつ", m: "自然の美しい風物。風流であること。" },
+            { k: "意味深長", y: "いみしんちょう", m: "言葉の底に深い意味が含まれていること。" },
+            { k: "因果応報", y: "いんがおうほう", m: "行為の善悪に応じて報いがあること。" },
+            { k: "有為転変", y: "ういてんぺん", m: "世の中の物事は常に移り変わり、はかないこと。" },
+            { k: "右往左往", y: "うおうさおう", m: "混乱してあちこち動き回ること。" },
+            { k: "海千山千", y: "うみせんやません", m: "世間の経験を積んで、悪賢くなっている人。" },
+            { k: "隔靴搔痒", y: "かっかそうよう", m: "靴の上から痒い所をかくように、もどかしいこと。" },
+            { k: "我田引水", y: "がでんいんすい", m: "自分に都合のよいように物事を行うこと。" },
+            { k: "画竜点睛", y: "がりょうてんせい", m: "物事の最後の大事な仕上げ。" },
+            { k: "夏炉冬扇", y: "かろとうせん", m: "時期外れで役に立たないもののたとえ。" },
+            { k: "感慨無量", y: "かんがいむりょう", m: "しみじみとした思いが計り知れないほど深いこと。" },
+            { k: "紆余曲折", y: "うよきょくせつ", m: "事情が複雑で、いろいろ変化があること。" },
+            { k: "汗牛充棟", y: "かんぎゅうじゅうとう", m: "蔵書が非常に多いこと。" },
+            { k: "雲散霧消", y: "うんさんむしょう", m: "跡形もなく消えること。" },
+            { k: "栄枯盛衰", y: "えいこせいすい", m: "栄えたり衰えたりすること。" },
+            { k: "会者定離", y: "えしゃじょうり", m: "会う者は必ず別れる運命にあること。" },
+            { k: "厭離穢土", y: "えんりえど", m: "汚れたこの世を嫌い離れること。" },
+            { k: "一生懸命", y: "いっしょうけんめい", m: "命がけで物事をやること。" },
+            { k: "温厚篤実", y: "おんこうとくじつ", m: "人柄が穏やかで誠意があり、情に厚いこと。" },
+            { k: "温故知新", y: "おんこちしん", m: "昔のことを研究し、そこから新しい知識や道理を得ること。" },
+            { k: "快刀乱麻", y: "かいとうらんま", m: "もつれた事柄をてきぱきと処理すること。" },
+            { k: "換骨奪胎", y: "かんこつだったい", m: "先人の作品の形式を利用し、独自の作品を作ること。" },
+            { k: "冠婚葬祭", y: "かんこんそうさい", m: "元服、結婚、葬式、祖先の祭り。重要な儀式の総称。" },
+            { k: "勧善懲悪", y: "かんぜんちょうあく", m: "善を勧め、悪を懲らしめること。" },
+            { k: "完全無欠", y: "かんぜんむけつ", m: "欠点や不足がまったくないこと。" },
+            { k: "艱難辛苦", y: "かんなんしんく", m: "困難に遭って、つらく苦しい思いをすること。" },
+            { k: "頑迷固陋", y: "がんめいころう", m: "頑固で視野が狭く、道理をわきまえないこと。" },
+            { k: "機会均等", y: "きかいきんとう", m: "すべての人に平等にチャンスを与えること。" },
+            { k: "危機一髪", y: "ききいっぱつ", m: "髪の毛一本ほどの差で極めて危険な状態。" },
+            { k: "危急存亡", y: "ききゅうそんぼう", m: "生きるか死ぬか、危ない瀬戸際。" },
+            { k: "起死回生", y: "きしかいせい", m: "絶望的な状態から盛り返すこと。" },
+            { k: "旗幟鮮明", y: "きしせんめい", m: "立場や主張がはっきりしていること。" },
+            { k: "起承転結", y: "きしょうてんけつ", m: "漢詩の構成法。また、物事の順序や構成。" },
+            { k: "疑心暗鬼", y: "ぎしんあんき", m: "疑う心があると、何でもないことまで恐ろしく感じられること。" },
+            { k: "奇想天外", y: "きそうてんがい", m: "普通では思いつかないような変わった考え。" },
+            { k: "才色兼備", y: "さいしょくけんび", m: "才能も容姿も優れていること。" },
+            { k: "厚顔無恥", y: "こうがんむち", m: "厚かましくて恥を知らないこと。" },
+            { k: "空前絶後", y: "くうぜんぜつご", m: "過去にも例がなく、将来にもありそうにないこと。" },
+            { k: "巧言令色", y: "こうげんれいしょく", m: "言葉を飾り顔色をつくろって、他人に媚びへつらうこと。" },
+            { k: "公明正大", y: "こうめいせいだい", m: "隠し事がなく、正しく堂々としていること。" },
+            { k: "呉越同舟", y: "ごえつどうしゅう", m: "仲の悪い者同士が同じ場所に居合わせること。" },
+            { k: "気息奄奄", y: "きそくえんえん", m: "息も絶え絶えで、今にも死にそうなさま。" },
+            { k: "群雄割拠", y: "ぐんゆうかっきょ", m: "多くの英雄が各地に勢力を張り対立すること。" },
+            { k: "喜怒哀楽", y: "きどあいらく", m: "人間の持つ様々な感情。" },
+            { k: "牛飲馬食", y: "ぎゅういんばしょく", m: "牛や馬のように多量に飲食すること。" },
+            { k: "旧態依然", y: "きゅうたいいぜん", m: "昔のままで少しも進歩しないさま。" },
+            { k: "急転直下", y: "きゅうてんちょっか", m: "事態が急変して、結末に向かうこと。" },
+            { k: "驚天動地", y: "きょうてんどうち", m: "世間を非常に驚かすこと。" },
+            { k: "虚虚実実", y: "きょきょじつじつ", m: "互いに計略を尽くして戦うこと。" },
+            { k: "曲学阿世", y: "きょくがくあせい", m: "真理を曲げて世間に媚びへつらうこと。" },
+            { k: "軽挙妄動", y: "けいきょもうどう", m: "軽はずみでむやみな行動。" },
+            { k: "牽強付会", y: "けんきょうふかい", m: "自分の都合のよいように理屈をこじつけること。" },
+            { k: "五里霧中", y: "ごりむちゅう", m: "事情がわからず、方針が立たず迷うこと。" },
+            { k: "三寒四温", y: "さんかんしおん", m: "冬、三日寒くて四日暖かい日が続く気候。" },
+            { k: "山紫水明", y: "さんしすいめい", m: "山水の景色が清らかで美しいこと。" },
+            { k: "自家撞着", y: "じかどうちゃく", m: "自分の言動がつじつまが合わないこと。" },
+            { k: "自業自得", y: "じごうじとく", m: "自分の行いの報いを自分が受けること。" },
+            { k: "獅子奮迅", y: "ししふんじん", m: "獅子が奮い立つように、激しい勢いで活動すること。" },
+            { k: "自縄自縛", y: "じじょうじばく", m: "自分の言動で自分の動きがとれなくなること。" },
+            { k: "七転八倒", y: "しちてんばっとう", m: "激しい苦痛などで転げ回って苦しむこと。" },
+            { k: "神出鬼没", y: "しんしゅつきぼつ", m: "自由自在に現れたり隠れたりすること。" },
+            { k: "千差万別", y: "せんさばんべつ", m: "種々様々に違っていること。" },
+            { k: "疾風迅雷", y: "しっぷうじんらい", m: "素早く激しいことのたとえ。" },
+            { k: "自暴自棄", y: "じぼうじき", m: "やけくそになって自分を粗末に扱うこと。" },
+            { k: "信賞必罰", y: "しんしょうひつばつ", m: "功績のある者には賞を与え、罪ある者は必ず罰すること。" },
+            { k: "四面楚歌", y: "しめんそか", m: "周りを敵に囲まれ、孤立して助けがないこと。" },
+            { k: "弱肉強食", y: "じゃくにくきょうしょく", m: "強い者が弱い者を犠牲にして繁栄すること。" },
+            { k: "針小棒大", y: "しんしょうぼうだい", m: "物事を大げさに言うこと。" },
+            { k: "深謀遠慮", y: "しんぼうえんりょ", m: "深く考えを巡らして、先々のことまで見通すこと。" },
+            { k: "縦横無尽", y: "じゅうおうむじん", m: "自由自在に振る舞うこと。" },
+            { k: "晴耕雨読", y: "せいこううどく", m: "晴れた日は耕し、雨の日は読書する。悠々自適な生活。" },
+            { k: "酔生夢死", y: "すいせいむし", m: "何もなさず、むなしく一生を過ごすこと。" },
+            { k: "生殺与奪", y: "せいさつよだつ", m: "生かすも殺すも思いのままであること。" },
+            { k: "青天白日", y: "せいてんはくじつ", m: "心にやましいことがなく潔白なこと。" },
+            { k: "是是非非", y: "ぜぜひひ", m: "よいことはよい、悪いことは悪いと公平に判断すること。" },
+            { k: "切磋琢磨", y: "せっさたくま", m: "互いに励まし合って向上すること。" },
+            { k: "切歯扼腕", y: "せっしやくわん", m: "歯ぎしりし腕を握りしめて悔しがること。" },
+            { k: "大器晩成", y: "たいきばんせい", m: "偉大な人物は、大成するまでに時間がかかること。" },
+            { k: "大同小異", y: "だいどうしょうい", m: "細かい点は違うが、大体は同じであること。" },
+            { k: "大同団結", y: "だいどうだんけつ", m: "小さな対立を捨てて、多くの人々が一つにまとまること。" },
+            { k: "多岐亡羊", y: "たきぼうよう", m: "方針が多すぎて、どれを選んでよいか迷うこと。" },
+            { k: "単刀直入", y: "たんとうちょくにゅう", m: "前置きなしに、いきなり本題に入ること。" },
+            { k: "朝三暮四", y: "ちょうさんぼし", m: "目先の違いにこだわり、結果が同じことに気づかないこと。口先で人を騙すこと。" },
+            { k: "直情径行", y: "ちょくじょうけいこう", m: "相手の思惑など考えず、自分の感情のままに行動すること。" },
+            { k: "猪突猛進", y: "ちょとつもうしん", m: "目標に向かって、向こう見ずに猛烈に突き進むこと。" },
+            { k: "適材適所", y: "てきざいてきしょ", m: "人の能力に適した地位や仕事につけること。" },
+            { k: "徹頭徹尾", y: "てっとうてつび", m: "最初から最後まで方針や考えを貫くこと。" },
+            { k: "天衣無縫", y: "てんいむほう", m: "自然で飾り気がなく、完全で美しいこと。" },
+            { k: "電光石火", y: "でんこうせっか", m: "動作などが非常に素早いこと。" },
+            { k: "支離滅裂", y: "しりめつれつ", m: "ばらばらでまとまりがないこと。" },
+            { k: "絶体絶命", y: "ぜったいぜつめい", m: "逃れようのない困難な立場に追い込まれること。" },
+            { k: "天真爛漫", y: "てんしんらんまん", m: "飾ったり気取ったりせず、ありのままの姿があふれていること。" },
+            { k: "天地神明", y: "てんちしんめい", m: "天地の神々。" },
+            { k: "当意即妙", y: "とういそくみょう", m: "その場に適した機転を利かせること。" },
+            { k: "虚心坦懐", y: "きょしんたんかい", m: "心になんのわだかまりもなく、さっぱりした気持ち。" },
+            { k: "玉石混交", y: "ぎょくせきこんこう", m: "優れたものと劣ったものが入り混じっていること。" },
+            { k: "鶏口牛後", y: "けいこうぎゅうご", m: "大きな組織の末端にいるより、小さくても組織の長になる方がよい。" },
+            { k: "捲土重来", y: "けんどちょうらい", m: "一度敗れた者が、勢いを盛り返して巻き返すこと。" },
+            { k: "乾坤一擲", y: "けんこんいってき", m: "運命をかけて、のるかそるかの大勝負をすること。" },
+            { k: "古今無双", y: "ここんむそう", m: "昔から今まで並ぶものがないほど優れていること。" },
+            { k: "孤立無援", y: "こりつむえん", m: "仲間がいなくて助けが得られないこと。" },
+            { k: "言語道断", y: "ごんごどうだん", m: "あまりにひどくて言葉も出ないこと。" },
+            { k: "質実剛健", y: "しつじつごうけん", m: "飾り気がなく真面目で、心身ともにたくましいこと。" },
+            { k: "試行錯誤", y: "しこうさくご", m: "失敗を繰り返しながら、解決策を見出していくこと。" },
+            { k: "時期尚早", y: "じきしょうそう", m: "ある物事を行うには、まだ早すぎること。" },
+            { k: "周章狼狽", y: "しゅうしょうろうばい", m: "あわてふためくこと。" },
+            { k: "周知徹底", y: "しゅうちてってい", m: "隅々まで広く知れ渡らせること。" },
+            { k: "熟読玩味", y: "じゅくどくがんみ", m: "文章の意味を深く読み味わうこと。" },
+            { k: "首尾一貫", y: "しゅびいっかん", m: "最初から最後まで方針が変わらないこと。" },
+            { k: "熟慮断行", y: "じゅくりょだんこう", m: "よく考えた上で、思い切って実行すること。" },
+            { k: "取捨選択", y: "しゅしゃせんたく", m: "必要なものを選び取り、不要なものを捨てること。" },
+            { k: "主客転倒", y: "しゅかくてんとう", m: "主な物と従属的な物の立場が逆になること。" },
+            { k: "順風満帆", y: "じゅんぷうまんぱん", m: "物事がすべて順調に進行すること。" },
+            { k: "枝葉末節", y: "しようまっせつ", m: "主要でない、つまらない部分。" },
+            { k: "優勝劣敗", y: "ゆうしょうれっぱい", m: "強い者が勝ち、弱い者が負けること。" },
+            { k: "森羅万象", y: "しんらばんしょう", m: "宇宙に存在するすべてのもの。" },
+            { k: "清廉潔白", y: "せいれんけっぱく", m: "心が清く、私欲や不正が全くないこと。" },
+            { k: "悠悠自適", y: "ゆうゆうじてき", m: "世俗を離れ、自分の思うままに静かに暮らすこと。" },
+            { k: "率先垂範", y: "そっせんすいはん", m: "人の先に立って模範を示すこと。" },
+            { k: "創意工夫", y: "そういくふう", m: "新しい方法を考え出すこと。" },
+            { k: "大義名分", y: "たいぎめいぶん", m: "人として守るべき道義。行動の基準となる正当な理由。" },
+            { k: "大言壮語", y: "たいげんそうご", m: "実力以上に大きなことを言うこと。" },
+            { k: "泰山北斗", y: "たいざんほくと", m: "その道の大家として仰ぎ見られる人。" },
+            { k: "泰然自若", y: "たいぜんじじゃく", m: "落ち着き払っていて、物事に動じないさま。" },
+            { k: "大胆不敵", y: "だいたんふてき", m: "度胸があって、恐れを知らないこと。" },
+            { k: "朝令暮改", y: "ちょうれいぼかい", m: "命令や方針が頻繁に変わり、定まらないこと。" },
+            { k: "沈思黙考", y: "ちんしもっこう", m: "沈黙して深く考えること。" },
+            { k: "天変地異", y: "てんぺんちい", m: "自然界に起こる異変。" },
+            { k: "東奔西走", y: "とうほんせいそう", m: "あちこち忙しく駆け回ること。" },
+            { k: "独立独歩", y: "どくりつどっぽ", m: "他人に頼らず、信じる道を行くこと。" },
+            { k: "内柔外剛", y: "ないじゅうがいごう", m: "内心は気が弱いが、外見は強そうに見えること。" },
+            { k: "内憂外患", y: "ないゆうがいかん", m: "国内の心配事と、外国からの圧迫。" },
+            { k: "南船北馬", y: "なんせんほくば", m: "各地を忙しく旅行すること。" },
+            { k: "二律背反", y: "にりつはいはん", m: "互いに矛盾する二つの命題が同等の妥当性をもって主張されること。" },
+            { k: "二六時中", y: "にろくじちゅう", m: "一日中。いつも。" },
+            { k: "日進月歩", y: "にっしんげっぽ", m: "絶え間なく進歩すること。" },
+            { k: "博覧強記", y: "はくらんきょうき", m: "広く書物を読み、よく記憶していること。" },
+            { k: "馬耳東風", y: "ばじとうふう", m: "人の意見を気に留めず聞き流すこと。" },
+            { k: "八面六臂", y: "はちめんろっぴ", m: "一人で多方面にわたる活躍をすること。" },
+            { k: "波瀾万丈", y: "はらんばんじょう", m: "劇的な変化に富んでいること。" },
+            { k: "万古不易", y: "ばんこふえき", m: "永久に変わらないこと。" },
+            { k: "半信半疑", y: "はんしんはんぎ", m: "半分信じて、半分疑うこと。" },
+            { k: "抱腹絶倒", y: "ほうふくぜっとう", m: "腹を抱えて大笑いすること。" },
+            { k: "本末転倒", y: "ほんまつてんとう", m: "根本的なことと些細なことを取り違えること。" },
+            { k: "未来永劫", y: "みらいえいごう", m: "これから先、無限に長い年月。" },
+            { k: "無為自然", y: "むいしぜん", m: "作為がなく、自然のままであること。" },
+            { k: "無我夢中", y: "むがむちゅう", m: "我を忘れて熱中すること。" },
+            { k: "無念無想", y: "むねんむそう", m: "一切の雑念を離れた境地。" },
+            { k: "無味乾燥", y: "むみかんそう", m: "何の面白みも味わいもないこと。" },
+            { k: "無理難題", y: "むりなんだい", m: "解決不可能な問題や要求。" },
+            { k: "明鏡止水", y: "めいきょうしすい", m: "曇りのない鏡と静かな水面。邪念がなく澄み切った心。" },
+            { k: "勇猛果敢", y: "ゆうもうかかん", m: "勇ましく決断力があること。" },
+            { k: "油断大敵", y: "ゆだんたいてき", m: "油断は失敗のもとであるから、恐るべき敵である。" },
+            { k: "羊頭狗肉", y: "ようとうくにく", m: "見かけは立派だが、中身が伴わないこと。" },
+            { k: "余裕綽綽", y: "よゆうしゃくしゃく", m: "ゆったりして焦らないさま。" },
+            { k: "利害得失", y: "りがいとくしつ", m: "利益と損失。" },
+            { k: "離合集散", y: "りごうしゅうさん", m: "離れたり集まったりすること。" },
+            { k: "理非曲直", y: "りひきょくちょく", m: "道理にかなっていることと、外れていること。" },
+            { k: "流言飛語", y: "りゅうげんひご", m: "根拠のないうわさ。" },
+            { k: "竜頭蛇尾", y: "りゅうとうだび", m: "初めは勢いがよいが、終わりは振るわないこと。" },
+            { k: "臨機応変", y: "りんきおうへん", m: "その場の状況に合わせて適切な処置をとること。" },
+            { k: "和気藹藹", y: "わきあいあい", m: "心と心が通じ合い、和やかな気分が満ちているさま。" },
+            { k: "和魂漢才", y: "わこんかんさい", m: "日本固有の精神と、中国伝来の学問の才能を併せ持つこと。" }
+        ];
+
+        let currentMode = ''; 
+        let quizSettings = { direction: 'idiom_to_meaning' };
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let wrongQuestions = [];
+        let lastMode = '';
+        let retryQueue = [];
+
+        // DOM要素
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const progressText = document.getElementById('progress-text');
+        const questionText = document.getElementById('question-text');
+        const yomiganaDisplay = document.getElementById('yomigana-display');
+        const yomiBtn = document.getElementById('yomi-btn');
+        const optionsContainer = document.getElementById('options-container');
+        const homeQuizBtn = document.getElementById('home-quiz-btn');
+        const gameModalOverlay = document.getElementById('game-modal-overlay');
+
+        // 画面遷移
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            if (screenId === 'quiz-screen') {
+                homeQuizBtn.style.display = 'block';
+            } else {
+                homeQuizBtn.style.display = 'none';
+            }
+        }
+
+        function openHomeModal() {
+            gameModalOverlay.classList.add('active');
+        }
+
+        function closeHomeModal() {
+            gameModalOverlay.classList.remove('active');
+        }
+
+        function confirmBackToStart() {
+            closeHomeModal();
+            showScreen('start-screen');
+        }
+
+        function backToStart() {
+            showScreen('start-screen');
+        }
+
+        // クイズ設定
+        window.setQuizType = function(type, element) {
+            quizSettings.direction = type;
+            document.querySelectorAll('.toggle-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        // クイズ開始
+        window.startQuiz = function(mode) {
+            currentMode = mode;
+            if (mode !== 'retry') lastMode = mode;
+            
+            currentIndex = 0;
+            score = 0;
+            wrongQuestions = [];
+            currentQuestions = [];
+
+            let questionCount = (mode === 'selection') ? 5 : 10;
+            if (mode === 'retry') questionCount = retryQueue.length;
+
+            if (mode === 'retry') {
+                currentQuestions = [...retryQueue];
+            } else if (mode === 'selection') {
+                const shuffled = [...idiomsData].sort(() => 0.5 - Math.random());
+                const selected = shuffled.slice(0, questionCount);
+                currentQuestions = selected.map(item => ({
+                    type: quizSettings.direction,
+                    data: item,
+                    options: generateOptions(item, quizSettings.direction)
+                }));
+            } else if (mode === 'review') {
+                const shuffled = [...idiomsData].sort(() => 0.5 - Math.random());
+                const selected = shuffled.slice(0, questionCount);
+                currentQuestions = selected.map(item => {
+                    const r = Math.random();
+                    let type = 'idiom_to_meaning';
+                    if (r < 0.33) type = 'meaning_to_idiom';
+                    else if (r < 0.66) type = 'fill_in_blank';
+                    
+                    return {
+                        type: type,
+                        data: item,
+                        options: generateOptions(item, type),
+                        blankIndex: (type === 'fill_in_blank') ? Math.floor(Math.random() * 4) : -1
+                    };
+                });
+            }
+
+            showScreen('quiz-screen');
+            renderQuestion();
+        }
+
+        function generateOptions(correctItem, type) {
+            const others = idiomsData.filter(i => i.k !== correctItem.k);
+            const shuffledOthers = others.sort(() => 0.5 - Math.random()).slice(0, 3);
+            const options = [correctItem, ...shuffledOthers];
+            return options.sort(() => 0.5 - Math.random());
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            progressText.textContent = `第 ${currentIndex + 1} / ${currentQuestions.length} 問`;
+            
+            yomiganaDisplay.textContent = q.data.y;
+            yomiganaDisplay.style.visibility = 'hidden';
+            yomiBtn.textContent = "読みを表示";
+            yomiBtn.style.display = (q.type === 'idiom_to_meaning' || q.type === 'fill_in_blank') ? 'inline-block' : 'none';
+
+            optionsContainer.innerHTML = '';
+            optionsContainer.classList.remove('short-text');
+
+            if (q.type === 'idiom_to_meaning') {
+                questionText.textContent = q.data.k;
+                questionText.style.fontSize = '2.5rem';
+                q.options.forEach(opt => createOptionBtn(opt.m, opt.k === q.data.k));
+
+            } else if (q.type === 'meaning_to_idiom') {
+                questionText.textContent = q.data.m;
+                questionText.style.fontSize = '1.2rem';
+                optionsContainer.classList.add('short-text');
+                q.options.forEach(opt => createOptionBtn(opt.k, opt.k === q.data.k));
+
+            } else if (q.type === 'fill_in_blank') {
+                const chars = q.data.k.split('');
+                const hiddenChar = chars[q.blankIndex];
+                chars[q.blankIndex] = '〇';
+                const maskedIdiom = chars.join('');
+
+                questionText.textContent = maskedIdiom;
+                questionText.style.fontSize = '2.5rem';
+                optionsContainer.classList.add('short-text');
+
+                const dummyChars = [];
+                while(dummyChars.length < 3) {
+                    const randomIdiom = idiomsData[Math.floor(Math.random() * idiomsData.length)];
+                    const randomChar = randomIdiom.k.charAt(Math.floor(Math.random() * 4));
+                    if (randomChar !== hiddenChar && !dummyChars.includes(randomChar)) {
+                        dummyChars.push(randomChar);
+                    }
+                }
+                const charOptions = [hiddenChar, ...dummyChars].sort(() => 0.5 - Math.random());
+                charOptions.forEach(char => createOptionBtn(char, char === hiddenChar));
+            }
+        }
+
+        function createOptionBtn(text, isCorrect) {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = text;
+            btn.onclick = () => checkAnswer(btn, isCorrect);
+            optionsContainer.appendChild(btn);
+        }
+
+        window.toggleYomigana = function() {
+            const isVisible = yomiganaDisplay.style.visibility === 'visible';
+            yomiganaDisplay.style.visibility = isVisible ? 'hidden' : 'visible';
+            yomiBtn.textContent = isVisible ? "読みを表示" : "読みを隠す";
+        }
+
+        function checkAnswer(btnElement, isCorrect) {
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                score++;
+            } else {
+                btnElement.classList.add('wrong');
+                // 正解表示
+                const q = currentQuestions[currentIndex];
+                let correctText = "";
+                if (q.type === 'idiom_to_meaning') correctText = q.data.m;
+                else if (q.type === 'meaning_to_idiom') correctText = q.data.k;
+                else if (q.type === 'fill_in_blank') correctText = q.data.k.charAt(q.blankIndex);
+
+                buttons.forEach(b => {
+                    if (b.textContent === correctText) b.classList.add('correct');
+                });
+                wrongQuestions.push(currentQuestions[currentIndex]);
+            }
+
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex < currentQuestions.length) {
+                    renderQuestion();
+                } else {
+                    showResultScreen();
+                }
+            }, 1200);
+        }
+
+        function showResultScreen() {
+            showScreen('result-screen');
+            const total = currentQuestions.length;
+            document.getElementById('score-display').textContent = `${score} / ${total}`;
+            
+            let comment = "";
+            if (score === total) comment = "素晴らしい！全問正解です！";
+            else if (score >= total * 0.8) comment = "惜しい！あと少しです！";
+            else comment = "復習してもう一度挑戦しましょう！";
+            document.getElementById('score-comment').textContent = comment;
+
+            const wrongContainer = document.getElementById('wrong-container');
+            const wrongList = document.getElementById('wrong-list');
+            const retryBtn = document.getElementById('retry-wrong-btn');
+
+            wrongList.innerHTML = '';
+            if (wrongQuestions.length > 0) {
+                wrongContainer.style.display = 'block';
+                retryBtn.style.display = 'inline-block';
+                retryQueue = [...wrongQuestions];
+
+                wrongQuestions.forEach(q => {
+                    const div = document.createElement('div');
+                    div.className = 'wrong-item';
+                    let typeText = "";
+                    if (q.type === 'idiom_to_meaning') typeText = "[意味当て]";
+                    if (q.type === 'meaning_to_idiom') typeText = "[熟語当て]";
+                    if (q.type === 'fill_in_blank') typeText = "[穴埋め]";
+
+                    div.innerHTML = `
+                        <div class="wrong-idiom">${q.data.k} <span style="font-size:0.8em; color:#666;">(${q.data.y})</span></div>
+                        <div class="wrong-meaning">${typeText} ${q.data.m}</div>
+                    `;
+                    wrongList.appendChild(div);
+                });
+            } else {
+                wrongContainer.style.display = 'none';
+                retryBtn.style.display = 'none';
+            }
+        }
+
+        window.retryWrongOnly = function() {
+            startQuiz('retry');
+        }
+    </script>
+</body>
+</html>
