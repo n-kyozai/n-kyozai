@@ -1,0 +1,1089 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四字熟語 演習 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* クイズアプリを囲むコンテナ */
+        .app-wrapper {
+            width: 100%;
+            max-width: 800px; /* デフォルト（スマホ・タブレット用） */
+            margin: 0 auto;
+            padding: 24px;
+            flex: 1;
+            transition: max-width 0.3s;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        /* PC以上で幅を広げて2カラムに対応 */
+        @media (min-width: 960px) {
+            .app-wrapper {
+                max-width: 1200px; /* 2カラム用に広げる */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .app-wrapper { padding: 16px; }
+        }
+
+        /* =========================================
+           クイズアプリ用スタイル
+           ========================================= */
+        #app {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: #44403c;
+            width: 100%;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        /* --- 2カラムレイアウト用 (PCのみ) --- */
+        #app .quiz-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (min-width: 960px) {
+            #app .quiz-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左右分割 */
+                gap: 32px;
+                align-items: start;
+            }
+            #app .quiz-side {
+                position: sticky;
+                top: 20px; /* スクロール追従 */
+            }
+        }
+
+        /* アニメーション */
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* コンポーネント */
+        #app h1 { font-size: 1.5rem; margin-bottom: 0.8rem; color: #78350f; }
+        #app h2 { font-size: 1.3rem; margin-bottom: 0.8rem; color: #78350f; }
+        #app h3 { font-size: 1.1rem; margin-bottom: 0.8rem; color: #78350f; }
+
+        #app button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        #app button:active { transform: scale(0.98); }
+
+        #app .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            border: 1px solid #e7e5e4;
+        }
+
+        /* スタート画面 */
+        #app .start-screen-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        #app .start-screen {
+            text-align: center;
+            border: 2px solid #fde68a;
+        }
+
+        #app .btn-start {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #app .btn-primary { background-color: #d97706; }
+        #app .btn-primary:hover { background-color: #b45309; }
+
+        #app .btn-secondary { background-color: #57534e; }
+        #app .btn-secondary:hover { background-color: #44403c; }
+
+        /* クイズ画面ヘッダー */
+        #app .quiz-header {
+            background-color: #fff;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #e7e5e4;
+        }
+
+        #app .btn-home-small {
+            background: none;
+            color: #78716c;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        #app .btn-home-small:hover { color: #44403c; }
+
+        /* 問題・選択肢エリア */
+        #app .question-box {
+            background-color: #ffffff;
+            border-left: 5px solid #f59e0b;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-weight: 600;
+            font-size: 1rem;
+            white-space: pre-wrap;
+            border: 1px solid #e7e5e4;
+            border-left-width: 5px;
+        }
+
+        #app .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #app .option-btn {
+            width: 100%;
+            padding: 12px 14px;
+            text-align: left;
+            background-color: #fff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        #app .option-btn:hover:not(:disabled) {
+            border-color: #fcd34d;
+            background-color: #fffbeb;
+        }
+
+        #app .option-btn.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+            font-weight: bold;
+        }
+
+        #app .option-btn.wrong {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+
+        #app .option-btn:disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        /* 解説エリア (右側) */
+        #app .feedback-area {
+            margin-top: 0; /* PCでは横並びなのでマージン調整 */
+            animation: fadeIn 0.5s ease;
+        }
+        @media (min-width: 960px) {
+            #app .feedback-area {
+                animation: slideInRight 0.4s ease;
+            }
+        }
+
+        #app .result-badge {
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        #app .result-badge.is-correct { background-color: #f0fdf4; color: #166534; }
+        #app .result-badge.is-wrong { background-color: #fef2f2; color: #991b1b; }
+
+        #app .explanation-box {
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
+            padding: 1.25rem;
+            border-radius: 8px;
+            color: #1e3a8a;
+            font-size: 0.9rem;
+            min-height: 100px;
+        }
+
+        #app .explanation-label {
+            display: inline-block;
+            background-color: #bfdbfe;
+            color: #1e40af;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        #app .btn-next {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #d97706;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 9999px;
+            font-weight: bold;
+            margin-top: 16px;
+            width: 100%; /* ボタン幅いっぱい */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+        #app .btn-next:hover { background-color: #b45309; }
+
+        /* 結果画面 */
+        #app .result-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        #app .result-header {
+            background-color: #d97706;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        #app .score-display {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 0.8rem 0;
+        }
+        #app .score-unit { font-size: 1.5rem; }
+
+        #app .result-body {
+            padding: 1.5rem;
+            text-align: center;
+            background-color: white;
+            border-radius: 0 0 12px 12px;
+            border: 1px solid #e7e5e4;
+            border-top: none;
+        }
+
+        #app .btn-retry {
+            background-color: #ef4444;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        #app .btn-retry:hover { background-color: #dc2626; }
+
+        #app .btn-home-large {
+            background-color: #e5e7eb;
+            color: #374151;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        #app .btn-home-large:hover { background-color: #d1d5db; }
+
+        #app .hidden { display: none !important; }
+
+        @media (max-width: 480px) {
+            #app .score-display { font-size: 2.5rem; }
+            #app .card { padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">国語</a> ＞ 四字熟語 演習
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">四字熟語 演習</h1>
+        </div>
+
+        <div class="app-wrapper">
+            <!-- ここにクイズアプリが描画されます -->
+            <div id="app"></div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // 指定のGAS URL（共通機能用）
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZhvVExnkiseSTiPJDqYK4W6aMGy5kKT8uMW0z3nU2ZdWDeYVMd6FJttE0NSxZMhwr/exec"; 
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        /* =========================================
+           以下、四字熟語演習クイズ用スクリプト
+           ========================================= */
+        const QUIZ_DATA = [
+            // Group 1: 問15 - 問26
+            {
+                id: 15,
+                group: 1,
+                question: "次の文章の『ただし』と同じ種類及び用法の接続詞が使われているものを、下の1~4の中から1つ選びなさい。\n\n「図書館 月曜日が休館だ。ただし、祝日の月曜日は除く。」",
+                options: [
+                    "遠くで雷鳴がした。すると、雨がにわかに降り出した。",
+                    "猫はかわいい。だが、家では飼えない。",
+                    "ここにいようか。それとも、出かけようか。",
+                    "待ち合わせに遅れた。なぜなら、渋滞していたからだ。"
+                ],
+                correctIndex: 1,
+                explanation: "問題文の「ただし」は「補足（または条件付きの逆接）」の働き。「だが」も逆接で前文と対立する内容を導くため最も近い。\n1は順接（結果）、3は選択、4は説明（理由）。"
+            },
+            {
+                id: 16,
+                group: 1,
+                question: "下線部分の意味として最も適切なものは、下の1~5のうちどれか。\n\n「身に余る処遇」",
+                options: ["役不足な", "余分な", "応分な", "随分な", "過分な"],
+                correctIndex: 4,
+                explanation: "「身に余る」は、自分には良すぎてふさわしくない（過分だ）という意味。「役不足」は「能力に対して役目が軽すぎる」という意味なので誤り。"
+            },
+            {
+                id: 17,
+                group: 1,
+                question: "次のA及びBの慣用句・ことわざの本来の意味の組み合わせとして最も適切なものを選びなさい。\n\nA. 気が置けない\nB. 情けは人のためならず",
+                options: [
+                    "A:気にかかる / B:自分に返ってくる",
+                    "A:油断できない / B:人のためにならない",
+                    "A:遠慮の必要がない / B:人のためにならない",
+                    "A:遠慮の必要がない / B:自分に返ってくる",
+                    "A:油断できない / B:必要のないこと",
+                    "A:気にかかる / B:必要のないこと"
+                ],
+                correctIndex: 3,
+                explanation: "A「気が置けない」は「遠慮や気配り（気）を置く必要がない＝親しい」という意味。\nB「情けは人のためならず」は「親切は巡り巡って自分に返ってくる」という意味。"
+            },
+            {
+                id: 18,
+                group: 1,
+                question: "次の①~⑤の文のうち、下線部の言葉として誤って使用したものの組み合わせを選びなさい。\n\n① 素人なので力不足だ\n② 寸暇を惜しんで\n③ 一丸となって心血を傾けた\n④ 一言が琴線に触れて怒った\n⑤ 二つ返事で引き受けた",
+                options: ["①と②", "②と③", "③と④"],
+                correctIndex: 2,
+                explanation: "③は誤り。「心血を注ぐ」が正しい。\n④は誤り。「琴線に触れる」は「感動する」意味。「逆鱗に触れる（怒る）」の誤用。\n①「力不足」は謙遜として正しい。"
+            },
+            {
+                id: 19,
+                group: 1,
+                question: "次の短文のうち、敬語の使い方が適切なものを選びなさい。",
+                options: [
+                    "募金活動に、たくさんの保護者の方がご協力くださった。",
+                    "校長先生の申したことに私は賛成します。",
+                    "校長先生が、給食をお召し上がりになられる。",
+                    "先生が来られるとき、雨は降っていらっしゃいましたか。"
+                ],
+                correctIndex: 0,
+                explanation: "ア（正解）：「くださる」は尊敬語。\nイ：「申す」は謙譲語なので校長先生には使わない。\nウ：「お召し上がりになられる」は二重敬語。\nエ：雨に「いらっしゃる」は使わない。"
+            },
+            {
+                id: 20,
+                group: 1,
+                question: "古語「うつくし」の意味として適切なものを選びなさい。",
+                options: ["不思議だ", "大人びている", "かわいらしい", "情けない"],
+                correctIndex: 2,
+                explanation: "古語の「うつくし」は、小さいものや弱いものに対する「かわいらしい」「愛らしい」という意味。"
+            },
+            {
+                id: 21,
+                group: 1,
+                question: "ことわざ・慣用句とその意味の組み合わせとして正しいものを選びなさい。",
+                options: [
+                    "案ずるより産むが易し……失敗しないよう前もって注意する",
+                    "うそも方便……はっきり言わない方が味わいがある",
+                    "果報は寝て待て……用心の上に用心を重ねる",
+                    "紺屋の白袴……他人のために忙しく自分のことをかまう暇がない",
+                    "のど元過ぎれば熱さ忘れる……苦しいときは何にでもすがりつく"
+                ],
+                correctIndex: 3,
+                explanation: "「紺屋の白袴」は、染物屋が自分の袴を染める暇がないことから、他人のことばかりで自分のことがおろそかになること。"
+            },
+            {
+                id: 22,
+                group: 1,
+                question: "次の慣用句の( )にあてはまる語の組み合わせとして正しいものを選びなさい。\n\nA ( )が切れる（頭の回転が速い）\nB ( )をかぶる（本性を隠す）\nC ( )を細める（うれしそうに笑う）\nD ( )を洗う（悪い仕事をやめる）",
+                options: [
+                    "頭、泥、目、肩",
+                    "手、口、足",
+                    "手、泥、口、肩",
+                    "頭、猫、目、足"
+                ],
+                correctIndex: 3,
+                explanation: "A:頭が切れる、B:猫をかぶる、C:目を細める、D:足を洗う。"
+            },
+            {
+                id: 23,
+                group: 1,
+                question: "次の故事成語が正しく使われているものを選びなさい。",
+                options: [
+                    "まだ師匠ほど活躍できず、青は藍より出でて藍より青だと評価されている。",
+                    "発言につじつまが合わず、彼の言葉は杞憂が多いと言われる。",
+                    "選りすぐりの烏合の衆だけあり、次々と斬新な提案をした。",
+                    "友人の失敗を批判するのではなく、他山の石として自分を向上させた。"
+                ],
+                correctIndex: 3,
+                explanation: "「他山の石」は他人の誤りを自分の修養の役に立てること（正解）。\n「出藍の誉れ」は師より優れること（文脈不適）。\n「杞憂」は無用な心配（矛盾の意味ではない）。\n「烏合の衆」は規律のない寄せ集め（悪い意味）。"
+            },
+            {
+                id: 24,
+                group: 1,
+                question: "次の四字熟語の意味の組み合わせとして正しいものを選びなさい。\n\nア：緊褌一番\nイ：行雲流水\nウ：首鼠両端\nエ：韋編三絶\nオ：千載一遇\n\n(a:成り行きに任せる, b:熟読する, c:固い決意, d:好機, e:どっちつかず)",
+                options: [
+                    "ア:c, イ:b, ウ:e, エ:c, オ:d",
+                    "ア:a, イ:a, ウ:c, エ:b, オ:e",
+                    "ア:b, イ:c, ウ:b, エ:a, オ:d",
+                    "ア:c, イ:a, ウ:e, エ:b, オ:d",
+                    "ア:c, イ:a, ウ:a, エ:b, オ:c"
+                ],
+                correctIndex: 3,
+                explanation: "正解は「ア:c, イ:a, ウ:e, エ:b, オ:d」です。\n\n緊褌一番(c:固い決意)\n行雲流水(a:成り行き任せ)\n首鼠両端(e:どっちつかず)\n韋編三絶(b:熟読)\n千載一遇(d:好機)"
+            },
+            {
+                id: 25,
+                group: 1,
+                question: "和歌「あかねさす 日は照らせれど…」において、「あかねさす」や「ぬばたまの」のような技法を何と言うか。",
+                options: ["序詞", "掛詞", "縁語", "枕詞", "本歌取り"],
+                correctIndex: 3,
+                explanation: "特定の語を導き出す5音の修飾語を「枕詞（まくらことば）」といいます。"
+            },
+            {
+                id: 26,
+                group: 1,
+                question: "「ドーナツの穴を空白として捉えるか…あくまで形而上的な問題であって」\n形而上的の意味に最も近いものを選びなさい。",
+                options: ["社会的", "形状的", "外面的", "精神的"],
+                correctIndex: 3,
+                explanation: "「形而上（けいじじょう）」は形がなく感覚で捉えられないもの、哲学・精神的なものを指します。"
+            },
+            // Group 2: 問27 - 問34 (追加問題)
+            {
+                id: 27,
+                group: 2,
+                question: "次の慣用句等の本来の意味のうち、正しいものはどれか。",
+                options: [
+                    "「しおどき」＝「ものごとが終わりに近づく時」",
+                    "「失笑する」＝「おかしさをこらえることができず吹き出す」",
+                    "「割愛」＝「不要なものを切り捨てる」",
+                    "「十指の指す所」＝「多様な意見」",
+                    "「姑息な手」＝「卑怯な手段」"
+                ],
+                correctIndex: 1,
+                explanation: "「失笑」はあきれて笑うことではなく、笑ってはいけない場面で吹き出すこと。\n「しおどき」は好機。「割愛」は惜しいが省略すること。「姑息」はその場しのぎ。"
+            },
+            {
+                id: 28,
+                group: 2,
+                question: "次の四字熟語とその意味の組合せのうち、明らかに誤っているものはどれか。",
+                options: [
+                    "一陽来復……よくない事の後にいい事がめぐってくる",
+                    "偕老同穴……夫婦が愛情深く固く結ばれている",
+                    "甲論乙駁……議論がいろいろあってまとまらない",
+                    "夜郎自大……自分の力量を知らず威張っている",
+                    "粒粒辛苦……さまざまな試練に見舞われること"
+                ],
+                correctIndex: 4,
+                explanation: "「粒粒辛苦」はコツコツと苦労を重ねて努力すること。受動的な「試練に見舞われる」という意味ではない。"
+            },
+            {
+                id: 29,
+                group: 2,
+                question: "故事成語の説明のうち、明らかに誤っているものはどれか。",
+                options: [
+                    "「画竜点睛」＝わずかなことで全体が生き生きする",
+                    "「胡蝶の夢」＝夢と現実とを同一視する",
+                    "「守株」＝伝統を大切に守り抜いて賞賛される",
+                    "「出藍の誉れ」＝弟子が師よりも勝れる",
+                    "「無用の用」＝役に立たないように見えるものが役に立つ"
+                ],
+                correctIndex: 2,
+                explanation: "「守株（株を守る）」は古い習慣にとらわれて融通がきかないこと（愚かさの例え）。"
+            },
+            {
+                id: 30,
+                group: 2,
+                question: "次の四字熟語の意味として、明らかに誤っているものを選びなさい。",
+                options: [
+                    "百家争鳴……いろいろな立場の人が盛んに議論しあう",
+                    "虚心坦懐……心にわだかまりがなく穏やかな様子",
+                    "不倶戴天……恨みが深いこと",
+                    "針小棒大……少ない元手で多くの利益を手にすること",
+                    "金科玉条……大切な規則のこと"
+                ],
+                correctIndex: 3,
+                explanation: "「針小棒大」は小さいことを大げさに言うこと。「一攫千金」のような利益の意味はない。"
+            },
+            {
+                id: 31,
+                group: 2,
+                question: "ことわざの本来の意味として誤っているものはどれか。",
+                options: [
+                    "「河童の川流れ」＝得意なことでも失敗する",
+                    "「勘定合って銭足らず」＝この中に裏切り者がいる",
+                    "「餅は餅屋」＝専門家が一番うまくやる",
+                    "「寄らば大樹の陰」＝頼むなら勢力のある者がよい",
+                    "「仏作って魂入れず」＝仕上げが抜けている"
+                ],
+                correctIndex: 1,
+                explanation: "「勘定合って銭足らず」は、理論上合っていても実際にはうまくいかないことの例え。"
+            },
+            {
+                id: 32,
+                group: 2,
+                question: "慣用句の意味として正しいものを選びなさい。",
+                options: [
+                    "腕を振るう……技術が上達するよう訓練する",
+                    "手を尽くす……考えられる限りの方法を試す",
+                    "頭が切れる……怒って興奮する",
+                    "目に余る……人に見つからないようにする",
+                    "手ぐすねを引く……力が及ばずどうすることもできない"
+                ],
+                correctIndex: 1,
+                explanation: "「手を尽くす」はあらゆる手段を試すこと。\n「頭が切れる」は鋭いこと。「手ぐすねを引く」は準備して待つこと。"
+            },
+            {
+                id: 33,
+                group: 2,
+                question: "次の四字熟語の意味の組み合わせとして正しいものを選びなさい。\n\nア:虚心坦懐 (a:さっぱり / b:意気消沈)\nイ:換骨奪胎 (a:努力 / b:古作の借用)\nウ:鶏鳴狗盗 (a:見掛け倒し / b:つまらない技能)\nエ:乾坤一擲 (a:団結 / b:大勝負)\nオ:鼓腹撃壌 (a:太平 / b:栄枯盛衰)",
+                options: [
+                    "ア:a, イ:b, ウ:b, エ:b, オ:a",
+                    "ア:a, イ:a, ウ:b, エ:a, オ:b",
+                    "ア:b, イ:b, ウ:a, エ:b, オ:a",
+                    "ア:a, イ:b, ウ:a, エ:a, オ:b",
+                    "ア:b, イ:a, ウ:b, エ:b, オ:a"
+                ],
+                correctIndex: 0,
+                explanation: "正しい組み合わせは「a(さっぱり)-b(借用)-b(技能)-b(大勝負)-a(太平)」です。"
+            },
+            {
+                id: 34,
+                group: 2,
+                question: "ことわざ・慣用句の意味として誤っているものを選びなさい。",
+                options: [
+                    "蟷螂の斧……弱者が強者に立ち向かうこと",
+                    "ひそみにならう……善悪を考えずむやみに人真似をする",
+                    "尻馬に乗る……無批判に便乗する",
+                    "病膏肓に入る……病気は気持ち次第で重くも軽くもなる"
+                ],
+                correctIndex: 3,
+                explanation: "「病膏肓に入る」は、病気が重く治る見込みがないこと、または趣味・悪癖に熱中して抜け出せないこと。「病は気から」とは異なる。"
+            }
+        ];
+
+        // アプリケーションの状態
+        let appState = {
+            view: 'start', // 'start', 'quiz', 'result'
+            activeQuestions: [],
+            currentQuestionIndex: 0,
+            userAnswers: [], // { questionId, isCorrect, selectedIndex, questionObject }
+            showExplanation: false,
+            selectedOption: null
+        };
+
+        const appContainer = document.getElementById('app');
+
+        // --- 描画関数 ---
+
+        function render() {
+            appContainer.innerHTML = '';
+            const container = document.createElement('div');
+            // コンテナスタイルはCSSで #app に直接適用されているため、クラス付与不要だが念のため
+            
+            if (appState.view === 'start') {
+                renderStartScreen(container);
+            } else if (appState.view === 'quiz') {
+                renderQuizScreen(container);
+            } else if (appState.view === 'result') {
+                renderResultScreen(container);
+            }
+            appContainer.appendChild(container);
+        }
+
+        function renderStartScreen(container) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'start-screen-wrapper';
+
+            const card = document.createElement('div');
+            card.className = 'card start-screen';
+
+            const title = document.createElement('h1');
+            title.textContent = '国語 演習クイズ';
+            card.appendChild(title);
+
+            const subtitle = document.createElement('p');
+            subtitle.textContent = '問題セットを選択してスタートしてください';
+            subtitle.style.marginBottom = '24px';
+            subtitle.style.color = '#57534e';
+            card.appendChild(subtitle);
+
+            const btn1 = document.createElement('button');
+            btn1.className = 'btn-start btn-primary';
+            btn1.textContent = '▶ 問15 ～ 問26';
+            btn1.onclick = () => startQuiz(1);
+            card.appendChild(btn1);
+
+            const btn2 = document.createElement('button');
+            btn2.className = 'btn-start btn-secondary';
+            btn2.textContent = '▶ 問27 ～ 問34 (追加問題)';
+            btn2.onclick = () => startQuiz(2);
+            card.appendChild(btn2);
+
+            wrapper.appendChild(card);
+            container.appendChild(wrapper);
+        }
+
+        function renderQuizScreen(container) {
+            const currentQ = appState.activeQuestions[appState.currentQuestionIndex];
+            const isLastQuestion = appState.currentQuestionIndex === appState.activeQuestions.length - 1;
+
+            // ヘッダー
+            const header = document.createElement('div');
+            header.className = 'quiz-header';
+            
+            const homeBtn = document.createElement('button');
+            homeBtn.className = 'btn-home-small';
+            homeBtn.textContent = '🏠 メニューへ';
+            homeBtn.onclick = goHome;
+            header.appendChild(homeBtn);
+
+            const title = document.createElement('div');
+            title.style.fontWeight = 'bold';
+            title.style.color = '#92400e';
+            title.textContent = `問 ${currentQ.id}`;
+            header.appendChild(title);
+
+            const progress = document.createElement('div');
+            progress.style.fontSize = '0.9rem';
+            progress.style.color = '#a8a29e';
+            progress.textContent = `${appState.currentQuestionIndex + 1} / ${appState.activeQuestions.length}`;
+            header.appendChild(progress);
+
+            container.appendChild(header);
+
+            // クイズレイアウト (2カラム用ラッパー)
+            const quizLayout = document.createElement('div');
+            quizLayout.className = 'quiz-layout';
+
+            // 左カラム: 問題と選択肢
+            const quizMain = document.createElement('div');
+            quizMain.className = 'quiz-main';
+
+            const questionBox = document.createElement('div');
+            questionBox.className = 'question-box';
+            questionBox.textContent = currentQ.question;
+            quizMain.appendChild(questionBox);
+
+            const optionsList = document.createElement('div');
+            optionsList.className = 'options-list';
+
+            currentQ.options.forEach((optionText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = `${idx + 1}. ${optionText}`;
+                
+                if (appState.showExplanation) {
+                    btn.disabled = true;
+                    if (idx === currentQ.correctIndex) {
+                        btn.classList.add('correct');
+                    } else if (idx === appState.selectedOption) {
+                        btn.classList.add('wrong');
+                    }
+                } else {
+                    btn.onclick = () => handleAnswer(idx);
+                }
+                optionsList.appendChild(btn);
+            });
+            quizMain.appendChild(optionsList);
+            quizLayout.appendChild(quizMain);
+
+            // 右カラム: 解説 (PC時) または下部 (SP時)
+            const quizSide = document.createElement('div');
+            quizSide.className = 'quiz-side';
+
+            if (appState.showExplanation) {
+                const feedbackArea = document.createElement('div');
+                feedbackArea.className = 'feedback-area';
+
+                const isCorrect = appState.selectedOption === currentQ.correctIndex;
+                const resultBadge = document.createElement('div');
+                resultBadge.className = `result-badge ${isCorrect ? 'is-correct' : 'is-wrong'}`;
+                resultBadge.innerHTML = `
+                    <span style="font-size: 1.5rem;">${isCorrect ? '●' : '×'}</span>
+                    <div>
+                        <div style="font-weight:bold; font-size:1.1rem;">${isCorrect ? '正解！' : '不正解...'}</div>
+                        <div style="font-size:0.9rem;">正解は <b>「${currentQ.correctIndex + 1}」</b> です。</div>
+                    </div>
+                `;
+                feedbackArea.appendChild(resultBadge);
+
+                const explanationBox = document.createElement('div');
+                explanationBox.className = 'explanation-box';
+                explanationBox.innerHTML = `
+                    <div class="explanation-label">解説</div>
+                    <div style="white-space: pre-wrap;">${currentQ.explanation}</div>
+                `;
+                feedbackArea.appendChild(explanationBox);
+
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'btn-next';
+                nextBtn.textContent = isLastQuestion ? '結果を見る' : '次の問題へ';
+                nextBtn.onclick = nextQuestion;
+                feedbackArea.appendChild(nextBtn);
+
+                quizSide.appendChild(feedbackArea);
+            }
+
+            quizLayout.appendChild(quizSide);
+            container.appendChild(quizLayout);
+        }
+
+        function renderResultScreen(container) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'result-wrapper';
+
+            const correctCount = appState.userAnswers.filter(a => a.isCorrect).length;
+            const totalCount = appState.userAnswers.length;
+            const percentage = Math.round((correctCount / totalCount) * 100);
+            const hasMistakes = correctCount < totalCount;
+
+            const header = document.createElement('div');
+            header.className = 'result-header';
+            
+            const title = document.createElement('h2');
+            title.textContent = '結果発表';
+            title.style.margin = '0';
+            header.appendChild(title);
+
+            const scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'score-display';
+            scoreDisplay.innerHTML = `${percentage}<span class="score-unit">%</span>`;
+            header.appendChild(scoreDisplay);
+
+            const countDisplay = document.createElement('p');
+            countDisplay.textContent = `${totalCount}問中 ${correctCount}問正解`;
+            countDisplay.style.opacity = '0.9';
+            header.appendChild(countDisplay);
+
+            wrapper.appendChild(header);
+
+            const body = document.createElement('div');
+            body.className = 'result-body';
+
+            const message = document.createElement('p');
+            message.style.marginBottom = '20px';
+            message.style.fontWeight = 'bold';
+            if (percentage === 100) {
+                message.textContent = '素晴らしい！全問正解です！🎉';
+                message.style.color = '#166534';
+            } else {
+                message.textContent = '復習して満点を目指しましょう！';
+                message.style.color = '#78716c';
+            }
+            body.appendChild(message);
+
+            if (hasMistakes) {
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'btn-retry';
+                retryBtn.textContent = `🔄 間違えた問題（${totalCount - correctCount}問）に再挑戦`;
+                retryBtn.onclick = retryIncorrect;
+                body.appendChild(retryBtn);
+            }
+
+            const homeBtn = document.createElement('button');
+            homeBtn.className = 'btn-home-large';
+            homeBtn.textContent = '🏠 スタート画面に戻る';
+            homeBtn.onclick = goHome;
+            body.appendChild(homeBtn);
+
+            wrapper.appendChild(body);
+            container.appendChild(wrapper);
+        }
+
+        // --- ロジック ---
+
+        function startQuiz(group) {
+            const filtered = QUIZ_DATA.filter(q => q.group === group);
+            appState.activeQuestions = filtered;
+            appState.currentQuestionIndex = 0;
+            appState.userAnswers = [];
+            appState.showExplanation = false;
+            appState.selectedOption = null;
+            appState.view = 'quiz';
+            render();
+        }
+
+        function handleAnswer(index) {
+            if (appState.showExplanation) return;
+
+            appState.selectedOption = index;
+            appState.showExplanation = true;
+
+            const currentQ = appState.activeQuestions[appState.currentQuestionIndex];
+            const isCorrect = index === currentQ.correctIndex;
+
+            appState.userAnswers.push({
+                questionId: currentQ.id,
+                isCorrect: isCorrect,
+                selectedIndex: index,
+                questionObject: currentQ
+            });
+
+            render();
+        }
+
+        function nextQuestion() {
+            if (appState.currentQuestionIndex < appState.activeQuestions.length - 1) {
+                appState.currentQuestionIndex++;
+                appState.showExplanation = false;
+                appState.selectedOption = null;
+                render();
+            } else {
+                appState.view = 'result';
+                render();
+            }
+        }
+
+        function retryIncorrect() {
+            const incorrectQuestions = appState.userAnswers
+                .filter(ans => !ans.isCorrect)
+                .map(ans => ans.questionObject);
+            
+            appState.activeQuestions = incorrectQuestions;
+            appState.currentQuestionIndex = 0;
+            appState.userAnswers = [];
+            appState.showExplanation = false;
+            appState.selectedOption = null;
+            appState.view = 'quiz';
+            render();
+        }
+
+        function goHome() {
+            appState.view = 'start';
+            appState.activeQuestions = [];
+            appState.currentQuestionIndex = 0;
+            appState.userAnswers = [];
+            appState.showExplanation = false;
+            appState.selectedOption = null;
+            render();
+        }
+
+        // 初期描画
+        render();
+
+    </script>
+</body>
+</html>
