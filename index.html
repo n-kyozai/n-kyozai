@@ -101,7 +101,6 @@
             justify-content: center;
         }
 
-        /* --- オーバーレイ --- */
         .overlay {
             display: none;
             position: fixed;
@@ -230,11 +229,23 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
+            animation: fadeIn 0.3s ease;
         }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .info-date { color: #94a3b8; font-size: 0.75rem; min-width: 85px; text-align: right; }
         .info-tag { background: var(--accent-color); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
 
-        .loader { color: #94a3b8; font-size: 0.75rem; text-align: center; padding: 10px; font-style: italic; }
+        .loader { 
+            color: #94a3b8; 
+            font-size: 0.75rem; 
+            text-align: center; 
+            padding: 20px; 
+            font-style: italic; 
+            background: #f1f5f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
 
         footer {
             background-color: white;
@@ -246,7 +257,6 @@
             margin-top: auto;
         }
 
-        /* --- モバイル対応 --- */
         @media (max-width: 768px) {
             .mobile-toggle-btn { display: flex; }
             .sidebar { transform: translateX(-100%); }
@@ -254,8 +264,6 @@
             .main-content { margin-left: 0; }
             .banner-container { height: 140px; }
             .container { padding: 16px; width: 100%; }
-            .site-title { font-size: 1.2rem; }
-            
             .sections-wrapper { grid-template-columns: 1fr; gap: 15px; }
             .category-grid { grid-template-columns: repeat(2, 1fr); }
             .cat-btn { font-size: 0.8rem; }
@@ -300,7 +308,6 @@
         <div class="container">
             <h1 class="site-title">対策まとめ</h1>
 
-            <!-- 4列カテゴリーボタン -->
             <div class="category-grid">
                 <a href="/n-kyozai/general/index.html" class="cat-btn">一般教養</a>
                 <a href="/n-kyozai/pedagogy/index.html" class="cat-btn">教職教養</a>
@@ -308,7 +315,6 @@
                 <a href="/n-kyozai/guidelines/index.html" class="cat-btn">指導要領</a>
             </div>
 
-            <!-- 横並びセクション -->
             <div class="sections-wrapper">
                 <section class="section-box">
                     <h2 class="section-title"><i data-lucide="bell"></i>新着情報</h2>
@@ -331,52 +337,68 @@
     <script>
         lucide.createIcons();
 
-        // 固定されたGASウェブアプリURL
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZhvVExnkiseSTiPJDqYK4W6aMGy5kKT8uMW0z3nU2ZdWDeYVMd6FJttE0NSxZMhwr/exec"; 
+        const CACHE_KEY = "n-kyozai-data-cache";
+
+        // UIを描画する共通関数
+        function renderData(data) {
+            const newsEl = document.getElementById('news-list');
+            const calEl = document.getElementById('calendar-list');
+            const linkEl = document.getElementById('link-list');
+            
+            newsEl.innerHTML = ''; calEl.innerHTML = ''; linkEl.innerHTML = '';
+
+            data.forEach(item => {
+                const dateStr = item.date || "";
+                if (item.section === 'news') {
+                    newsEl.innerHTML += `<li class="info-item"><span><span class="info-tag">${item.tag || '更新'}</span>${item.title}</span><span class="info-date">${dateStr}</span></li>`;
+                } else if (item.section === 'calendar') {
+                    calEl.innerHTML += `<li class="info-item"><span>${item.title}</span><span class="info-date">${dateStr}</span></li>`;
+                } else if (item.section === 'link') {
+                    linkEl.innerHTML += `<a href="${item.url}" target="_blank" class="cat-btn" style="font-weight:normal; font-size:0.75rem;">${item.title}</a>`;
+                }
+            });
+
+            if (newsEl.innerHTML === '') newsEl.innerHTML = '<div class="loader">新着情報はありません</div>';
+            if (calEl.innerHTML === '') calEl.innerHTML = '<div class="loader">予定はありません</div>';
+            if (linkEl.innerHTML === '') linkEl.innerHTML = '<div class="loader">リンクはありません</div>';
+
+            lucide.createIcons();
+        }
 
         async function fetchSheetData() {
-            if (!GAS_WEB_APP_URL) {
-                document.querySelectorAll(".loader").forEach(el => el.innerText = "URLが設定されていません");
-                return;
+            // 1. まずはキャッシュがあれば表示（超高速表示）
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            if (cachedData) {
+                try {
+                    renderData(JSON.parse(cachedData));
+                    console.log("Cached data rendered.");
+                } catch(e) { console.error("Cache error", e); }
             }
+
+            if (!GAS_WEB_APP_URL) return;
+
+            // 2. 最新データを取得（バックグラウンド）
             try {
-                // キャッシュ回避のためにタイムスタンプを付与
                 const url = GAS_WEB_APP_URL + (GAS_WEB_APP_URL.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
-                
                 const response = await fetch(url);
-                if (!response.ok) throw new Error("HTTPエラー: " + response.status);
+                if (!response.ok) throw new Error("Network response error");
                 
-                const data = await response.json();
-                console.log("取得データ:", data);
-
-                const newsEl = document.getElementById('news-list');
-                const calEl = document.getElementById('calendar-list');
-                const linkEl = document.getElementById('link-list');
+                const freshData = await response.json();
                 
-                newsEl.innerHTML = ''; calEl.innerHTML = ''; linkEl.innerHTML = '';
+                // 3. データを保存し、UIを更新
+                localStorage.setItem(CACHE_KEY, JSON.stringify(freshData));
+                renderData(freshData);
+                console.log("Fresh data rendered and cached.");
 
-                data.forEach(item => {
-                    const dateStr = item.date || "";
-                    if (item.section === 'news') {
-                        newsEl.innerHTML += `<li class="info-item"><span><span class="info-tag">${item.tag || '更新'}</span>${item.title}</span><span class="info-date">${dateStr}</span></li>`;
-                    } else if (item.section === 'calendar') {
-                        calEl.innerHTML += `<li class="info-item"><span>${item.title}</span><span class="info-date">${dateStr}</span></li>`;
-                    } else if (item.section === 'link') {
-                        linkEl.innerHTML += `<a href="${item.url}" target="_blank" class="cat-btn" style="font-weight:normal; font-size:0.75rem;">${item.title}</a>`;
-                    }
-                });
-
-                if (newsEl.innerHTML === '') newsEl.innerHTML = '<div class="loader">新着情報はありません</div>';
-                if (calEl.innerHTML === '') calEl.innerHTML = '<div class="loader">予定はありません</div>';
-                if (linkEl.innerHTML === '') linkEl.innerHTML = '<div class="loader">リンクはありません</div>';
-
-                lucide.createIcons();
             } catch (error) {
-                console.error(error);
-                document.querySelectorAll(".loader").forEach(el => {
-                    el.style.color = "#e74c3c";
-                    el.innerText = "データの取得に失敗しました。";
-                });
+                console.error("Fetch error:", error);
+                if (!cachedData) {
+                    document.querySelectorAll(".loader").forEach(el => {
+                        el.style.color = "#e74c3c";
+                        el.innerText = "データの取得に失敗しました。";
+                    });
+                }
             }
         }
 
