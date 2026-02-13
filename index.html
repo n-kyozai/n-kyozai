@@ -13,9 +13,9 @@
             --accent-color: #3498db;
             --bg-color: #f8fafc;
             --text-color: #334155;
-            --sidebar-width: 220px; /* 260pxから縮小 */
+            --sidebar-width: 220px;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --header-height: 50px; /* 少し低く調整 */
+            --header-height: 50px;
         }
 
         * {
@@ -48,7 +48,7 @@
         }
 
         .sidebar-header {
-            padding: 16px 20px; /* 余白を圧縮 */
+            padding: 16px 20px;
             font-size: 1.1rem;
             font-weight: bold;
             color: var(--primary-color);
@@ -63,7 +63,7 @@
         }
 
         .nav-category {
-            padding: 10px 20px 4px; /* 余白を圧縮 */
+            padding: 10px 20px 4px;
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -74,11 +74,11 @@
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 7px 20px; /* 垂直方向を10pxから7pxへ圧縮 */
+            padding: 7px 20px;
             color: #64748b;
             text-decoration: none;
             transition: all 0.2s;
-            font-size: 0.85rem; /* 0.95remから縮小 */
+            font-size: 0.85rem;
         }
 
         .nav-item:hover {
@@ -88,34 +88,39 @@
 
         .nav-item i {
             margin-right: 10px;
-            width: 16px; /* アイコンも少し小さく */
+            width: 16px;
             height: 16px;
         }
 
-        /* --- モバイル用ヘッダー --- */
+        /* --- モバイル用ヘッダー（ボタンのみ） --- */
         .mobile-header {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-height);
-            background-color: white;
-            border-bottom: 1px solid #e2e8f0;
-            z-index: 900;
-            align-items: center;
-            padding: 0 16px;
+            top: 10px;
+            left: 10px;
+            z-index: 1100; /* バナーやサイドバーより上に */
+            pointer-events: none; /* 下の要素を触れるように */
         }
 
         .menu-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--primary-color);
-            padding: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            pointer-events: auto; /* ボタン自体は触れるように */
+            transition: 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: white;
+            transform: scale(1.05);
         }
 
         /* --- オーバーレイ --- */
@@ -148,7 +153,7 @@
             transition: margin-left 0.3s ease;
         }
 
-        /* バナーセクション（180px維持） */
+        /* バナーセクション */
         .banner-container {
             width: 100%;
             height: 180px;
@@ -297,7 +302,7 @@
         /* --- モバイル対応 --- */
         @media (max-width: 768px) {
             .mobile-header {
-                display: flex;
+                display: block;
             }
 
             .sidebar {
@@ -310,11 +315,10 @@
 
             .main-content {
                 margin-left: 0;
-                padding-top: var(--header-height);
             }
 
             .banner-container {
-                height: 120px;
+                height: 140px; /* 少し余裕を持たせて調整 */
             }
 
             .container {
@@ -334,13 +338,12 @@
 </head>
 <body>
 
-    <!-- モバイル用ヘッダー -->
-    <header class="mobile-header">
+    <!-- モバイル用メニューボタンのみ -->
+    <div class="mobile-header">
         <button class="menu-toggle" id="menuToggle">
             <i data-lucide="menu"></i>
         </button>
-        <span style="margin-left: 10px; font-weight: bold; color: var(--primary-color);">n-kyozai</span>
-    </header>
+    </div>
 
     <!-- 背景オーバーレイ -->
     <div class="overlay" id="overlay"></div>
@@ -378,12 +381,14 @@
         <div class="banner-container">
             <img src="n-kyozai_ホームページ_トップバナー.png" alt="学習バナー" class="banner-img" onerror="this.src='https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80'">
             <div class="banner-overlay">
-                <h2>夢の教壇へ、一歩ずつ。</h2>
+                <!-- 文言変更：教員採用試験対策 -->
+                <h2>教員採用試験対策</h2>
             </div>
         </div>
 
         <div class="container">
-            <h1 class="site-title">教員採用試験 対策まとめ</h1>
+            <!-- タイトル変更：対策まとめ -->
+            <h1 class="site-title">対策まとめ</h1>
 
             <div class="category-grid">
                 <a href="/n-kyozai/general/index.html" class="cat-btn">一般教養</a>
