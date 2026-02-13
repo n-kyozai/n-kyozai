@@ -1,10 +1,11 @@
+<!-- Canvas: ON, Preview: ON -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>教員採用試験対策まとめ - n-kyozai</title>
-    <!-- Lucide Icons for sidebar -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -12,8 +13,9 @@
             --accent-color: #3498db;
             --bg-color: #f8fafc;
             --text-color: #334155;
-            --sidebar-width: 260px;
+            --sidebar-width: 220px; /* 260pxから縮小 */
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px; /* 少し低く調整 */
         }
 
         * {
@@ -26,11 +28,12 @@
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.5;
             display: flex;
+            min-height: 100vh;
         }
 
-        /* サイドバー */
+        /* --- サイドバー --- */
         .sidebar {
             width: var(--sidebar-width);
             background-color: white;
@@ -40,27 +43,28 @@
             top: 0;
             border-right: 1px solid #e2e8f0;
             overflow-y: auto;
-            z-index: 100;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar-header {
-            padding: 24px;
-            font-size: 1.25rem;
+            padding: 16px 20px; /* 余白を圧縮 */
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--primary-color);
             border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .nav-menu {
-            padding: 12px 0;
+            padding: 8px 0;
         }
 
         .nav-category {
-            padding: 12px 24px 8px;
-            font-size: 0.75rem;
+            padding: 10px 20px 4px; /* 余白を圧縮 */
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #94a3b8;
@@ -70,11 +74,11 @@
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 10px 24px;
+            padding: 7px 20px; /* 垂直方向を10pxから7pxへ圧縮 */
             color: #64748b;
             text-decoration: none;
             transition: all 0.2s;
-            font-size: 0.95rem;
+            font-size: 0.85rem; /* 0.95remから縮小 */
         }
 
         .nav-item:hover {
@@ -83,22 +87,71 @@
         }
 
         .nav-item i {
-            margin-right: 12px;
-            width: 18px;
+            margin-right: 10px;
+            width: 16px; /* アイコンも少し小さく */
+            height: 16px;
         }
 
-        /* メインコンテンツ */
+        /* --- モバイル用ヘッダー --- */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 900;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary-color);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- オーバーレイ --- */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* --- メインコンテンツ --- */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
             min-height: 100vh;
-            padding-bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
         }
 
-        /* バナーセクション（高さを250pxに縮小） */
+        /* バナーセクション（180px維持） */
         .banner-container {
             width: 100%;
-            height: 250px;
+            height: 180px;
             overflow: hidden;
             position: relative;
             background-color: #e2e8f0;
@@ -108,8 +161,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* 画像の少し上のほう（顔付近）が中心にくるように調整 */
-            object-position: center 20%;
+            object-position: center 15%;
         }
 
         .banner-overlay {
@@ -117,51 +169,52 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.5));
-            padding: 20px 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.4));
+            padding: 15px 40px;
             color: white;
         }
 
         .banner-overlay h2 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 20px 24px;
+            flex: 1;
         }
 
         .site-title {
-            font-size: 1.75rem;
-            margin-bottom: 20px;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
             color: var(--primary-color);
-            border-left: 6px solid var(--accent-color);
-            padding-left: 15px;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 12px;
         }
 
-        /* カテゴリーボタン（余白を少し詰める） */
+        /* カテゴリーボタン */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
         }
 
         .cat-btn {
             display: block;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             background: white;
-            border: 2px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
             border-radius: 50px;
             text-decoration: none;
             color: var(--primary-color);
             font-weight: bold;
             transition: all 0.3s;
             box-shadow: var(--shadow);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .cat-btn:hover {
@@ -174,22 +227,22 @@
         /* セクション枠 */
         .section-box {
             background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
             box-shadow: var(--shadow);
             border: 1px solid #e2e8f0;
         }
 
         .section-title {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
+            font-size: 1rem;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
             color: var(--primary-color);
             border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
 
         .info-list {
@@ -197,45 +250,36 @@
         }
 
         .info-item {
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px dashed #e2e8f0;
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .info-date {
             color: #94a3b8;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
-        /* お役立ちリンク */
-        .link-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .useful-link {
-            color: var(--accent-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-        }
-
-        .useful-link:hover {
-            text-decoration: underline;
+        /* フッター */
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            margin-top: auto;
         }
 
         /* スクロールボタン */
         .scroll-top {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 45px;
-            height: 45px;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
             background-color: var(--primary-color);
             color: white;
             border-radius: 50%;
@@ -247,35 +291,65 @@
             border: none;
             opacity: 0.8;
             transition: 0.3s;
+            z-index: 800;
         }
 
-        /* モバイル対応 */
+        /* --- モバイル対応 --- */
         @media (max-width: 768px) {
-            .sidebar {
-                display: none;
+            .mobile-header {
+                display: flex;
             }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
             .main-content {
                 margin-left: 0;
+                padding-top: var(--header-height);
             }
+
             .banner-container {
-                height: 150px;
+                height: 120px;
             }
+
+            .container {
+                padding: 16px;
+            }
+
             .site-title {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
             }
-            .link-grid {
-                grid-template-columns: 1fr;
+
+            .category-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- モバイル用ヘッダー -->
+    <header class="mobile-header">
+        <button class="menu-toggle" id="menuToggle">
+            <i data-lucide="menu"></i>
+        </button>
+        <span style="margin-left: 10px; font-weight: bold; color: var(--primary-color);">n-kyozai</span>
+    </header>
+
+    <!-- 背景オーバーレイ -->
+    <div class="overlay" id="overlay"></div>
+
     <!-- サイドバー -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <i data-lucide="book-open"></i>
-            教採対策メニュー
+            教採まとめ
         </div>
         <nav class="nav-menu">
             <div class="nav-category">Main</div>
@@ -286,7 +360,7 @@
             <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>学習指導要領</a>
 
-            <div class="nav-category">専門科目（社会系）</div>
+            <div class="nav-category">専門科目</div>
             <a href="/n-kyozai/world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
             <a href="/n-kyozai/japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
             <a href="/n-kyozai/geography/index.html" class="nav-item"><i data-lucide="navigation"></i>地理</a>
@@ -315,7 +389,7 @@
                 <a href="/n-kyozai/general/index.html" class="cat-btn">一般教養</a>
                 <a href="/n-kyozai/pedagogy/index.html" class="cat-btn">教職教養</a>
                 <a href="/n-kyozai/politics/index.html" class="cat-btn">専門科目</a>
-                <a href="/n-kyozai/guidelines/index.html" class="cat-btn">学習指導要領</a>
+                <a href="/n-kyozai/guidelines/index.html" class="cat-btn">指導要領</a>
             </div>
 
             <section class="section-box">
@@ -338,14 +412,18 @@
 
             <section class="section-box">
                 <h2 class="section-title"><i data-lucide="link"></i>お役立ちリンク</h2>
-                <div class="link-grid">
+                <div class="link-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px;">
                     <a href="https://www.mext.go.jp/" target="_blank" class="useful-link"><i data-lucide="external-link"></i>文部科学省</a>
-                    <a href="#" class="useful-link"><i data-lucide="external-link"></i>教職・学習ポータルサイト</a>
-                    <a href="#" class="useful-link"><i data-lucide="external-link"></i>都道府県別 試験情報</a>
-                    <a href="#" class="useful-link"><i data-lucide="external-link"></i>教育新聞（最新ニュース）</a>
+                    <a href="#" class="useful-link"><i data-lucide="external-link"></i>教職・学習ポータル</a>
+                    <a href="#" class="useful-link"><i data-lucide="external-link"></i>都道府県 試験情報</a>
+                    <a href="#" class="useful-link"><i data-lucide="external-link"></i>教育系ニュース</a>
                 </div>
             </section>
         </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
     </main>
 
     <button class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
@@ -354,6 +432,33 @@
 
     <script>
         lucide.createIcons();
+
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
     </script>
 </body>
 </html>
