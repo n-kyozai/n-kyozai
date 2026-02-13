@@ -1,0 +1,981 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文学史 演習 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル (サイドバー・ヘッダー等)
+           ========================================= */
+        :root {
+            --primary-color: #d97706; /* 文学史用のテーマカラー（アンバー） */
+            --accent-color: #0ea5e9;
+            --bg-color: #fdfbf7;
+            --text-color: #44403c;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --border-color: #d6d3d1;
+            
+            /* マーカー用 */
+            --marker-hidden-bg: #f97316;
+            --marker-hidden-text: #f97316;
+            --marker-visible-bg: #ffedd5;
+            --marker-visible-text: #c2410c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #2c3e50; /* サイドバーヘッダーは共通色 */
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: #2c3e50;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 1200px; /* デスクトップで広く使う */
+            margin: 0 auto;
+            padding: 24px 0;
+            padding-bottom: 100px; /* フッターボタン用余白 */
+            flex: 1;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+        }
+
+        /* =========================================
+           文学史コンテンツ用スタイル
+           ========================================= */
+        h1 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        h2 {
+            color: #431407;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            background-color: #fff7ed;
+            padding: 10px 15px;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 4px;
+        }
+
+        p.guide {
+            font-size: 0.9rem;
+            color: #666;
+            background: #fff;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #e5e5e5;
+            margin-bottom: 20px;
+        }
+
+        /* ルビ */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: #78716c; }
+
+        /* 暗記シート（テーブル） */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            min-width: 700px; /* スクロール発生幅 */
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 14px 10px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f5f5f4;
+            font-weight: bold;
+            color: #57534e;
+            white-space: nowrap;
+        }
+        
+        .col-author { width: 20%; background-color: #fafaf9; }
+        .col-work { width: 25%; font-weight: bold; }
+        .col-desc { width: 55%; font-size: 0.9rem; }
+        .col-id { width: 50px; text-align: center; font-weight: bold; color: #999; }
+        .col-intro { font-style: italic; color: #555; }
+
+        /* 過去問セクション */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 960px) {
+            .exam-grid {
+                grid-template-columns: 1fr 1fr; /* PCでは2列 */
+            }
+        }
+
+        .exam-box {
+            background: #fff;
+            border: 2px solid #e7e5e4;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .exam-q { font-weight: bold; margin-bottom: 10px; }
+        .exam-content {
+            background: #f5f5f4;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .exam-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+        .exam-ans-area {
+            margin-top: auto; /* 下揃え */
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
+
+        /* マーカー */
+        .marker {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.15s ease-out;
+            user-select: none;
+            margin: 1px;
+            min-width: 1.5em;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .marker.hidden {
+            background-color: var(--marker-hidden-bg);
+            color: var(--marker-hidden-text);
+        }
+        .marker.hidden ruby { visibility: hidden; }
+
+        .marker.visible {
+            background-color: var(--marker-visible-bg);
+            color: var(--marker-visible-text);
+        }
+
+        /* モード切替ボタン（文字表示） */
+        .mode-switch-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            width: auto;  /* 幅自動 */
+            height: auto; /* 高さ自動 */
+            border-radius: 50px; /* カプセル型 */
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .mode-switch-btn:active { transform: scale(0.95); }
+        .mode-switch-btn:hover { transform: translateY(-2px); }
+        
+        /* クイズエリア */
+        .quiz-grid-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 960px) {
+            .quiz-grid-wrapper {
+                grid-template-columns: 1fr 1fr; /* PCでは2列 */
+                align-items: start;
+            }
+        }
+
+        .quiz-section {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #e5e5e5;
+        }
+        .quiz-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #1f2937;
+        }
+
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn {
+            background: #fff;
+            border: 1px solid #d1d5db;
+            padding: 10px 12px;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #374151;
+            transition: background 0.2s;
+        }
+        .option-btn:hover { background: #f9fafb; }
+        
+        .result-msg {
+            margin-top: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 6px;
+            border-radius: 4px;
+        }
+        .correct { color: #065f46; background-color: #d1fae5 !important; border-color: #34d399 !important; }
+        .incorrect { color: #991b1b; background-color: #fee2e2 !important; border-color: #f87171 !important; }
+
+        .flashcard-btn {
+            background-color: #57534e;
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .flashcard-btn:hover { background-color: #44403c; }
+        
+        .answer-text {
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1rem;
+            display: none;
+            background: #fff7ed;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .refresh-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .refresh-btn:hover { background-color: #0284c7; }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <!-- 階層を3つ戻る -->
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">国語</a> ＞ 文学史
+            </div>
+            <h1>文学史 演習</h1>
+        </div>
+
+        <div class="container">
+            <p class="guide">
+                <i data-lucide="lightbulb" style="width:16px; display:inline; vertical-align:middle;"></i>
+                オレンジ色のマーカー部分をタップすると答えが見えます。<br>
+                画面右下のボタンで「全表示／全隠し」を一括切替できます。
+            </p>
+
+            <h2>1. 文学史 (明治・大正・昭和)</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-author">作者</th>
+                            <th class="col-work">作品</th>
+                            <th class="col-desc">特徴</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 写実主義 -->
+                        <tr>
+                            <td><ruby>坪内逍遙<rt>つぼうちしょうよう</rt></ruby></td>
+                            <td><span class="marker hidden" data-ans="38"><ruby>小説神髄<rt>しょうせつしんずい</rt></ruby></span></td>
+                            <td>【写実主義】これまでの<ruby>勧善懲悪<rt>かんぜんちょうあく</rt></ruby>主義を排し、写実主義を主張。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="39"><ruby>二葉亭四迷<rt>ふたばていしめい</rt></ruby></span></td>
+                            <td>浮雲</td>
+                            <td>【写実主義】我が国初の<ruby>言文一致体<rt>げんぶんいっちたい</rt></ruby>。またロシア文学の翻訳『あひびき』が有名。</td>
+                        </tr>
+                        <!-- 擬古典主義 -->
+                        <tr>
+                            <td><span class="marker hidden" data-ans="40"><ruby>尾崎紅葉<rt>おざきこうよう</rt></ruby></span></td>
+                            <td>『<ruby>金色夜叉<rt>こんじきやしゃ</rt></ruby>』</td>
+                            <td>【<ruby>擬古典<rt>ぎこてん</rt></ruby>主義】財力が権力をふるう時代背景を描写。<ruby>硯友社<rt>けんゆうしゃ</rt></ruby>を結成。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="41"><ruby>幸田露伴<rt>こうだろはん</rt></ruby></span></td>
+                            <td>『<ruby>風流仏<rt>ふうりゅうぶつ</rt></ruby>』<br>『五重塔』</td>
+                            <td>【<ruby>擬古典<rt>ぎこてん</rt></ruby>主義】伝統的な精神や恋の美しさを描写。</td>
+                        </tr>
+                        <!-- 浪漫主義 -->
+                        <tr>
+                            <td><ruby>泉鏡花<rt>いずみきょうか</rt></ruby></td>
+                            <td><span class="marker hidden" data-ans="42"><ruby>高野聖<rt>こうやひじり</rt></ruby></span></td>
+                            <td>【浪漫主義】修行僧の神秘と<ruby>怪異<rt>かいい</rt></ruby>に満ちた小説。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="43"><ruby>樋口一葉<rt>ひぐちいちよう</rt></ruby></span></td>
+                            <td>『たけくらべ』</td>
+                            <td>【浪漫主義】吉原<ruby>竜泉寺町<rt>りゅうせんじちょう</rt></ruby>を舞台に少年少女の淡い恋を描いた作品。他『大つごもり』『にごりえ』など。</td>
+                        </tr>
+                        <tr>
+                            <td><ruby>国木田独歩<rt>くにきだどっぽ</rt></ruby></td>
+                            <td><span class="marker hidden" data-ans="44">武蔵野</span></td>
+                            <td>【浪漫主義】詩的散文の短編小説。武蔵野の面影を残す近郊の風物を新鮮な感覚で描写。</td>
+                        </tr>
+                        <!-- 自然主義 -->
+                        <tr>
+                            <td><span class="marker hidden" data-ans="45"><ruby>島崎藤村<rt>しまざきとうそん</rt></ruby></span></td>
+                            <td>『夜明け前』</td>
+                            <td>【自然主義】主人公の悲劇的な生涯を軸に明治維新前後の時代の苦悩を描く歴史小説。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="46"><ruby>田山花袋<rt>たやまかたい</rt></ruby></span></td>
+                            <td>『<ruby>蒲団<rt>ふとん</rt></ruby>』<br>『田舎教師』</td>
+                            <td>【自然主義】自己の体験を小説化。<ruby>私小説<rt>わたくししょうせつ</rt></ruby>の流れを形成。</td>
+                        </tr>
+                        <!-- 余裕派・耽美派 -->
+                        <tr>
+                            <td><ruby>森鷗外<rt>もりおうがい</rt></ruby></td>
+                            <td>『雁』『阿部一族』<br>『<ruby>山椒大夫<rt>さんしょうだゆう</rt></ruby>』『高瀬舟』</td>
+                            <td>【<span class="marker hidden" data-ans="47"><ruby>余裕<rt>よゆう</rt></ruby>（<ruby>高踏<rt>こうとう</rt></ruby>）</span>派】薄幸な女性の自我の目覚めと挫折を描いた作品。他は歴史小説。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="48"><ruby>夏目漱石<rt>なつめそうせき</rt></ruby></span></td>
+                            <td>『<ruby>吾輩<rt>わがはい</rt></ruby>は猫である』<br>『草枕』『こころ』</td>
+                            <td>【<span class="marker hidden" data-ans="47"><ruby>余裕<rt>よゆう</rt></ruby>（<ruby>高踏<rt>こうとう</rt></ruby>）</span>派】人間を猫の目から風刺的に描いた小説など。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="49"><ruby>谷崎潤一郎<rt>たにざきじゅんいちろう</rt></ruby></span></td>
+                            <td>『<span class="marker hidden" data-ans="50"><ruby>細雪<rt>ささめゆき</rt></ruby></span>』『<ruby>春琴抄<rt>しゅんきんしょう</rt></ruby>』<br>『<ruby>刺青<rt>しせい</rt></ruby>』『<ruby>痴人<rt>ちじん</rt></ruby>の愛』</td>
+                            <td>【<ruby>耽美<rt>たんび</rt></ruby>派】大阪の富裕商家の四人姉妹の生き方を描いた小説など。</td>
+                        </tr>
+                        <!-- 白樺派 -->
+                        <tr>
+                            <td><span class="marker hidden" data-ans="51"><ruby>武者小路実篤<rt>むしゃのこうじさねあつ</rt></ruby></span></td>
+                            <td>『お目出たき人』<br>『友情』『幸福者』</td>
+                            <td>【<ruby>白樺<rt>しらかば</rt></ruby>派】人道主義を掲げる。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="52"><ruby>志賀直哉<rt>しがなおや</rt></ruby></span></td>
+                            <td>『<ruby>暗夜行路<rt>あんやこうろ</rt></ruby>』<br>『小僧の神様』</td>
+                            <td>【<ruby>白樺<rt>しらかば</rt></ruby>派】小説の神様と称される。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="53"><ruby>有島武郎<rt>ありしまたけお</rt></ruby></span></td>
+                            <td>『カインの<ruby>末裔<rt>まつえい</rt></ruby>』<br>『生まれ出づる悩み』</td>
+                            <td>【<ruby>白樺<rt>しらかば</rt></ruby>派】人道主義的作風。</td>
+                        </tr>
+                        <!-- 新思潮派 -->
+                        <tr>
+                            <td><span class="marker hidden" data-ans="54"><ruby>芥川龍之介<rt>あくたがわりゅうのすけ</rt></ruby></span></td>
+                            <td>『鼻』『<ruby>羅生門<rt>らしょうもん</rt></ruby>』<br>『河童』</td>
+                            <td>【<ruby>新思潮<rt>しんしちょう</rt></ruby>派】初期は古典作品の主人公の心理を理知的に解釈。後に自伝的小説が増加。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden" data-ans="55"><ruby>菊池寛<rt>きくちかん</rt></ruby></span></td>
+                            <td>『<ruby>恩讐<rt>おんしゅう</rt></ruby>の彼方に』<br>『父帰る』</td>
+                            <td>【<ruby>新思潮<rt>しんしちょう</rt></ruby>派】小説、<ruby>戯曲<rt>ぎきょく</rt></ruby>など。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>2. 文学作品の冒頭</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-id">No.</th>
+                            <th class="col-work">作品</th>
+                            <th class="col-author">作者</th>
+                            <th class="col-intro">冒頭文</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-id">1</td>
+                            <td><span class="marker hidden" data-ans="1_work">土佐日記</span></td>
+                            <td><ruby>紀貫之<rt>きのつらゆき</rt></ruby></td>
+                            <td>「男もすなる日記といふものを、女もしてみむとてするなり。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">2</td>
+                            <td><span class="marker hidden" data-ans="2_work"><ruby>枕草子<rt>まくらのそうし</rt></ruby></span></td>
+                            <td><ruby>清少納言<rt>せいしょうなごん</rt></ruby></td>
+                            <td>「春はあけぼの。やうやう白くなりゆく、山ぎはすこしあかりて、紫だちたる雲のほそくたなびきたる。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">3</td>
+                            <td><span class="marker hidden" data-ans="3_work">源氏物語</span></td>
+                            <td><ruby>紫式部<rt>むらさきしきぶ</rt></ruby></td>
+                            <td>「いづれの<ruby>御時<rt>おおんとき</rt></ruby>にか、<ruby>女御<rt>にょうご</rt></ruby><ruby>更衣<rt>こうい</rt></ruby>あまた<ruby>さぶらひ<rt>さぶらい</rt></ruby>給ひける中に、いとやむごとなききはにはあらぬが、すぐれて<ruby>時めき<rt>ときめき</rt></ruby>給ふありけり。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">4</td>
+                            <td><span class="marker hidden" data-ans="4_work">平家物語</span></td>
+                            <td>(不詳)</td>
+                            <td>「<ruby>祇園精舎<rt>ぎおんしょうじゃ</rt></ruby>の鐘の声、<ruby>諸行無常<rt>しょぎょうむじょう</rt></ruby>の響きあり。<ruby>娑羅双樹<rt>しゃらそうじゅ</rt></ruby>の花の色、<ruby>盛者必衰<rt>じょうしゃひっすい</rt></ruby>のことわりをあらはす。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">5</td>
+                            <td><span class="marker hidden" data-ans="5_work"><ruby>方丈記<rt>ほうじょうき</rt></ruby></span></td>
+                            <td><ruby>鴨長明<rt>かものちょうめい</rt></ruby></td>
+                            <td>「ゆく河の流れは絶えずして、しかも、もとの水にあらず。淀みに浮ぶ<ruby>うたかた<rt>泡沫</rt></ruby>は、かつ消えかつ結びて、久しくとどまりたる例なし。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">6</td>
+                            <td><span class="marker hidden" data-ans="6_work"><ruby>更級日記<rt>さらしなにっき</rt></ruby></span></td>
+                            <td><ruby>菅原孝標女<rt>すがわらのたかすえのむすめ</rt></ruby></td>
+                            <td>「<ruby>東路<rt>あずまじ</rt></ruby>の道のはてよりも、なほ奥つ方に生ひ出でたる人、いかばかりかはあやしかりけむを、………………。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">7</td>
+                            <td><span class="marker hidden" data-ans="7_work">奥の細道</span></td>
+                            <td><ruby>松尾芭蕉<rt>まつおばしょう</rt></ruby></td>
+                            <td>「月日は<ruby>百代<rt>はくたい</rt></ruby>の<ruby>過客<rt>かかく</rt></ruby>にして、行きかふ年もまた旅人なり。舟の上に生涯を浮かべ、馬の口とらへて老いを迎ふるものは日々旅にして旅を<ruby>栖<rt>すみか</rt></ruby>とす。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">8</td>
+                            <td><span class="marker hidden" data-ans="8_work">草枕</span></td>
+                            <td>夏目漱石</td>
+                            <td>「山路を登りながら、こう考えた。智に働けば角が立つ情に<ruby>棹<rt>さお</rt></ruby>させば流される。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">9</td>
+                            <td><span class="marker hidden" data-ans="9_work">夜明け前</span></td>
+                            <td>島崎藤村</td>
+                            <td>「<ruby>木曽路<rt>きそじ</rt></ruby>はすべて山の中である。あるところは<ruby>岨<rt>そば</rt></ruby>づたいに行く崖の道であり、………………。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">10</td>
+                            <td><span class="marker hidden" data-ans="10_work">暗夜行路</span></td>
+                            <td>志賀直哉</td>
+                            <td>「私が自分に祖父のある事を知ったのは、私の母が産後の病気で死に、その後二月程経って不意に祖父が私の前に現れて来た、その時であった。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">11</td>
+                            <td><span class="marker hidden" data-ans="11_work">羅生門</span></td>
+                            <td>芥川龍之介</td>
+                            <td>「ある日の暮れ方の事である。一人の<ruby>下人<rt>げにん</rt></ruby>が、羅生門の下で雨やみを待っていた。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">12</td>
+                            <td><span class="marker hidden" data-ans="12_work">鼻</span></td>
+                            <td>芥川龍之介</td>
+                            <td>「<ruby>禅智内供<rt>ぜんちないぐ</rt></ruby>の鼻と云えば、池の尾で知らない者はない。長さは五六寸あって上唇の上から顎の下まで下がっている。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">13</td>
+                            <td><span class="marker hidden" data-ans="13_work">蜘蛛の糸</span></td>
+                            <td>芥川龍之介</td>
+                            <td>「或日の事でございます。御釈迦様は極楽の蓮池のふちを、独りでぶらぶら御歩きになっていらっしゃいました。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">14</td>
+                            <td><span class="marker hidden" data-ans="14_work">斜陽</span></td>
+                            <td>太宰治</td>
+                            <td>「朝、食堂でスウプを一さじすっと吸ってお母さまが、『あ。』と幽かな叫び声をお挙げになった。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">15</td>
+                            <td><span class="marker hidden" data-ans="15_work">人間失格</span></td>
+                            <td>太宰治</td>
+                            <td>「恥の多い生涯を送って来ました。自分には、人間の生活というものが、見当つかないのです。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">16</td>
+                            <td><span class="marker hidden" data-ans="16_work">たけくらべ</span></td>
+                            <td>樋口一葉</td>
+                            <td>「廻れば<ruby>大門<rt>おおもん</rt></ruby>の<ruby>見返り柳<rt>みかえりやなぎ</rt></ruby>いと長けれど、お歯ぐろ溝に<ruby>燈火<rt>ともしび</rt></ruby>うつる三階の騒ぎも手に取るごとく、………………。」</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">17</td>
+                            <td><span class="marker hidden" data-ans="17_work">伊豆の踊子</span></td>
+                            <td>川端康成</td>
+                            <td>「道がつづら折りになって、いよいよ<ruby>天城峠<rt>あまぎとうげ</rt></ruby>に近づいたと思う頃、雨脚が杉の密林を白く染めながら、すさまじい早さで麓から私を追ってきた。」</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>3. 過去問に挑戦!</h2>
+            <div class="exam-grid">
+                <div class="exam-box">
+                    <div class="exam-q">問1. 次の作品を成立年代が古い順に並べ替えよ。(富山県 改題)</div>
+                    <div class="exam-options">
+                        ア. 方丈記　イ. 更級日記　ウ. 万葉集　エ. 土佐日記　オ. 古今和歌集
+                    </div>
+                    <div class="exam-ans-area">
+                        答え: <span class="marker hidden" data-ans="exam_1">ウ・オ・エ・イ・ア</span>
+                        <p style="font-size:0.8rem; margin-top:4px; color:#666;">
+                            (解説: 万葉[760頃] → 古今[905] → 土佐[935] → 更級[1060頃] → 方丈[1212])
+                        </p>
+                    </div>
+                </div>
+
+                <div class="exam-box">
+                    <div class="exam-q">問2. 次の冒頭文①②に対応する「作品名」と「作者」を選べ。(秋田県改題)</div>
+                    <div class="exam-content">
+                        ① <ruby>木曾路<rt>きそじ</rt></ruby>はすべて山の中である。あるところは<ruby>岨<rt>そば</rt></ruby>づたいに行く崖の道であり...<br>
+                        ② 野島が初めて杉子にあったのは帝劇の二階の正面廊下だった。...
+                    </div>
+                    <div class="exam-options">
+                        〈著書名〉 ア.伊豆の踊子 イ.鼻 ウ.夜明け前 エ.友情 オ.潮騒<br>
+                        〈著者名〉 ア.島崎藤村 イ.川端康成 ウ.芥川龍之介 エ.三島由紀夫 オ.武者小路実篤
+                    </div>
+                    <div class="exam-ans-area">
+                        ① 答え: <span class="marker hidden" data-ans="exam_2_1">作品:ウ(夜明け前) ・ 作者:ア(島崎藤村)</span><br>
+                        ② 答え: <span class="marker hidden" data-ans="exam_2_2">作品:エ(友情) ・ 作者:オ(武者小路実篤)</span>
+                    </div>
+                </div>
+
+                <div class="exam-box">
+                    <div class="exam-q">問3. 「雪国」などの作者で、日本で初めてノーベル文学賞を受賞した人物は誰か。(大分県改題)</div>
+                    <div class="exam-ans-area">
+                        答え: <span class="marker hidden" data-ans="exam_3">川端康成</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border:0; border-top:1px solid #ccc; margin: 40px 0 20px;">
+
+            <div class="quiz-grid-wrapper">
+                <div>
+                    <h2>確認クイズ A：選択式</h2>
+                    <button class="refresh-btn" onclick="generateQuizzes()"><i data-lucide="refresh-cw" width="16"></i> 問題を入れ替える</button>
+                    <div id="quiz-multiple-choice" class="quiz-section">
+                        <!-- JSで生成 -->
+                    </div>
+                </div>
+
+                <div>
+                    <h2>確認クイズ B：一問一答</h2>
+                    <div id="quiz-flashcard" class="quiz-section">
+                        <!-- JSで生成 -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 暗記モード切替ボタン -->
+    <button id="toggleModeBtn" class="mode-switch-btn" title="暗記モード切替">
+        暗記モード: ON
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // 指定のGAS URL
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZhvVExnkiseSTiPJDqYK4W6aMGy5kKT8uMW0z3nU2ZdWDeYVMd6FJttE0NSxZMhwr/exec"; 
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        /* --- 文学史データ --- */
+        const qaData = [
+            // 文学史（明治・大正・昭和） ID: 38-55
+            { id: 38, q: "坪内逍遙が著した、写実主義を主張した評論は？", a: "小説神髄", options: ["小説神髄", "浮雲", "風流仏", "武蔵野"] },
+            { id: 39, q: "我が国初の言文一致体小説『浮雲』の作者は？", a: "二葉亭四迷", options: ["二葉亭四迷", "坪内逍遙", "尾崎紅葉", "山田美妙"] },
+            { id: 40, q: "『金色夜叉』の作者で、硯友社を結成したのは？", a: "尾崎紅葉", options: ["尾崎紅葉", "幸田露伴", "泉鏡花", "徳富蘆花"] },
+            { id: 41, q: "『五重塔』『風流仏』の作者は？", a: "幸田露伴", options: ["幸田露伴", "尾崎紅葉", "森鷗外", "夏目漱石"] },
+            { id: 42, q: "泉鏡花が書いた、修行僧の神秘と怪異に満ちた小説は？", a: "高野聖", options: ["高野聖", "歌行燈", "夜行巡査", "外科室"] },
+            { id: 43, q: "『たけくらべ』『にごりえ』の作者は？", a: "樋口一葉", options: ["樋口一葉", "与謝野晶子", "林芙美子", "平塚らいてう"] },
+            { id: 44, q: "国木田独歩の代表作で、近郊の風物を描いた作品は？", a: "武蔵野", options: ["武蔵野", "牛肉と馬鈴薯", "春の鳥", "忘れえぬ人々"] },
+            { id: 45, q: "『夜明け前』などの作品がある自然主義の作家は？", a: "島崎藤村", options: ["島崎藤村", "田山花袋", "正宗白鳥", "徳田秋声"] },
+            { id: 46, q: "『蒲団』『田舎教師』で知られる自然主義の作家は？", a: "田山花袋", options: ["田山花袋", "島崎藤村", "岩野泡鳴", "長塚節"] },
+            { id: 47, q: "森鷗外や夏目漱石は何派と呼ばれるか？", a: "余裕（高踏）", options: ["余裕（高踏）", "耽美", "白樺", "新感覚"] },
+            { id: 48, q: "『吾輩は猫である』『こころ』の作者は？", a: "夏目漱石", options: ["夏目漱石", "森鷗外", "芥川龍之介", "太宰治"] },
+            { id: 49, q: "『痴人の愛』『細雪』などで知られる耽美派の作家は？", a: "谷崎潤一郎", options: ["谷崎潤一郎", "永井荷風", "佐藤春夫", "川端康成"] },
+            { id: 50, q: "谷崎潤一郎の代表作で、大阪の四人姉妹を描いた作品は？", a: "細雪", options: ["細雪", "春琴抄", "卍", "鍵"] },
+            { id: 51, q: "白樺派の中心人物で『友情』の作者は？", a: "武者小路実篤", options: ["武者小路実篤", "志賀直哉", "有島武郎", "長与善郎"] },
+            { id: 52, q: "「小説の神様」と称され『暗夜行路』を書いたのは？", a: "志賀直哉", options: ["志賀直哉", "武者小路実篤", "有島武郎", "里見弴"] },
+            { id: 53, q: "『カインの末裔』『生まれ出づる悩み』の作者は？", a: "有島武郎", options: ["有島武郎", "志賀直哉", "武者小路実篤", "有島生馬"] },
+            { id: 54, q: "『鼻』『羅生門』『河童』の作者は？", a: "芥川龍之介", options: ["芥川龍之介", "菊池寛", "久米正雄", "山本有三"] },
+            { id: 55, q: "『父帰る』『恩讐の彼方に』の作者は？", a: "菊池寛", options: ["菊池寛", "芥川龍之介", "直木三十五", "横光利一"] },
+
+            // 冒頭文 ID: 1-17
+            { id: 1, q: "「男もすなる日記といふものを…」で始まる作品は？", a: "土佐日記", options: ["土佐日記", "更級日記", "蜻蛉日記", "紫式部日記"] },
+            { id: 2, q: "「春はあけぼの。やうやう白くなりゆく…」で始まる作品は？", a: "枕草子", options: ["枕草子", "源氏物語", "徒然草", "方丈記"] },
+            { id: 3, q: "「いづれの御時にか、女御更衣あまた…」で始まる作品は？", a: "源氏物語", options: ["源氏物語", "枕草子", "伊勢物語", "竹取物語"] },
+            { id: 4, q: "「祇園精舎の鐘の声、諸行無常の響きあり…」で始まる作品は？", a: "平家物語", options: ["平家物語", "保元物語", "平治物語", "太平記"] },
+            { id: 5, q: "「ゆく河の流れは絶えずして…」で始まる作品は？", a: "方丈記", options: ["方丈記", "徒然草", "奥の細道", "更級日記"] },
+            { id: 6, q: "「東路の道のはてよりも、なほ奥つ方に…」で始まる作品は？", a: "更級日記", options: ["更級日記", "土佐日記", "十六夜日記", "蜻蛉日記"] },
+            { id: 7, q: "「月日は百代の過客にして…」で始まる作品は？", a: "奥の細道", options: ["奥の細道", "野ざらし紀行", "笈の小文", "更級日記"] },
+            { id: 8, q: "「山路を登りながら、こう考えた。智に働けば…」で始まる作品は？", a: "草枕", options: ["草枕", "吾輩は猫である", "坊っちゃん", "三四郎"] },
+            { id: 9, q: "「木曽路はすべて山の中である…」で始まる作品は？", a: "夜明け前", options: ["夜明け前", "破戒", "家", "春"] },
+            { id: 10, q: "「私が自分に祖父のある事を知ったのは…」で始まる作品は？", a: "暗夜行路", options: ["暗夜行路", "和解", "城の崎にて", "小僧の神様"] },
+            { id: 11, q: "「ある日の暮れ方の事である。一人の下人が…」で始まる作品は？", a: "羅生門", options: ["羅生門", "鼻", "地獄変", "蜘蛛の糸"] },
+            { id: 12, q: "「禅智内供の鼻と云えば、池の尾で知らない者はない…」で始まる作品は？", a: "鼻", options: ["鼻", "羅生門", "芋粥", "戯作三昧"] },
+            { id: 13, q: "「或日の事でございます。御釈迦様は極楽の…」で始まる作品は？", a: "蜘蛛の糸", options: ["蜘蛛の糸", "杜子春", "トロッコ", "奉教人の死"] },
+            { id: 14, q: "「朝、食堂でスウプを一さじすっと吸って…」で始まる作品は？", a: "斜陽", options: ["斜陽", "人間失格", "走れメロス", "富嶽百景"] },
+            { id: 15, q: "「恥の多い生涯を送って来ました…」で始まる作品は？", a: "人間失格", options: ["人間失格", "斜陽", "晩年", "ヴィヨンの妻"] },
+            { id: 16, q: "「廻れば大門の見返り柳いと長けれど…」で始まる作品は？", a: "たけくらべ", options: ["たけくらべ", "にごりえ", "十三夜", "金色夜叉"] },
+            { id: 17, q: "「道がつづら折りになって、いよいよ天城峠に…」で始まる作品は？", a: "伊豆の踊子", options: ["伊豆の踊子", "雪国", "千羽鶴", "古都"] },
+
+            // 過去問クイズ（抜粋）
+            { id: 101, q: "【並べ替え】古い順に並べよ：ア.方丈記 イ.更級日記 ウ.万葉集 エ.土佐日記 オ.古今和歌集", a: "ウ→オ→エ→イ→ア", options: ["ウ→オ→エ→イ→ア", "ウ→エ→オ→イ→ア", "ウ→オ→イ→エ→ア", "オ→ウ→エ→イ→ア"] },
+            { id: 103, q: "『雪国』の作者で、日本人初のノーベル文学賞受賞者は？", a: "川端康成", options: ["川端康成", "大江健三郎", "三島由紀夫", "谷崎潤一郎"] }
+        ];
+
+        // --- 1. マーカー制御機能 ---
+        const markers = document.querySelectorAll('.marker');
+        const toggleBtn = document.getElementById('toggleModeBtn');
+        let isMemorizeMode = true;
+
+        markers.forEach(m => {
+            const key = m.dataset.ans;
+            const dataMatch = qaData.find(d => d.id == key);
+
+            m.addEventListener('click', () => {
+                if (isMemorizeMode) {
+                    m.classList.toggle('hidden');
+                    m.classList.toggle('visible');
+                }
+            });
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            isMemorizeMode = !isMemorizeMode;
+            updateMode();
+        });
+
+        function updateMode() {
+            if (isMemorizeMode) {
+                markers.forEach(m => {
+                    m.classList.remove('visible');
+                    m.classList.add('hidden');
+                });
+                toggleBtn.textContent = '暗記モード: ON';
+                toggleBtn.style.backgroundColor = '#d97706';
+            } else {
+                markers.forEach(m => {
+                    m.classList.remove('hidden');
+                    m.classList.add('visible');
+                });
+                toggleBtn.textContent = '暗記モード: OFF';
+                toggleBtn.style.backgroundColor = '#57534e';
+            }
+        }
+
+        // --- 2. クイズ生成機能 ---
+        
+        function generateQuizzes() {
+            generateMCQuiz();
+            generateFlashcards();
+        }
+
+        // 選択式クイズ生成
+        function generateMCQuiz() {
+            const mcContainer = document.getElementById('quiz-multiple-choice');
+            mcContainer.innerHTML = "";
+
+            const shuffledData = [...qaData].sort(() => 0.5 - Math.random());
+            const selectedQuestions = shuffledData.slice(0, 5);
+
+            selectedQuestions.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-item';
+                
+                const shuffledOptions = [...item.options].sort(() => 0.5 - Math.random());
+                let optionsHtml = '';
+                shuffledOptions.forEach(opt => {
+                    const safeOpt = opt.replace(/'/g, "\\'");
+                    const safeAns = item.a.replace(/'/g, "\\'");
+                    optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, '${safeOpt}', '${safeAns}')">${opt}</button>`;
+                });
+
+                div.innerHTML = `
+                    <div class="question-text">Q${index + 1}. ${item.q}</div>
+                    <div class="options">${optionsHtml}</div>
+                    <div class="result-msg"></div>
+                `;
+                mcContainer.appendChild(div);
+            });
+        }
+
+        // 選択式の正誤判定
+        window.checkAnswer = function(btn, selected, correct) {
+            const parent = btn.parentElement;
+            const msgDiv = parent.nextElementSibling;
+            const allBtns = parent.querySelectorAll('.option-btn');
+            
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selected === correct) {
+                btn.classList.add('correct');
+                msgDiv.innerHTML = '⭕ 正解！';
+                msgDiv.style.color = '#065f46';
+                msgDiv.style.background = '#d1fae5';
+            } else {
+                btn.classList.add('incorrect');
+                msgDiv.innerHTML = `❌ 不正解... 正解は「${correct}」`;
+                msgDiv.style.color = '#991b1b';
+                msgDiv.style.background = '#fee2e2';
+                
+                allBtns.forEach(b => {
+                    if (b.innerText === correct) b.classList.add('correct');
+                });
+            }
+        };
+
+        // 一問一答クイズ生成
+        function generateFlashcards() {
+            const fcContainer = document.getElementById('quiz-flashcard');
+            fcContainer.innerHTML = "";
+
+            qaData.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-item';
+                div.innerHTML = `
+                    <div class="question-text">Q${item.id}. ${item.q}</div>
+                    <button class="flashcard-btn" onclick="toggleAnswer(this)">答えを見る</button>
+                    <div class="answer-text">${item.a}</div>
+                `;
+                fcContainer.appendChild(div);
+            });
+        }
+
+        // 一問一答の表示切替
+        window.toggleAnswer = function(btn) {
+            const ans = btn.nextElementSibling;
+            if (ans.style.display === 'block') {
+                ans.style.display = 'none';
+                btn.textContent = '答えを見る';
+                btn.style.backgroundColor = '#57534e';
+            } else {
+                ans.style.display = 'block';
+                btn.textContent = '隠す';
+                btn.style.backgroundColor = '#d97706';
+            }
+        };
+
+        // 初回実行
+        generateQuizzes();
+
+    </script>
+</body>
+</html>
