@@ -1,4 +1,3 @@
-<!-- Canvas: ON, Preview: ON -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,9 +12,8 @@
             --accent-color: #3498db;
             --bg-color: #f8fafc;
             --text-color: #334155;
-            --sidebar-width: 200px; /* 220pxからさらにスリム化 */
+            --sidebar-width: 200px;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --header-height: 50px;
         }
 
         * {
@@ -33,7 +31,7 @@
             min-height: 100vh;
         }
 
-        /* --- サイドバー --- */
+        /* --- サイドバー（コンパクト版） --- */
         .sidebar {
             width: var(--sidebar-width);
             background-color: white;
@@ -48,8 +46,8 @@
         }
 
         .sidebar-header {
-            padding: 14px 16px; /* 余白を少し削る */
-            font-size: 1rem; /* 1.1remから縮小 */
+            padding: 14px 16px;
+            font-size: 0.9rem;
             font-weight: bold;
             color: var(--primary-color);
             border-bottom: 1px solid #e2e8f0;
@@ -58,70 +56,44 @@
             gap: 8px;
         }
 
-        @media (max-width: 768px) {
-            .sidebar-header {
-                padding-left: 60px; 
-            }
-        }
-
-        .nav-menu {
-            padding: 6px 0;
-        }
-
+        .nav-menu { padding: 6px 0; }
         .nav-category {
             padding: 8px 16px 2px;
-            font-size: 0.65rem; /* 0.7remから縮小 */
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #94a3b8;
             font-weight: 600;
         }
-
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 6px 16px; /* 7pxから6pxへ圧縮 */
+            padding: 6px 16px;
             color: #64748b;
             text-decoration: none;
-            transition: all 0.2s;
-            font-size: 0.8rem; /* 0.85remから縮小 */
+            transition: 0.2s;
+            font-size: 0.8rem;
         }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
 
-        .nav-item:hover {
-            background-color: #f1f5f9;
-            color: var(--accent-color);
-        }
-
-        .nav-item i {
-            margin-right: 8px;
-            width: 14px; /* アイコンを少し小さく */
-            height: 14px;
-        }
-
-        /* --- モバイル用ヘッダー（ボタンのみ） --- */
-        .mobile-header {
+        /* --- モバイル用メニューボタン（バナー上に配置） --- */
+        .mobile-toggle-btn {
             display: none;
             position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 1100;
-            pointer-events: none;
-        }
-
-        .menu-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px; /* 40pxから少し小さく */
-            height: 36px;
+            top: 15px;
+            left: 15px;
+            z-index: 2000;
+            width: 40px;
+            height: 40px;
             background-color: rgba(255, 255, 255, 0.9);
             border: none;
             border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             cursor: pointer;
             color: var(--primary-color);
-            pointer-events: auto;
-            transition: 0.3s;
+            align-items: center;
+            justify-content: center;
         }
 
         /* --- オーバーレイ --- */
@@ -135,14 +107,8 @@
             background-color: rgba(0, 0, 0, 0.4);
             z-index: 950;
             backdrop-filter: blur(2px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
-
-        .overlay.active {
-            display: block;
-            opacity: 1;
-        }
+        .overlay.active { display: block; }
 
         /* --- メインコンテンツ --- */
         .main-content {
@@ -151,25 +117,20 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: margin-left 0.3s ease;
         }
 
-        /* バナーセクション */
         .banner-container {
             width: 100%;
             height: 180px;
             overflow: hidden;
             position: relative;
-            background-color: #e2e8f0;
         }
-
         .banner-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center 15%;
         }
-
         .banner-overlay {
             position: absolute;
             bottom: 0;
@@ -179,11 +140,7 @@
             padding: 15px 40px;
             color: white;
         }
-
-        .banner-overlay h2 {
-            font-size: 1.2rem;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-        }
+        .banner-overlay h2 { font-size: 1.2rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.5); }
 
         .container {
             max-width: 900px;
@@ -203,11 +160,10 @@
         /* カテゴリーボタン */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
             margin-bottom: 24px;
         }
-
         .cat-btn {
             display: block;
             padding: 10px;
@@ -218,17 +174,11 @@
             text-decoration: none;
             color: var(--primary-color);
             font-weight: bold;
-            transition: all 0.3s;
+            font-size: 0.85rem;
             box-shadow: var(--shadow);
-            font-size: 0.85rem; /* 少し小さく */
+            transition: 0.3s;
         }
-
-        .cat-btn:hover {
-            border-color: var(--accent-color);
-            background-color: var(--accent-color);
-            color: white;
-            transform: translateY(-2px);
-        }
+        .cat-btn:hover { border-color: var(--accent-color); background: var(--accent-color); color: white; transform: translateY(-2px); }
 
         /* セクション枠 */
         .section-box {
@@ -239,9 +189,8 @@
             box-shadow: var(--shadow);
             border: 1px solid #e2e8f0;
         }
-
         .section-title {
-            font-size: 0.95rem; /* 少し小さく */
+            font-size: 0.9rem;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -251,150 +200,72 @@
             padding-bottom: 6px;
         }
 
-        .info-list {
-            list-style: none;
-        }
-
+        .info-list { list-style: none; }
         .info-item {
             padding: 6px 0;
             border-bottom: 1px dashed #e2e8f0;
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem; /* 少し小さく */
+            font-size: 0.8rem;
         }
+        .info-date { color: #94a3b8; font-size: 0.75rem; min-width: 85px; text-align: right; }
+        .info-tag { background: var(--accent-color); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
 
-        .info-date {
-            color: #94a3b8;
-            font-size: 0.75rem;
-            min-width: 85px;
-            text-align: right;
-        }
+        .loader { color: #94a3b8; font-size: 0.75rem; text-align: center; padding: 10px; font-style: italic; }
 
-        .info-tag {
-            background: var(--accent-color);
-            color: white;
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-right: 8px;
-        }
-
-        /* フッター */
         footer {
             background-color: white;
             border-top: 1px solid #e2e8f0;
             padding: 15px;
             text-align: center;
             color: #94a3b8;
-            font-size: 0.7rem; /* 少し小さく */
+            font-size: 0.7rem;
             margin-top: auto;
-        }
-
-        /* スクロールボタン */
-        .scroll-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 36px;
-            height: 36px;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: none;
-            opacity: 0.8;
-            transition: 0.3s;
-            z-index: 800;
         }
 
         /* --- モバイル対応 --- */
         @media (max-width: 768px) {
-            .mobile-header {
-                display: block;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .banner-container {
-                height: 140px;
-            }
-
-            .container {
-                padding: 16px;
-            }
-
-            .site-title {
-                font-size: 1.2rem;
-            }
-
-            .category-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .banner-container { height: 140px; }
+            .banner-overlay { padding: 10px 20px; }
+            .category-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- モバイル用メニューボタン -->
-    <div class="mobile-header">
-        <button class="menu-toggle" id="menuToggle" title="メニュー">
-            <i data-lucide="menu"></i>
-        </button>
-    </div>
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
 
-    <!-- 背景オーバーレイ -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <i data-lucide="book-open"></i>
-            メニュー
-        </div>
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
         <nav class="nav-menu">
             <div class="nav-category">Main</div>
             <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
-            
             <div class="nav-category">教養・指導要領</div>
             <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
             <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
-
             <div class="nav-category">専門科目</div>
             <a href="/n-kyozai/world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
             <a href="/n-kyozai/japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
-            <a href="/n-kyozai/geography/index.html" class="nav-item"><i data-lucide="navigation"></i>地理</a>
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
-            <a href="/n-kyozai/economics/index.html" class="nav-item"><i data-lucide="trending-up"></i>経済</a>
             <a href="/n-kyozai/ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
-
             <div class="nav-category">演習</div>
             <a href="/n-kyozai/comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
         </nav>
     </aside>
 
-    <!-- メインコンテンツ -->
     <main class="main-content">
         <div class="banner-container">
-            <img src="n-kyozai_ホームページ_トップバナー.png" alt="学習バナー" class="banner-img" onerror="this.src='https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80'">
-            <div class="banner-overlay">
-                <h2>教員採用試験対策</h2>
-            </div>
+            <img src="n-kyozai_ホームページ_トップバナー.png" alt="バナー" class="banner-img" onerror="this.src='https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80'">
+            <div class="banner-overlay"><h2>教員採用試験対策</h2></div>
         </div>
 
         <div class="container">
@@ -409,88 +280,78 @@
 
             <section class="section-box">
                 <h2 class="section-title"><i data-lucide="bell"></i>新着情報</h2>
-                <ul class="info-list" id="news-list">
-                    <li class="info-item">
-                        <span><span class="info-tag">お知らせ</span>サイトを開設しました。</span>
-                        <span class="info-date">2024.05.20</span>
-                    </li>
-                    <li class="info-item">
-                        <span><span class="info-tag">追加</span>「現代国家と法」まとめクイズを追加。</span>
-                        <span class="info-date">2024.05.21</span>
-                    </li>
-                </ul>
+                <ul class="info-list" id="news-list"><div class="loader">読み込み中...</div></ul>
             </section>
 
             <section class="section-box">
                 <h2 class="section-title"><i data-lucide="calendar"></i>教採カレンダー</h2>
-                <ul class="info-list" id="calendar-list">
-                    <li class="info-item">
-                        <span>令和7年度 教員採用試験 公告</span>
-                        <span class="info-date">2024.06.01</span>
-                    </li>
-                    <li class="info-item" style="color: #e67e22; font-weight: bold;">
-                        <span>第1次選考試験（筆記）</span>
-                        <span class="info-date">2024.07.07</span>
-                    </li>
-                </ul>
+                <ul class="info-list" id="calendar-list"><div class="loader">読み込み中...</div></ul>
             </section>
 
             <section class="section-box">
                 <h2 class="section-title"><i data-lucide="link"></i>お役立ちリンク</h2>
-                <div class="link-grid" id="useful-links" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px;">
-                    <a href="https://www.mext.go.jp/" target="_blank" class="useful-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.8rem;"><i data-lucide="external-link" style="width:12px; margin-right:4px;"></i>文部科学省</a>
-                    <a href="#" class="useful-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.8rem;"><i data-lucide="external-link" style="width:12px; margin-right:4px;"></i>教職ポータル</a>
-                    <a href="#" class="useful-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.8rem;"><i data-lucide="external-link" style="width:12px; margin-right:4px;"></i>試験情報</a>
+                <div class="category-grid" id="link-list" style="box-shadow: none;">
+                    <div class="loader">読み込み中...</div>
                 </div>
             </section>
         </div>
 
-        <footer>
-            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
-        </footer>
+        <footer><p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p></footer>
     </main>
-
-    <button class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <i data-lucide="chevron-up"></i>
-    </button>
 
     <script>
         lucide.createIcons();
 
+        // 【ここにGASのURLを貼る】
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzBWUKCHI7dNvRebUyV2wWIFttHO6qXvHEQS_2EsPlmp4wOGjYYdMdF2NHkX6wktTUV/exec"; 
+
+        async function updateSheetContent() {
+            if (!GAS_WEB_APP_URL) return;
+            try {
+                const response = await fetch(GAS_WEB_APP_URL);
+                const data = await response.json();
+
+                const newsEl = document.getElementById('news-list');
+                const calEl = document.getElementById('calendar-list');
+                const linkEl = document.getElementById('link-list');
+
+                newsEl.innerHTML = '';
+                calEl.innerHTML = '';
+                linkEl.innerHTML = '';
+
+                data.forEach(item => {
+                    const dateStr = item.date || "";
+                    if (item.section === 'news') {
+                        newsEl.innerHTML += `<li class="info-item"><span><span class="info-tag">${item.tag || '更新'}</span>${item.title}</span><span class="info-date">${dateStr}</span></li>`;
+                    } else if (item.section === 'calendar') {
+                        calEl.innerHTML += `<li class="info-item"><span>${item.title}</span><span class="info-date">${dateStr}</span></li>`;
+                    } else if (item.section === 'link') {
+                        linkEl.innerHTML += `<a href="${item.url}" target="_blank" class="cat-btn" style="font-weight:normal; font-size:0.75rem;">${item.title}</a>`;
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+                document.querySelectorAll('.loader').forEach(el => el.innerText = "データの取得に失敗しました。");
+            }
+        }
+
+        // サイドバー制御
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
         const toggleSidebar = () => {
             const isActive = sidebar.classList.contains('active');
-            if (isActive) {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            } else {
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
         };
 
         menuToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
+        overlay.addEventListener('click', toggleSidebar);
+        updateSheetContent();
     </script>
 </body>
 </html>
