@@ -3,7 +3,8 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 変更点: モバイルでも表全体（約768px幅）を初期表示で収めるための設定 -->
+    <meta name="viewport" content="width=768, user-scalable=yes">
     <title>文学史 演習 - 教員採用試験対策まとめ</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -55,7 +56,7 @@
             padding: 14px 16px;
             font-size: 0.95rem;
             font-weight: bold;
-            color: #2c3e50; /* サイドバーヘッダーは共通色 */
+            color: #2c3e50;
             border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
@@ -88,15 +89,15 @@
         .mobile-toggle-btn {
             display: none;
             position: fixed;
-            top: 10px;
-            left: 10px;
+            top: 20px; /* 拡大縮小操作の邪魔にならないよう位置調整 */
+            left: 20px;
             z-index: 2000;
-            width: 36px;
-            height: 36px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: none;
+            width: 48px; /* 少し大きくして押しやすく */
+            height: 48px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
             border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             cursor: pointer;
             color: #2c3e50;
             align-items: center;
@@ -138,11 +139,11 @@
         .breadcrumb a:hover { text-decoration: underline; }
 
         .container {
-            width: 95%;
-            max-width: 1200px; /* デスクトップで広く使う */
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 24px 0;
-            padding-bottom: 100px; /* フッターボタン用余白 */
+            padding: 24px; /* 横余白を確保 */
+            padding-bottom: 120px; /* ボタン用余白 */
             flex: 1;
         }
 
@@ -156,21 +157,23 @@
             margin-top: auto;
         }
 
+        /* モバイル対応（幅768px以下の場合） */
         @media (max-width: 768px) {
             .sidebar-header { padding-left: 60px; }
             .mobile-toggle-btn { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
             .main-content { margin-left: 0; }
-            .page-header { padding-left: 60px; }
-            .container { padding: 16px; width: 100%; }
+            /* ヘッダーの余白を増やしてボタンと被らないように */
+            .page-header { padding-left: 80px; }
+            .container { padding: 20px; width: 100%; }
         }
 
         /* =========================================
            文学史コンテンツ用スタイル
            ========================================= */
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             color: var(--primary-color);
             margin: 0;
         }
@@ -179,21 +182,22 @@
             color: #431407;
             margin-top: 40px;
             margin-bottom: 15px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             background-color: #fff7ed;
-            padding: 10px 15px;
-            border-left: 5px solid var(--primary-color);
+            padding: 12px 18px;
+            border-left: 6px solid var(--primary-color);
             border-radius: 4px;
         }
 
         p.guide {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #666;
             background: #fff;
-            padding: 12px;
-            border-radius: 4px;
+            padding: 15px;
+            border-radius: 6px;
             border: 1px solid #e5e5e5;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            line-height: 1.8;
         }
 
         /* ルビ */
@@ -202,23 +206,24 @@
 
         /* 暗記シート（テーブル） */
         .table-wrapper {
+            /* 横スクロールは許可するが、初期表示は縮小で全体を見せる */
             overflow-x: auto;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             background: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         table {
             width: 100%;
-            min-width: 700px; /* スクロール発生幅 */
+            /* min-width: 700px;  <-- 初期縮小表示のため、あえて削除または調整 */
             border-collapse: collapse;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         th, td {
-            padding: 14px 10px;
+            padding: 16px 12px;
             border: 1px solid var(--border-color);
             text-align: left;
             vertical-align: middle;
@@ -231,21 +236,22 @@
             white-space: nowrap;
         }
         
+        /* 列幅の調整 */
         .col-author { width: 20%; background-color: #fafaf9; }
         .col-work { width: 25%; font-weight: bold; }
-        .col-desc { width: 55%; font-size: 0.9rem; }
-        .col-id { width: 50px; text-align: center; font-weight: bold; color: #999; }
+        .col-desc { width: auto; font-size: 0.95rem; }
+        .col-id { width: 60px; text-align: center; font-weight: bold; color: #999; }
         .col-intro { font-style: italic; color: #555; }
 
         /* 過去問セクション */
         .exam-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 25px;
         }
         @media (min-width: 960px) {
             .exam-grid {
-                grid-template-columns: 1fr 1fr; /* PCでは2列 */
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -253,35 +259,36 @@
             background: #fff;
             border: 2px solid #e7e5e4;
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
         }
-        .exam-q { font-weight: bold; margin-bottom: 10px; }
+        .exam-q { font-weight: bold; margin-bottom: 12px; font-size: 1.05rem; }
         .exam-content {
             background: #f5f5f4;
-            padding: 10px;
+            padding: 12px;
             border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
         }
         .exam-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
         }
         .exam-ans-area {
-            margin-top: auto; /* 下揃え */
-            padding-top: 10px;
+            margin-top: auto;
+            padding-top: 12px;
             border-top: 1px dashed #ccc;
+            font-size: 1rem;
         }
 
         /* マーカー */
         .marker {
             display: inline-block;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
@@ -304,21 +311,21 @@
             color: var(--marker-visible-text);
         }
 
-        /* モード切替ボタン（文字表示） */
+        /* モード切替ボタン（カプセル型） */
         .mode-switch-btn {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
+            bottom: 30px;
+            right: 30px;
             background-color: var(--primary-color);
             color: #fff;
             border: none;
-            width: auto;  /* 幅自動 */
-            height: auto; /* 高さ自動 */
-            border-radius: 50px; /* カプセル型 */
-            padding: 12px 24px;
-            font-size: 1rem;
+            width: auto;
+            height: auto;
+            border-radius: 50px;
+            padding: 14px 28px;
+            font-size: 1.1rem;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             cursor: pointer;
             z-index: 1000;
             display: flex;
@@ -334,11 +341,11 @@
         .quiz-grid-wrapper {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 30px;
         }
         @media (min-width: 960px) {
             .quiz-grid-wrapper {
-                grid-template-columns: 1fr 1fr; /* PCでは2列 */
+                grid-template-columns: 1fr 1fr;
                 align-items: start;
             }
         }
@@ -347,43 +354,43 @@
             background: #fff;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 20px;
+            padding: 25px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .quiz-item {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
             border-bottom: 1px dashed #e5e5e5;
         }
         .quiz-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
         .question-text {
             font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
+            margin-bottom: 12px;
+            font-size: 1rem;
             color: #1f2937;
         }
 
-        .options { display: flex; flex-direction: column; gap: 8px; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
         .option-btn {
             background: #fff;
             border: 1px solid #d1d5db;
-            padding: 10px 12px;
+            padding: 12px 14px;
             text-align: left;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #374151;
             transition: background 0.2s;
         }
         .option-btn:hover { background: #f9fafb; }
         
         .result-msg {
-            margin-top: 8px;
+            margin-top: 10px;
             font-weight: bold;
-            font-size: 0.9rem;
-            padding: 6px;
+            font-size: 0.95rem;
+            padding: 8px;
             border-radius: 4px;
         }
         .correct { color: #065f46; background-color: #d1fae5 !important; border-color: #34d399 !important; }
@@ -393,22 +400,22 @@
             background-color: #57534e;
             color: #fff;
             border: none;
-            padding: 6px 16px;
+            padding: 8px 18px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.85rem;
-            margin-top: 5px;
+            font-size: 0.9rem;
+            margin-top: 8px;
         }
         .flashcard-btn:hover { background-color: #44403c; }
         
         .answer-text {
-            margin-top: 10px;
+            margin-top: 12px;
             color: var(--primary-color);
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.05rem;
             display: none;
             background: #fff7ed;
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
             border-left: 4px solid var(--primary-color);
         }
@@ -417,15 +424,15 @@
             background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
         .refresh-btn:hover { background-color: #0284c7; }
     </style>
@@ -474,7 +481,7 @@
             <p class="guide">
                 <i data-lucide="lightbulb" style="width:16px; display:inline; vertical-align:middle;"></i>
                 オレンジ色のマーカー部分をタップすると答えが見えます。<br>
-                画面右下のボタンで「全表示／全隠し」を一括切替できます。
+                <b>このページは縮小表示されています。ピンチアウト（指で広げる）で拡大してご覧ください。</b>
             </p>
 
             <h2>1. 文学史 (明治・大正・昭和)</h2>
