@@ -1,0 +1,1166 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>暗記シート＆演習 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50; /* サイドバー用 */
+            --accent-color: #3498db;
+            --bg-color: #fdfbf7;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* コンテナ */
+        .content-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            padding-bottom: 140px; /* 固定ボタン用余白 */
+            flex: 1;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .content-container { padding: 16px; padding-bottom: 140px; }
+        }
+
+        /* =========================================
+           暗記シート＆演習 固有スタイル
+           ========================================= */
+        :root {
+            --app-primary: #d97706; /* アンバー */
+            --app-header-bg: #f5f5f4;
+            --marker-hidden-bg: #f97316;
+            --marker-hidden-text: #f97316;
+            --marker-visible-bg: #ffedd5;
+            --marker-visible-text: #c2410c;
+            --correct-bg: #dcfce7;
+            --correct-border: #86efac;
+            --correct-text: #064e3b;
+            --incorrect-bg: #fee2e2;
+            --incorrect-border: #fca5a5;
+            --incorrect-text: #7f1d1d;
+        }
+
+        /* タイトルエリア */
+        .app-title-area {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .main-title {
+            color: #78350f;
+            margin: 0 0 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: inline-block;
+            padding-bottom: 5px;
+            border-bottom: 3px solid var(--app-primary);
+        }
+
+        /* ページ内ナビ */
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .nav-btn {
+            background: #fff;
+            border: 1px solid var(--app-primary);
+            color: var(--app-primary);
+            padding: 10px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #fffbeb; }
+        .nav-btn:active { background: var(--app-primary); color: #fff; transform: scale(0.98); }
+
+        @media (max-width: 600px) {
+            .nav-buttons { grid-template-columns: 1fr 1fr; }
+            .nav-btn:last-child { grid-column: span 2; }
+        }
+
+        /* 見出し */
+        h2 {
+            color: #fff;
+            background-color: #78350f;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            padding: 12px 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            scroll-margin-top: 20px;
+        }
+
+        /* テーブル */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border: 1px solid #d6d3d1;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch;
+        }
+        table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 0.95rem; }
+        th, td {
+            padding: 12px 10px;
+            border: 1px solid #d6d3d1;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: var(--app-header-bg);
+            font-weight: bold;
+            color: #57534e;
+            white-space: nowrap;
+            width: 30%;
+        }
+
+        .q-text { font-size: 1rem; margin-bottom: 8px; font-weight: bold; color: #444; }
+        .q-options {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #555;
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+            line-height: 1.6;
+        }
+        .highlight-txt { font-weight: bold; color: var(--app-primary); border-bottom: 2px solid var(--app-primary); }
+
+        /* マーカー */
+        .marker {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.1s;
+            user-select: none;
+            margin: 2px 0;
+            min-width: 2.5em;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        .marker.hidden { background-color: var(--marker-hidden-bg); color: var(--marker-hidden-text); }
+        .marker.visible { background-color: var(--marker-visible-bg); color: var(--marker-visible-text); border-color: #fdba74; }
+        .exp-marker { font-weight: normal; font-size: 0.85rem; line-height: 1.5; margin-top: 8px; display: inline-block; }
+
+        /* 演習クイズ */
+        .practice-container { display: flex; flex-direction: column; gap: 20px; }
+        .practice-box {
+            background: #fff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            animation: slideIn 0.3s ease-out;
+        }
+        .practice-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; border-bottom: 2px solid #f3f4f6; padding-bottom: 12px;
+        }
+        .practice-badge { font-size: 0.85rem; font-weight: bold; color: #fff; background: #64748b; padding: 4px 10px; border-radius: 12px; }
+        .practice-progress { font-size: 0.9rem; color: #666; font-weight: bold; }
+        .practice-q { font-weight: bold; font-size: 1.1rem; color: #1f2937; margin-bottom: 16px; line-height: 1.6; }
+        .practice-context {
+            background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;
+            font-family: "Yu Mincho", serif; line-height: 1.8; border-left: 4px solid #cbd5e1; white-space: pre-wrap; font-size: 0.95rem;
+        }
+        
+        .hint-area { margin-bottom: 16px; }
+        .hint-btn {
+            background: #fffbeb; border: 1px solid #fcd34d; color: #d97706;
+            padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 6px; font-weight: bold;
+            width: 100%; justify-content: center;
+        }
+        .hint-btn:active { background: #fde68a; }
+        .hint-content {
+            display: none; margin-top: 10px; padding: 12px;
+            background: #fffbeb; border: 1px dashed #fcd34d; border-radius: 6px;
+            font-size: 0.9rem; color: #92400e;
+        }
+
+        .practice-options { display: flex; flex-direction: column; gap: 12px; }
+        .p-option-btn {
+            text-align: left; background: #fff; border: 2px solid #e2e8f0;
+            padding: 16px; border-radius: 10px; cursor: pointer;
+            font-size: 1rem; color: #334155; position: relative;
+            transition: background 0.1s;
+        }
+        .p-option-btn:hover { background-color: #f8fafc; border-color: #cbd5e1; }
+        .p-option-btn:active { background: #f1f5f9; border-color: #94a3b8; transform: scale(0.98); }
+        .p-option-btn.correct { background-color: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); font-weight: bold; }
+        .p-option-btn.incorrect { background-color: var(--incorrect-bg); border-color: var(--incorrect-border); color: var(--incorrect-text); opacity: 0.8; }
+        .p-option-btn.correct::after { content: "⭕"; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); }
+        .p-option-btn.incorrect::after { content: "❌"; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); }
+
+        .practice-feedback {
+            margin-top: 24px; padding: 16px; border-radius: 10px;
+            font-weight: bold; display: none; animation: fadeIn 0.3s;
+            background-color: #f0fdf4; border: 1px solid #bbf7d0; color: #166534;
+        }
+        .exp-content {
+            margin-top: 10px; font-weight: normal; font-size: 0.95rem;
+            border-top: 1px dashed rgba(0,0,0,0.2); padding-top: 10px; line-height: 1.6; color: #333;
+        }
+
+        .next-btn {
+            display: block; width: 100%; margin-top: 30px;
+            background-color: #0ea5e9; color: white; border: none;
+            padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; text-align: center; box-shadow: 0 4px 6px rgba(14, 165, 233, 0.25);
+        }
+        .next-btn:active { background-color: #0284c7; transform: translateY(2px); }
+
+        .start-btn, .retry-btn {
+            width: 100%; max-width: 300px; margin: 20px auto; padding: 16px;
+            border-radius: 50px; font-size: 1.1rem; font-weight: bold;
+            border: none; color: white; cursor: pointer; display: block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .start-btn { background-color: #0ea5e9; }
+        .start-btn:active { transform: scale(0.98); background-color: #0284c7; }
+        .retry-btn { background-color: #dc2626; }
+        .retry-btn:active { transform: scale(0.98); background-color: #b91c1c; }
+
+        /* 結果画面 */
+        .result-screen { text-align: center; padding: 40px 20px; }
+        .result-score { font-size: 3rem; color: var(--app-primary); font-weight: bold; margin: 15px 0; }
+        .result-msg { font-size: 1.1rem; color: #444; margin-bottom: 25px; }
+
+        /* --- 固定ボタン群 --- */
+        .fixed-btn-container {
+            position: fixed; bottom: 25px; right: 20px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 1000;
+        }
+        .circle-btn {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: none; color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            flex-direction: column; text-align: center; transition: transform 0.2s;
+        }
+        .circle-btn:active { transform: scale(0.9); }
+
+        /* スクロールトップボタン（添付画像風） */
+        .scroll-top-btn {
+            background-color: #4b5563; /* ダークグレー */
+            opacity: 0.95;
+        }
+
+        /* 暗記モード切替ボタン */
+        .mode-switch-btn {
+            background-color: var(--app-primary);
+            font-weight: bold; font-size: 0.8rem; line-height: 1.2;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <!-- 階層を3つ戻る -->
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">国語</a> ＞ 暗記シート＆演習
+            </div>
+            <h1>暗記シート＆演習</h1>
+        </div>
+
+        <div class="content-container">
+            
+            <div class="app-title-area">
+                <div class="main-title">平成2年〜6年 過去問 & 文学史演習</div>
+                <div class="nav-buttons">
+                    <button onclick="scrollToSection('sec1')" class="nav-btn">1. 平成2〜6年 暗記</button>
+                    <button onclick="scrollToSection('sec2')" class="nav-btn">2. 文学史 暗記</button>
+                    <button onclick="scrollToSection('sec3')" class="nav-btn">3. 実戦演習クイズ</button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- セクション1: 平成2年〜6年 -->
+            <!-- ========================================== -->
+            <h2 id="sec1"><i data-lucide="book" style="width:18px; margin-right:5px; vertical-align:middle;"></i>1. 漢字・語句・ことわざ<br><span style="font-size:0.7em; opacity:0.9;">(平成2年〜6年 長崎県教員採用試験)</span></h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:30%;">問題</th>
+                            <th>正解・解説</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 平成6年 -->
+                        <tr>
+                            <td>
+                                <strong>【熟語構成】</strong><br>「既存」と同じ構成は？
+                                <div class="q-options">①増減 ②予想<br>③平然 ④臨海</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">② 予想</span><br>
+                                <span class="marker hidden exp-marker">「既存(すでに-存在する)」は[修飾-被修飾]。<br>「予想(あらかじめ-想う)」も同じ。</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【ことわざ】</strong><br>「中途半端で役に立たない」
+                                <div class="q-options">①濡れ手で粟<br>②仏つくって魂入れず<br>③帯に短したすきに長し<br>④のれんに腕押し</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">③ 帯に短したすきに長し</span>
+                            </td>
+                        </tr>
+                        <!-- 平成5年 -->
+                        <tr>
+                            <td>
+                                <strong>【漢字表記】</strong><br><span class="highlight-txt">強調箇所</span>が正しいのは？
+                                <div class="q-options">
+                                    ①<span class="highlight-txt">脈落</span>のない話<br>②運賃を<span class="highlight-txt">成算</span>する<br>
+                                    ③世間に広く<span class="highlight-txt">周知</span>する<br>④怪我の<span class="highlight-txt">巧妙</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">③ 世間に広く周知する</span><br>
+                                <span class="marker hidden exp-marker">×脈落→脈絡<br>×成算→精算<br>×巧妙→功名</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【ことわざ】</strong><br>意味が異なるものは？
+                                <div class="q-options">①弘法にも筆の誤り<br>②紺屋の白袴<br>③猿も木から落ちる<br>④河童の川流れ</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">② 紺屋の白袴</span><br>
+                                <span class="marker hidden exp-marker">「紺屋…」は「他人のために忙しく自分に手が回らない」。他は「名人でも失敗する」。</span>
+                            </td>
+                        </tr>
+                        <!-- 平成4年 -->
+                        <tr>
+                            <td>
+                                <strong>【漢字表記】</strong><br><span class="highlight-txt">強調箇所</span>が正しいのは？
+                                <div class="q-options">
+                                    ①<span class="highlight-txt">由緒</span>ある社寺<br>②<span class="highlight-txt">荒灰</span>する<br>
+                                    ③意気<span class="highlight-txt">答合</span> ④<span class="highlight-txt">抵向</span>する
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">① 由緒ある社寺</span><br>
+                                <span class="marker hidden exp-marker">×荒灰→荒廃<br>×答合→投合<br>×抵向→抵抗</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【故事成語】</strong><br>「慣習にとらわれて進歩がない」
+                                <div class="q-options">①杞憂 ②杜撰<br>③白眉 ④守株</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">④ 守株（しゅしゅ）</span>
+                            </td>
+                        </tr>
+                        <!-- 平成3年 -->
+                        <tr>
+                            <td>
+                                <strong>【漢字表記】</strong><br><span class="highlight-txt">強調箇所</span>が正しいのは？
+                                <div class="q-options">
+                                    ①<span class="highlight-txt">棒大</span>な借金<br>②<span class="highlight-txt">台登</span>する<br>
+                                    ③<span class="highlight-txt">押収</span>する<br>④左右<span class="highlight-txt">対照</span>の図形
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">③ 押収する</span><br>
+                                <span class="marker hidden exp-marker">×棒大→膨大<br>×台登→台頭<br>×対照→対称</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【四字熟語】</strong><br>「根拠のないうわさ」
+                                <div class="q-options">①有為転変 ②言語道断<br>③流言飛語 ④曲学阿世</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">③ 流言飛語</span>
+                            </td>
+                        </tr>
+                        <!-- 平成2年 -->
+                        <tr>
+                            <td>
+                                <strong>【漢字表記】</strong><br><span class="highlight-txt">強調箇所</span>が正しいのは？
+                                <div class="q-options">
+                                    ①<span class="highlight-txt">回複</span>する<br>②<span class="highlight-txt">批決</span>される<br>
+                                    ③<span class="highlight-txt">収束</span>に向かう<br>④<span class="highlight-txt">脅威</span>的な発展
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">③ 事態が収束に向かう</span><br>
+                                <span class="marker hidden exp-marker">×回複→回復<br>×批決→否決<br>×脅威→驚異</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【三字熟語】</strong><br>「力量や価値を判定する基準」
+                                <div class="q-options">①真骨頂 ②試金石<br>③鉄面皮 ④有頂天</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">② 試金石</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- セクション2: 文学史 -->
+            <!-- ========================================== -->
+            <h2 id="sec2"><i data-lucide="feather" style="width:18px; margin-right:5px; vertical-align:middle;"></i>2. 文学史 (問題1〜6・2015/2019)</h2>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:30%;">テーマ</th>
+                            <th>正解・重要事項</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>【奥の細道】</strong><br>作者とジャンル
+                                <div class="q-options">
+                                    ア. 松尾芭蕉-作り物語<br>
+                                    イ. 松尾芭蕉-俳諧紀行文<br>
+                                    ウ. 紀貫之-日記文学
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">イ. 松尾芭蕉 - 俳諧紀行文</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【奥の細道】</strong><br>語句の意味
+                                <div class="q-options">
+                                    1.「百代の過客」<br>
+                                    2.「漂泊の思ひやまず」
+                                </div>
+                            </td>
+                            <td>
+                                1. <span class="marker hidden">永遠の旅人</span><br>
+                                2. <span class="marker hidden">あてのない旅に出たい思い</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【和歌集】</strong><br>日本最初の勅撰和歌集
+                                <div class="q-options">1.万葉集 2.古今和歌集<br>3.山家集</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">2. 古今和歌集</span><br>
+                                <span class="marker hidden exp-marker">撰者：紀貫之ら</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【冒頭文】</strong><br>作品あて
+                                <div class="q-options">
+                                    a.いづれの御時にか…<br>
+                                    b.ゆく川の流れは…<br>
+                                    c.男もすなる日記…
+                                </div>
+                            </td>
+                            <td>
+                                a. <span class="marker hidden">源氏物語</span> (紫式部)<br>
+                                b. <span class="marker hidden">方丈記</span> (鴨長明)<br>
+                                c. <span class="marker hidden">土佐日記</span> (紀貫之)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【作家】</strong><br>井上靖の作品
+                                <div class="q-options">①斜陽 ②しろばんば<br>③城の崎にて</div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">② しろばんば</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【作家】</strong><br>正しい組み合わせ
+                                <div class="q-options">
+                                    1. 鴨長明 - 山家集<br>
+                                    2. 吉田兼好 - 方丈記<br>
+                                    3. 紀貫之 - 土佐日記
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">3. 紀貫之 - 土佐日記</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【短歌】</strong><br>『一握の砂』の作者
+                                <div class="q-options">
+                                    「はたらけど…」<br>
+                                    ①石川啄木 ②正岡子規
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">① 石川啄木</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【年代整序】</strong><br>2019年 福岡など<br>
+                                <div class="q-text">日本文学における作品を、左から古い年代順に並べたものとして正しいものを選びなさい。</div>
+                                <div class="q-options">
+                                    ①拾遺→詞花→新古今→千載<br>
+                                    ②大和→今昔→宇治→源氏<br>
+                                    ③大鏡→徒然草→風姿花伝→方丈記<br>
+                                    ④歌よみ→赤光→みだれ髪→一握の砂<br>
+                                    ⑤舞姫→吾輩は猫である→羅生門→伊豆の踊子
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">⑤ 舞姫→猫→羅生門→伊豆</span><br>
+                                <span class="marker hidden exp-marker">明治→大正→昭和の流れ</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>【年代整序】</strong><br>2015年<br>
+                                <div class="q-text">日本文学における作品を、左から古い年代順に並べたものとして正しいものを選びなさい。</div>
+                                <div class="q-options">
+                                    ①竹取→平家→源氏→平中<br>
+                                    ②発心集→徒然草→十訓抄→枕草子<br>
+                                    ③万葉集→古今和歌集→和漢朗詠集→新古今和歌集<br>
+                                    ④小説神髄→たけくらべ→雪国→舞姫<br>
+                                    ⑤吾輩は猫である→伊豆の踊子→金閣寺→羅生門
+                                </div>
+                            </td>
+                            <td>
+                                <span class="marker hidden">③ 万葉→古今→和漢→新古今</span><br>
+                                <span class="marker hidden exp-marker">奈良→平安→鎌倉初期</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- セクション3: 実戦演習クイズ -->
+            <!-- ========================================== -->
+            <h2 id="sec3" style="background-color:#0ea5e9;"><i data-lucide="play-circle" style="width:18px; margin-right:5px; vertical-align:middle;"></i>3. 実戦演習クイズ (一問一答)</h2>
+            
+            <div class="practice-container" id="quiz-area">
+                <button class="start-btn" onclick="initQuiz(true)">演習を開始する ▶</button>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 右下固定ボタン群 -->
+    <div class="fixed-btn-container">
+        <button id="scrollTopBtn" class="circle-btn scroll-top-btn" onclick="scrollToTop()" title="トップへ">
+            <i data-lucide="chevron-up" style="width: 24px; height: 24px;"></i>
+        </button>
+        <button id="toggleModeBtn" class="circle-btn mode-switch-btn" title="暗記モード切替">暗記<br>モード</button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 指定のGAS URL（共通機能用）
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZhvVExnkiseSTiPJDqYK4W6aMGy5kKT8uMW0z3nU2ZdWDeYVMd6FJttE0NSxZMhwr/exec"; 
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        /* =========================================
+           暗記シート＆演習用スクリプト
+           ========================================= */
+        
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 暗記マーカー ---
+        const markers = document.querySelectorAll('.marker');
+        const toggleBtn = document.getElementById('toggleModeBtn');
+        let isMemorizeMode = true;
+
+        markers.forEach(m => {
+            m.addEventListener('click', () => {
+                m.classList.toggle('hidden');
+                m.classList.toggle('visible');
+            });
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            isMemorizeMode = !isMemorizeMode;
+            if (isMemorizeMode) {
+                markers.forEach(m => { m.classList.remove('visible'); m.classList.add('hidden'); });
+                toggleBtn.style.backgroundColor = '#d97706';
+            } else {
+                markers.forEach(m => { m.classList.remove('hidden'); m.classList.add('visible'); });
+                toggleBtn.style.backgroundColor = '#57534e';
+            }
+        });
+
+        // --- クイズデータ ---
+        const rawQuizData = [
+            // 平成6年
+            {
+                id: "h6-1",
+                label: "平成6年・熟語",
+                q: "次の熟語のうち、「既存」と同じ構成の熟語はどれか。",
+                hint: "ヒント：「既存」＝「すでに（修飾）存在する（被修飾）」",
+                context: null,
+                options: ["増減", "予想", "平然", "臨海"],
+                ans: 1,
+                exp: "「既存」は[修飾-被修飾]の関係。②「予想(あらかじめ-想う)」も同じ関係です。<br>①増減は[反対語]、③平然は[〜の様子]、④臨海は[動作-対象]です。"
+            },
+            {
+                id: "h6-2",
+                label: "平成6年・ことわざ",
+                q: "「中途半端で役に立たないこと」という意味のことわざはどれか。",
+                hint: "長すぎても短すぎても使いにくい、ある和服の小物。",
+                context: null,
+                options: ["濡れ手で粟", "仏つくって魂入れず", "帯に短したすきに長し", "のれんに腕押し"],
+                ans: 2,
+                exp: "「帯に短したすきに長し」。帯にするには短すぎ、たすきにするには長すぎることから。"
+            },
+            // 平成5年
+            {
+                id: "h5-1",
+                label: "平成5年・漢字",
+                q: "強調された箇所の漢字表記について正しいものはどれか。",
+                hint: "間違い探しです。「みゃくらく」「せいさん」「こうみょう」の漢字に注意。",
+                context: "①<span class='highlight-txt'>脈落</span>のない話をする\n②運賃を<span class='highlight-txt'>成算</span>する\n③世間に広く<span class='highlight-txt'>周知</span>する\n④怪我の<span class='highlight-txt'>巧妙</span>",
+                options: ["①", "②", "③", "④"],
+                ans: 2,
+                exp: "①脈落→脈絡（みゃくらく）、②成算→精算（せいさん）、④巧妙→功名（こうみょう）。③周知は正しい表記です。"
+            },
+            {
+                id: "h5-2",
+                label: "平成5年・ことわざ",
+                q: "次のことわざのうち、他の3つと意味が異なるものはどれか。",
+                hint: "「名人でも失敗する」という意味のものが3つあります。",
+                context: null,
+                options: ["弘法にも筆の誤り", "紺屋の白袴", "猿も木から落ちる", "河童の川流れ"],
+                ans: 1,
+                exp: "「紺屋の白袴」は「他人のために忙しく、自分のことには手が回らない」こと。他3つは「名人・達人でも失敗することがある」という意味です。"
+            },
+            // 平成4年
+            {
+                id: "h4-1",
+                label: "平成4年・漢字",
+                q: "強調された箇所の漢字表記について正しいものはどれか。",
+                hint: "「こうはい」「とうごう」「ていこう」の漢字に注意。",
+                context: "①<span class='highlight-txt'>由緒</span>ある社寺\n②戦禍によって<span class='highlight-txt'>荒灰</span>する\n③意気<span class='highlight-txt'>答合</span>する\n④激しく<span class='highlight-txt'>抵向</span>する",
+                options: ["①", "②", "③", "④"],
+                ans: 0,
+                exp: "①由緒（正しい）。②荒灰→荒廃（こうはい）、③答合→投合（とうごう）、④抵向→抵抗（ていこう）。"
+            },
+            {
+                id: "h4-2",
+                label: "平成4年・故事成語",
+                q: "「慣習にとらわれて進歩がないこと」という意味の故事成語はどれか。",
+                hint: "ウサギが切り株にぶつかるのを待つお話。",
+                context: null,
+                options: ["杞憂", "杜撰", "白眉", "守株"],
+                ans: 3,
+                exp: "「守株（しゅしゅ）」。古い習慣にこだわって融通がきかないことのたとえです。"
+            },
+            // 平成3年
+            {
+                id: "h3-1",
+                label: "平成3年・漢字",
+                q: "強調された箇所の漢字表記について正しいものはどれか。",
+                hint: "「ぼうだい」「たいとう」「たいしょう」の漢字に注意。",
+                context: "①<span class='highlight-txt'>棒大</span>な借金を背負う\n②新勢力が<span class='highlight-txt'>台登</span>する\n③証拠品を<span class='highlight-txt'>押収</span>する\n④左右<span class='highlight-txt'>対照</span>の図形",
+                options: ["①", "②", "③", "④"],
+                ans: 2,
+                exp: "①棒大→膨大（ぼうだい）、②台登→台頭（たいとう）、④対照→対称（たいしょう）。③押収は正しいです。"
+            },
+            {
+                id: "h3-2",
+                label: "平成3年・四字熟語",
+                q: "「根拠のないうわさ」という意味の四字熟語はどれか。",
+                hint: "流れる言葉、飛ぶ言葉。",
+                context: null,
+                options: ["有為転変", "言語道断", "流言飛語", "曲学阿世"],
+                ans: 2,
+                exp: "流言飛語（りゅうげんひご）。根拠のない無責任なうわさ話のこと。"
+            },
+            // 平成2年
+            {
+                id: "h2-1",
+                label: "平成2年・漢字",
+                q: "強調された箇所の漢字表記について正しいものはどれか。",
+                hint: "「かいふく」「ひけつ」「しゅうそく」「きょうい」の漢字に注意。",
+                context: "①景気が緩やかに<span class='highlight-txt'>回複</span>する\n②議案が<span class='highlight-txt'>批決</span>される\n③事態が<span class='highlight-txt'>収束</span>に向かう\n④<span class='highlight-txt'>脅威</span>的な発展を遂げる",
+                options: ["①", "②", "③", "④"],
+                ans: 2,
+                exp: "①回複→回復、②批決→否決/可決、④脅威→驚異。消去法により、③収束（混乱が収まり落ち着くこと）が正解となります。"
+            },
+            {
+                id: "h2-2",
+                label: "平成2年・三字熟語",
+                q: "「人物の力量やものの価値を判定する基準となるものごと」という意味の三字熟語はどれか。",
+                hint: "金をこすりつけて品質を見る石。",
+                context: null,
+                options: ["真骨頂", "試金石", "鉄面皮", "有頂天"],
+                ans: 1,
+                exp: "試金石（しきんせき）。"
+            },
+            // 文学史
+            {
+                id: "lit-1",
+                label: "文学史・作品",
+                q: "『おくのほそ道』の作者とジャンルの組み合わせとして正しいものは？",
+                hint: "江戸時代の俳人による東北への旅。",
+                context: null,
+                options: ["ア. 松尾芭蕉 - 作り物語", "イ. 松尾芭蕉 - 俳諧紀行文", "ウ. 紀貫之 - 日記文学", "エ. 清少納言 - 随筆"],
+                ans: 1,
+                exp: "『おくのほそ道』は松尾芭蕉の俳諧紀行文です。"
+            },
+            {
+                id: "lit-2",
+                label: "文学史・語句",
+                q: "「百代の過客（はくたいのかかく）」の意味として適当なものは？",
+                hint: "百代＝永遠。過客＝旅人。",
+                context: null,
+                options: ["百人の客", "多くの友人", "永遠の旅人", "長期の滞在者"],
+                ans: 2,
+                exp: "百代＝永遠の時。過客＝旅人。「月日というものは永遠の旅人のようなものだ」という意味です。"
+            },
+            {
+                id: "lit-3",
+                label: "文学史・和歌",
+                q: "日本で最初の勅撰和歌集はどれか。",
+                hint: "紀貫之らが撰者です。",
+                context: null,
+                options: ["万葉集", "古今和歌集", "山家集", "新古今和歌集"],
+                ans: 1,
+                exp: "万葉集は最古ですが勅撰（天皇の命で作られたもの）ではありません。最初の勅撰和歌集は『古今和歌集』です。"
+            },
+            {
+                id: "lit-4",
+                label: "文学史・冒頭",
+                q: "次の冒頭文と作品の組み合わせで正しいものは？",
+                hint: "「いづれの御時にか…」は光源氏の物語。「男もすなる…」は女性のふりをして書いた日記。",
+                context: "a. いづれの御時にか、女御、更衣あまた…\nb. ゆく川の流れは絶えずして…\nc. 男もすなる日記といふものを…",
+                options: ["a:源氏物語, b:方丈記, c:土佐日記", "a:枕草子, b:徒然草, c:土佐日記", "a:竹取物語, b:奥の細道, c:更級日記"],
+                ans: 0,
+                exp: "a=源氏物語(紫式部), b=方丈記(鴨長明), c=土佐日記(紀貫之)の組み合わせが正解です。"
+            },
+            {
+                id: "lit-5",
+                label: "文学史・作家",
+                q: "井上靖の作品はどれか。",
+                hint: "他は太宰治、志賀直哉、森鷗外の作品です。",
+                context: null,
+                options: ["斜陽", "しろばんば", "城の崎にて", "高瀬舟"],
+                ans: 1,
+                exp: "正解は「しろばんば」です。斜陽(太宰治)、城の崎にて(志賀直哉)、高瀬舟(森鷗外)。"
+            },
+            {
+                id: "lit-6",
+                label: "文学史・作者",
+                q: "正しい作者と作品名の組み合わせは？",
+                hint: "紀貫之は土佐から京都へ帰る旅日記を書きました。",
+                context: null,
+                options: ["鴨長明 - 山家集", "吉田兼好 - 方丈記", "紀貫之 - 土佐日記", "西行 - 更級日記"],
+                ans: 2,
+                exp: "3が正解。山家集(西行)、方丈記(鴨長明)、更級日記(菅原孝標女)。"
+            },
+            {
+                id: "lit-7",
+                label: "文学史・短歌",
+                q: "歌集『一握の砂』『悲しき玩具』の作者は？",
+                hint: "生活の苦しさを「じっと手を見る」と詠みました。",
+                context: "「はたらけど はたらけど わが生活楽にならざり…」",
+                options: ["石川啄木", "正岡子規", "与謝野晶子", "北原白秋"],
+                ans: 0,
+                exp: "石川啄木です。"
+            },
+            // 2019, 2015 追加分
+            {
+                id: "lit-sort-2019",
+                label: "2019年・文学史",
+                q: "日本文学における作品を、左から古い年代順に並べたものとして正しいものを選びなさい。",
+                hint: "⑤は明治→明治→大正→大正/昭和の流れです。",
+                context: "① 拾遺和歌集 → 詞花和歌集 → 新古今和歌集 → 千載和歌集\n② 大和物語 → 今昔物語集 → 宇治拾遺物語 → 源氏物語\n③ 大鏡 → 徒然草 → 風姿花伝 → 方丈記\n④ 歌よみに与ふる書 → 赤光 → みだれ髪 → 一握の砂\n⑤ 舞姫 → 吾輩は猫である → 羅生門 → 伊豆の踊子",
+                options: ["①", "②", "③", "④", "⑤"],
+                ans: 4, 
+                exp: "正解は⑤。<br>舞姫(1890)→猫(1905)→羅生門(1915)→伊豆(1926)。<br>①は千載が新古今の前。<br>②は源氏が平安中期で一番古い。<br>③は方丈記が鎌倉初期で徒然草より前。<br>④は『みだれ髪』(1901)が『赤光』(1913)より前。"
+            },
+            {
+                id: "lit-sort-2015",
+                label: "2015年・文学史",
+                q: "日本文学における作品を、左から古い年代順に並べたものとして正しいものを選びなさい。",
+                hint: "③は奈良→平安初期→平安中期→鎌倉初期の順です。",
+                context: "① 竹取物語 → 平家物語 → 源氏物語 → 平中物語\n② 発心集 → 徒然草 → 十訓抄 → 枕草子\n③ 万葉集 → 古今和歌集 → 和漢朗詠集 → 新古今和歌集\n④ 小説神髄 → たけくらべ → 雪国 → 舞姫\n⑤ 吾輩は猫である → 伊豆の踊子 → 金閣寺 → 羅生門",
+                options: ["①", "②", "③", "④", "⑤"],
+                ans: 2, 
+                exp: "正解は③。<br>万葉(奈良)→古今(905)→和漢朗詠(1013)→新古今(1205)。<br>①は源氏が平家より前。<br>②は枕草子が平安で一番古い。<br>④は舞姫(1890)が雪国(1937)より前。<br>⑤は羅生門(1915)が伊豆(1926)より前。"
+            }
+        ];
+
+        // --- クイズロジック ---
+        const quizArea = document.getElementById('quiz-area');
+        let currentQIndex = 0;
+        let activeQuestions = [];
+        let incorrectQuestions = [];
+        let score = 0;
+        let isRetryMode = false;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz(isFullStart) {
+            if (isFullStart) {
+                activeQuestions = shuffleArray([...rawQuizData]);
+                incorrectQuestions = [];
+                isRetryMode = false;
+            } else {
+                activeQuestions = shuffleArray([...incorrectQuestions]);
+                incorrectQuestions = [];
+                isRetryMode = true;
+            }
+            currentQIndex = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            quizArea.innerHTML = "";
+            if (currentQIndex >= activeQuestions.length) {
+                showResult();
+                return;
+            }
+
+            const item = activeQuestions[currentQIndex];
+            const safeExp = encodeURIComponent(item.exp);
+
+            let hintHtml = "";
+            if (item.hint) {
+                hintHtml = `
+                    <div class="hint-area">
+                        <button class="hint-btn" onclick="toggleHint(this)">
+                            <span>💡 ヒントを見る</span>
+                        </button>
+                        <div class="hint-content">${item.hint}</div>
+                    </div>
+                `;
+            }
+
+            let contextHtml = "";
+            if (item.context) {
+                contextHtml = `<div class="practice-context">${item.context}</div>`;
+            }
+
+            let optionsHtml = '';
+            item.options.forEach((opt, optIdx) => {
+                optionsHtml += `<button class="p-option-btn" onclick="handleAnswer(this, ${optIdx}, ${item.ans}, '${safeExp}')">${opt}</button>`;
+            });
+
+            const box = document.createElement('div');
+            box.className = 'practice-box';
+            const modeText = isRetryMode ? `<span style="color:#dc2626; font-weight:bold;">🔥 リトライ中</span> ` : "";
+
+            box.innerHTML = `
+                <div class="practice-header">
+                    <span class="practice-badge">${item.label}</span>
+                    <span class="practice-progress">${modeText}Q. ${currentQIndex + 1} / ${activeQuestions.length}</span>
+                </div>
+                <div class="practice-q">${item.q}</div>
+                ${contextHtml}
+                ${hintHtml}
+                <div class="practice-options">
+                    ${optionsHtml}
+                </div>
+                <div class="practice-feedback"></div>
+                <button class="next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ ▶</button>
+            `;
+            quizArea.appendChild(box);
+        }
+
+        function toggleHint(btn) {
+            const content = btn.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                btn.innerHTML = "<span>💡 ヒントを見る</span>";
+            } else {
+                content.style.display = "block";
+                btn.innerHTML = "<span>💡 ヒントを隠す</span>";
+            }
+        }
+
+        window.handleAnswer = function(btn, selectedIdx, correctIdx, encodedExp) {
+            const parent = btn.parentElement;
+            const box = parent.parentElement;
+            const feedback = box.querySelector('.practice-feedback');
+            const nextBtn = box.querySelector('.next-btn');
+            const buttons = parent.querySelectorAll('.p-option-btn');
+            const exp = decodeURIComponent(encodedExp);
+            const currentItem = activeQuestions[currentQIndex];
+
+            if (btn.disabled) return;
+            buttons.forEach(b => b.disabled = true);
+
+            let resultHtml = '';
+            if (selectedIdx === correctIdx) {
+                btn.classList.add('correct');
+                feedback.style.backgroundColor = '#dcfce7';
+                feedback.style.color = '#064e3b';
+                feedback.style.borderColor = '#86efac';
+                resultHtml = '⭕ 正解！';
+                score++;
+            } else {
+                btn.classList.add('incorrect');
+                buttons[correctIdx].classList.add('correct');
+                feedback.style.backgroundColor = '#fee2e2';
+                feedback.style.color = '#7f1d1d';
+                feedback.style.borderColor = '#fca5a5';
+                resultHtml = '❌ 不正解...';
+                incorrectQuestions.push(currentItem);
+            }
+
+            feedback.innerHTML = `
+                <div style="font-size:1.1rem; margin-bottom:10px;">${resultHtml}</div>
+                <div class="exp-content">${exp}</div>
+            `;
+            feedback.style.display = 'block';
+            nextBtn.style.display = 'block';
+        };
+
+        window.nextQuestion = function() {
+            currentQIndex++;
+            renderQuestion();
+        };
+
+        function showResult() {
+            let resultHTML = `
+                <div class="practice-box result-screen">
+                    <h2>おつかれさまでした！</h2>
+                    <div class="result-msg">今回のスコア</div>
+                    <div class="result-score">${score} / ${activeQuestions.length}</div>
+            `;
+
+            if (incorrectQuestions.length > 0) {
+                resultHTML += `
+                    <div class="result-msg" style="color:#dc2626;">
+                        ${incorrectQuestions.length}問の間違いがあります。<br>苦手を克服しましょう！
+                    </div>
+                    <button class="retry-btn" onclick="initQuiz(false)">🔥 間違えた問題だけ再挑戦</button>
+                    <button class="start-btn" style="background-color:#64748b; font-size:1rem; padding:12px;" onclick="initQuiz(true)">最初から全問やり直す</button>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="result-msg" style="color:#059669; font-weight:bold; font-size:1.3rem;">
+                        🎉 全問正解！おめでとうございます！ 🎉
+                    </div>
+                    <button class="start-btn" onclick="initQuiz(true)">もう一度全問に挑戦する 🔄</button>
+                `;
+            }
+            resultHTML += `</div>`;
+            quizArea.innerHTML = resultHTML;
+        }
+    </script>
+</body>
+</html>
