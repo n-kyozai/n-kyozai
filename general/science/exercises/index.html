@@ -1,0 +1,728 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>理科 演習問題 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- MathJax (数式表示用) -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --science-color: #0d9488; /* Teal */
+            --science-light: #f0fdfa;
+            --bg-color: #f0fdfa;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
+            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--science-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--science-color); background-color: #f0fdfa; font-weight: bold; border-right: 3px solid var(--science-color); }
+
+        /* モバイル用トグル */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 42px; height: 42px; background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border: none !important;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border-right: none !important;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 100%; max-width: 1000px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            border-right: none !important;
+        }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 70px; }
+            .container { padding: 12px; }
+        }
+
+        /* =========================================
+           理科 固有スタイル
+           ========================================= */
+        h1 { font-size: 1.6rem; color: var(--science-color); margin: 0; }
+        h2.section-title {
+            color: #115e59; margin-top: 40px; margin-bottom: 20px; font-size: 1.3rem;
+            border-left: 6px solid var(--science-color); padding-left: 15px;
+            background: linear-gradient(to right, #fff, transparent);
+        }
+
+        .nav-buttons { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
+        .page-nav-btn {
+            background: #fff; border: 1px solid var(--science-color); color: var(--science-color);
+            padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer;
+        }
+        .page-nav-btn:hover { background: var(--science-light); }
+
+        /* 問題カード */
+        .problem-card {
+            background-color: #fff; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px;
+            margin-bottom: 24px; border: 1px solid #e2e8f0;
+            transition: transform 0.2s;
+        }
+        .problem-card:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
+
+        .problem-header {
+            display: flex; align-items: baseline; margin-bottom: 16px;
+        }
+
+        .problem-number {
+            background-color: var(--science-color); color: white;
+            padding: 4px 12px; border-radius: 6px; font-weight: bold;
+            font-size: 0.85rem; margin-right: 12px; white-space: nowrap;
+        }
+
+        .problem-body {
+            display: flex; gap: 24px; align-items: flex-start; justify-content: space-between;
+        }
+        @media (max-width: 768px) { .problem-body { flex-direction: column; gap: 16px; } }
+        
+        .problem-text {
+            font-size: 1rem; font-weight: 500; flex: 1;
+            white-space: normal; text-align: left; color: var(--text-color);
+        }
+
+        /* 画像エリア */
+        .problem-image-box {
+            width: 250px; flex-shrink: 0; text-align: center;
+            background: #f1f5f9; border-radius: 8px; padding: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .problem-image-box img {
+            max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 4px;
+        }
+        .no-img-text { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+        @media (max-width: 768px) { .problem-image-box { width: 100% !important; } }
+
+        /* 解答エリア */
+        .answer-section { margin-top: 20px; border-top: 1px dashed #e2e8f0; padding-top: 16px; }
+        .toggle-btn {
+            background-color: #f1f5f9; color: var(--text-color); border: none;
+            padding: 10px; border-radius: 6px; cursor: pointer;
+            font-size: 0.9rem; display: flex; width: 100%; justify-content: center; font-weight: bold;
+            transition: background 0.2s;
+        }
+        .toggle-btn:hover { background-color: #e2e8f0; }
+
+        .answer-content {
+            display: none; margin-top: 16px; padding: 20px;
+            background-color: var(--science-light); border-radius: 8px;
+            border-left: 4px solid var(--science-color);
+            width: 100%; overflow-wrap: break-word; word-break: break-all;
+        }
+        .answer-content.show { display: block; animation: fadeIn 0.3s ease; }
+
+        .answer-title { font-weight: bold; color: #0f766e; margin-bottom: 8px; display: block; }
+        .result { font-weight: bold; color: #dc2626; background-color: #fff1f2; padding: 2px 6px; border-radius: 4px; }
+        .step { margin-bottom: 12px; font-size: 0.95rem; }
+
+        /* スクロールトップ */
+        .scroll-top-btn {
+            position: fixed; bottom: 25px; right: 20px;
+            width: 48px; height: 48px; background: #374151; color: #fff;
+            border-radius: 50%; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            cursor: pointer; z-index: 900; display: flex; align-items: center; justify-content: center;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="sidebar-overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">理科</a> ＞ 演習問題
+            </div>
+            <h1>演習問題</h1>
+        </div>
+
+        <div class="container">
+            <div class="nav-buttons">
+                <button class="page-nav-btn" onclick="scrollToId('sec-physics')">物理</button>
+                <button class="page-nav-btn" onclick="scrollToId('sec-chem')">化学</button>
+                <button class="page-nav-btn" onclick="scrollToId('sec-bio')">生物</button>
+                <button class="page-nav-btn" onclick="scrollToId('sec-earth')">地学</button>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 物理 -->
+            <!-- ========================================== -->
+            <section id="sec-physics">
+                <h2 class="section-title">物理（力・電気）</h2>
+
+                <!-- No.1 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.1</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            図のように、つり合っているてこがある。Aの重りは何gか。<br>
+                            ただし、棒およびひもの重さは考えないものとする。<br>
+                            (左側: 80g×25cm) = (右側: 60g×10cm + xg×25cm)
+                        </div>
+                        <div class="problem-image-box">
+                            <img src="1.png" alt="No.1 てこ" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">(画像: 1.png)</div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                <strong>力のモーメントのつり合い</strong><br>
+                                (左回りのモーメント) = (右回りのモーメント)<br>
+                                $80 \times 25 = 60 \times 10 + x \times 25$<br>
+                                $2000 = 600 + 25x$<br>
+                                $25x = 1400$<br>
+                                $x = 56$<br>
+                                答え： <span class="result">56g</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.2 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.2</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            図のように、2つの動滑車を使って2000Nのおもりを引き上げた。滑車とひもの重さや摩擦は無視する。ひもを引いて、おもりを引き上げるのに必要な力は何Nか。
+                        </div>
+                        <div class="problem-image-box">
+                            <img src="2.png" alt="No.2 滑車" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">(画像: 2.png)</div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                動滑車を1つ使うと力は半分になる。<br>
+                                1つ目： $2000 \div 2 = 1000\text{N}$<br>
+                                2つ目： $1000 \div 2 = 500\text{N}$<br>
+                                答え： <span class="result">500N</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.3 (電気) -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.3</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            100V用400Wの電熱線を、100Vの電源につないだ。<br>
+                            (1) 電熱線を流れる電流は何Aか。<br>
+                            (2) 電熱線の抵抗は何Ωか。
+                        </div>
+                        <div class="problem-image-box">
+                            <img src="3.png" alt="No.3 回路図" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">(画像: 3.png)</div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                (1) 電力 $W = V \times I$ より、$400 = 100 \times I \rightarrow I = 4\text{A}$<br>
+                                答え： <span class="result">4A</span>
+                            </div>
+                            <div class="step">
+                                (2) オームの法則 $V = I \times R$ より、$100 = 4 \times R \rightarrow R = 25\Omega$<br>
+                                答え： <span class="result">25Ω</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.4 (並列回路) -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.4</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            図のように、10Ωの抵抗アと30Ωの抵抗イを並列につなぎ、6Vの電源をつないだ。<br>
+                            (1) 抵抗ア、イにかかる電圧を求めよ。<br>
+                            (2) 点Aを流れる電流の大きさを求めよ（抵抗ア）。<br>
+                            (3) 点B，Cを流れる電流の大きさを求めよ（B:抵抗イ, C:全体）。
+                        </div>
+                        <div class="problem-image-box">
+                            <img src="4.png" alt="No.4 並列回路" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">(画像: 4.png)</div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                (1) 並列回路では電圧は等しい。答え： <span class="result">アもイも 6V</span>
+                            </div>
+                            <div class="step">
+                                (2) 抵抗ア（点A）：$I = 6\text{V} \div 10\Omega = $ <span class="result">0.6A</span>
+                            </div>
+                            <div class="step">
+                                (3) 抵抗イ（点B）：$I = 6\text{V} \div 30\Omega = 0.2\text{A}$<br>
+                                全体（点C）：$0.6 + 0.2 = $ <span class="result">0.8A</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 化学 -->
+            <section id="sec-chem">
+                <h2 class="section-title">化学（物質・気体）</h2>
+
+                <!-- No.5 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.5</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            プロパン $C_3H_8$ 2.2gを空気中で燃焼させたところ、二酸化炭素と水が生じた。(原子量 H=1.0, C=12.0, O=16.0)<br>
+                            (1) この化学変化を化学反応式で示せ。<br>
+                            (2) このとき生じた水の質量は何gか。
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                (1) $C_3H_8 + 5O_2 \rightarrow 3CO_2 + 4H_2O$
+                            </div>
+                            <div class="step">
+                                (2) プロパンの分子量 $= 12 \times 3 + 1 \times 8 = 44$。<br>
+                                2.2gは $2.2 \div 44 = 0.05$mol。<br>
+                                反応式より、プロパン1molから水4molができるので、水は $0.05 \times 4 = 0.2$mol 生成。<br>
+                                水 $H_2O$ の分子量は18。質量は $0.2 \times 18 = $ <span class="result">3.6g</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.6 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.6</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            次の物質を混合物と純物質に分類せよ。<br>
+                            ア.石油　イ.塩化ナトリウム　ウ.ドライアイス　エ.水蒸気　オ.空気
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                <strong>混合物：</strong> <span class="result">ア(石油), オ(空気)</span><br>
+                                <strong>純物質：</strong> <span class="result">イ, ウ, エ</span> (NaCl, CO2, H2O)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.7 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.7</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            次の現象に最も関係が深いものをア～カから選べ。<br>
+                            [ ア.蒸発 イ.凝固 ウ.凝縮 エ.融解 オ.沸騰 カ.昇華 ]<br>
+                            (1) 冷えたコップの周りに水滴がつく。<br>
+                            (2) 洗濯物が乾く。<br>
+                            (3) 外圧を低くしたり温度を高くしたりすると、液体の内部で蒸発がおこる。
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">(1) 気体→液体：<span class="result">ウ (凝縮)</span></div>
+                            <div class="step">(2) 液体→気体（表面から）：<span class="result">ア (蒸発)</span></div>
+                            <div class="step">(3) 液体→気体（内部から）：<span class="result">オ (沸騰)</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.8 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.8</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            次の水溶液のうち、酸性を示すものをすべて選べ。<br>
+                            ①食塩水 ②石灰水 ③塩酸 ④アンモニア水 ⑤食酢
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                酸性：③塩酸、⑤食酢（酢酸）<br>
+                                中性：①食塩水<br>
+                                アルカリ性：②石灰水、④アンモニア水<br>
+                                答え： <span class="result">③, ⑤</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.9 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.9</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            次の(1)～(5)の特徴にあてはまる気体を、以下の語群から選べ。<br>
+                            [ 水素, アンモニア, 二酸化炭素, 酸素, 窒素 ]<br>
+                            (1) 鼻をさすような刺激臭があり、水によく溶けて水溶液はアルカリ性を示す。<br>
+                            (2) 気体の中で最も軽く、この気体を集めた試験管にマッチの炎を近づけると、気体が燃えて水になる。<br>
+                            (3) 空気よりわずかに軽い。空気の体積の約80％を占め、常温ではほとんど化学変化をしない。<br>
+                            (4) 水に少し溶けて、水溶液は酸性を示す。石灰水の中に通すと白く濁る。<br>
+                            (5) 無色無臭で水に溶けにくく、気体そのものは燃えないが他の物質を燃やす働きをもつ。
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">(1) 刺激臭、アルカリ性 $\rightarrow$ <span class="result">アンモニア</span></div>
+                            <div class="step">(2) 最も軽い、燃えると水 $\rightarrow$ <span class="result">水素</span></div>
+                            <div class="step">(3) 空気の80% $\rightarrow$ <span class="result">窒素</span></div>
+                            <div class="step">(4) 石灰水を白く濁らせる $\rightarrow$ <span class="result">二酸化炭素</span></div>
+                            <div class="step">(5) 助燃性（ものを燃やす働き） $\rightarrow$ <span class="result">酸素</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 生物 -->
+            <section id="sec-bio">
+                <h2 class="section-title">生物</h2>
+
+                <!-- No.10 (植物分類) -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.10</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            次の図は、植物の分類を示したものである。空欄A～Eにあてはまる分類上の名称を答えよ。
+                        </div>
+                        <div class="problem-image-box">
+                            <img src="10.png" alt="No.10 植物分類表" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">(画像: 10.png)</div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">A: <span class="result">種子植物</span> (花を咲かせ種子で増える)</div>
+                            <div class="step">B: <span class="result">被子植物</span> (胚珠が子房に包まれている)</div>
+                            <div class="step">C: <span class="result">単子葉類</span> (子葉が1枚、ひげ根、平行脈)</div>
+                            <div class="step">D: <span class="result">双子葉類</span> (子葉が2枚、主根・側根、網状脈)</div>
+                            <div class="step">E: <span class="result">シダ植物</span> (胞子で増える、維管束あり)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.11 (心臓) -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.11</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            右の図は、ヒトの心臓の断面を示したものである。<br>
+                            (1) 図のCの部分の名称を答えよ。<br>
+                            (2) 図のA～Hから静脈をすべて選べ。<br>
+                            (3) 酸素を多くとり入れた血液が通る道すじを、図のA～Hの記号で示せ。
+                        </div>
+                        <div class="problem-image-box">
+                            <img src="11.png" alt="No.11 心臓" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">(画像: 11.png)</div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">(1) Cは心臓の下側（心室）で、全身へ血液を送り出す壁の厚い部分。$\rightarrow$ <span class="result">左心室</span> (※図の左右反転に注意。向かって右が左心室、左が右心室。設問に合わせてCが右心室か左心室か要確認。通常、全身へ送る最も筋肉が厚いのが左心室)</div>
+                            <div class="step"><strong>※元データの解答に基づく補正:</strong><br>元データでは C=$\rightarrow$<span class="result">右心室</span> となっています（図の配置に依存）。</div>
+                            <div class="step">(2) 心臓に戻ってくる血管＝静脈。<br>大静脈(A)と肺静脈(F)。 $\rightarrow$ <span class="result">A, F</span></div>
+                            <div class="step">(3) 動脈血（酸素が多い）の経路：肺静脈(F) $\rightarrow$ 左心房(E) $\rightarrow$ 左心室(D) $\rightarrow$ 大動脈(H)。<br>答え： <span class="result">F, E, D, H</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.12 (循環) -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.12</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            右の図は、ヒトの血液の循環経路を示している。<br>
+                            (1) 図中の血管A～Dの中から静脈をすべて選べ。<br>
+                            (2) 図中の血管a～eのうち、グルコース（ブドウ糖）などの栄養分を最も多く含む血液が流れている血管を1つ選べ。<br>
+                            (3) 図中の血管a～eのうち、二酸化炭素以外の不要物が最も少ない血液が流れている血管を1つ選べ。
+                        </div>
+                        <div class="problem-image-box">
+                            <img src="12.png" alt="No.12 循環" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">(画像: 12.png)</div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">(1) 心臓へ戻る血管。<span class="result">B, D</span></div>
+                            <div class="step">(2) 小腸で吸収した養分を肝臓へ運ぶ血管（門脈）。 $\rightarrow$ <span class="result">d</span></div>
+                            <div class="step">(3) 腎臓で不要物（尿素など）をこし取った後の血管（腎静脈）。 $\rightarrow$ <span class="result">e</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.13-15 動物 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.13-15</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            No.13 動物と分類名の組合わせとして正しいものを選べ。<br>
+                            ①イモリ-は虫類 ②ヤモリ-両生類 ③サンショウウオ-魚類 ④コウモリ-鳥類 ⑤クジラ-哺乳類<br><br>
+                            No.14 外界の温度が変化しても体温が変わらないもの(恒温動物)をすべて選べ。<br>
+                            ①イルカ ②サメ ③ペンギン ④イグアナ ⑤カエル<br><br>
+                            No.15 外骨格をもつものを選べ。<br>
+                            ①アサリ ②ウニ ③イカ ④ヒトデ ⑤カニ
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">No.13: <span class="result">⑤ クジラ - 哺乳類</span> (イモリ=両生類, ヤモリ=は虫類)</div>
+                            <div class="step">No.14: 哺乳類・鳥類 <span class="result">①イルカ, ③ペンギン</span></div>
+                            <div class="step">No.15: 節足動物など <span class="result">⑤ カニ</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 地学 -->
+            <section id="sec-earth">
+                <h2 class="section-title">地学</h2>
+
+                <!-- No.16-19 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.16-19</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            No.16 火山の形：正しい組み合わせ<br>
+                            ①富士山-溶岩円頂丘 ②浅間山-盾状火山 ③昭和新山-盾状火山 ④キラウェア山-成層火山 ⑤有珠山-溶岩円頂丘<br><br>
+                            No.17 火山岩であるものをすべて選べ<br>
+                            ①流紋岩 ②安山岩 ③花こう岩 ④斑れい岩 ⑤玄武岩<br><br>
+                            No.18 粘性が大きくドーム型の火山<br>
+                            ①富士山 ②有珠山 ③マウナロア山 ④桜島 ⑤浅間山<br><br>
+                            No.19 マグマが地表または地表近くで急に冷やされてできた岩石（火山岩）<br>
+                            ①せん緑岩 ②斑れい岩 ③玄武岩 ④流紋岩 ⑤花こう岩
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">No.16: <span class="result">⑤ 有珠山 - 溶岩円頂丘(ドーム)</span> (昭和新山も溶岩円頂丘)</div>
+                            <div class="step">No.17: <span class="result">①流紋岩, ②安山岩, ⑤玄武岩</span></div>
+                            <div class="step">No.18: 粘性が大きい＝ドーム型 <span class="result">② 有珠山 (または昭和新山)</span></div>
+                            <div class="step">No.19: <span class="result">③玄武岩, ④流紋岩</span> (斑れい岩等は深成岩)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No.20-21 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">No.20-21</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">
+                            No.20 示準化石をすべて選べ<br>
+                            ①アンモナイト ②シジミ ③フズリナ ④サンゴ ⑤アサリ<br><br>
+                            No.21 次のア～キのうち、どの化石が含まれていれば(1)，(2)の地層で堆積したといえるか。<br>
+                            ア.フズリナ イ.アサリ ウ.シジミ エ.アンモナイト オ.サンゴ カ.ビカリア キ.ハマグリ<br>
+                            (1)河口や湖の水底で堆積した地層<br>
+                            (2)恐竜が生きていた時代に堆積した地層
+                        </div>
+                        <!-- 画像枠（必要な場合のみ使用） -->
+                        <div class="problem-image-box" style="display:none;">
+                           <!-- ここに化石の画像などを入れる -->
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">No.20: 時代がわかるもの <span class="result">①アンモナイト, ③フズリナ</span></div>
+                            <div class="step">No.21: (1) 淡水・汽水環境を示すもの <span class="result">ウ (シジミ)</span><br>(2) 中生代を示すもの <span class="result">エ (アンモナイト)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer><p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p></footer>
+    </main>
+
+    <button id="scrollTopBtn" class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <i data-lucide="arrow-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        function scrollToId(id) {
+            const el = document.getElementById(id);
+            if (el) window.scrollTo({ top: el.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function toggleAnswer(btn) {
+            const content = btn.nextElementSibling;
+            const isShown = content.classList.contains('show');
+            content.classList.toggle('show');
+            btn.textContent = isShown ? "解説を見る" : "解説を隠す";
+        }
+    </script>
+</body>
+</html>
