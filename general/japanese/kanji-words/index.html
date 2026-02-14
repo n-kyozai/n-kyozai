@@ -1,0 +1,937 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>漢字と語句 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50; /* サイドバー用 */
+            --accent-color: #3498db;
+            --bg-color: #fdfbf7;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* コンテナ */
+        .content-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            padding-bottom: 140px; /* 固定ボタン用余白 */
+            flex: 1;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .content-container { padding: 16px; padding-bottom: 140px; }
+        }
+
+        /* =========================================
+           漢字と語句 固有スタイル
+           ========================================= */
+        :root {
+            --app-primary: #0891b2; /* シアン系 */
+            --app-header-bg: #ecfeff;
+            --marker-hidden-bg: #0891b2;
+            --marker-hidden-text: #0891b2;
+            --marker-visible-bg: #cffafe;
+            --marker-visible-text: #0e7490;
+        }
+
+        /* タイトルエリア */
+        .app-title-area {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .main-title {
+            color: #0e7490;
+            margin: 0 0 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: inline-block;
+            padding-bottom: 5px;
+            border-bottom: 3px solid var(--app-primary);
+        }
+
+        /* ページ内ナビ */
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .nav-btn {
+            background: #fff;
+            border: 1px solid var(--app-primary);
+            color: var(--app-primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #ecfeff; }
+        .nav-btn:active { background: var(--app-primary); color: #fff; transform: scale(0.98); }
+
+        /* 見出し */
+        h2 {
+            color: #fff;
+            background-color: #0e7490;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            padding: 12px 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            scroll-margin-top: 20px;
+        }
+        
+        h3 {
+            color: #155e75;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            border-left: 4px solid #06b6d4;
+            padding-left: 10px;
+        }
+
+        /* 見出し＋選択肢のレイアウト */
+        .section-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* モバイルで折り返し */
+            gap: 12px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        .section-header h3 {
+            margin: 0; /* コンテナ内での余白リセット */
+        }
+
+        .choice-box {
+            font-size: 0.9rem;
+            color: #475569;
+            background-color: #fff;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            flex: 1; /* 余白を埋める */
+            min-width: 280px; /* 狭くなりすぎないように */
+        }
+        
+        .choice-label {
+            font-weight: bold;
+            color: #0891b2;
+            margin-right: 6px;
+            font-size: 0.85rem;
+            background: #ecfeff;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* テーブル */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border: 1px solid #d6d3d1;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch;
+        }
+        table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 0.95rem; }
+        th, td {
+            padding: 12px 10px;
+            border: 1px solid #d6d3d1;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: var(--app-header-bg);
+            font-weight: bold;
+            color: #164e63;
+            white-space: nowrap;
+        }
+
+        .kanji-cell { font-size: 1.3rem; font-weight: bold; text-align: center; }
+        
+        /* マーカー */
+        .marker {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.1s;
+            user-select: none;
+            margin: 2px 0;
+            min-width: 2em;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        .marker.hidden { background-color: var(--marker-hidden-bg); color: var(--marker-hidden-text); }
+        .marker.visible { background-color: var(--marker-visible-bg); color: var(--marker-visible-text); border-color: #67e8f9; }
+
+        /* 演習エリア（グリッド） */
+        .practice-box {
+            background: #fff;
+            border: 2px solid #cffafe;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .kanji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        .kanji-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        /* 筆順画像用 */
+        .kanji-img-box {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+        .kanji-img-box img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .no-img-text {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .kanji-q { font-size: 0.9rem; color: #64748b; margin-bottom: 5px; }
+        .kanji-a { font-size: 1.5rem; font-weight: bold; color: #334155; }
+
+        /* 同訓異字専用カードスタイル */
+        .homonym-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .homonym-card {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .homonym-header {
+            background-color: #ecfeff;
+            color: #0e7490;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .homonym-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .homonym-list li {
+            padding: 12px 15px;
+            border-bottom: 1px dashed #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+        .homonym-list li:last-child { border-bottom: none; }
+
+        /* 固定ボタン群 */
+        .fixed-btn-container {
+            position: fixed; bottom: 25px; right: 20px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 1000;
+        }
+        .circle-btn {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: none; color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            flex-direction: column; text-align: center; transition: transform 0.2s;
+        }
+        .circle-btn:active { transform: scale(0.9); }
+        .scroll-top-btn { background: #64748b; font-size: 1.5rem; opacity: 0.95; }
+        
+        .mode-switch-btn {
+            background-color: var(--app-primary);
+            font-weight: bold; font-size: 0.8rem; line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">国語</a> ＞ 漢字と語句
+            </div>
+            <h1>漢字と語句</h1>
+        </div>
+
+        <div class="content-container">
+            
+            <div class="app-title-area">
+                <div class="main-title">漢字の基本・熟語・書き取り</div>
+                <div class="nav-buttons">
+                    <button onclick="scrollToSection('sec1')" class="nav-btn">1. 漢字の基本</button>
+                    <button onclick="scrollToSection('sec2')" class="nav-btn">2. 部首と筆順</button>
+                    <button onclick="scrollToSection('sec3')" class="nav-btn">3. 熟語の基本</button>
+                    <button onclick="scrollToSection('sec4')" class="nav-btn">4. 書き取り演習</button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 1. 漢字の基本 -->
+            <!-- ========================================== -->
+            <h2 id="sec1"><i data-lucide="pen-tool" style="width:18px; margin-right:5px; vertical-align:middle;"></i>1. 漢字の基本</h2>
+            
+            <div class="section-header">
+                <h3>(1) 漢字の成り立ち</h3>
+                <div class="choice-box">
+                    <span class="choice-label">選択肢</span>林、月、上、時、明、泳、車、中
+                </div>
+            </div>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>種類</th>
+                            <th>説明</th>
+                            <th>例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="marker hidden">象形</span>文字</td>
+                            <td>物の形や様子を描いた絵文字を略したもの。</td>
+                            <td><span class="marker hidden">月</span>、<span class="marker hidden">車</span></td>
+                        </tr>
+                        <tr>
+                            <td>指事文字</td>
+                            <td>形で表せない数や位置などの事柄を、記号や図形で表したもの。</td>
+                            <td>上、中</td>
+                        </tr>
+                        <tr>
+                            <td>会意文字</td>
+                            <td>2つ以上の文字を組み合わせて、新しい意味を示したもの。</td>
+                            <td>林、明</td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden">形声</span>文字</td>
+                            <td>意味を表す文字と、音を表す文字とを合わせたもの。</td>
+                            <td><span class="marker hidden">時</span>、<span class="marker hidden">泳</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-header">
+                <h3>(2) 漢字の読み</h3>
+                <div class="choice-box">
+                    <span class="choice-label">選択肢</span>素顔、教育、面影、人間、荷物、昔話、指図、座敷
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>種類</th>
+                            <th>構成</th>
+                            <th>例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>音読み</td>
+                            <td>音＋音</td>
+                            <td><span class="marker hidden">教育</span>、<span class="marker hidden">人間</span></td>
+                        </tr>
+                        <tr>
+                            <td>訓読み</td>
+                            <td>訓＋訓</td>
+                            <td><span class="marker hidden">面影</span>、<span class="marker hidden">昔話</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="marker hidden">重箱</span>読み</td>
+                            <td>音＋訓</td>
+                            <td><span class="marker hidden">素顔</span>、<span class="marker hidden">座敷</span></td>
+                        </tr>
+                        <tr>
+                            <td>湯桶読み</td>
+                            <td>訓＋音</td>
+                            <td><span class="marker hidden">荷物</span>、<span class="marker hidden">指図</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>(3) 同訓異字</h3>
+            <div class="homonym-grid">
+                <!-- グループ: おさめる -->
+                <div class="homonym-card">
+                    <div class="homonym-header">おさめる</div>
+                    <ul class="homonym-list">
+                        <li>封筒に<span class="marker hidden">納</span>める</li>
+                        <li>国を<span class="marker hidden">治</span>める</li>
+                        <li>学業を<span class="marker hidden">修</span>める</li>
+                        <li>成功を<span class="marker hidden">収</span>める</li>
+                    </ul>
+                </div>
+                
+                <!-- グループ: はかる -->
+                <div class="homonym-card">
+                    <div class="homonym-header">はかる</div>
+                    <ul class="homonym-list">
+                        <li>記録を<span class="marker hidden">計</span>る</li>
+                        <li>再起を<span class="marker hidden">図</span>る</li>
+                        <li>身長を<span class="marker hidden">測</span>る</li>
+                        <li>目方を<span class="marker hidden">量</span>る</li>
+                    </ul>
+                </div>
+
+                <!-- グループ: とく -->
+                <div class="homonym-card">
+                    <div class="homonym-header">とく</div>
+                    <ul class="homonym-list">
+                        <li>問題を<span class="marker hidden">解</span>く</li>
+                        <li>絵の具を<span class="marker hidden">溶</span>く</li>
+                        <li>教えを<span class="marker hidden">説</span>く</li>
+                    </ul>
+                </div>
+
+                <!-- グループ: うつす -->
+                <div class="homonym-card">
+                    <div class="homonym-header">うつす</div>
+                    <ul class="homonym-list">
+                        <li>住所を<span class="marker hidden">移</span>す</li>
+                        <li>文章を<span class="marker hidden">写</span>す</li>
+                        <li>鏡に<span class="marker hidden">映</span>す</li>
+                    </ul>
+                </div>
+
+                <!-- グループ: あつい -->
+                <div class="homonym-card">
+                    <div class="homonym-header">あつい</div>
+                    <ul class="homonym-list">
+                        <li><span class="marker hidden">暑</span>い日</li>
+                        <li><span class="marker hidden">熱</span>い湯</li>
+                        <li><span class="marker hidden">厚</span>い板</li>
+                    </ul>
+                </div>
+
+                <!-- グループ: つとめる -->
+                <div class="homonym-card">
+                    <div class="homonym-header">つとめる</div>
+                    <ul class="homonym-list">
+                        <li>解決に<span class="marker hidden">努</span>める</li>
+                        <li>会社に<span class="marker hidden">勤</span>める</li>
+                        <li>議長を<span class="marker hidden">務</span>める</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 2. 部首と筆順 -->
+            <!-- ========================================== -->
+            <h2 id="sec2"><i data-lucide="edit-3" style="width:18px; margin-right:5px; vertical-align:middle;"></i>2. 部首と筆順</h2>
+
+            <h3>(1) 主な部首</h3>
+            <div class="table-wrapper">
+                <table>
+                    <tbody>
+                        <tr><th>防</th><td><span class="marker hidden">こざとへん</span></td><th>性</th><td><span class="marker hidden">りっしんべん</span></td></tr>
+                        <tr><th>残</th><td><span class="marker hidden">かばねへん</span></td><th>複</th><td><span class="marker hidden">ころもへん</span></td></tr>
+                        <tr><th>雑</th><td><span class="marker hidden">ふるとり</span></td><th>敗</th><td><span class="marker hidden">ぼくづくり</span></td></tr>
+                        <tr><th>段</th><td><span class="marker hidden">るまた</span></td><th>別</th><td><span class="marker hidden">りっとう</span></td></tr>
+                        <tr><th>写</th><td><span class="marker hidden">わかんむり</span></td><th>登</th><td><span class="marker hidden">はつがしら</span></td></tr>
+                        <tr><th>空</th><td><span class="marker hidden">あなかんむり</span></td><th>蒸</th><td><span class="marker hidden">くさかんむり</span></td></tr>
+                        <tr><th>先</th><td><span class="marker hidden">にんにょう</span></td><th>盛</th><td><span class="marker hidden">さら</span></td></tr>
+                        <tr><th>熟</th><td><span class="marker hidden">れんが</span></td><th>慕</th><td><span class="marker hidden">したごころ</span></td></tr>
+                        <tr><th>応</th><td><span class="marker hidden">まだれ</span></td><th>病</th><td><span class="marker hidden">やまいだれ</span></td></tr>
+                        <tr><th>原</th><td><span class="marker hidden">がんだれ</span></td><th>屈</th><td><span class="marker hidden">しかばね</span></td></tr>
+                        <tr><th>起</th><td><span class="marker hidden">そうにょう</span></td><th>近</th><td><span class="marker hidden">しんにゅう</span></td></tr>
+                        <tr><th>建</th><td><span class="marker hidden">えんにょう</span></td><th>聞</th><td><span class="marker hidden">もんがまえ</span></td></tr>
+                        <tr><th>区</th><td><span class="marker hidden">はこがまえ</span></td><th>街</th><td><span class="marker hidden">ぎょうがまえ</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>(2) 誤りやすい筆順（何画目？）</h3>
+            <div class="practice-box">
+                <p style="margin-bottom:15px; color:#64748b; font-size:0.9rem;">
+                    ※ <span style="color:#0ea5e9; font-weight:bold;">青色</span>で示された画数が、全体の何画目か答えよ。<br>
+                    ※ <small>画像が表示されない場合は、画像ファイル(28.png〜47.png)を同じフォルダにアップロードしてください。</small>
+                </p>
+                <div class="kanji-grid">
+                    <!-- 画像あり (28-37) -->
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="28.png" alt="問28 左" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">左 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">2</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="29.png" alt="問29 以" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">以 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">3</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="30.png" alt="問30 必" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">必 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">2</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="31.png" alt="問31 成" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">成 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">2</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="32.png" alt="問32 何" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">何 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">4</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="33.png" alt="問33 別" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">別 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">5</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="34.png" alt="問34 波" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">波 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">4</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="35.png" alt="問35 非" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">非 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">1</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="36.png" alt="問36 長" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">長 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">2</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="37.png" alt="問37 馬" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">馬 (青線)</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">2</span></div>
+                    </div>
+                    <!-- 画像準備中 (38-47) -->
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="38.png" alt="問38 拒" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">拒「巨」の上画</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">5</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="39.png" alt="問39 狂" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">狂「犭」の2画目</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">2</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="40.png" alt="問40 発" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">発「ハ」の左</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">5</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="41.png" alt="問41 飛" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">飛 左の縦棒</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">4</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="42.png" alt="問42 武" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">武「止」の縦棒</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">3</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="43.png" alt="問43 部" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">部「阝」の縦棒</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">9</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="44.png" alt="問44 情" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">情「青」の月縦</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">3</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="45.png" alt="問45 衆" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">衆 下の左払い</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">8</span></div>
+                    </div>
+                    <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="46.png" alt="問46 報" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">報「幸」の縦棒</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">10</span></div>
+                    </div>
+                     <div class="kanji-card">
+                        <div class="kanji-img-box">
+                            <img src="47.png" alt="問47 粛" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                            <div class="no-img-text" style="display:none;">粛「聿」の縦棒</div>
+                        </div>
+                        <div class="kanji-q">何画目？</div><div class="kanji-a"><span class="marker hidden">10</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 3. 熟語の基本 -->
+            <!-- ========================================== -->
+            <h2 id="sec3"><i data-lucide="book-open" style="width:18px; margin-right:5px; vertical-align:middle;"></i>3. 熟語の基本</h2>
+
+            <h3>(1) 同音異義語</h3>
+            <div class="table-wrapper">
+                <table>
+                    <tbody>
+                        <tr><th>コウセイ</th><td>論文の<span class="marker hidden">構成</span></td><td>非行少年を<span class="marker hidden">更生</span></td><td><span class="marker hidden">後世</span>に伝える</td><td>文章を<span class="marker hidden">校正</span></td></tr>
+                        <tr><th>タイショウ</th><td>研究の<span class="marker hidden">対象</span></td><td>左右<span class="marker hidden">対称</span></td><td><span class="marker hidden">対症</span>療法</td><td><span class="marker hidden">対照</span>的な意見</td></tr>
+                        <tr><th>ツイキュウ</th><td>責任を<span class="marker hidden">追及</span></td><td>真理を<span class="marker hidden">追究</span></td><td>利益を<span class="marker hidden">追求</span></td><td></td></tr>
+                        <tr><th>ホショウ</th><td>生活を<span class="marker hidden">保障</span></td><td>人柄を<span class="marker hidden">保証</span></td><td>損害を<span class="marker hidden">補償</span></td><td></td></tr>
+                        <tr><th>カイホウ</th><td>人質を<span class="marker hidden">解放</span></td><td>病人を<span class="marker hidden">介抱</span></td><td>一般に<span class="marker hidden">開放</span></td><td></td></tr>
+                        <tr><th>カクシン</th><td>事件の<span class="marker hidden">核心</span></td><td>成功を<span class="marker hidden">確信</span></td><td><span class="marker hidden">革新</span>的な政党</td><td></td></tr>
+                        <tr><th>セイサン</th><td>経費を<span class="marker hidden">精算</span></td><td>借金を<span class="marker hidden">清算</span></td><td>勝利の<span class="marker hidden">成算</span></td><td>物を<span class="marker hidden">生産</span></td></tr>
+                        <tr><th>タイセイ</th><td>政治<span class="marker hidden">体制</span></td><td>受け入れ<span class="marker hidden">態勢</span></td><td>得意の<span class="marker hidden">体勢</span></td><td><span class="marker hidden">大勢</span>に影響はない</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>(2) 三字熟語</h3>
+            <div class="table-wrapper">
+                <table>
+                    <tbody>
+                        <tr><td>うまくいった喜びで夢中になる</td><td><span class="marker hidden">有頂天</span></td></tr>
+                        <tr><td>物事をきちんとしていい加減にしない</td><td><span class="marker hidden">几帳面</span></td></tr>
+                        <tr><td>価値や力量をはかる基準</td><td><span class="marker hidden">試金石</span></td></tr>
+                        <tr><td>そのものが本来もっている姿</td><td><span class="marker hidden">真骨頂</span></td></tr>
+                        <tr><td>うまく後始末をつけるための方策</td><td><span class="marker hidden">善後策</span></td></tr>
+                        <tr><td>物事の本当のおもしろさ・深い味わい</td><td><span class="marker hidden">醍醐味</span></td></tr>
+                        <tr><td>思うままにならない（特に経済状態）</td><td><span class="marker hidden">不如意</span></td></tr>
+                        <tr><td>歴史上、今まで一度も起こったことがない</td><td><span class="marker hidden">未曾有</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 4. 書き取り演習 -->
+            <!-- ========================================== -->
+            <h2 id="sec4"><i data-lucide="edit" style="width:18px; margin-right:5px; vertical-align:middle;"></i>4. 書き取り演習</h2>
+
+            <div class="practice-box">
+                <div class="kanji-grid">
+                    <!-- 重要漢字 -->
+                    <div class="kanji-card"><div class="kanji-q">ケンシン的な看護</div><div class="kanji-a"><span class="marker hidden">献身</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">仕事のジャマ</div><div class="kanji-a"><span class="marker hidden">邪魔</span></div></div>
+                    
+                    <!-- 同音異字 -->
+                    <div class="kanji-card"><div class="kanji-q">テッカイ（やめにする）</div><div class="kanji-a"><span class="marker hidden">撤回</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">テッテイ（つらぬく）</div><div class="kanji-a"><span class="marker hidden">徹底</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">ヘイガイ（悪いこと）</div><div class="kanji-a"><span class="marker hidden">弊害</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">カヘイ（ぜに）</div><div class="kanji-a"><span class="marker hidden">貨幣</span></div></div>
+
+                    <!-- 同訓異字 -->
+                    <div class="kanji-card"><div class="kanji-q">目録にオサめる</div><div class="kanji-a"><span class="marker hidden">収</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">注文品をオサめる</div><div class="kanji-a"><span class="marker hidden">納</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">薬がよくキく</div><div class="kanji-a"><span class="marker hidden">効</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">機転がキく</div><div class="kanji-a"><span class="marker hidden">利</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">食事をタつ</div><div class="kanji-a"><span class="marker hidden">断</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">縁をタつ</div><div class="kanji-a"><span class="marker hidden">絶</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">布を細かくタつ</div><div class="kanji-a"><span class="marker hidden">裁</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">見通しがタつ</div><div class="kanji-a"><span class="marker hidden">立</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">社員をトる</div><div class="kanji-a"><span class="marker hidden">採</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">指揮をトる</div><div class="kanji-a"><span class="marker hidden">執</span></div></div>
+                    <div class="kanji-card"><div class="kanji-q">昆虫をトる</div><div class="kanji-a"><span class="marker hidden">捕</span></div></div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 右下固定ボタン群 -->
+    <div class="fixed-btn-container">
+        <button id="scrollTopBtn" class="circle-btn scroll-top-btn" onclick="scrollToTop()" title="トップへ">
+            <i data-lucide="chevron-up" style="width: 24px; height: 24px;"></i>
+        </button>
+        <button id="toggleModeBtn" class="circle-btn mode-switch-btn" title="暗記モード切替">暗記<br>モード</button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 指定のGAS URL（共通機能用）
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZhvVExnkiseSTiPJDqYK4W6aMGy5kKT8uMW0z3nU2ZdWDeYVMd6FJttE0NSxZMhwr/exec"; 
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        /* =========================================
+           暗記シート用スクリプト
+           ========================================= */
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 暗記マーカー ---
+        const markers = document.querySelectorAll('.marker');
+        const toggleBtn = document.getElementById('toggleModeBtn');
+        let isMemorizeMode = true;
+
+        markers.forEach(m => {
+            m.addEventListener('click', () => {
+                if (isMemorizeMode) {
+                    m.classList.toggle('hidden');
+                    m.classList.toggle('visible');
+                }
+            });
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            isMemorizeMode = !isMemorizeMode;
+            if (isMemorizeMode) {
+                markers.forEach(m => { m.classList.remove('visible'); m.classList.add('hidden'); });
+                toggleBtn.textContent = '暗記モード: ON';
+                toggleBtn.style.backgroundColor = '#d97706';
+            } else {
+                markers.forEach(m => { m.classList.remove('hidden'); m.classList.add('visible'); });
+                toggleBtn.textContent = '暗記モード: OFF';
+                toggleBtn.style.backgroundColor = '#57534e';
+            }
+        });
+    </script>
+</body>
+</html>
