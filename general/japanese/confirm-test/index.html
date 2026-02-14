@@ -1,0 +1,739 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=768, user-scalable=yes">
+    <title>確認テスト - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50; /* サイドバー用 */
+            --accent-color: #3498db;
+            --bg-color: #fdfbf7;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 48px; height: 48px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* コンテナ */
+        .content-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            padding-bottom: 140px; /* 固定ボタン用余白 */
+            flex: 1;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        /* モバイル対応（幅768px以下の場合） */
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 80px; }
+            .content-container { padding: 20px; width: 100%; }
+        }
+
+        /* =========================================
+           確認テスト 固有スタイル
+           ========================================= */
+        :root {
+            --app-primary: #16a34a; /* グリーン系 */
+            --app-header-bg: #f0fdf4;
+            --marker-hidden-bg: #16a34a;
+            --marker-hidden-text: #16a34a;
+            --marker-visible-bg: #dcfce7;
+            --marker-visible-text: #14532d;
+            --correct-bg: #dcfce7;
+            --correct-border: #86efac;
+            --correct-text: #064e3b;
+            --incorrect-bg: #fee2e2;
+            --incorrect-border: #fca5a5;
+            --incorrect-text: #7f1d1d;
+        }
+
+        /* タイトルエリア */
+        .app-title-area {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .main-title {
+            color: #15803d;
+            margin: 0 0 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: inline-block;
+            padding-bottom: 5px;
+            border-bottom: 3px solid var(--app-primary);
+        }
+
+        /* ページ内ナビ */
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .nav-btn {
+            background: #fff;
+            border: 1px solid var(--app-primary);
+            color: var(--app-primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #f0fdf4; }
+        .nav-btn:active { background: var(--app-primary); color: #fff; transform: scale(0.98); }
+
+        /* 見出し */
+        h2 {
+            color: #fff;
+            background-color: #15803d;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            padding: 12px 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            scroll-margin-top: 20px;
+        }
+        
+        h3 {
+            color: #166534;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            border-left: 4px solid #22c55e;
+            padding-left: 10px;
+        }
+
+        /* カードグリッド（暗記用） */
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .word-card {
+            background: #fff;
+            border: 1px solid #dcfce7;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px;
+        }
+        .word-q { font-size: 1.1rem; font-weight: bold; color: #334155; margin-bottom: 8px; }
+        .word-a { font-size: 1rem; color: #15803d; }
+        
+        /* テーブル（ことわざ用） */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            background: #fff;
+        }
+        table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 0.95rem; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid #f0fdf4; text-align: left; }
+        th { background-color: var(--app-header-bg); font-weight: bold; color: #166534; white-space: nowrap; width: 35%; }
+        td { color: #334155; }
+        tr:last-child td { border-bottom: none; }
+
+        /* マーカー */
+        .marker {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.1s;
+            user-select: none;
+            margin: 2px 0;
+            min-width: 2em;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        .marker.hidden { background-color: var(--marker-hidden-bg); color: var(--marker-hidden-text); }
+        .marker.visible { background-color: var(--marker-visible-bg); color: var(--marker-visible-text); border-color: #86efac; }
+
+        /* クイズエリア */
+        .quiz-section {
+            margin-top: 50px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            border: 2px solid #bbf7d0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .quiz-header-box {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--app-primary);
+        }
+        
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+        
+        .option-btn {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #334155;
+            font-size: 0.95rem;
+        }
+        .option-btn:hover:not(.disabled) { background-color: #f0fdf4; border-color: #22c55e; }
+        .option-btn.disabled { cursor: default; opacity: 0.8; }
+        .option-btn.correct { background-color: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); font-weight: bold; }
+        .option-btn.wrong { background-color: var(--incorrect-bg); border-color: var(--incorrect-border); color: var(--incorrect-text); }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            color: #166534;
+            display: none;
+            font-size: 0.95rem;
+        }
+        
+        .quiz-controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .start-btn {
+            background-color: var(--app-primary);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
+            transition: transform 0.1s;
+        }
+        .start-btn:active { transform: scale(0.98); }
+
+        /* 固定ボタン群 */
+        .fixed-btn-container {
+            position: fixed; bottom: 25px; right: 20px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 1000;
+        }
+        .circle-btn {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: none; color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            flex-direction: column; text-align: center; transition: transform 0.2s;
+        }
+        .circle-btn:active { transform: scale(0.9); }
+        .scroll-top-btn { background: #64748b; font-size: 1.5rem; opacity: 0.95; }
+        
+        .mode-switch-btn {
+            background-color: var(--app-primary);
+            font-weight: bold; font-size: 0.8rem; line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">国語</a> ＞ 確認テスト
+            </div>
+            <h1>確認テスト</h1>
+        </div>
+
+        <div class="content-container">
+            
+            <div class="app-title-area">
+                <div class="main-title">国語【一般教養】確認テスト</div>
+                <div class="nav-buttons">
+                    <button onclick="scrollToSection('sec1')" class="nav-btn">1. 難読語</button>
+                    <button onclick="scrollToSection('sec2')" class="nav-btn">2. 熟字訓・あて字</button>
+                    <button onclick="scrollToSection('sec3')" class="nav-btn">3. ことわざ</button>
+                    <button onclick="scrollToSection('quiz-section')" class="nav-btn">4. 確認クイズ</button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 1. 難読語 -->
+            <!-- ========================================== -->
+            <h2 id="sec1"><i data-lucide="book-open" style="width:18px; margin-right:5px; vertical-align:middle;"></i>1. 難読語</h2>
+            <div class="word-grid" id="kanji-grid-1">
+                <!-- JSで生成 -->
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 2. 熟字訓・あて字 -->
+            <!-- ========================================== -->
+            <h2 id="sec2"><i data-lucide="feather" style="width:18px; margin-right:5px; vertical-align:middle;"></i>2. 熟字訓・あて字</h2>
+            <div class="word-grid" id="kanji-grid-2">
+                <!-- JSで生成 -->
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 3. ことわざ -->
+            <!-- ========================================== -->
+            <h2 id="sec3"><i data-lucide="message-circle" style="width:18px; margin-right:5px; vertical-align:middle;"></i>3. ことわざ</h2>
+            <div class="table-wrapper">
+                <table id="proverb-table">
+                    <thead>
+                        <tr>
+                            <th>ことわざ</th>
+                            <th>意味</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- JSで生成 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 4. 確認クイズ -->
+            <!-- ========================================== -->
+            <div id="quiz-section" class="quiz-section">
+                <div class="quiz-header-box">
+                    <h2 style="margin-top:0; background:none; color:var(--primary-color); padding:0; box-shadow:none; font-size:1.6rem;">
+                        <i data-lucide="check-square" style="width:24px; vertical-align:middle;"></i> 実力確認クイズ
+                    </h2>
+                    <p style="color:#64748b;">上記の内容からランダムに5問出題します。</p>
+                </div>
+                
+                <div id="quiz-display-area">
+                    <div class="quiz-controls">
+                        <button class="start-btn" onclick="generateQuiz()">クイズを開始する ▶</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 右下固定ボタン群 -->
+    <div class="fixed-btn-container">
+        <button id="scrollTopBtn" class="circle-btn scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="トップへ">
+            <i data-lucide="chevron-up" style="width: 24px; height: 24px;"></i>
+        </button>
+        <button id="toggleModeBtn" class="circle-btn mode-switch-btn" title="暗記モード切替">暗記<br>モード</button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 指定のGAS URL
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZhvVExnkiseSTiPJDqYK4W6aMGy5kKT8uMW0z3nU2ZdWDeYVMd6FJttE0NSxZMhwr/exec"; 
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        /* =========================================
+           データ定義
+           ========================================= */
+        const kanjiData = [
+            { q: "華奢", a: "きゃしゃ" }, { q: "苛酷", a: "かこく" },
+            { q: "勤行", a: "ごんぎょう" }, { q: "疾病", a: "しっぺい" },
+            { q: "所詮", a: "しょせん" }, { q: "出納", a: "すいとう" },
+            { q: "補填", a: "ほてん" }, { q: "謀反", a: "むほん" },
+            { q: "弛緩", a: "しかん" }, { q: "執拗", a: "しつよう" },
+            { q: "捺印", a: "なついん" }, { q: "侮蔑", a: "ぶべつ" },
+            { q: "軋轢", a: "あつれき" }, { q: "混沌", a: "こんとん" },
+            { q: "叱咤", a: "しった" }, { q: "無垢", a: "むく" },
+            { q: "所以", a: "ゆえん" }
+        ];
+
+        const jukujikunData = [
+            { q: "海原", a: "うなばら" }, { q: "桟敷", a: "さじき" },
+            { q: "仲人", a: "なこうど" }, { q: "祝詞", a: "のりと" },
+            { q: "紅葉", a: "もみじ" }, { q: "海女", a: "あま" },
+            { q: "乳母", a: "うば" }, { q: "早苗", a: "さなえ" },
+            { q: "草履", a: "ぞうり" }, { q: "稚児", a: "ちご" },
+            { q: "投網", a: "とあみ" }, { q: "寄席", a: "よせ" }
+        ];
+
+        const proverbData = [
+            { q: "悪事千里を走る", a: "悪い行いや評判は、またたく間に世間に知れ渡る" },
+            { q: "虻蜂取らず", a: "二つのものを同時に得ようとして、結局両方とも失敗する" },
+            { q: "鬼の目にも涙", a: "無慈悲な人でも、時には優しい心を起こす" },
+            { q: "河童の川流れ", a: "名人や達人でも、時には失敗することがある" },
+            { q: "亀の甲より年の功", a: "年長者の経験や知恵は尊ぶべきである" },
+            { q: "枯木も山のにぎわい", a: "つまらないものでも、ないよりはましである" },
+            { q: "雉も鳴かずは打たれまい", a: "余計なことを言わなければ、災いを招かずにすむ" },
+            { q: "木で鼻をくくる", a: "冷淡な態度であしらうこと" },
+            { q: "けがの功名", a: "失敗したことが、かえって良い結果を生むこと" },
+            { q: "弘法にも筆の誤り", a: "どんなにその道に優れた人でも、失敗することはある" },
+            { q: "地獄で仏", a: "苦難の最中に、思いがけない助けに会うこと" },
+            { q: "釈迦に説法", a: "自分よりよく知っている人に教えることの愚かさ" },
+            { q: "雀百まで踊り忘れぬ", a: "幼い頃に身についた習慣は、年をとっても変わらない" },
+            { q: "背に腹はかえられぬ", a: "差し迫った困難を避けるためには、他のことを犠牲にしても仕方がない" },
+            { q: "栴檀は双葉より芳し", a: "大成する人物は、幼い頃から人並み外れて優れている" },
+            { q: "船頭多くして船山へ上る", a: "指図する人が多すぎて、物事がとんでもない方向へ進んでしまうこと" },
+            { q: "袖振り合うも他生の縁", a: "見知らぬ人と袖が触れ合うような些細なことも、前世からの因縁である" },
+            { q: "立つ鳥あとを濁さず", a: "立ち去る者は、あとが見苦しくないように始末すべきである" }
+        ];
+
+        // --- データ描画 ---
+        function renderWordGrid(containerId, data) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            data.forEach(item => {
+                html += `
+                    <div class="word-card">
+                        <div class="word-q">${item.q}</div>
+                        <div class="word-a"><span class="marker hidden">${item.a}</span></div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderTable(tableId, data) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            let html = '';
+            data.forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.q}</td>
+                        <td><span class="marker hidden">${item.a}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // 初期描画実行
+        renderWordGrid('kanji-grid-1', kanjiData);
+        renderWordGrid('kanji-grid-2', jukujikunData);
+        renderTable('proverb-table', proverbData);
+
+        // --- 暗記マーカー制御 ---
+        const toggleBtn = document.getElementById('toggleModeBtn');
+        let isMemorizeMode = true;
+
+        // 動的に生成されたマーカーにもイベントを付与するため、親要素(body)に委譲
+        document.body.addEventListener('click', function(e) {
+            if (e.target.classList.contains('marker')) {
+                if (isMemorizeMode) {
+                    e.target.classList.toggle('hidden');
+                    e.target.classList.toggle('visible');
+                }
+            }
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            isMemorizeMode = !isMemorizeMode;
+            const allMarkers = document.querySelectorAll('.marker');
+            if (isMemorizeMode) {
+                allMarkers.forEach(m => { m.classList.remove('visible'); m.classList.add('hidden'); });
+                toggleBtn.textContent = '暗記モード: ON';
+                toggleBtn.style.backgroundColor = '#d97706';
+            } else {
+                allMarkers.forEach(m => { m.classList.remove('hidden'); m.classList.add('visible'); });
+                toggleBtn.textContent = '暗記モード: OFF';
+                toggleBtn.style.backgroundColor = '#57534e';
+            }
+        });
+
+        /* =========================================
+           クイズ機能
+           ========================================= */
+        function generateQuiz() {
+            const quizDisplay = document.getElementById('quiz-display-area');
+            quizDisplay.innerHTML = ''; // クリア
+
+            // 全データからランダムに5問抽出
+            const allData = [
+                ...kanjiData.map(d => ({ type: '読み', q: d.q, a: d.a, opts: generateOptions(d.a, kanjiData) })),
+                ...jukujikunData.map(d => ({ type: '読み', q: d.q, a: d.a, opts: generateOptions(d.a, jukujikunData) })),
+                ...proverbData.map(d => ({ type: '意味', q: d.q, a: d.a, opts: generateProverbOptions(d.a, proverbData) }))
+            ];
+
+            const questions = shuffleArray(allData).slice(0, 5);
+
+            questions.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerHTML = `Q${index + 1}. 「${item.q}」の${item.type}は？`;
+                card.appendChild(qText);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options-grid';
+                
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+
+                item.opts.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+                    btn.onclick = () => {
+                        // 正誤判定
+                        const allBtns = optionsDiv.querySelectorAll('.option-btn');
+                        allBtns.forEach(b => b.classList.add('disabled'));
+
+                        if (opt === item.a) {
+                            btn.classList.add('correct');
+                            btn.innerHTML += ' ⭕';
+                            feedback.innerHTML = '正解！';
+                        } else {
+                            btn.classList.add('wrong');
+                            btn.innerHTML += ' ❌';
+                            feedback.innerHTML = `不正解... 正解は「${item.a}」です。`;
+                            // 正解を表示
+                            allBtns.forEach(b => {
+                                if (b.textContent === item.a) {
+                                    b.classList.add('correct');
+                                    b.innerHTML += ' ⭕';
+                                }
+                            });
+                        }
+                        feedback.style.display = 'block';
+                    };
+                    optionsDiv.appendChild(btn);
+                });
+
+                card.appendChild(optionsDiv);
+                card.appendChild(feedback);
+                quizDisplay.appendChild(card);
+            });
+
+            // もう一度ボタン
+            const retryBtn = document.createElement('div');
+            retryBtn.className = 'quiz-controls';
+            retryBtn.innerHTML = '<button class="start-btn" onclick="generateQuiz()">別の問題に挑戦 🔄</button>';
+            quizDisplay.appendChild(retryBtn);
+        }
+
+        // ダミー選択肢生成
+        function generateOptions(correct, dataSource) {
+            const others = dataSource.filter(d => d.a !== correct).map(d => d.a);
+            const shuffledOthers = shuffleArray(others).slice(0, 3);
+            return shuffleArray([correct, ...shuffledOthers]);
+        }
+        
+        function generateProverbOptions(correct, dataSource) {
+            // ことわざの場合は選択肢が長くなるので文字数調整などが必要だが、簡易的にそのまま使用
+            // ただし文字数が多すぎる場合は短くする処理が必要かも（今回はそのまま）
+            const others = dataSource.filter(d => d.a !== correct).map(d => d.a);
+            const shuffledOthers = shuffleArray(others).slice(0, 3);
+            return shuffleArray([correct, ...shuffledOthers]);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+    </script>
+</body>
+</html>
