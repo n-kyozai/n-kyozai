@@ -1,0 +1,449 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>過去問にChallenge 2 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --english-color: #4f46e5; /* 英語テーマカラー（インディゴ） */
+            --english-dark: #3730a3;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
+            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--english-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--english-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 42px; height: 42px; background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border: none !important;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border-right: none !important;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 100%; max-width: 900px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            border-right: none !important;
+        }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 70px; }
+            .container { padding: 12px; }
+        }
+
+        /* =========================================
+           英語過去問 Challenge 固有スタイル
+           ========================================= */
+        .section-card {
+            background: #fff; border-radius: 12px; padding: 25px; margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            border-left: 5px solid var(--english-color); padding-left: 12px;
+            margin-bottom: 20px; color: var(--primary-color); font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .problem-text {
+            font-size: 1rem; font-weight: 500; margin-bottom: 15px; line-height: 1.7;
+        }
+
+        .sub-q-container {
+            margin-bottom: 30px;
+        }
+        .sub-q-container p {
+            font-weight: bold; color: #1e293b; margin-bottom: 10px;
+        }
+
+        /* クイズ選択肢 */
+        .choices-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px; margin-top: 10px; margin-bottom: 10px;
+        }
+        .choice-btn {
+            background: #fff; border: 2px solid #e2e8f0; padding: 12px;
+            border-radius: 8px; cursor: pointer; transition: all 0.2s;
+            text-align: center; font-weight: bold; font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        .choice-btn:hover { border-color: var(--english-color); background: #eef2ff; }
+        .choice-btn.correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .choice-btn.wrong { background: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+
+        .explanation {
+            display: none; margin-top: 5px; padding: 15px;
+            background: #eef2ff; border-radius: 8px; border-left: 4px solid var(--english-color);
+            font-size: 0.85rem; color: #1e1b4b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="sidebar-overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <!-- 指定: ../index.html で一般教養トップへ -->
+            <a href="../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <!-- 英語メニューへ -->
+            <a href="index.html" class="nav-item"><i data-lucide="languages"></i>英語</a>
+            <a href="../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../index.html">ホーム</a> ＞ <a href="../index.html">一般教養</a> ＞ <a href="index.html">英語</a> ＞ 過去問Challenge 2
+            </div>
+        </div>
+
+        <div class="container">
+            
+            <!-- 問題 1 -->
+            <div class="section-card">
+                <h2>1. 適語選択 (文法)</h2>
+                <div class="problem-text">( &nbsp;&nbsp;&nbsp;&nbsp; ) に入る最も適切な語句を選択肢から選びなさい。</div>
+                
+                <!-- 1(1) -->
+                <div class="sub-q-container">
+                    <p>(1) My dream is ( &nbsp;&nbsp;&nbsp;&nbsp; ) around the world.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. travel</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">イ. to travel</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. traveled</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">エ. traveling</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>イ．to travel</strong><br>
+                        訳：私の夢は世界中を旅することです。<br>
+                        解説：主格補語として「〜すること」という意味の不定詞の名詞的用法。
+                    </div>
+                </div>
+
+                <!-- 1(2) -->
+                <div class="sub-q-container">
+                    <p>(2) They had a daughter, ( &nbsp;&nbsp;&nbsp;&nbsp; ) went to Europe to study music.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. that</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">イ. who</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. whose</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">エ. whom</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>イ．who</strong><br>
+                        訳：彼らには音楽を学ぶためにヨーロッパへ行った娘がいました。<br>
+                        解説：先行詞 a daughter を修飾する主格の関係代名詞。継続用法のため that は不可。
+                    </div>
+                </div>
+
+                <!-- 1(3) -->
+                <div class="sub-q-container">
+                    <p>(3) She ( &nbsp;&nbsp;&nbsp;&nbsp; ) on the phone for two hours.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. has talk</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">イ. has talking</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. has been talked</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">エ. has been talking</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>エ．has been talking</strong><br>
+                        訳：彼女は2時間も電話で話しています。<br>
+                        解説：for two hours があるため、現在までの継続を表す現在完了進行形が適切。
+                    </div>
+                </div>
+
+                <!-- 1(4) -->
+                <div class="sub-q-container">
+                    <p>(4) My grandmother ( &nbsp;&nbsp;&nbsp;&nbsp; ) ninety next year.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. is going to</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">イ. will been</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. shall be</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">エ. will be</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>エ．will be</strong><br>
+                        訳：私の祖母は来年90歳になります。<br>
+                        解説：単純な未来の事態や状態を表す will be が適切。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 問題 2 -->
+            <div class="section-card">
+                <h2>2. 適語選択 (文脈・語彙)</h2>
+                <div class="problem-text">文中の ( &nbsp;&nbsp;&nbsp;&nbsp; ) に入る最も適切な語句を番号で答えなさい。</div>
+
+                <!-- 2(1) -->
+                <div class="sub-q-container">
+                    <p>(1) As soon as he ( &nbsp;&nbsp;&nbsp;&nbsp; ) back from lunch, Mr. Chan plans to call his customer.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">① come</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">② comes</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">③ came</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">④ will come</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>② comes</strong><br>
+                        訳：チャンさんは昼食から戻るとすぐに顧客に電話するつもりです。<br>
+                        解説：時や条件を表す副詞節（as soon as）の中では、未来のことでも現在形を用いる。
+                    </div>
+                </div>
+
+                <!-- 2(2) -->
+                <div class="sub-q-container">
+                    <p>(2) Children ( &nbsp;&nbsp;&nbsp;&nbsp; ) the age of six cannot use this machine.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">① via</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">② along</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">③ under</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">④ through</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>③ under</strong><br>
+                        訳：6歳未満のお子様はこの機械を使用できません。<br>
+                        解説：under the age of ～ で「～歳未満」という表現。
+                    </div>
+                </div>
+
+                <!-- 2(3) -->
+                <div class="sub-q-container">
+                    <p>(3) Her grandparents live on the ( &nbsp;&nbsp;&nbsp;&nbsp; ) side of the street.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">① opposite</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">② nasal</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">③ equal</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">④ acute</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>① opposite</strong><br>
+                        訳：彼女の祖父母は通りの反対側に住んでいます。<br>
+                        解説：opposite side で「反対側」。
+                    </div>
+                </div>
+
+                <!-- 2(4) -->
+                <div class="sub-q-container">
+                    <p>(4) A: How much money do we need to have dinner at this hotel?<br>B: Oh, don’t worry. The hotel charge ( &nbsp;&nbsp;&nbsp;&nbsp; ) dinner and breakfast.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">① eliminates</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">② magnifies</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">③ avoids</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">⑤ includes</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>⑤ includes</strong><br>
+                        訳：A: このホテルで夕食をとるにはいくら必要ですか？ B: ああ、ご心配なく。宿泊料金には夕食と朝食が含まれています。<br>
+                        解説：include で「〜を含む」。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 問題 3 -->
+            <div class="section-card">
+                <h2>3. 熟語・慣用表現</h2>
+                <div class="problem-text">( &nbsp;&nbsp;&nbsp;&nbsp; ) に入る最も適当な記号を選びなさい。</div>
+
+                <!-- 3(1) -->
+                <div class="sub-q-container">
+                    <p>(1) It will not be ( &nbsp;&nbsp;&nbsp;&nbsp; ) before the typhoon season starts.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. easy</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">イ. fine</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. hard</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">エ. long</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>エ．long</strong><br>
+                        訳：台風シーズンが始まるのももうすぐです。<br>
+                        解説：It will not be long before ～ で「まもなく〜するだろう」。
+                    </div>
+                </div>
+
+                <!-- 3(2) -->
+                <div class="sub-q-container">
+                    <p>(2) The moment I hung ( &nbsp;&nbsp;&nbsp;&nbsp; ) the telephone, I realized I had forgotten to say something.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">ア. up</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">イ. in</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. on</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">エ. at</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>ア．up</strong><br>
+                        訳：電話を切った瞬間、私は何かを言い忘れていたことに気づいた。<br>
+                        解説：hang up で「（電話を）切る」。
+                    </div>
+                </div>
+
+                <!-- 3(3) -->
+                <div class="sub-q-container">
+                    <p>(3) We took it for ( &nbsp;&nbsp;&nbsp;&nbsp; ) that they would get married.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. truthful</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">イ. free</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true)">ウ. granted</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">エ. demanded</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>ウ．granted</strong><br>
+                        訳：私たちは彼らが結婚するのは当然だと思っていました。<br>
+                        解説：take it for granted that ～ で「〜を当然のことと思う」。
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+        };
+        menuToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // クイズ判定
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const subContainer = btn.closest('.sub-q-container');
+            const explanation = subContainer.querySelector('.explanation');
+            const btns = parent.querySelectorAll('.choice-btn');
+
+            btns.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                const correctBtn = parent.querySelector('[data-correct="true"]');
+                if (correctBtn) correctBtn.classList.add('correct');
+            }
+            if (explanation) explanation.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
