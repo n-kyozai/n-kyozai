@@ -1,0 +1,812 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語 語彙 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50; /* サイドバーなど共通部分用 */
+            --accent-color: #3498db;
+            --english-color: #8b5cf6; /* 英語（語彙）用のテーマカラー（バイオレット） */
+            --english-dark: #7c3aed;
+            --bg-color: #f5f3ff;      /* 薄いバイオレット背景 */
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
+            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 48px; height: 48px; background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border-right: none !important;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border-right: none !important;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            border-right: none !important;
+        }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 80px; }
+            .container { padding: 10px; width: 100%; }
+        }
+
+        /* =========================================
+           英語（語彙）固有スタイル
+           ========================================= */
+        /* コンテナ内ヘッダー */
+        header {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            text-align: center;
+            border-top: 5px solid var(--english-color);
+        }
+
+        .nav-menu-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .nav-btn-inner {
+            background: var(--bg-color);
+            color: var(--english-dark);
+            border: 1px solid var(--english-color);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-btn-inner:hover, .nav-btn-inner:active {
+            background: var(--english-color);
+            color: white;
+        }
+
+        /* セクションスタイル */
+        section {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        h2 {
+            border-left: 5px solid var(--english-color);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 穴埋めスタイル */
+        .fill-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 0.95rem;
+        }
+        
+        .fill-blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 2px solid var(--english-color);
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: color 0.3s;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .fill-blank.revealed {
+            color: var(--english-dark);
+            background: none;
+        }
+        
+        .translation {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-left: 8px;
+        }
+
+        .dynamic-hint {
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .dynamic-hint.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .show-ans-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            color: #64748b;
+            margin-left: 10px;
+        }
+
+        /* グリッドレイアウト */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        @media (min-width: 600px) { .vocab-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .vocab-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .vocab-term { font-weight: bold; color: var(--text-color); }
+        .vocab-arrow { color: #64748b; font-size: 0.9em; }
+
+        /* クイズ（選択式） */
+        .quiz-item {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .quiz-question {
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .choice-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .choice-btn:hover { background-color: #f5f3ff; border-color: var(--english-color); }
+
+        .choice-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #15803d; font-weight: bold; }
+        .choice-btn.correct::after { content: "◎"; position: absolute; right: 10px; color: #15803d; }
+
+        .choice-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+        .choice-btn.wrong::after { content: "✕"; position: absolute; right: 10px; color: #ef4444; }
+
+        .quiz-explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        /* ランダムクイズ */
+        #random-quiz-area {
+            background: white;
+            border: 2px solid #f59e0b;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .next-btn {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(249, 115, 22, 0.3);
+            margin-top: 15px;
+        }
+        .next-btn:active { transform: scale(0.98); }
+
+        /* FAB */
+        #fab-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: var(--english-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-size: 1.2rem;
+            z-index: 1100;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <!-- 2階層上に戻る -->
+            <a href="../../index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <!-- 1階層上に戻る -->
+            <a href="../index.html" class="nav-item active"><i data-lucide="languages"></i>英語</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">英語</a> ＞ 語彙
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">語彙・一般教養編</h1>
+        </div>
+
+        <div class="container">
+            <header>
+                <nav class="nav-menu-inner">
+                    <a href="#section1" class="nav-btn-inner js-scroll">英単語記述</a>
+                    <a href="#section2" class="nav-btn-inner js-scroll">日本文化</a>
+                    <a href="#section3" class="nav-btn-inner js-scroll">語形変化</a>
+                    <a href="#section4" class="nav-btn-inner js-scroll">反意語</a>
+                    <a href="#section5" class="nav-btn-inner js-scroll">略語</a>
+                    <a href="#section6" class="nav-btn-inner js-scroll">掲示</a>
+                    <a href="#past-exam" class="nav-btn-inner js-scroll">過去問</a>
+                    <a href="#random" class="nav-btn-inner js-scroll">ランダムQ</a>
+                </nav>
+            </header>
+
+            <!-- 1. English Descriptions -->
+            <section id="section1">
+                <h2>1. 英単語記述 <button class="show-ans-btn" onclick="toggleSectionBlanks('section1')">全て表示</button></h2>
+                <p style="font-size:0.85em; color:#64748b; margin-bottom:15px;">説明文にあてはまる英単語をタップして確認してください。</p>
+                
+                <div class="fill-item">
+                    (1) The son of one's brother or sister
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">nephew</span> <span class="translation dynamic-hint">（甥）</span></div>
+                </div>
+                <div class="fill-item">
+                    (2) The person employed to take care of a patient
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">nurse</span> <span class="translation dynamic-hint">（看護師）</span></div>
+                </div>
+                <div class="fill-item">
+                    (3) The middle joint of the leg, where the leg bends
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">knee</span> <span class="translation dynamic-hint">（膝）</span></div>
+                </div>
+                <div class="fill-item">
+                    (4) The instrument for measuring temperature
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">thermometer</span> <span class="translation dynamic-hint">（温度計）</span></div>
+                </div>
+                <div class="fill-item">
+                    (5) The area of land without trees or water, often covered with sand
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">desert</span> <span class="translation dynamic-hint">（砂漠）</span></div>
+                </div>
+                <div class="fill-item">
+                    (6) The drama with an unhappy ending
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">tragedy</span> <span class="translation dynamic-hint">（悲劇）</span></div>
+                </div>
+                <div class="fill-item">
+                    (7) The short wise saying used for a long time by many people
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">proverb</span> <span class="translation dynamic-hint">（ことわざ）</span></div>
+                </div>
+                <div class="fill-item">
+                    (8) The woman whose husband has died and who has not married again
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">widow</span> <span class="translation dynamic-hint">（未亡人）</span></div>
+                </div>
+            </section>
+
+            <!-- 2. Japanese Culture -->
+            <section id="section2">
+                <h2>2. 日本文化説明 <button class="show-ans-btn" onclick="toggleSectionBlanks('section2')">全て表示</button></h2>
+                <p style="font-size:0.85em; color:#64748b; margin-bottom:15px;">英文が示す内容をタップして確認してください。</p>
+
+                <div class="fill-item">
+                    (1) A jelly-like food which is made from soybeans and is rich in protein
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">豆腐</span> <span class="translation dynamic-hint">(tofu)</span></div>
+                </div>
+                <div class="fill-item">
+                    (2) A gift sent in the middle of December
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">歳暮</span> <span class="translation dynamic-hint">(seibo)</span></div>
+                </div>
+                <div class="fill-item">
+                    (3) A card sent as a greeting for the new year
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">年賀状</span></div>
+                </div>
+                <div class="fill-item">
+                    (4) A poetry structured in the set from of 17 syllables, arranged in group of 5, 7 and 5
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">俳句</span></div>
+                </div>
+                <div class="fill-item">
+                    (5) Two sticks that hold food between them when people eat
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">箸</span> <span class="translation dynamic-hint">(chopsticks)</span></div>
+                </div>
+                <div class="fill-item">
+                    (6) Square cloths that are used to wrap and carry things
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">風呂敷</span></div>
+                </div>
+                <div class="fill-item">
+                    (7) An art of drawing characters with a brush and India ink
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">書道</span></div>
+                </div>
+                <div class="fill-item">
+                    (8) A picture painted in India ink
+                    <div style="margin-top:5px;">Ans: <span class="fill-blank" onclick="toggleBlank(this)">水墨画</span></div>
+                </div>
+            </section>
+
+            <!-- 3. Word Forms -->
+            <section id="section3">
+                <h2>3. 語形変化 <button class="show-ans-btn" onclick="toggleSectionBlanks('section3')">全て表示</button></h2>
+                <p style="font-size:0.85em; color:#64748b; margin-bottom:15px;">空欄の指定された語形をタップして確認。</p>
+                
+                <div class="vocab-grid">
+                    <div class="vocab-item">
+                        <span class="vocab-term">(1) decide (動)</span>
+                        <span class="vocab-arrow">↓ (名詞)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">decision</span>
+                    </div>
+                    <div class="vocab-item">
+                        <span class="vocab-term">(2) length (名)</span>
+                        <span class="vocab-arrow">↓ (形容詞)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">long</span>
+                    </div>
+                    <div class="vocab-item">
+                        <span class="vocab-term">(3) memory (名)</span>
+                        <span class="vocab-arrow">↓ (動詞)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">memorize</span>
+                    </div>
+                    <div class="vocab-item">
+                        <span class="vocab-term">(4) tooth (単)</span>
+                        <span class="vocab-arrow">↓ (複数)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">teeth</span>
+                    </div>
+                    <div class="vocab-item">
+                        <span class="vocab-term">(5) emphasis (名)</span>
+                        <span class="vocab-arrow">↓ (動詞)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">emphasize</span>
+                    </div>
+                    <div class="vocab-item">
+                        <span class="vocab-term">(6) poverty (名)</span>
+                        <span class="vocab-arrow">↓ (形容詞)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">poor</span>
+                    </div>
+                    <div class="vocab-item">
+                        <span class="vocab-term">(7) propose (動)</span>
+                        <span class="vocab-arrow">↓ (名詞)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">proposal</span>
+                    </div>
+                    <div class="vocab-item">
+                        <span class="vocab-term">(8) mouse (単)</span>
+                        <span class="vocab-arrow">↓ (複数)</span>
+                        <span class="fill-blank" onclick="toggleBlank(this)">mice</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Antonyms -->
+            <section id="section4">
+                <h2>4. 反意語 <button class="show-ans-btn" onclick="toggleSectionBlanks('section4')">全て表示</button></h2>
+                <div class="vocab-grid">
+                    <div class="vocab-item"><span class="vocab-term">increase</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">decrease</span></div>
+                    <div class="vocab-item"><span class="vocab-term">success</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">failure</span></div>
+                    <div class="vocab-item"><span class="vocab-term">heavy</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">light</span></div>
+                    <div class="vocab-item"><span class="vocab-term">negative</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">positive</span></div>
+                    <div class="vocab-item"><span class="vocab-term">wise</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">foolish</span></div>
+                    <div class="vocab-item"><span class="vocab-term">healthy</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">unhealthy</span></div>
+                    <div class="vocab-item"><span class="vocab-term">easy</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">difficult</span></div>
+                    <div class="vocab-item"><span class="vocab-term">left</span><span class="vocab-arrow">⇔</span><span class="fill-blank" onclick="toggleBlank(this)">right</span></div>
+                </div>
+            </section>
+
+            <!-- 5. Abbreviations -->
+            <section id="section5">
+                <h2>5. 略語 <button class="show-ans-btn" onclick="toggleSectionBlanks('section5')">全て表示</button></h2>
+                <div class="fill-item">(1) M&A: <span class="fill-blank" onclick="toggleBlank(this)">企業の合併・買収</span></div>
+                <div class="fill-item">(2) WTO: <span class="fill-blank" onclick="toggleBlank(this)">世界貿易機関</span></div>
+                <div class="fill-item">(3) WHO: <span class="fill-blank" onclick="toggleBlank(this)">世界保健機関</span></div>
+                <div class="fill-item">(4) ICT: <span class="fill-blank" onclick="toggleBlank(this)">情報通信技術</span></div>
+                <div class="fill-item">(5) ILO: <span class="fill-blank" onclick="toggleBlank(this)">国際労働機関</span></div>
+                <div class="fill-item">(6) 日本工業規格: <span class="fill-blank" onclick="toggleBlank(this)">JIS</span></div>
+                <div class="fill-item">(7) 国際連合: <span class="fill-blank" onclick="toggleBlank(this)">UN</span></div>
+                <div class="fill-item">(8) 国内総生産: <span class="fill-blank" onclick="toggleBlank(this)">GDP</span></div>
+            </section>
+
+            <!-- 6. Signs -->
+            <section id="section6">
+                <h2>6. 掲示・標識 <button class="show-ans-btn" onclick="toggleSectionBlanks('section6')">全て表示</button></h2>
+                <div class="vocab-grid">
+                    <div class="vocab-item">Sold Out: <span class="fill-blank" onclick="toggleBlank(this)">売切</span></div>
+                    <div class="vocab-item">Under Construction: <span class="fill-blank" onclick="toggleBlank(this)">工事中</span></div>
+                    <div class="vocab-item">No Admittance: <span class="fill-blank" onclick="toggleBlank(this)">入場禁止</span></div>
+                    <div class="vocab-item">Closed Today: <span class="fill-blank" onclick="toggleBlank(this)">本日休業</span></div>
+                    <div class="vocab-item">Watch Your Step: <span class="fill-blank" onclick="toggleBlank(this)">足元注意</span></div>
+                    <div class="vocab-item">No Crossing: <span class="fill-blank" onclick="toggleBlank(this)">横断禁止</span></div>
+                    <div class="vocab-item">Post No Bills: <span class="fill-blank" onclick="toggleBlank(this)">貼紙禁止</span></div>
+                    <div class="vocab-item">Handle with Care: <span class="fill-blank" onclick="toggleBlank(this)">取扱注意</span></div>
+                    <div class="vocab-item">No Vacancy: <span class="fill-blank" onclick="toggleBlank(this)">満室</span></div>
+                    <div class="vocab-item">Emergency Exit: <span class="fill-blank" onclick="toggleBlank(this)">非常口</span></div>
+                </div>
+            </section>
+
+            <!-- Past Exam -->
+            <section id="past-exam">
+                <h2>過去問に挑戦！</h2>
+                <p style="font-size:0.85em; color:#64748b; margin-bottom:15px;">次の英文が示す語句を選べ。</p>
+
+                <div class="quiz-item">
+                    <div class="quiz-question">(1) the food made by rolling rice in the palms of the hands</div>
+                    <div class="choices-container">
+                        <button class="choice-btn" onclick="checkAnswer(this, false, '赤飯')">① sekihan</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false, '餅')">② mochi</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true, '正解：<b>onigiri</b><br>訳：米を手のひらで転がして作る食べ物')">③ onigiri</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false, '梅干し')">④ umeboshi</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false, 'おでん')">⑤ oden</button>
+                    </div>
+                    <div class="quiz-explanation"></div>
+                </div>
+
+                <div class="quiz-item">
+                    <div class="quiz-question">(2) the dream that occurs from the night of New Year's Day to the morning of the 2nd</div>
+                    <div class="choices-container">
+                        <button class="choice-btn" onclick="checkAnswer(this, false, 'おせち')">① osechi</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false, '書き初め')">② kakizome</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false, '正夢')">③ masayume</button>
+                        <button class="choice-btn" data-correct="true" onclick="checkAnswer(this, true, '正解：<b>hatsuyume</b><br>訳：元旦の夜から2日の朝にかけて見る夢')">④ hatsuyume</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false, '正月')">⑤ shougatsu</button>
+                    </div>
+                    <div class="quiz-explanation"></div>
+                </div>
+            </section>
+
+            <!-- Random Quiz -->
+            <section id="random">
+                <h2>ランダム・クイズ (Random Challenge)</h2>
+                <div id="random-quiz-area">
+                    <div id="rq-content">
+                        <p style="color:#64748b;">「次へ」を押すと語彙問題が出ます</p>
+                    </div>
+                    <button class="next-btn" onclick="generateRandomQuiz()">次の問題へ</button>
+                </div>
+            </section>
+
+            <!-- Footer / FAB -->
+            <a href="#top" id="fab-top" class="js-scroll">↑</a>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // --- Data for Random Quiz ---
+        const quizData = [
+            {type: "記述", q: "Son of one's brother or sister", a: "nephew (甥)"},
+            {type: "記述", q: "Person employed to take care of a patient", a: "nurse"},
+            {type: "記述", q: "Middle joint of the leg", a: "knee"},
+            {type: "記述", q: "Instrument for measuring temperature", a: "thermometer"},
+            {type: "記述", q: "Land without trees/water, covered with sand", a: "desert"},
+            {type: "記述", q: "Drama with an unhappy ending", a: "tragedy"},
+            {type: "記述", q: "Short wise saying", a: "proverb (ことわざ)"},
+            {type: "記述", q: "Woman whose husband has died", a: "widow (未亡人)"},
+            {type: "日本文化", q: "Jelly-like food made from soybeans", a: "豆腐 (tofu)"},
+            {type: "日本文化", q: "Gift sent in middle of December", a: "歳暮 (seibo)"},
+            {type: "日本文化", q: "Card sent as greeting for new year", a: "年賀状"},
+            {type: "日本文化", q: "Poetry with 17 syllables (5-7-5)", a: "俳句"},
+            {type: "日本文化", q: "Two sticks for eating", a: "箸 (chopsticks)"},
+            {type: "日本文化", q: "Square cloths used to wrap things", a: "風呂敷"},
+            {type: "日本文化", q: "Art of drawing with brush and ink", a: "書道"},
+            {type: "日本文化", q: "Picture painted in India ink", a: "水墨画"},
+            {type: "語形", q: "decide (動) -> [        ] (名)", a: "decision"},
+            {type: "語形", q: "length (名) -> [        ] (形)", a: "long"},
+            {type: "語形", q: "memory (名) -> [        ] (動)", a: "memorize"},
+            {type: "語形", q: "tooth (単) -> [        ] (複)", a: "teeth"},
+            {type: "語形", q: "emphasis (名) -> [        ] (動)", a: "emphasize"},
+            {type: "語形", q: "poverty (名) -> [        ] (形)", a: "poor"},
+            {type: "語形", q: "propose (動) -> [        ] (名)", a: "proposal"},
+            {type: "語形", q: "mouse (単) -> [        ] (複)", a: "mice"},
+            {type: "反意語", q: "increase ⇔ [        ]", a: "decrease"},
+            {type: "反意語", q: "success ⇔ [        ]", a: "failure"},
+            {type: "反意語", q: "heavy ⇔ [        ]", a: "light"},
+            {type: "反意語", q: "negative ⇔ [        ]", a: "positive"},
+            {type: "反意語", q: "wise ⇔ [        ]", a: "foolish"},
+            {type: "反意語", q: "healthy ⇔ [        ]", a: "unhealthy"},
+            {type: "反意語", q: "easy ⇔ [        ]", a: "difficult"},
+            {type: "反意語", q: "left ⇔ [        ]", a: "right"},
+            {type: "略語", q: "M&A", a: "企業の合併・買収"},
+            {type: "略語", q: "WTO", a: "世界貿易機関"},
+            {type: "略語", q: "WHO", a: "世界保健機関"},
+            {type: "略語", q: "ICT", a: "情報通信技術"},
+            {type: "略語", q: "ILO", a: "国際労働機関"},
+            {type: "略語", q: "日本工業規格", a: "JIS"},
+            {type: "略語", q: "国際連合", a: "UN"},
+            {type: "略語", q: "国内総生産", a: "GDP"},
+            {type: "掲示", q: "Sold Out", a: "売切"},
+            {type: "掲示", q: "Under Construction", a: "工事中"},
+            {type: "掲示", q: "No Admittance", a: "入場禁止"},
+            {type: "掲示", q: "Closed Today", a: "本日休業"},
+            {type: "掲示", q: "Watch Your Step", a: "足元注意"},
+            {type: "掲示", q: "No Crossing", a: "横断禁止"},
+            {type: "掲示", q: "Post No Bills", a: "貼紙禁止"},
+            {type: "掲示", q: "Handle with Care", a: "取扱注意"},
+            {type: "掲示", q: "No Vacancy", a: "満室"},
+            {type: "掲示", q: "Emergency Exit", a: "非常口"}
+        ];
+
+        // --- Interactive Functions ---
+
+        function toggleBlank(element) {
+            element.classList.toggle('revealed');
+            // ヒント連動ロジック
+            const parent = element.parentElement; // div wrapper
+            if (parent) {
+                const hint = parent.querySelector('.dynamic-hint');
+                if (hint) {
+                    if (element.classList.contains('revealed')) {
+                        hint.classList.add('visible');
+                    } else {
+                        hint.classList.remove('visible');
+                    }
+                }
+            }
+        }
+        
+        function toggleSectionBlanks(sectionId) {
+            const section = document.getElementById(sectionId);
+            const blanks = section.querySelectorAll('.fill-blank');
+            let allRevealed = true;
+            blanks.forEach(b => { if(!b.classList.contains('revealed')) allRevealed = false; });
+            
+            blanks.forEach(b => {
+                const parent = b.parentElement;
+                const hint = parent ? parent.querySelector('.dynamic-hint') : null;
+
+                if(allRevealed) {
+                    b.classList.remove('revealed');
+                    if(hint) hint.classList.remove('visible');
+                } else {
+                    b.classList.add('revealed');
+                    if(hint) hint.classList.add('visible');
+                }
+            });
+        }
+
+        function checkAnswer(btn, isCorrect, explanation) {
+            const container = btn.closest('.quiz-item');
+            const buttons = container.querySelectorAll('.choice-btn');
+            const expBox = container.querySelector('.quiz-explanation');
+
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                expBox.innerHTML = `<strong style="color:green">正解！</strong><br>${explanation}`;
+            } else {
+                btn.classList.add('wrong');
+                const correctBtn = container.querySelector('button[data-correct="true"]');
+                if (correctBtn) correctBtn.classList.add('correct');
+                expBox.innerHTML = `<strong style="color:red">不正解...</strong><br>${explanation}`;
+            }
+            expBox.style.display = 'block';
+        }
+
+        function generateRandomQuiz() {
+            const index = Math.floor(Math.random() * quizData.length);
+            const data = quizData[index];
+            const contentDiv = document.getElementById('rq-content');
+            
+            // バッジ（カテゴリー名）削除
+            contentDiv.innerHTML = `
+                <div style="width:100%;">
+                    <div style="font-weight:bold; margin:10px 0; font-size:1.1em;">${data.q}</div>
+                    <div id="rq-answer" style="display:none; color:var(--primary-dark); font-weight:bold; margin-top:10px; font-size:1.2em;">${data.a}</div>
+                    <button onclick="document.getElementById('rq-answer').style.display='block'" 
+                            style="background:#e2e8f0; border:none; padding:8px 20px; border-radius:15px; margin-top:10px; cursor:pointer; font-size:0.9em;">
+                        答えを見る
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- Smooth Scroll & FAB Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            const fab = document.getElementById('fab-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    fab.style.opacity = '1';
+                    fab.style.pointerEvents = 'auto';
+                } else {
+                    fab.style.opacity = '0';
+                    fab.style.pointerEvents = 'none';
+                }
+            });
+            
+            generateRandomQuiz();
+        });
+
+    </script>
+</body>
+</html>
