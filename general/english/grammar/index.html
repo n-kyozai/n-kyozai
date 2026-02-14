@@ -1,0 +1,766 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語 構文 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50; /* サイドバー用 */
+            --accent-color: #3498db;
+            --bg-color: #eff6ff; /* 構文用背景色（薄い青） */
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
+            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--accent-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 48px; height: 48px; background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border-right: none !important;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border-right: none !important;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .content-container {
+            width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            border-right: none !important;
+        }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 80px; }
+            .content-container { padding: 10px; width: 100%; }
+        }
+
+        /* =========================================
+           英語（構文）固有スタイル
+           ========================================= */
+        :root {
+            --syntax-primary: #3b82f6; /* Blue for Syntax */
+            --syntax-dark: #2563eb;
+            --syntax-accent: #f59e0b; /* Amber */
+            --syntax-card-bg: #ffffff;
+            --syntax-text-main: #334155;
+            --syntax-text-light: #64748b;
+            --syntax-border-radius: 8px;
+            --syntax-correct: #22c55e;
+            --syntax-wrong: #ef4444;
+        }
+
+        /* コンテナ内ヘッダー */
+        .syntax-header {
+            background: white;
+            padding: 15px;
+            border-radius: var(--syntax-border-radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            text-align: center;
+            border-top: 5px solid var(--syntax-primary);
+        }
+
+        h1 {
+            color: var(--syntax-dark);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .nav-menu-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .nav-btn-inner {
+            background: var(--bg-color);
+            color: var(--syntax-dark);
+            border: 1px solid var(--syntax-primary);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-btn-inner:hover, .nav-btn-inner:active {
+            background: var(--syntax-primary);
+            color: white;
+        }
+
+        /* セクション */
+        section {
+            background: var(--syntax-card-bg);
+            border-radius: var(--syntax-border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            border-left: 5px solid var(--syntax-primary);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            color: var(--syntax-text-main);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 穴埋め・書き換えスタイル */
+        .fill-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #e2e8f0;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .question-text {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--syntax-text-main);
+        }
+
+        .sub-text {
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .fill-blank {
+            display: inline-block;
+            min-width: 50px;
+            border-bottom: 2px solid var(--syntax-primary);
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: color 0.3s;
+            background: rgba(59, 130, 246, 0.1); /* Blue tint */
+            border-radius: 3px;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+
+        .fill-blank.revealed {
+            color: var(--syntax-dark);
+            background: none;
+        }
+
+        .translation {
+            display: block;
+            font-size: 0.85em;
+            color: var(--syntax-text-light);
+            margin-top: 5px;
+            background: #f8fafc;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        /* 連動ヒント */
+        .dynamic-hint {
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .dynamic-hint.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .show-ans-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            color: var(--syntax-text-light);
+            margin-left: 5px;
+        }
+
+        /* ランダムクイズ */
+        #random-quiz-area {
+            background: white;
+            border: 2px solid var(--syntax-accent);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .next-btn {
+            background: var(--syntax-accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3);
+            margin-top: 15px;
+        }
+        .next-btn:active { transform: scale(0.98); }
+
+        /* FAB */
+        #fab-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: var(--syntax-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-size: 1.2rem;
+            z-index: 1100;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <!-- 2階層上に戻る -->
+            <a href="../../index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <!-- 1階層上に戻る (英語メニュー) -->
+            <a href="../index.html" class="nav-item active"><i data-lucide="languages"></i>英語</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">英語</a> ＞ 構文
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">構文・一般教養編</h1>
+        </div>
+
+        <div class="content-container">
+            <header class="syntax-header">
+                <h1>教職一般教養 英語演習<br><span style="font-size:0.8em">構文編</span></h1>
+                <nav class="nav-menu-inner">
+                    <a href="#section1" class="nav-btn-inner js-scroll">書き換え</a>
+                    <a href="#section2" class="nav-btn-inner js-scroll">適語補充</a>
+                    <a href="#random" class="nav-btn-inner js-scroll">ランダムQ</a>
+                </nav>
+            </header>
+
+            <!-- 1. Rewrite (Paraphrasing) -->
+            <section id="section1">
+                <h2>1. 書き換え問題 <button class="show-ans-btn" onclick="toggleSectionBlanks('section1')">全て表示</button></h2>
+                <p style="font-size:0.85em; color:var(--syntax-text-light); margin-bottom:15px;">上下の英文が同じ意味になるように空所に適語を入れよ。</p>
+                
+                <div class="fill-item">
+                    <div class="question-text">(1) He seems to resemble his mother rather than his father.</div>
+                    <div class="sub-text">＝ He seems to <span class="fill-blank" onclick="toggleBlank(this)">take</span> after his mother rather than his father.</div>
+                    <div class="translation dynamic-hint">訳：彼は父親よりも母親に似ているようだ。<br>(take after: ～に似ている)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(2) I asked her to extinguish the fire.</div>
+                    <div class="sub-text">＝ I asked her to <span class="fill-blank" onclick="toggleBlank(this)">put</span> out the fire.</div>
+                    <div class="translation dynamic-hint">訳：私は彼女に火を消すように頼んだ。<br>(put out: ～を消す)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(3) Don't criticize others.</div>
+                    <div class="sub-text">＝ Don't <span class="fill-blank" onclick="toggleBlank(this)">find</span> fault with others.</div>
+                    <div class="translation dynamic-hint">訳：他人を批判しないでください。<br>(find fault with: ～にけちをつける/非難する)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(4) It is difficult for him to stop smoking.</div>
+                    <div class="sub-text">＝ It is difficult for him to <span class="fill-blank" onclick="toggleBlank(this)">give</span> up smoking.</div>
+                    <div class="translation dynamic-hint">訳：彼にとって喫煙をやめることは難しい。<br>(give up: ～をあきらめる/やめる)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(5) Our car will overtake Tom's soon.</div>
+                    <div class="sub-text">＝ Our car will <span class="fill-blank" onclick="toggleBlank(this)">catch</span> up with Tom's soon.</div>
+                    <div class="translation dynamic-hint">訳：私たちの車はもうすぐトムの車を追い抜くでしょう。<br>(catch up with: ～に追いつく)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(6) They all respect him as their leader.</div>
+                    <div class="sub-text">＝ They all <span class="fill-blank" onclick="toggleBlank(this)">look</span> up to him as their leader.</div>
+                    <div class="translation dynamic-hint">訳：彼らは皆、彼をリーダーとして尊敬しています。<br>(look up to: ～を尊敬する)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(7) I couldn't understand what he was trying to say.</div>
+                    <div class="sub-text">＝ I couldn't <span class="fill-blank" onclick="toggleBlank(this)">make</span> out what he was trying to say.</div>
+                    <div class="translation dynamic-hint">訳：彼が何を言おうとしているのか理解できなかった。<br>(make out: ～を理解する)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(8) People should abolish such evil customs.</div>
+                    <div class="sub-text">＝ People should <span class="fill-blank" onclick="toggleBlank(this)">do</span> away with such evil customs.</div>
+                    <div class="translation dynamic-hint">訳：人々はそのような悪い習慣を廃止すべきです。<br>(do away with: ～を廃止する)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(9) They will refuse his application because of his inexperience.</div>
+                    <div class="sub-text">＝ They will <span class="fill-blank" onclick="toggleBlank(this)">turn</span> down his application because of his inexperience.</div>
+                    <div class="translation dynamic-hint">訳：彼らは経験不足を理由に彼の応募を拒否するだろう。<br>(turn down: ～を却下/拒絶する)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(10) She was not able to contact him.</div>
+                    <div class="sub-text">＝ She was not able to <span class="fill-blank" onclick="toggleBlank(this)">get</span> [keep] in touch with him.</div>
+                    <div class="translation dynamic-hint">訳：彼女は彼と連絡を取ることができなかった。<br>(get/keep in touch with: 連絡を取る)</div>
+                </div>
+            </section>
+
+            <!-- 2. Fill in the blanks (Syntax) -->
+            <section id="section2">
+                <h2>2. 適語補充 <button class="show-ans-btn" onclick="toggleSectionBlanks('section2')">全て表示</button></h2>
+                <p style="font-size:0.85em; color:var(--syntax-text-light); margin-bottom:15px;">次の日本文に合うように空所に適語を入れよ。</p>
+
+                <div class="fill-item">
+                    <div class="question-text">(1) 彼は仕事中はタバコを吸わないことにしている。</div>
+                    <div class="sub-text">He makes it a <span class="fill-blank" onclick="toggleBlank(this)">rule</span> not to smoke while working.</div>
+                    <div class="translation dynamic-hint">(make it a rule to: いつも～することにしている)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(2) どんなに一生懸命勉強しても、彼は試験に合格できなかった。</div>
+                    <div class="sub-text"><span class="fill-blank" onclick="toggleBlank(this)">No</span> <span class="fill-blank" onclick="toggleBlank(this)">matter</span> <span class="fill-blank" onclick="toggleBlank(this)">how</span> hard he studied, he couldn't pass the examination.</div>
+                    <div class="translation dynamic-hint">(No matter how = however: どんなに～しようとも)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(3) 私は電車で財布を盗まれた。</div>
+                    <div class="sub-text">I had my purse <span class="fill-blank" onclick="toggleBlank(this)">stolen</span> in the train.</div>
+                    <div class="translation dynamic-hint">(have + O + 過去分詞: ～される)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(4) 例外のない規則はない。</div>
+                    <div class="sub-text">There is <span class="fill-blank" onclick="toggleBlank(this)">no</span> rule <span class="fill-blank" onclick="toggleBlank(this)">but</span> has some exceptions.</div>
+                    <div class="translation dynamic-hint">(no ... but: ～ない...はない)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(5) その博物館は十分行ってみる価値がある。</div>
+                    <div class="sub-text">The museum is well <span class="fill-blank" onclick="toggleBlank(this)">worth</span> visiting.</div>
+                    <div class="translation dynamic-hint">(be worth ～ing: ～する価値がある)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(6) 聞こえるようにもっと大きな声で話して下さい。</div>
+                    <div class="sub-text">Talk louder so <span class="fill-blank" onclick="toggleBlank(this)">that</span> I may hear you.</div>
+                    <div class="translation dynamic-hint">(so that A can/may: Aが～するように)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(7) ちょっと休憩したい気分だ。</div>
+                    <div class="sub-text">I feel like <span class="fill-blank" onclick="toggleBlank(this)">taking</span> [having] a rest.</div>
+                    <div class="translation dynamic-hint">(feel like ～ing: ～したい気分)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(8) 上着を着なさい、さもないとかぜをひくよ。</div>
+                    <div class="sub-text">Put your coat on, <span class="fill-blank" onclick="toggleBlank(this)">or</span> you will catch cold.</div>
+                    <div class="translation dynamic-hint">(命令文 + or: ～しなさい、さもないと)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(9) あなたの助けがなかったら、彼女は失敗していただろう。</div>
+                    <div class="sub-text"><span class="fill-blank" onclick="toggleBlank(this)">But</span> <span class="fill-blank" onclick="toggleBlank(this)">for</span> your help, she would have failed.</div>
+                    <div class="translation dynamic-hint">(But for = Without: ～がなかったら)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(10) 彼は英語を読むことすらできない、ましてや書くことなどできるものではない。</div>
+                    <div class="sub-text">He can't even read English, <span class="fill-blank" onclick="toggleBlank(this)">much</span> [still] <span class="fill-blank" onclick="toggleBlank(this)">less</span> write it.</div>
+                    <div class="translation dynamic-hint">(much less: まして～でない)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(11) 村までわずか3マイルだ。</div>
+                    <div class="sub-text">It is <span class="fill-blank" onclick="toggleBlank(this)">no</span> <span class="fill-blank" onclick="toggleBlank(this)">more</span> <span class="fill-blank" onclick="toggleBlank(this)">than</span> 3 miles to the village.</div>
+                    <div class="translation dynamic-hint">(no more than: たったの、～しか)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(12) 来てくださってどうもありがとう。</div>
+                    <div class="sub-text">It is very kind <span class="fill-blank" onclick="toggleBlank(this)">of</span> you to come.</div>
+                    <div class="translation dynamic-hint">(It is kind of you to...)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(13) 今朝になってはじめて、その事故のことを知った。</div>
+                    <div class="sub-text">It was not <span class="fill-blank" onclick="toggleBlank(this)">until</span> this morning <span class="fill-blank" onclick="toggleBlank(this)">that</span> I knew the accident.</div>
+                    <div class="translation dynamic-hint">(It is not until ... that: ～して初めて...する)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(14) 京都の人口は広島の約2倍である。</div>
+                    <div class="sub-text">The population of Kyoto is about <span class="fill-blank" onclick="toggleBlank(this)">twice</span> as large as <span class="fill-blank" onclick="toggleBlank(this)">that</span> of Hiroshima.</div>
+                    <div class="translation dynamic-hint">(twice as ... as that of: ～の2倍)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(15) 私たちは彼女が泣くのを見たことがない。</div>
+                    <div class="sub-text">We have never seen her <span class="fill-blank" onclick="toggleBlank(this)">cry</span>.</div>
+                    <div class="translation dynamic-hint">(see + O + 原形不定詞: Oが～するのを見る)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(16) 警察官を見るとすぐに、その少年は逃げ出した。</div>
+                    <div class="sub-text"><span class="fill-blank" onclick="toggleBlank(this)">On</span> seeing the policeman, the boy ran away.</div>
+                    <div class="translation dynamic-hint">(On ～ing: ～するとすぐに)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(17) ひとりで行くよりここにいたい。</div>
+                    <div class="sub-text">I would <span class="fill-blank" onclick="toggleBlank(this)">rather</span> stay here <span class="fill-blank" onclick="toggleBlank(this)">than</span> go alone.</div>
+                    <div class="translation dynamic-hint">(would rather A than B: BするよりむしろAしたい)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(18) メアリーはジェーンと身長がだいたい同じであった。</div>
+                    <div class="sub-text">Mary was about the <span class="fill-blank" onclick="toggleBlank(this)">same</span> height <span class="fill-blank" onclick="toggleBlank(this)">as</span> Jane.</div>
+                    <div class="translation dynamic-hint">(the same ... as: ～と同じ...)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(19) 昨日の夜に宿題をすませておくべきだった。</div>
+                    <div class="sub-text">I <span class="fill-blank" onclick="toggleBlank(this)">should</span> <span class="fill-blank" onclick="toggleBlank(this)">have</span> <span class="fill-blank" onclick="toggleBlank(this)">done</span> my homework last night.</div>
+                    <div class="translation dynamic-hint">(should have done: ～すべきだった)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(20) 彼に金を貸すくらいなら、捨てた方がましだ。</div>
+                    <div class="sub-text">You <span class="fill-blank" onclick="toggleBlank(this)">might</span> <span class="fill-blank" onclick="toggleBlank(this)">as</span> <span class="fill-blank" onclick="toggleBlank(this)">well</span> throw your money away as lend it to him.</div>
+                    <div class="translation dynamic-hint">(might as well A as B: BするくらいならAした方がまし)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(21) もちろん2人は結婚するものと思っている。</div>
+                    <div class="sub-text">I <span class="fill-blank" onclick="toggleBlank(this)">take</span> it <span class="fill-blank" onclick="toggleBlank(this)">for</span> <span class="fill-blank" onclick="toggleBlank(this)">granted</span> that they will marry.</div>
+                    <div class="translation dynamic-hint">(take it for granted that: ～を当然のことと思う)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(22) あなたはこの薬を飲んだ方がよい。</div>
+                    <div class="sub-text">You <span class="fill-blank" onclick="toggleBlank(this)">may</span> <span class="fill-blank" onclick="toggleBlank(this)">as</span> <span class="fill-blank" onclick="toggleBlank(this)">well</span> take this medicine.</div>
+                    <div class="translation dynamic-hint">(may as well: ～した方がよい)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(23) 彼は健康増進の目的でテニスをしている。</div>
+                    <div class="sub-text">He plays tennis <span class="fill-blank" onclick="toggleBlank(this)">with</span> a <span class="fill-blank" onclick="toggleBlank(this)">view</span> <span class="fill-blank" onclick="toggleBlank(this)">to</span> promoting his <span class="fill-blank" onclick="toggleBlank(this)">health</span>.</div>
+                    <div class="translation dynamic-hint">(with a view to ～ing: ～する目的で)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(24) 彼女は若いころは美しかったかもしれない。</div>
+                    <div class="sub-text">She <span class="fill-blank" onclick="toggleBlank(this)">may</span> <span class="fill-blank" onclick="toggleBlank(this)">have</span> <span class="fill-blank" onclick="toggleBlank(this)">been</span> beauty in her youth.</div>
+                    <div class="translation dynamic-hint">(may have been: ～だったかもしれない)</div>
+                </div>
+
+                <div class="fill-item">
+                    <div class="question-text">(25) 彼は学者というよりはむしろジャーナリストだ。</div>
+                    <div class="sub-text">He is <span class="fill-blank" onclick="toggleBlank(this)">not</span> <span class="fill-blank" onclick="toggleBlank(this)">so</span> <span class="fill-blank" onclick="toggleBlank(this)">much</span> a scholar <span class="fill-blank" onclick="toggleBlank(this)">as</span> a journalist.</div>
+                    <div class="translation dynamic-hint">(not so much A as B: AというよりむしろB)</div>
+                </div>
+            </section>
+
+            <!-- Random Quiz -->
+            <section id="random">
+                <h2>ランダム・クイズ (Random Challenge)</h2>
+                <div id="random-quiz-area">
+                    <div id="rq-content">
+                        <p style="color:var(--syntax-text-light);">「次へ」を押すと構文問題が出ます</p>
+                    </div>
+                    <button class="next-btn" onclick="generateRandomQuiz()">次の問題へ</button>
+                </div>
+            </section>
+
+            <!-- Footer / FAB -->
+            <a href="#top" id="fab-top" class="js-scroll">↑</a>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // --- Data for Random Quiz ---
+        const quizData = [
+            {q: "resemble = [        ] after", a: "take"},
+            {q: "extinguish = [        ] out", a: "put"},
+            {q: "criticize = [        ] fault with", a: "find"},
+            {q: "stop = [        ] up", a: "give"},
+            {q: "overtake = [        ] up with", a: "catch"},
+            {q: "respect = [        ] up to", a: "look"},
+            {q: "understand = [        ] out", a: "make"},
+            {q: "abolish = [        ] away with", a: "do"},
+            {q: "refuse = [        ] down", a: "turn"},
+            {q: "contact = [        ] in touch with", a: "get"},
+            {q: "He makes it a [        ] not to smoke. (～することにしている)", a: "rule"},
+            {q: "[        ] matter how hard he studied... (どんなに～でも)", a: "No"},
+            {q: "There is [        ] rule but has some exceptions.", a: "no"},
+            {q: "The museum is well [        ] visiting. (価値がある)", a: "worth"},
+            {q: "Talk louder so [        ] I may hear you. (～するように)", a: "that"},
+            {q: "I feel like [        ] a rest. (～したい気分)", a: "taking"},
+            {q: "Put your coat on, [        ] you will catch cold. (さもないと)", a: "or"},
+            {q: "[        ] for your help, she would have failed. (もし～がなかったら)", a: "But"},
+            {q: "much [        ] write it. (まして～ない)", a: "less"},
+            {q: "It is [        ] more than 3 miles. (たったの)", a: "no"},
+            {q: "It is very kind [        ] you to come.", a: "of"},
+            {q: "It was not [        ] this morning that... (～して初めて)", a: "until"},
+            {q: "twice as large [        ] that of Hiroshima.", a: "as"},
+            {q: "We have never seen her [        ]. (泣くのを)", a: "cry"},
+            {q: "[        ] seeing the policeman... (～するとすぐに)", a: "On"},
+            {q: "I would [        ] stay here than go alone. (～よりむしろ)", a: "rather"},
+            {q: "about the [        ] height as Jane.", a: "same"},
+            {q: "I [        ] have done my homework. (すべきだった)", a: "should"},
+            {q: "You [        ] as well throw your money away... (～するくらいなら)", a: "might"},
+            {q: "I take it for [        ] that... (当然のことと思う)", a: "granted"},
+            {q: "You [        ] as well take this medicine. (～した方がよい)", a: "may"},
+            {q: "with a view [        ] promoting his health. (～する目的で)", a: "to"},
+            {q: "She [        ] have been beauty. (～だったかもしれない)", a: "may"},
+            {q: "not [        ] much a scholar as a journalist.", a: "so"}
+        ];
+
+        // --- Interactive Functions ---
+
+        function toggleBlank(element) {
+            element.classList.toggle('revealed');
+            // ヒント連動ロジック
+            const parent = element.closest('.fill-item'); // より確実な親要素取得
+            if (parent) {
+                const hint = parent.querySelector('.dynamic-hint');
+                if (hint) {
+                    if (element.classList.contains('revealed')) {
+                        hint.classList.add('visible');
+                    } else {
+                        // 他の空欄が開いているかチェック
+                        const siblings = parent.querySelectorAll('.fill-blank');
+                        let anyRevealed = false;
+                        siblings.forEach(sib => {
+                            if(sib.classList.contains('revealed')) anyRevealed = true;
+                        });
+                        
+                        if(!anyRevealed) {
+                            hint.classList.remove('visible');
+                        }
+                    }
+                }
+            }
+        }
+        
+        function toggleSectionBlanks(sectionId) {
+            const section = document.getElementById(sectionId);
+            const blanks = section.querySelectorAll('.fill-blank');
+            let allRevealed = true;
+            blanks.forEach(b => { if(!b.classList.contains('revealed')) allRevealed = false; });
+            
+            blanks.forEach(b => {
+                const parent = b.closest('.fill-item');
+                const hint = parent ? parent.querySelector('.dynamic-hint') : null;
+
+                if(allRevealed) {
+                    b.classList.remove('revealed');
+                    if(hint) hint.classList.remove('visible');
+                } else {
+                    b.classList.add('revealed');
+                    if(hint) hint.classList.add('visible');
+                }
+            });
+        }
+
+        function generateRandomQuiz() {
+            const index = Math.floor(Math.random() * quizData.length);
+            const data = quizData[index];
+            const contentDiv = document.getElementById('rq-content');
+            
+            // バッジ（カテゴリー名）削除
+            contentDiv.innerHTML = `
+                <div style="width:100%;">
+                    <div style="font-weight:bold; margin:10px 0; font-size:1.1em;">${data.q}</div>
+                    <div id="rq-answer" style="display:none; color:var(--primary-dark); font-weight:bold; margin-top:10px; font-size:1.2em;">${data.a}</div>
+                    <button onclick="document.getElementById('rq-answer').style.display='block'" 
+                            style="background:#e2e8f0; border:none; padding:8px 20px; border-radius:15px; margin-top:10px; cursor:pointer; font-size:0.9em;">
+                        答えを見る
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- Smooth Scroll & FAB Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            const fab = document.getElementById('fab-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    fab.style.opacity = '1';
+                    fab.style.pointerEvents = 'auto';
+                } else {
+                    fab.style.opacity = '0';
+                    fab.style.pointerEvents = 'none';
+                }
+            });
+            
+            generateRandomQuiz();
+        });
+
+    </script>
+</body>
+</html>
