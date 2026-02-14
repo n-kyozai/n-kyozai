@@ -3,7 +3,8 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ユーザーが拡大・縮小して閲覧することを前提に、標準的な幅を確保 -->
+    <meta name="viewport" content="width=1024, user-scalable=yes">
     <title>数学 応用問題 - 教員採用試験対策まとめ</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -39,14 +40,13 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
-            overflow-x: hidden;
             width: 100%;
+            background-color: var(--bg-color);
             border: none !important;
         }
 
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
             display: flex;
@@ -63,7 +63,6 @@
             border-right: 1px solid #e2e8f0;
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .sidebar-header {
             padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
@@ -82,69 +81,52 @@
         .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
         .nav-item.active { color: var(--math-color); background-color: #f1f5f9; font-weight: bold; }
 
-        .mobile-toggle-btn {
-            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
-            width: 42px; height: 42px; background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid #ccc; border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
-            align-items: center; justify-content: center;
-        }
-
-        .overlay {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
-        }
-        .overlay.active { display: block; }
-
+        /* --- メインコンテンツ --- */
         .main-content {
-            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
-            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
-            border: none !important;
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #e2e8f0;
         }
         .page-header {
-            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 40px;
         }
-        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb { font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; }
         .breadcrumb a { color: #94a3b8; text-decoration: none; }
         .breadcrumb a:hover { text-decoration: underline; }
 
-        /* コンテナ幅を拡大して解説を収まりやすく */
+        /* コンテナ幅を拡大して、拡大閲覧に耐えられるように */
         .container {
-            width: 100%; max-width: 1100px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 40px;
+            padding-bottom: 140px;
+            flex: 1;
         }
         
         footer {
-            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
-            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar-header { padding-left: 60px; }
-            .mobile-toggle-btn { display: flex; }
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .page-header { padding-left: 70px; }
-            .container { padding: 12px; }
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 20px;
+            text-align: center; color: #94a3b8; font-size: 0.8rem; margin-top: auto;
         }
 
         /* =========================================
            数学応用問題 固有スタイル
            ========================================= */
-        h1 { font-size: 1.6rem; color: var(--math-color); margin: 0; }
+        h1 { font-size: 1.8rem; color: var(--math-color); margin: 0; }
         h2.section-title {
-            color: #0c4a6e; margin-top: 40px; margin-bottom: 20px; font-size: 1.3rem;
+            color: #0c4a6e; margin-top: 50px; margin-bottom: 25px; font-size: 1.4rem;
             border-left: 6px solid var(--math-color); padding-left: 15px;
             background: linear-gradient(to right, #fff, transparent);
         }
 
         .problem-card {
             background-color: #fff; border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px;
-            margin-bottom: 24px; border: 1px solid #e2e8f0;
-            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); padding: 30px;
+            margin-bottom: 30px; border: 1px solid #e2e8f0;
         }
-        .problem-card:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
 
         .problem-card.similar {
             border-left: 6px solid #8b5cf6;
@@ -152,109 +134,101 @@
         }
 
         .problem-header {
-            display: flex; align-items: baseline; margin-bottom: 16px;
+            display: flex; align-items: baseline; margin-bottom: 20px;
         }
 
         .problem-number {
             background-color: var(--math-color); color: white;
-            padding: 4px 12px; border-radius: 6px; font-weight: bold;
-            font-size: 0.85rem; margin-right: 12px; white-space: nowrap;
+            padding: 5px 12px; border-radius: 6px; font-weight: bold;
+            font-size: 0.9rem; margin-right: 15px; white-space: nowrap;
         }
         .problem-card.similar .problem-number { background-color: #8b5cf6; }
 
+        /* 問題文と画像を横並びに固定 */
         .problem-body {
             display: flex;
-            gap: 24px;
+            flex-direction: row; /* モバイルでも縦にしない */
+            gap: 30px;
             align-items: flex-start;
             justify-content: space-between;
         }
         
         .problem-text {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 500;
             flex: 1;
-            white-space: normal; /* 不要な余白を完全に排除 */
             text-align: left; 
             color: var(--text-color);
+            white-space: normal;
         }
 
-        /* 画像エリア */
+        /* 画像エリアのサイズ調整 */
         .problem-image-box {
-            width: 220px;
+            width: 280px; /* 少し大きめに確保 */
             flex-shrink: 0;
             text-align: center;
-            background: #f1f5f9; border-radius: 8px; padding: 10px;
+            background: #f1f5f9; border-radius: 8px; padding: 15px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 1px solid #cbd5e1;
         }
         .problem-image-box img {
             max-width: 100%; height: auto;
-            border: 1px solid #cbd5e1; border-radius: 4px;
+            border-radius: 4px;
         }
-        .no-img-text { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+        .no-img-text { font-size: 0.8rem; color: #94a3b8; margin-top: 5px; }
 
-        /* 解答・解説エリア (改善版) */
-        .answer-section { margin-top: 20px; border-top: 1px dashed #e2e8f0; padding-top: 16px; }
+        /* 解答・解説エリア */
+        .answer-section { margin-top: 25px; border-top: 1px dashed #e2e8f0; padding-top: 20px; }
         .toggle-btn {
             background-color: #f1f5f9; color: var(--text-color); border: none;
-            padding: 10px; border-radius: 6px; cursor: pointer;
-            font-size: 0.9rem; display: flex; width: 100%; justify-content: center; font-weight: bold;
+            padding: 12px; border-radius: 6px; cursor: pointer;
+            font-size: 1rem; display: flex; width: 100%; justify-content: center; font-weight: bold;
+            transition: background 0.2s;
         }
         .toggle-btn:hover { background-color: #e2e8f0; }
 
         .answer-content {
             display: none; 
-            margin-top: 16px; 
-            padding: 20px;
+            margin-top: 20px; 
+            padding: 25px;
             background-color: #f0f9ff; 
             border-radius: 8px;
-            border-left: 4px solid var(--math-color);
+            border-left: 5px solid var(--math-color);
             width: 100%;
-            overflow-wrap: break-word; /* テキストの折り返し */
-            word-break: break-all;      /* モバイルでの突き抜け防止 */
+            overflow-wrap: break-word; 
+            word-break: normal;
             max-width: 100%;
         }
         .problem-card.similar .answer-content { background-color: #f5f3ff; border-left-color: #8b5cf6; }
-        .answer-content.show { display: block; animation: fadeIn 0.3s ease; }
+        .answer-content.show { display: block; animation: fadeIn 0.4s ease; }
 
-        .answer-title { font-weight: bold; color: #0284c7; margin-bottom: 8px; display: block; }
+        .answer-title { font-weight: bold; color: #0284c7; margin-bottom: 10px; display: block; font-size: 1.1rem; }
         .problem-card.similar .answer-title { color: #7c3aed; }
-        .result { font-weight: bold; color: #dc2626; background-color: #fef2f2; padding: 2px 6px; border-radius: 4px; }
-        .step { margin-bottom: 12px; font-size: 0.95rem; }
+        .result { font-weight: bold; color: #dc2626; background-color: #fef2f2; padding: 2px 8px; border-radius: 4px; }
+        .step { margin-bottom: 15px; font-size: 1rem; }
 
-        /* ページ内ナビボタン */
-        .nav-buttons { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
+        /* ページ内ナビ */
+        .nav-buttons { display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center; }
         .page-nav-btn {
             background: #fff; border: 1px solid var(--math-color); color: var(--math-color);
-            padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer;
+            padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .page-nav-btn:hover { background: #e0f2fe; }
 
-        /* モバイルレイアウト調整 */
-        @media (max-width: 768px) {
-            .problem-body { flex-direction: column; gap: 16px; }
-            .problem-image-box { width: 100% !important; height: auto; }
-            .problem-text { font-size: 0.95rem; }
-            .answer-content { padding: 15px; }
-        }
-
-        /* 固定トップへ戻るボタン */
+        /* スクロールトップボタン */
         .scroll-top-btn {
-            position: fixed; bottom: 25px; right: 20px;
-            width: 48px; height: 48px; background: #374151; color: #fff;
-            border-radius: 50%; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            position: fixed; bottom: 30px; right: 30px;
+            width: 55px; height: 55px; background: #374151; color: #fff;
+            border-radius: 50%; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
             cursor: pointer; z-index: 900; display: flex; align-items: center; justify-content: center;
-            opacity: 0.9;
+            opacity: 0.9; font-size: 1.5rem;
         }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
-    <button class="mobile-toggle-btn" id="menuToggle">
-        <i data-lucide="menu"></i>
-    </button>
-
-    <div class="overlay" id="sidebar-overlay"></div>
 
     <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
@@ -299,7 +273,6 @@
             <section id="sec-number">
                 <h2 class="section-title">数と式・方程式</h2>
 
-                <!-- No.1 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.1</span></div>
                     <div class="problem-body">
@@ -311,7 +284,7 @@
                             <span class="answer-title">【解答】</span>
                             <div class="step">$A = 6k + 3, B = 6l + 4$ と置く。</div>
                             <div class="step">$A+B = (6k+3) + (6l+4) = 6(k+l) + 7 = 6(k+l+1) + 1$ → 余り <span class="result">1</span></div>
-                            <div class="step">$AB = (6k+3)(6l+4) = 36kl + 24k + 18l + 12$ → 余り <span class="result">0</span></div>
+                            <div class="step">$AB = (6k+3)(6l+4) = 36kl + 24k + 18l + 12$ → 全て$6$で割り切れる。余り <span class="result">0</span></div>
                         </div>
                     </div>
                 </div>
@@ -325,13 +298,11 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【類題の解答】</span>
-                            <div>$A+B$：余りの和 $2+3=5$ を5で割ると余りは <span class="result">0</span></div>
-                            <div>$AB$：余りの積 $2 \times 3 = 6$ を5で割ると余りは <span class="result">1</span></div>
+                            <div>$A+B$：余りの和 $2+3=5$ を5で割ると余りは <span class="result">0</span><br>$AB$：余りの積 $2 \times 3 = 6$ を5で割ると余りは <span class="result">1</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.2 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.2</span></div>
                     <div class="problem-body">
@@ -341,7 +312,7 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>$252 = 2^2 \times 3^2 \times 7^1$。約数の個数は $(2+1)(2+1)(1+1) = $ <span class="result">18個</span></div>
+                            <div>$252 = 2^2 \times 3^2 \times 7^1$ より、$(2+1)(2+1)(1+1) = $ <span class="result">18個</span></div>
                         </div>
                     </div>
                 </div>
@@ -360,7 +331,6 @@
                     </div>
                 </div>
 
-                <!-- No.4 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.4</span></div>
                     <div class="problem-body">
@@ -370,8 +340,7 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>(1) $32+16+2+1 = $ <span class="result">51</span></div>
-                            <div>(2) $73 = 64+8+1 \rightarrow$ <span class="result">1001001<sub>(2)</sub></span></div>
+                            <div>(1) $32+16+2+1 = $ <span class="result">51</span><br>(2) $73 = 64+8+1 \rightarrow$ <span class="result">1001001<sub>(2)</sub></span></div>
                         </div>
                     </div>
                 </div>
@@ -385,13 +354,11 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【類題の解答】</span>
-                            <div>(1) $32+8+2 = $ <span class="result">42</span></div>
-                            <div>(2) $50 = 32+16+2 \rightarrow$ <span class="result">110010<sub>(2)</sub></span></div>
+                            <div>(1) $32+8+2 = $ <span class="result">42</span><br>(2) $50 = 32+16+2 \rightarrow$ <span class="result">110010<sub>(2)</sub></span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.5 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.5</span></div>
                     <div class="problem-body">
@@ -401,30 +368,25 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>(1) $200 \div 5 = $ <span class="result">40個</span></div>
-                            <div>(2) 35の倍数。$200 \div 35 = 5.7\dots$ → <span class="result">5個</span></div>
-                            <div>(3) $40 + 28 - 5 = $ <span class="result">63個</span></div>
+                            <div>(1) $200 \div 5 = $ <span class="result">40個</span><br>(2) $200 \div 35 = 5.7\dots$ → <span class="result">5個</span><br>(3) $40 + 28 - 5 = $ <span class="result">63個</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.6 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.6</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">50人の生徒のうち、運動部22人、文化部25人、帰宅部10人。両方に所属している者は何人か？</div>
+                        <div class="problem-text">50人の生徒のうち、運動部22人、文化部25人、帰宅部(どちらでもない)10人。両方に所属している者は何人か？</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">所属者は $50 - 10 = 40$人。</div>
-                            <div>$22 + 25 - x = 40 \rightarrow 47 - x = 40 \rightarrow$ <span class="result">7人</span></div>
+                            <div>所属者は $50 - 10 = 40$人。$22 + 25 - x = 40$ より、$47 - x = 40$。答え： <span class="result">7人</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.7 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.7</span></div>
                     <div class="problem-body">
@@ -440,7 +402,6 @@
                     </div>
                 </div>
 
-                <!-- No.8, 9, 10 食塩水 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.8</span></div>
                     <div class="problem-body">
@@ -464,8 +425,7 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">$x+y=400, 0.1x+0.05y=32$ を解くと、$x=240, y=160$。</div>
-                            <div>答え： <span class="result">10%が240g、5%が160g</span></div>
+                            <div>$x+y=400, 0.1x+0.05y=32$ を解くと、$x=240, y=160$。答え： <span class="result">10%が240g、5%が160g</span></div>
                         </div>
                     </div>
                 </div>
@@ -479,17 +439,15 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>天秤算より、濃度差の比 $2:1$ なので分量は逆比の $1:2$。</div>
-                            <div>答え： <span class="result">7%が50g、4%が100g</span></div>
+                            <div>濃度差の比 $2:1$ なので分量は逆比の $1:2$。答え： <span class="result">7%が50g、4%が100g</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.11, 12 過不足算 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.11</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">一人に3個ずつ配ると5個余り、4個ずつ配ると3個足りない。子どもの人数とみかんの個数を求めよ。</div>
+                        <div class="problem-text">みかんを配る。一人に3個ずつ配ると5個余り、4個ずつ配ると3個足りない。子どもの人数とみかんの個数を求めよ。</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
@@ -515,7 +473,6 @@
                     </div>
                 </div>
 
-                <!-- No.13 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.13</span></div>
                     <div class="problem-body">
@@ -551,10 +508,11 @@
                     </div>
                 </div>
 
+                <!-- 図形問題: No.15 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.15</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">1辺$10\text{cm}$の正方形の内部に、辺を直径とする半円を4つ書いた花びら型の斜線部分の面積。</div>
+                        <div class="problem-text">1辺$10\text{cm}$の正方形の内部に、辺を直径とする半円を4つ書いた。重なり合った花びら型の斜線部分の面積を求めよ。</div>
                         <div class="problem-image-box">
                             <img src="15.png" alt="No.15" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <div class="no-img-text" style="display:none;">(画像: 15.png)</div>
@@ -564,11 +522,12 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>(半円4つ) - (正方形) $= 50\pi - 100$ <span class="result">cm<sup>2</sup></span></div>
+                            <div>(半円4つ) - (正方形) $= (25\pi \div 2 \times 4) - 100 = $ <span class="result">50π - 100 (cm<sup>2</sup>)</span></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 図形問題: No.16 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.16</span></div>
                     <div class="problem-body">
@@ -587,6 +546,7 @@
                     </div>
                 </div>
 
+                <!-- 図形問題: No.17 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.17</span></div>
                     <div class="problem-body">
@@ -600,7 +560,7 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">高さ $h = 2\sqrt{10}$。</div>
+                            <div class="step">高さ $h = \sqrt{7^2 - 3^2} = 2\sqrt{10}$。</div>
                             <div>$V = \frac{1}{3} \pi 3^2 \times 2\sqrt{10} = $ <span class="result">6√10π cm<sup>3</sup></span></div>
                         </div>
                     </div>
@@ -664,16 +624,16 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">(1) $_4P_2 \times 5! = 12 \times 120 = $ <span class="result">1440通り</span></div>
-                            <div>(2) $4! \times _5P_3 = 24 \times 60 = $ <span class="result">1440通り</span></div>
+                            <div>(1) $_4P_2 \times 5! = 12 \times 120 = $ <span class="result">1440通り</span><br>(2) $4! \times _5P_3 = 24 \times 60 = $ <span class="result">1440通り</span></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 図形問題: No.21 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.21</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">格子状の道路がある。AからBへ行く最短経路は何通りあるか。(1)全経路 (2)P経由</div>
+                        <div class="problem-text">図のような格子状の道路がある。AからBへ行く最短経路は何通りあるか。(1)全経路 (2)P経由</div>
                         <div class="problem-image-box">
                             <img src="21.png" alt="No.21" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <div class="no-img-text" style="display:none;">(画像: 21.png)</div>
@@ -729,25 +689,13 @@
     <script>
         lucide.createIcons();
 
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        const toggleSidebar = () => {
-            const isActive = sidebar.classList.contains('active');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
-            lucide.createIcons();
-            document.body.style.overflow = isActive ? '' : 'hidden';
-        };
-        menuToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
-
+        // ページ内リンク
         function scrollToId(id) {
             const el = document.getElementById(id);
             if (el) window.scrollTo({ top: el.offsetTop - 20, behavior: 'smooth' });
         }
 
+        // 解説のトグル
         function toggleAnswer(btn) {
             const content = btn.nextElementSibling;
             const isShown = content.classList.contains('show');
