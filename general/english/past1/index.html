@@ -1,0 +1,487 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>過去問にChallenge 1 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --english-color: #4f46e5; /* 英語テーマカラー（インディゴ） */
+            --english-dark: #3730a3;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
+            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--english-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--english-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 42px; height: 42px; background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border: none !important;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border-right: none !important;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 100%; max-width: 900px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            border-right: none !important;
+        }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 70px; }
+            .container { padding: 12px; }
+        }
+
+        /* =========================================
+           英語過去問 Challenge 固有スタイル
+           ========================================= */
+        .section-card {
+            background: #fff; border-radius: 12px; padding: 25px; margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            border-left: 5px solid var(--english-color); padding-left: 12px;
+            margin-bottom: 20px; color: var(--primary-color); font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .problem-text {
+            font-size: 1rem; font-weight: 500; margin-bottom: 15px; line-height: 1.7;
+        }
+
+        .memo-box {
+            background: #f1f5f9; border: 1px dashed #cbd5e1; padding: 15px;
+            border-radius: 8px; margin-bottom: 15px; font-style: italic; color: #475569;
+        }
+
+        /* クイズ選択肢 */
+        .choices-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px; margin-top: 10px; margin-bottom: 10px;
+        }
+        .choice-btn {
+            background: #fff; border: 2px solid #e2e8f0; padding: 12px;
+            border-radius: 8px; cursor: pointer; transition: all 0.2s;
+            text-align: center; font-weight: bold; font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        .choice-btn:hover { border-color: var(--english-color); background: #eef2ff; }
+        .choice-btn.correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .choice-btn.wrong { background: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+
+        .explanation {
+            display: none; margin-top: 5px; margin-bottom: 20px; padding: 12px;
+            background: #eef2ff; border-radius: 8px; border-left: 4px solid var(--english-color);
+            font-size: 0.85rem; color: #1e1b4b;
+        }
+
+        /* 単語復習テーブル */
+        .vocab-table {
+            width: 100%; border-collapse: collapse; margin-top: 20px;
+        }
+        .vocab-table th, .vocab-table td {
+            border: 1px solid #e2e8f0; padding: 12px; text-align: left;
+        }
+        .vocab-table th { background: #f8fafc; width: 40%; color: #64748b; }
+
+        /* マーカー */
+        .marker {
+            display: inline-block; padding: 2px 8px; border-radius: 4px;
+            font-weight: bold; cursor: pointer; transition: 0.2s;
+            user-select: none;
+        }
+        .marker.hidden { background-color: var(--english-color); color: var(--english-color); }
+        .marker.visible { background-color: #e0e7ff; color: var(--english-dark); }
+
+        /* 固定切替ボタン (初期は非表示) */
+        .mode-switch-btn {
+            position: fixed; bottom: 25px; right: 20px;
+            background: var(--english-color); color: #fff; border: none;
+            padding: 12px 24px; border-radius: 50px; font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 1100;
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <!-- 指定: ../index.html で一般教養トップへ -->
+            <a href="../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <!-- 英語メニューへ -->
+            <a href="index.html" class="nav-item"><i data-lucide="languages"></i>英語</a>
+            <a href="../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../index.html">ホーム</a> ＞ <a href="../index.html">一般教養</a> ＞ <a href="index.html">英語</a> ＞ 過去問Challenge 1
+            </div>
+            <h1>過去問にChallenge 1</h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 問題 1 -->
+            <div class="section-card">
+                <h2>Q1. 物当てクイズ</h2>
+                <div class="problem-text">
+                    次の英文はあるものを留学生に紹介したときに書いたメモです。何を紹介したメモか選びなさい。
+                </div>
+                <div class="memo-box">
+                    "It is something that we often use for festivals. There is a candle or light bulb inside. The outside is made of paper and bamboo. It can be red or white with black kanji."
+                </div>
+                <div class="choices-grid">
+                    <button class="choice-btn" onclick="check(this, false)">① 松明</button>
+                    <button class="choice-btn" onclick="check(this, false)">② 神輿</button>
+                    <button class="choice-btn" onclick="check(this, false)">③ 襖</button>
+                    <button class="choice-btn" data-correct="true" onclick="check(this, true)">④ 提灯</button>
+                    <button class="choice-btn" onclick="check(this, false)">⑤ 扇子</button>
+                </div>
+                <div class="explanation">
+                    正解：<strong>④ 提灯</strong><br>
+                    紙と竹で作られ、中にロウソクや電球を入れるという記述から判断します。
+                </div>
+            </div>
+
+            <!-- 問題 2 -->
+            <div class="section-card">
+                <h2>Q2. 言い換え表現</h2>
+                <div class="problem-text">
+                    次の2つの英文を同じ意味にするために、（　）に当てはまる語句を選びなさい。
+                </div>
+                <div class="memo-box">
+                    At last we found out the truth.<br>
+                    ＝ ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) we found out the truth.
+                </div>
+                <div class="choices-grid">
+                    <button class="choice-btn" data-correct="true" onclick="check(this, true)">① Finally</button>
+                    <button class="choice-btn" onclick="check(this, false)">② Suddenly</button>
+                    <button class="choice-btn" onclick="check(this, false)">③ Clearly</button>
+                    <button class="choice-btn" onclick="check(this, false)">④ Especially</button>
+                    <button class="choice-btn" onclick="check(this, false)">⑤ Fortunately</button>
+                </div>
+                <div class="explanation">
+                    正解：<strong>① Finally</strong><br>
+                    "At last" ＝ "Finally"（ついに、ようやく）
+                </div>
+            </div>
+
+            <!-- 問題 3 -->
+            <div class="section-card">
+                <h2>Q3. 同意表現の選択</h2>
+                <div class="problem-text">
+                    下線部とほぼ同じ意味をもつものを選びなさい。
+                </div>
+                
+                <!-- (1) -->
+                <div class="sub-q-container">
+                    <p>(1) The picnic was cancelled <u>owing to</u> the heavy rain.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="check(this, false)">ア. in spite of</button>
+                        <button class="choice-btn" data-correct="true" onclick="check(this, true)">イ. because of</button>
+                        <button class="choice-btn" onclick="check(this, false)">ウ. instead of</button>
+                        <button class="choice-btn" onclick="check(this, false)">エ. according to</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>イ. because of</strong><br>
+                        "owing to" ＝ "because of"（〜のために：原因・理由を示す）
+                    </div>
+                </div>
+
+                <!-- (2) -->
+                <div class="sub-q-container">
+                    <p>(2) Your dream will come true <u>sooner or later</u>.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" data-correct="true" onclick="check(this, true)">ア. in time</button>
+                        <button class="choice-btn" onclick="check(this, false)">イ. on time</button>
+                        <button class="choice-btn" onclick="check(this, false)">ウ. at a time</button>
+                        <button class="choice-btn" onclick="check(this, false)">エ. by time</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>ア. in time</strong><br>
+                        "sooner or later"（遅かれ早かれ ≒ やがて）は、ここでは「いつか、間に合って」という意味合いで "in time" が最も近いです。
+                    </div>
+                </div>
+
+                <!-- (3) -->
+                <div class="sub-q-container">
+                    <p>(3) She <u>got in touch with</u> her father as soon as she arrived.</p>
+                    <div class="choices-grid">
+                        <button class="choice-btn" onclick="check(this, false)">ア. met</button>
+                        <button class="choice-btn" onclick="check(this, false)">イ. asked</button>
+                        <button class="choice-btn" onclick="check(this, false)">ウ. missed</button>
+                        <button class="choice-btn" data-correct="true" onclick="check(this, true)">エ. contacted</button>
+                    </div>
+                    <div class="explanation">
+                        正解：<strong>エ. contacted</strong><br>
+                        "get in touch with" ＝ "contact"（連絡をとる）
+                    </div>
+                </div>
+            </div>
+
+            <!-- 問題 4 -->
+            <div class="section-card">
+                <h2>Q4. カテゴリー分類</h2>
+                <div class="problem-text">
+                    【 】内の項目に英単語<strong>すべて</strong>が当てはまるものを二つ選び、その組み合わせを選びなさい。
+                </div>
+                <div class="memo-box" style="font-style:normal; font-size:0.9rem;">
+                    ア.【職業】 architect, carpenter, container, cucumber, lawyer<br>
+                    イ.【衣類】 goat, jacket, shirt, skirt, trainer<br>
+                    ウ.【台所用品】 canal, kettle, orchard, oven, saucepan<br>
+                    エ.【動物】 deer, donkey, fox, squirrel, zebra<br>
+                    オ.【図形】 cone, cube, oval, rectangle, square
+                </div>
+                <div class="choices-grid">
+                    <button class="choice-btn" onclick="check(this, false)">1. ア，イ</button>
+                    <button class="choice-btn" onclick="check(this, false)">3. ア，エ</button>
+                    <button class="choice-btn" onclick="check(this, false)">6. イ，エ</button>
+                    <button class="choice-btn" data-correct="true" onclick="check(this, true)">0. エ，オ</button>
+                </div>
+                <div class="explanation">
+                    正解：<strong>0. エ（動物）と オ（図形）</strong><br>
+                    ア：container（容器）, cucumber（きゅうり）が職業ではない。<br>
+                    イ：goat（ヤギ）が衣類ではない。<br>
+                    ウ：canal（運河）, orchard（果樹園）が台所用品ではない。
+                </div>
+            </div>
+
+            <!-- 英単語復習（暗記シート） -->
+            <div class="section-card" id="vocab-section">
+                <h2>英単語復習（暗記シート）</h2>
+                <p style="font-size:0.8rem; color:#64748b; margin-bottom:10px;">※このエリアでは右下に「暗記モード」ボタンが表示されます。</p>
+                <table class="vocab-table">
+                    <thead>
+                        <tr><th>English</th><th>Japanese</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>architect</td><td><span class="marker hidden">建築家</span></td></tr>
+                        <tr><td>carpenter</td><td><span class="marker hidden">大工</span></td></tr>
+                        <tr><td>container</td><td><span class="marker hidden">容器</span></td></tr>
+                        <tr><td>cucumber</td><td><span class="marker hidden">キュウリ</span></td></tr>
+                        <tr><td>lawyer</td><td><span class="marker hidden">弁護士</span></td></tr>
+                        <tr><td>goat</td><td><span class="marker hidden">ヤギ</span></td></tr>
+                        <tr><td>jacket</td><td><span class="marker hidden">ジャケット</span></td></tr>
+                        <tr><td>skirt</td><td><span class="marker hidden">スカート</span></td></tr>
+                        <tr><td>trainer</td><td><span class="marker hidden">トレーナー</span></td></tr>
+                        <tr><td>canal</td><td><span class="marker hidden">運河</span></td></tr>
+                        <tr><td>kettle</td><td><span class="marker hidden">やかん</span></td></tr>
+                        <tr><td>orchard</td><td><span class="marker hidden">果樹園</span></td></tr>
+                        <tr><td>oven</td><td><span class="marker hidden">オーブン</span></td></tr>
+                        <tr><td>saucepan</td><td><span class="marker hidden">鍋</span></td></tr>
+                        <tr><td>deer</td><td><span class="marker hidden">鹿</span></td></tr>
+                        <tr><td>donkey</td><td><span class="marker hidden">ロバ</span></td></tr>
+                        <tr><td>fox</td><td><span class="marker hidden">キツネ</span></td></tr>
+                        <tr><td>squirrel</td><td><span class="marker hidden">リス</span></td></tr>
+                        <tr><td>zebra</td><td><span class="marker hidden">シマウマ</span></td></tr>
+                        <tr><td>cone</td><td><span class="marker hidden">円錐</span></td></tr>
+                        <tr><td>cube</td><td><span class="marker hidden">立方体</span></td></tr>
+                        <tr><td>oval</td><td><span class="marker hidden">楕円形</span></td></tr>
+                        <tr><td>rectangle</td><td><span class="marker hidden">長方形</span></td></tr>
+                        <tr><td>square</td><td><span class="marker hidden">正方形</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 暗記モード切替ボタン -->
+    <button id="toggleModeBtn" class="mode-switch-btn">暗記モード: ON</button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+        };
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // クイズ判定
+        function check(btn, isCorrect) {
+            const parent = btn.parentElement;
+            // Q3のようにサブコンテナがある場合、その中のexplanationを探す
+            const subContainer = btn.closest('.sub-q-container');
+            const card = btn.closest('.section-card');
+            
+            const explanation = subContainer ? subContainer.querySelector('.explanation') : card.querySelector('.explanation');
+            const btns = parent.querySelectorAll('.choice-btn');
+
+            btns.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                const correctBtn = parent.querySelector('[data-correct="true"]');
+                if (correctBtn) correctBtn.classList.add('correct');
+            }
+            if (explanation) explanation.style.display = 'block';
+        }
+
+        // 暗記モード制御
+        const markers = document.querySelectorAll('.marker');
+        const modeBtn = document.getElementById('toggleModeBtn');
+        const vocabSection = document.getElementById('vocab-section');
+        let isMemorizeMode = true;
+
+        // 暗記モードボタンの表示・非表示をスクロールで制御
+        window.addEventListener('scroll', () => {
+            const rect = vocabSection.getBoundingClientRect();
+            // 単語セクションが画面内（少し上の方まで見えたら）に入ったら表示
+            if (rect.top < window.innerHeight - 100) {
+                modeBtn.style.display = 'block';
+            } else {
+                modeBtn.style.display = 'none';
+            }
+        });
+
+        document.body.addEventListener('click', (e) => {
+            if (e.target.classList.contains('marker') && isMemorizeMode) {
+                e.target.classList.toggle('hidden');
+                e.target.classList.toggle('visible');
+            }
+        });
+
+        modeBtn.addEventListener('click', () => {
+            isMemorizeMode = !isMemorizeMode;
+            markers.forEach(m => {
+                if (isMemorizeMode) {
+                    m.classList.add('hidden'); m.classList.remove('visible');
+                } else {
+                    m.classList.remove('hidden'); m.classList.add('visible');
+                }
+            });
+            modeBtn.textContent = isMemorizeMode ? "暗記モード: ON" : "解答を表示中";
+            modeBtn.style.background = isMemorizeMode ? '#4f46e5' : '#64748b';
+        });
+
+    </script>
+</body>
+</html>
