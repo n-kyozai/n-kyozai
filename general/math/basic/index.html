@@ -163,8 +163,8 @@
         
         /* 裏技・重要ポイント */
         .check-point {
-            background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; border-radius: 6px;
-            margin-top: 15px; font-size: 0.95rem; color: #92400e; display: flex; gap: 8px; align-items: start;
+            background-color: #fffbeb; border: 1px solid #fcd34d; padding: 15px; border-radius: 8px;
+            margin-top: 20px; font-size: 0.95rem; color: #92400e; display: flex; gap: 10px; align-items: start;
         }
         .check-point i { color: #d97706; flex-shrink: 0; margin-top: 3px; }
 
@@ -179,52 +179,45 @@
             background-color: #f0f9ff; color: #0284c7; width: 30%; white-space: nowrap;
         }
 
-        /* 問題カード */
-        .problem-card {
-            background-color: #fff; border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px;
-            margin-bottom: 25px; border: none;
-            transition: transform 0.2s;
+        /* クイズエリア */
+        .quiz-section {
+            background: #fff; border: 2px solid #bae6fd; border-radius: 12px;
+            padding: 25px; margin-top: 50px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
-        .problem-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .quiz-header {
+            text-align: center; margin-bottom: 30px;
+        }
+        
+        /* 個別問題カード */
+        .quiz-card {
+            background: #f8fafc; border-radius: 8px; padding: 25px; margin-bottom: 30px;
+            border-left: 5px solid var(--math-color); border: 1px solid #e2e8f0;
+            border-left-width: 5px;
+        }
+        .q-number {
+            font-size: 0.9rem; font-weight: bold; color: var(--math-color); margin-bottom: 8px; display: block;
+        }
+        .q-text { font-weight: bold; font-size: 1.1rem; margin-bottom: 20px; color: #1e293b; line-height: 1.8; }
+        .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 600px) { .q-options { grid-template-columns: 1fr; } }
+        
+        .option-btn {
+            background: #fff; border: 1px solid #cbd5e1; padding: 16px; border-radius: 8px;
+            text-align: left; font-size: 1rem; cursor: pointer; transition: all 0.1s; color: var(--text-color);
+            display: flex; align-items: center; min-height: 60px;
+        }
+        .option-btn:hover:not(:disabled) { background-color: #f0f9ff; border-color: var(--math-color); }
+        .option-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #14532d; font-weight: bold; }
+        .option-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
+        .option-btn:disabled { cursor: default; opacity: 0.8; }
 
-        .problem-header {
-            display: flex; align-items: baseline; margin-bottom: 15px;
+        .feedback {
+            margin-top: 20px; padding: 20px; background: #f0f9ff; border-radius: 8px;
+            color: #0369a1; display: none; font-size: 0.95rem; border: 1px solid #bae6fd;
+            line-height: 1.8;
+            animation: fadeIn 0.3s ease;
         }
-        .problem-number {
-            background-color: var(--math-color); color: white;
-            padding: 5px 12px; border-radius: 8px; font-weight: bold;
-            font-size: 0.9em; margin-right: 15px; white-space: nowrap;
-        }
-        .problem-text { font-size: 1.05em; font-weight: 500; width: 100%; }
-
-        /* 解答エリア */
-        .answer-section {
-            margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 15px;
-        }
-        .toggle-btn {
-            background-color: #f1f5f9; color: var(--text-color); border: none;
-            padding: 10px 20px; border-radius: 6px; cursor: pointer;
-            font-size: 0.9em; display: inline-flex; align-items: center;
-            width: 100%; justify-content: center; font-weight: bold;
-        }
-        .toggle-btn:hover { background-color: #e2e8f0; }
-
-        .answer-content {
-            display: none; margin-top: 15px; padding: 20px;
-            background-color: #f0f9ff; border-radius: 8px;
-            border-left: 4px solid var(--math-color);
-        }
-        .answer-content.show { display: block; animation: fadeIn 0.4s ease; }
-        .answer-title {
-            font-weight: bold; color: #0284c7; margin-bottom: 10px; display: block;
-        }
-
-        .step { margin-bottom: 12px; font-size: 0.95em; line-height: 1.7; }
-        .result {
-            font-weight: bold; color: #dc2626; font-size: 1.1em;
-            background-color: #fef2f2; padding: 2px 8px; border-radius: 4px;
-        }
+        .feedback-title { font-weight: bold; margin-bottom: 5px; font-size: 1.1rem; }
 
         /* ページ内ナビボタン */
         .nav-buttons {
@@ -310,6 +303,7 @@
                 <button class="page-nav-btn" onclick="scrollToId('sec2')">2. 図形と計量</button>
                 <button class="page-nav-btn" onclick="scrollToId('sec3')">3. データの分析</button>
                 <button class="page-nav-btn" onclick="scrollToId('sec4')">4. 数列</button>
+                <button class="page-nav-btn" onclick="scrollToId('quiz-area')">5. 演習クイズ</button>
             </div>
 
             <!-- 1. 数と式 -->
@@ -333,6 +327,10 @@
                             • たすき掛け: $acx^2+(ad+bc)x+bd = (ax+b)(cx+d)$<br>
                             • 分母の有理化：<br>
                             $\displaystyle \frac{c}{\sqrt{a}+\sqrt{b}} = \frac{c(\sqrt{a}-\sqrt{b})}{a-b}$
+                        </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>時短テクニック:</strong><br>$\frac{1}{\sqrt{3}+\sqrt{2}}$ のように分母の差が1になる場合は、符号を逆にしたもの（$\sqrt{3}-\sqrt{2}$）がそのまま答えになる！</div>
                         </div>
                     </div>
                     <div class="formula-card">
@@ -360,6 +358,10 @@
                             • <strong>弧の長さ</strong> $l = 2\pi r \times \frac{a}{360}$<br>
                             • <strong>面積</strong> $S = \pi r^2 \times \frac{a}{360} = \frac{1}{2}lr$
                         </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>裏技:</strong><br>扇形の面積は $S = \frac{1}{2}lr$ （三角形の面積公式のイメージ）で計算すると早い！中心角を出す必要がない。</div>
+                        </div>
                     </div>
                     <div class="formula-card">
                         <div class="formula-title">空間図形（球・錐）</div>
@@ -381,6 +383,10 @@
                         <div class="formula-content">
                             • $\tan\theta = \frac{\sin\theta}{\cos\theta}$<br>
                             • $\sin^2\theta + \cos^2\theta = 1$
+                        </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>時短:</strong><br>直角三角形の比「$1:1:\sqrt{2}$ ($45^\circ$)」「$1:2:\sqrt{3}$ ($30^\circ, 60^\circ$)」は必ず暗記！</div>
                         </div>
                     </div>
                 </div>
@@ -414,7 +420,7 @@
                         </div>
                         <div class="check-point">
                             <i data-lucide="zap"></i>
-                            <div><strong>意味:</strong><br>標準偏差が大きいほど、データの散らばりが大きい（平均から離れたデータが多い）。</div>
+                            <div><strong>裏技（分散の公式）:</strong><br>分散 = (2乗の平均) - (平均の2乗)<br>データが整数の場合、こちらの公式の方が計算が速いことが多い！</div>
                         </div>
                     </div>
                 </div>
@@ -444,10 +450,27 @@
                             &nbsp;&nbsp;$\displaystyle \sum_{k=1}^n k = \frac{1}{2}n(n + 1)$<br>
                             • 奇数の和 ($1, 3, 5\dots$)： $n^2$ (項数$n$の場合)
                         </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>裏技:</strong><br>1から始まる奇数の和は、個数の2乗になる！<br>例: 1+3+5 (3個) = $3^2 = 9$</div>
+                        </div>
                     </div>
                 </div>
             </section>
 
+            <!-- 演習クイズ -->
+            <section id="quiz-area" class="quiz-section">
+                <div class="quiz-header">
+                    <h2 style="margin:0; border:none; justify-content:center; color:#0ea5e9; background:none; box-shadow:none;">
+                        <i data-lucide="edit-3"></i> 総合確認クイズ
+                    </h2>
+                    <p style="color:#64748b;">全範囲からランダムに7問出題 (全問表示)</p>
+                </div>
+                
+                <!-- JSでクイズ生成 -->
+                <div id="quiz-list"></div>
+
+            </section>
         </div>
 
         <footer>
@@ -491,6 +514,147 @@
 
         menuToggle.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
+
+        /* --- クイズデータ (全範囲) --- */
+        const quizData = [
+            {
+                q: "次の式を展開せよ：$(x + 3)(x - 5)$",
+                options: ["$x^2 - 2x - 15$", "$x^2 + 2x - 15$", "$x^2 - 8x - 15$", "$x^2 - 15$"],
+                a: 0,
+                exp: "乗法公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を利用します。<br>$(x + 3)(x - 5) = x^2 + (3 - 5)x + (3 \\times -5) = x^2 - 2x - 15$"
+            },
+            {
+                q: "$12$の約数の個数はいくつか。",
+                options: ["$4$個", "$5$個", "$6$個", "$8$個"],
+                a: 2,
+                exp: "$12 = 2^2 \\times 3^1$。約数の個数は (指数+1) の積なので、<br>$(2 + 1) \\times (1 + 1) = 3 \\times 2 = 6$個。<br>(約数: 1, 2, 3, 4, 6, 12)"
+            },
+            {
+                q: "初項 $3$, 公差 $4$ の等差数列の第$10$項はいくつか。",
+                options: ["$36$", "$39$", "$40$", "$43$"],
+                a: 1,
+                exp: "等差数列の一般項 $a_n = a + (n-1)d$ より、<br>$3 + (10 - 1) \\times 4 = 3 + 36 = 39$"
+            },
+            {
+                q: "半径 $3\\text{cm}$ の球の表面積はいくつか。",
+                options: ["$9\\pi \\text{cm}^2$", "$12\\pi \\text{cm}^2$", "$27\\pi \\text{cm}^2$", "$36\\pi \\text{cm}^2$"],
+                a: 3,
+                exp: "球の表面積 $S = 4\\pi r^2$ より、<br>$4\\pi \\times 3^2 = 4\\pi \\times 9 = 36\\pi \\text{cm}^2$"
+            },
+            {
+                q: "半径 $6\\text{cm}$, 中心角 $120^\\circ$ の扇形の面積は？",
+                options: ["$6\\pi \\text{cm}^2$", "$12\\pi \\text{cm}^2$", "$18\\pi \\text{cm}^2$", "$24\\pi \\text{cm}^2$"],
+                a: 1,
+                exp: "扇形の面積 $S = \\pi r^2 \\times \\frac{a}{360}$ より、<br>$\\pi \\times 6^2 \\times \\frac{120}{360} = 36\\pi \\times \\frac{1}{3} = 12\\pi \\text{cm}^2$"
+            },
+            {
+                q: "データの最大値から最小値を引いた値を何というか。",
+                options: ["分散", "範囲 (レンジ)", "四分位範囲", "標準偏差"],
+                a: 1,
+                exp: "最大値 - 最小値 は「範囲 (レンジ)」です。<br>四分位範囲は $Q_3 - Q_1$ です。"
+            },
+            {
+                q: "分散の正の平方根を何というか。",
+                options: ["平均値", "中央値", "偏差", "標準偏差"],
+                a: 3,
+                exp: "分散のルートをとったものが「標準偏差」($\\sqrt{\\text{分散}}$)です。"
+            },
+            {
+                q: "底面の半径が $3\\text{cm}$、高さが $4\\text{cm}$ の円錐の体積は？",
+                options: ["$12\\pi \\text{cm}^3$", "$36\\pi \\text{cm}^3$", "$4\\pi \\text{cm}^3$", "$16\\pi \\text{cm}^3$"],
+                a: 0,
+                exp: "円錐の体積 $V = \\frac{1}{3}Sh = \\frac{1}{3} \\pi r^2 h$。<br>$V = \\frac{1}{3} \\pi (3^2) \\times 4 = \\frac{1}{3} \\pi (9) (4) = 12\\pi$"
+            },
+            {
+                q: "$1$から$10$までの自然数の和はいくつか。",
+                options: ["$45$", "$50$", "$55$", "$60$"],
+                a: 2,
+                exp: "自然数の和の公式 $S = \\frac{1}{2} n(n+1)$ を使います。<br>$\\frac{1}{2} \\times 10 \\times (10 + 1) = 5 \\times 11 = 55$"
+            }
+        ];
+
+        // クイズリスト生成 (シャッフルして全問表示)
+        function initQuizList() {
+            const quizList = document.getElementById('quiz-list');
+            const shuffled = [...quizData].sort(() => 0.5 - Math.random());
+            
+            shuffled.forEach((data, index) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                card.id = `q-${index}`;
+
+                const qNum = document.createElement('span');
+                qNum.className = 'q-number';
+                qNum.textContent = `Q${index + 1}`;
+                card.appendChild(qNum);
+
+                const qText = document.createElement('div');
+                qText.className = 'q-text';
+                qText.innerHTML = data.q;
+                card.appendChild(qText);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'q-options';
+
+                data.options.forEach((opt, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = opt;
+                    btn.onclick = () => checkAnswer(card, btn, optIdx, data.a, data.exp);
+                    optionsDiv.appendChild(btn);
+                });
+                card.appendChild(optionsDiv);
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                card.appendChild(feedback);
+
+                quizList.appendChild(card);
+            });
+
+            // MathJax更新
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function checkAnswer(card, btn, selectedIdx, correctIdx, exp) {
+            const btns = card.querySelectorAll('.option-btn');
+            const feedback = card.querySelector('.feedback');
+            
+            // ボタン無効化
+            btns.forEach(b => b.disabled = true);
+
+            let title = "";
+            if (selectedIdx === correctIdx) {
+                btn.classList.add('correct');
+                btn.innerHTML += ' <span style="float:right">⭕</span>';
+                title = '<span style="color:#16a34a; font-weight:bold;">正解！</span>';
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += ' <span style="float:right">❌</span>';
+                title = '<span style="color:#dc2626; font-weight:bold;">不正解...</span>';
+                
+                // 正解を表示
+                btns[correctIdx].classList.add('correct');
+                btns[correctIdx].innerHTML += ' <span style="float:right">⭕</span>';
+            }
+
+            feedback.innerHTML = `
+                <div style="margin-bottom:8px;">${title}</div>
+                <div>${exp}</div>
+            `;
+            feedback.style.display = 'block';
+
+            // MathJax更新 (解説内の数式用)
+            if (window.MathJax) {
+                MathJax.typesetPromise([feedback]);
+            }
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', initQuizList);
+
     </script>
 </body>
 </html>
