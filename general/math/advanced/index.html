@@ -82,7 +82,6 @@
         .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
         .nav-item.active { color: var(--math-color); background-color: #f1f5f9; font-weight: bold; }
 
-        /* モバイル用トグルボタン */
         .mobile-toggle-btn {
             display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
             width: 42px; height: 42px; background-color: rgba(255, 255, 255, 0.95);
@@ -97,7 +96,6 @@
         }
         .overlay.active { display: block; }
 
-        /* メインコンテンツ */
         .main-content {
             flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
             display: flex; flex-direction: column; transition: margin-left 0.3s ease;
@@ -139,7 +137,6 @@
             background: linear-gradient(to right, #fff, transparent);
         }
 
-        /* 問題カード */
         .problem-card {
             background-color: #fff; border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px;
@@ -175,7 +172,7 @@
             font-size: 1rem;
             font-weight: 500;
             flex: 1;
-            white-space: normal; /* インデント問題を解消 */
+            white-space: normal; /* 不要な余白をカット */
             text-align: left; 
             color: var(--text-color);
         }
@@ -203,10 +200,20 @@
         }
         .toggle-btn:hover { background-color: #e2e8f0; }
 
+        /* 重要: 解説文の見切れ・はみ出し防止 */
         .answer-content {
-            display: none; margin-top: 16px; padding: 20px;
-            background-color: #f0f9ff; border-radius: 8px;
+            display: none; 
+            margin-top: 16px; 
+            padding: 20px;
+            background-color: #f0f9ff; 
+            border-radius: 8px;
             border-left: 4px solid var(--math-color);
+            width: 100%;
+            max-width: 100%; /* コンテナからはみ出さない */
+            overflow-x: auto; /* 長い数式などはスクロール可能に */
+            overflow-wrap: break-word; /* テキストを折り返す */
+            word-break: break-all;      /* モバイルでの見切れ防止 */
+            -webkit-overflow-scrolling: touch; /* スムーズスクロール */
         }
         .problem-card.similar .answer-content { background-color: #f5f3ff; border-left-color: #8b5cf6; }
         .answer-content.show { display: block; animation: fadeIn 0.3s ease; }
@@ -220,14 +227,15 @@
         .nav-buttons { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
         .page-nav-btn {
             background: #fff; border: 1px solid var(--math-color); color: var(--math-color);
-            padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer;
+            padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer;
         }
 
-        /* モバイルレイアウト調整 */
+        /* モバイルレイアウト */
         @media (max-width: 768px) {
             .problem-body { flex-direction: column; gap: 16px; }
             .problem-image-box { width: 100% !important; height: auto; }
             .problem-text { font-size: 0.95rem; }
+            .answer-content { padding: 15px; }
         }
 
         /* 固定トップへ戻るボタン */
@@ -255,9 +263,11 @@
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
         <nav class="nav-menu">
             <div class="nav-category">Main</div>
+            <!-- 指定: ../../../index.html でホームへ -->
             <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
             <div class="nav-category">教養・指導要領</div>
+            <!-- 指定: ../../index.html で一般教養トップへ -->
             <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
             <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
@@ -303,14 +313,25 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">$A = 6k + 3, B = 6l + 4$ と置く。</div>
-                            <div class="step">$A+B = (6k+3) + (6l+4) = 6(k+l) + 7 = 6(k+l+1) + 1$ → 余り <span class="result">1</span></div>
-                            <div class="step">$AB = (6k+3)(6l+4) = 36kl + 24k + 18l + 12$ → すべて$6$の倍数。よって余り <span class="result">0</span></div>
+                            <div class="step">$A = 6k + 3, B = 6l + 4$ と置く。<br>$A+B = (6k+3) + (6l+4) = 6(k+l) + 7 = 6(k+l+1) + 1$ → 余り <span class="result">1</span><br>$AB = (6k+3)(6l+4) = 36kl + 24k + 18l + 12$ → 余り <span class="result">0</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.2 -->
+                <div class="problem-card similar">
+                    <div class="problem-header"><span class="problem-number">No.1 類題</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">整数$A$を$5$で割ると$2$余り、整数$B$を$5$で割ると$3$余る。$A+B$、$AB$をそれぞれ$5$で割った余りを求めよ。</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【類題の解答】</span>
+                            <div>$A+B$：余りの和 $2+3=5$ を5で割ると余りは <span class="result">0</span><br>$AB$：余りの積 $2 \times 3 = 6$ を5で割ると余りは <span class="result">1</span></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.2</span></div>
                     <div class="problem-body">
@@ -320,13 +341,25 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">$252 = 2^2 \times 3^2 \times 7^1$</div>
-                            <div class="step">$(2+1)(2+1)(1+1) = 3 \times 3 \times 2 = $ <span class="result">18個</span></div>
+                            <div>$252 = 2^2 \times 3^2 \times 7^1$ より、$(2+1)(2+1)(1+1) = $ <span class="result">18個</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.4 -->
+                <div class="problem-card similar">
+                    <div class="problem-header"><span class="problem-number">No.2 類題</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">$360$の正の約数の個数を求めよ。</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【類題の解答】</span>
+                            <div>$360 = 2^3 \times 3^2 \times 5^1$ より、$(3+1)(2+1)(1+1) = $ <span class="result">24個</span></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.4</span></div>
                     <div class="problem-body">
@@ -336,46 +369,39 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">(1) $32+16+2+1 = $ <span class="result">51</span></div>
-                            <div class="step">(2) $73 = 64+8+1 \rightarrow$ <span class="result">1001001<sub>(2)</sub></span></div>
+                            <div>(1) $32+16+2+1 = $ <span class="result">51</span><br>(2) $73 = 64+8+1 \rightarrow$ <span class="result">1001001<sub>(2)</sub></span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.5 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.5</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">1から200までの整数のうち、(1) 5で割り切れる数、(2) 5でも7でも割り切れる数、(3) 5または7で割り切れる数の個数をそれぞれ求めよ。</div>
+                        <div class="problem-text">1から200までの整数のうち、(1) 5で割り切れる数、(2) 5でも7でも割り切れる数、(3) 5または7で割り切れる数の個数を求めよ。</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>(1) $200 \div 5 = $ <span class="result">40個</span></div>
-                            <div>(2) $200 \div 35 = 5.7\dots$ → <span class="result">5個</span></div>
-                            <div>(3) $40 + (200 \div 7) - 5 = 40 + 28 - 5 = $ <span class="result">63個</span></div>
+                            <div>(1) $200 \div 5 = $ <span class="result">40個</span><br>(2) $200 \div 35 = 5.7\dots$ → <span class="result">5個</span><br>(3) $40 + 28 - 5 = $ <span class="result">63個</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.6 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.6</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">50人の生徒のうち、運動部22人、文化部25人、帰宅部(どちらでもない)10人。両方に所属している者は何人か？</div>
+                        <div class="problem-text">50人の生徒のうち、運動部22人、文化部25人、帰宅部10人。両方に所属している者は何人か？</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>全体 $50$、部活所属者は $50 - 10 = 40$人。</div>
-                            <div>$22 + 25 - x = 40$ より、$47 - x = 40$。答え： <span class="result">7人</span></div>
+                            <div>全体 $50 - 10 = 40$。 $(22 + 25) - x = 40 \rightarrow 47 - x = 40 \rightarrow$ <span class="result">7人</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.7 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.7</span></div>
                     <div class="problem-body">
@@ -386,12 +412,11 @@
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
                             <div class="step">(1) $x+y=\sqrt{10}, xy=\frac{3}{2}$。$x^2+y^2=(x+y)^2-2xy = 10-3 = $ <span class="result">7</span></div>
-                            <div class="step">(2) $3 < \sqrt{10} < 4$ より $a=\sqrt{10}-3$。$a^2+6a = a(a+6) = (\sqrt{10}-3)(\sqrt{10}+3) = 10-9 = $ <span class="result">1</span></div>
+                            <div class="step">(2) $a=\sqrt{10}-3$。$a(a+6) = (\sqrt{10}-3)(\sqrt{10}+3) = 10-9 = $ <span class="result">1</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.8 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.8</span></div>
                     <div class="problem-body">
@@ -401,13 +426,11 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">$500 \times 0.08 + x \times 0.20 = (500 + x) \times 0.10$</div>
-                            <div>$40 + 0.2x = 50 + 0.1x \rightarrow 0.1x = 10$。答え： <span class="result">100g</span></div>
+                            <div>$40 + 0.2x = 50 + 0.1x \rightarrow 0.1x = 10 \rightarrow x = $ <span class="result">100g</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.9 (復活) -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.9</span></div>
                     <div class="problem-body">
@@ -417,15 +440,11 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">$10\%$を $x\text{g}$、$5\%$を $y\text{g}$ とする。</div>
-                            <div class="step">$x + y = 400$ ‥①</div>
-                            <div class="step">$0.1x + 0.05y = 400 \times 0.08 = 32$ ‥②</div>
-                            <div>連立方程式を解くと、$x=240, y=160$。答え： <span class="result">10%が240g、5%が160g</span></div>
+                            <div>$x+y=400, 0.1x+0.05y=32$ を解く。答え： <span class="result">10%が240g、5%が160g</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.10 (復活) -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.10</span></div>
                     <div class="problem-body">
@@ -435,17 +454,15 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">天秤法を利用：濃度差 $7-5=2$、$5-4=1$。量の比は逆比の $1:2$ となる。</div>
-                            <div>$150 \times \frac{1}{3} = 50$。答え： <span class="result">7%が50g、4%が100g</span></div>
+                            <div>天秤算より比は $1:2$。答え： <span class="result">7%が50g、4%が100g</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.11 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.11</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">みかんを配る。一人に3個ずつ配ると5個余り、4個ずつ配ると3個足りなくなる。子どもの人数とみかんの個数を求めよ。</div>
+                        <div class="problem-text">一人に3個ずつ配ると5個余り、4個ずつ配ると3個足りない。子どもの人数とみかんの個数を求めよ。</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
@@ -456,24 +473,20 @@
                     </div>
                 </div>
 
-                <!-- No.12 (復活) -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.12</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">りんごを配る。1人に3個ずつ分けると9個残り、1人に5個ずつ分けると1人の子どもだけは4個しかもらえなくなる。子どもの人数とりんごの個数を求めよ。</div>
+                        <div class="problem-text">1人に3個ずつ分けると9個残り、1人に5個ずつ分けると1人の子どもだけは4個しかもらえない。子どもの人数とりんごの個数。</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">$3x + 9 = 5(x-1) + 4$ （$x-1$人は5個、最後の一人は4個）</div>
-                            <div class="step">$3x + 9 = 5x - 5 + 4 \rightarrow 3x + 9 = 5x - 1 \rightarrow 2x = 10 \rightarrow x = 5$</div>
-                            <div>答え： <span class="result">子供5人、りんご24個</span></div>
+                            <div>$3x + 9 = 5(x-1) + 4 \rightarrow 2x = 10 \rightarrow x = 5$。答え： <span class="result">子供5人、りんご24個</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.13 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.13</span></div>
                     <div class="problem-body">
@@ -483,7 +496,7 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>$-4 < x - 2 < 4 \rightarrow -2 < x < 6$。整数は $-1, 0, 1, 2, 3, 4, 5$ の <span class="result">7個</span></div>
+                            <div>$-2 < x < 6$。整数は $-1, 0, 1, 2, 3, 4, 5$ の <span class="result">7個</span></div>
                         </div>
                     </div>
                 </div>
@@ -495,7 +508,6 @@
             <section id="sec-geometry">
                 <h2 class="section-title">図形</h2>
 
-                <!-- No.14 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.14</span></div>
                     <div class="problem-body">
@@ -505,17 +517,15 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>(1) 内角：$180(6-2) \div 6 = $ <span class="result">120度</span></div>
-                            <div>(2) 外角：$360 \div 6 = $ <span class="result">60度</span></div>
+                            <div>(1) <span class="result">120度</span> (2) <span class="result">60度</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.15 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.15</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">1辺$10\text{cm}$の正方形の内部に、各辺を直径とする半円を4つ書いた。重なり合った花びら型の斜線部分の面積を求めよ。</div>
+                        <div class="problem-text">1辺$10\text{cm}$の正方形の内部に、辺を直径とする半円を4つ書いた花びら型の斜線部分の面積。</div>
                         <div class="problem-image-box">
                             <img src="15.png" alt="No.15" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <div class="no-img-text" style="display:none;">(画像: 15.png)</div>
@@ -525,18 +535,15 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>(半円4つ) - (正方形) で重なった部分が求まる。</div>
-                            <div>$(\pi \times 5^2 \div 2 \times 4) - 10^2 = 50\pi - 100$</div>
-                            <div>答え： <span class="result">50π - 100 (cm<sup>2</sup>)</span></div>
+                            <div>(半円4つ) - (正方形) $= 50\pi - 100$ <span class="result">cm<sup>2</sup></span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.16 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.16</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">平行四辺形ABCD。MはADの中点。PはBDとCMの交点。$\triangle \text{PMD}=3\text{cm}^2$のとき、四角形ABCMの面積を求めよ。</div>
+                        <div class="problem-text">平行四辺形ABCD。MはADの中点。PはBDとCMの交点。$\triangle \text{PMD}=3\text{cm}^2$のとき、四角形ABCMの面積。</div>
                         <div class="problem-image-box">
                             <img src="16.png" alt="No.16" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <div class="no-img-text" style="display:none;">(画像: 16.png)</div>
@@ -546,18 +553,15 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">相似比 $\triangle \text{PMD} : \triangle \text{PCB} = 1:2$ より、面積比は $1:4$。よって $\triangle \text{PCB} = 12$。</div>
-                            <div class="step">高さ比より $\triangle \text{PCD} = 6$。$\triangle \text{MCD} = 9$。平行四辺形全体は $36$。</div>
-                            <div>答え： $36 - 9 = $ <span class="result">27 cm<sup>2</sup></span></div>
+                            <div>相似比より $\triangle \text{PCB}=12, \triangle \text{PCD}=6$。全体 $36 - 9 = $ <span class="result">27 cm<sup>2</sup></span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.17 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.17</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">円錐の展開図。側面（扇形）の半径(母線)が7cm、底面の円の半径が3cmである。この円錐の体積を求めよ。</div>
+                        <div class="problem-text">円錐の展開図。母線が7cm、底面の半径が3cmである。この円錐の体積を求めよ。</div>
                         <div class="problem-image-box">
                             <img src="17.png" alt="No.17" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <div class="no-img-text" style="display:none;">(画像: 17.png)</div>
@@ -567,8 +571,7 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>三平方の定理より、高さ $h = \sqrt{7^2 - 3^2} = \sqrt{40} = 2\sqrt{10}$</div>
-                            <div>$V = \frac{1}{3} \pi \times 3^2 \times 2\sqrt{10} = $ <span class="result">6√10π cm<sup>3</sup></span></div>
+                            <div class="step">高さ $h = 2\sqrt{10}$。 $V = \frac{1}{3} \pi 3^2 \times 2\sqrt{10} = $ <span class="result">6√10π cm<sup>3</sup></span></div>
                         </div>
                     </div>
                 </div>
@@ -580,11 +583,10 @@
             <section id="sec-prob">
                 <h2 class="section-title">確率・場合の数</h2>
 
-                <!-- No.18 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.18</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">8人から委員長、副委員長、書記を1名ずつ選ぶ方法は何通りあるか。</div>
+                        <div class="problem-text">8人から委員長、副委員長、書記を1名ずつ選ぶ方法は何通りか。</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
@@ -595,7 +597,6 @@
                     </div>
                 </div>
 
-                <!-- No.19 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.19</span></div>
                     <div class="problem-body">
@@ -605,35 +606,29 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">一の位が0の場合：$4 \times 3 = 12$</div>
-                            <div class="step">一の位が2の場合：$3 \times 3 = 9$ (百の位に0は不可)</div>
-                            <div class="step">一の位が4の場合：$3 \times 3 = 9$</div>
-                            <div>合計： <span class="result">30個</span></div>
+                            <div>一の位が0($12$) ＋ 2または4($9 \times 2$) $=$ <span class="result">30個</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.20 (復活) -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.20</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">男子4人、女子3人の計7人が一列に並ぶとき、(1)男子が両端にくる並び方、(2)女子が隣り合わない並び方は何通りあるか。</div>
+                        <div class="problem-text">男子4人、女子3人の計7人が一列に並ぶ。(1)男子が両端 (2)女子が隣り合わない 並び方。</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">(1) 男子$_4P_2$通り × 残り5人の並び方$5! = 12 \times 120 = $ <span class="result">1440通り</span></div>
-                            <div class="step">(2) まず男子4人を並べる($4!$)。その隙間5か所に女子3人を配置する($_5P_3$)。$24 \times 60 = $ <span class="result">1440通り</span></div>
+                            <div>(1) $_4P_2 \times 5! = $ <span class="result">1440通り</span><br>(2) $4! \times _5P_3 = $ <span class="result">1440通り</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.21 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.21</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">図のような格子状の道路がある。AからBへ行く最短経路は何通りあるか。<br>(1) 全経路 (2) 点Pを通る経路</div>
+                        <div class="problem-text">格子状の道路がある。AからBへ行く最短経路は何通りあるか。(1)全経路 (2)P経由</div>
                         <div class="problem-image-box">
                             <img src="21.png" alt="No.21" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <div class="no-img-text" style="display:none;">(画像: 21.png)</div>
@@ -643,41 +638,35 @@
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">(1) 全経路: 横5、縦4の計9移動。$\displaystyle {}_9\mathrm{C}_4 = \frac{9 \times 8 \times 7 \times 6}{4 \times 3 \times 2 \times 1} = $ <span class="result">126通り</span></div>
-                            <div class="step">(2) P経由: A→P (${}_4C_2=6$) × P→B (${}_5C_2=10$) = <span class="result">60通り</span></div>
+                            <div>(1) $_9C_4 = $ <span class="result">126通り</span><br>(2) $6 \times 10 = $ <span class="result">60通り</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.22 (復活) -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.22</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">男子8人、女子7人から5人選ぶとき、(1)選び方の全通り、(2)男子3人、女子2人を選ぶ方法は何通りあるか。</div>
+                        <div class="problem-text">男子8人、女子7人から5人選ぶ。(1)全通り (2)男子3人、女子2人選ぶ方法。</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div class="step">(1) 全事象：$_{15}C_5 = \frac{15 \cdot 14 \cdot 13 \cdot 12 \cdot 11}{5 \cdot 4 \cdot 3 \cdot 2 \cdot 1} = $ <span class="result">3003通り</span></div>
-                            <div class="step">(2) 男子：$_8C_3 = 56$、女子：$_7C_2 = 21$。 $56 \times 21 = $ <span class="result">1176通り</span></div>
+                            <div>(1) $_{15}C_5 = $ <span class="result">3003通り</span><br>(2) $_8C_3 \times _7C_2 = $ <span class="result">1176通り</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- No.23 -->
                 <div class="problem-card">
                     <div class="problem-header"><span class="problem-number">No.23</span></div>
                     <div class="problem-body">
-                        <div class="problem-text">赤玉3個、白玉2個が入った袋から2個取り出すとき、(1) 2個とも赤玉である確率、(2) 赤玉と白玉が1個ずつである確率を求めよ。</div>
+                        <div class="problem-text">赤玉3個、白玉2個から2個取り出す。(1) 2個とも赤 (2) 赤白1個ずつ</div>
                     </div>
                     <div class="answer-section">
                         <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
                         <div class="answer-content">
                             <span class="answer-title">【解答】</span>
-                            <div>全事象 $_5C_2 = 10$通り</div>
-                            <div class="step">(1) $_3C_2 = 3$ → <span class="result">3/10</span></div>
-                            <div class="step">(2) $_3C_1 \times _2C_1 = 6$ → <span class="result">3/5</span></div>
+                            <div>全事象 $_5C_2=10$。 (1) $_3C_2 = 3$ → <span class="result">3/10</span> (2) $_3C_1 \times _2C_1 = 6$ → <span class="result">3/5</span></div>
                         </div>
                     </div>
                 </div>
@@ -688,8 +677,8 @@
         <footer><p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p></footer>
     </main>
 
-    <button id="scrollTopBtn" class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-        <i data-lucide="arrow-up"></i>
+    <button id="back-to-top" class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <i data-lucide="chevron-up"></i>
     </button>
 
     <script>
