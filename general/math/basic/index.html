@@ -16,7 +16,7 @@
                 displayMath: [['$$', '$$'], ['\\[', '\\]']]
             },
             options: {
-                enableMenu: false /* モバイルでの誤操作防止 */
+                enableMenu: false 
             },
             chtml: {
                 displayAlign: 'left',
@@ -97,7 +97,6 @@
         .nav-item i { margin-right: 10px; width: 16px; height: 16px; }
         .nav-item.active { color: var(--math-color); background-color: #f0f9ff; font-weight: bold; border-right: 3px solid var(--math-color); }
 
-        /* モバイル用トグルボタン */
         .mobile-toggle-btn {
             display: none; position: fixed; top: 12px; left: 12px; z-index: 2000;
             width: 44px; height: 44px; background-color: white;
@@ -112,7 +111,6 @@
         }
         .overlay.active { display: block; }
 
-        /* --- メインコンテンツ --- */
         .main-content {
             flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
             display: flex; flex-direction: column; transition: margin-left 0.3s ease;
@@ -141,7 +139,6 @@
             background: linear-gradient(to right, #f0f9ff, transparent);
         }
 
-        /* 公式カード */
         .formula-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 30px;
         }
@@ -155,19 +152,46 @@
         }
         .formula-content { font-size: 1rem; color: var(--text-color); line-height: 2; }
         
+        /* 改善: 時短（チェックポイント）枠の右切れ修正 */
         .check-point {
             background-color: #fffbeb; border: 1px solid #fcd34d; padding: 14px; border-radius: 10px;
-            margin-top: 15px; font-size: 0.9rem; color: #92400e; display: flex; gap: 10px; align-items: flex-start;
+            margin-top: 15px; font-size: 0.9rem; color: #92400e; 
+            display: flex; gap: 10px; align-items: flex-start;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            max-width: 100%;
         }
         .check-point i { color: #d97706; flex-shrink: 0; margin-top: 2px; }
 
-        /* データ分析テーブル */
-        .table-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid #e2e8f0; background: white; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 400px; }
+        /* 改善: データ分析テーブルのモバイル対応（見切れ防止） */
+        .table-wrapper { 
+            overflow-x: auto; 
+            border-radius: 10px; 
+            border: 1px solid #e2e8f0; 
+            background: white;
+            margin-bottom: 20px;
+        }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         .data-table th, .data-table td { border-bottom: 1px solid #e2e8f0; padding: 12px; text-align: left; }
         .data-table th { background-color: #f8fafc; color: #0284c7; width: 35%; }
 
-        /* クイズセクション */
+        @media (max-width: 600px) {
+            /* モバイルではテーブルを縦並びに */
+            .data-table, .data-table tbody, .data-table tr, .data-table th, .data-table td {
+                display: block;
+                width: 100% !important;
+            }
+            .data-table th {
+                border-bottom: none;
+                padding-bottom: 4px;
+                font-weight: bold;
+            }
+            .data-table td {
+                padding-top: 0;
+                padding-bottom: 12px;
+            }
+        }
+
         .quiz-container { margin-top: 50px; background: white; border-radius: 16px; padding: 24px; border: 2px solid #bae6fd; }
         .quiz-card { background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #e2e8f0; }
         .q-header { font-size: 0.85rem; font-weight: bold; color: var(--math-color); margin-bottom: 8px; }
@@ -208,14 +232,12 @@
             animation: fadeIn 0.3s ease;
         }
 
-        /* ページ内ナビ */
         .nav-buttons { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
         .page-nav-btn {
             background: #fff; border: 1px solid var(--math-color); color: var(--math-color);
             padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
         }
 
-        /* スクロールトップ */
         .scroll-top-btn {
             position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px;
             background: #374151; color: white; border-radius: 50%; border: none;
@@ -229,7 +251,7 @@
             .main-content { margin-left: 0; }
             .mobile-toggle-btn { display: flex; }
             .page-header { padding-left: 70px; }
-            .container { padding: 15px; }
+            .container { padding: 12px; }
             h1.title { font-size: 1.35rem; }
             .formula-grid { grid-template-columns: 1fr; }
         }
@@ -250,12 +272,10 @@
         <nav class="nav-menu">
             <div class="nav-category">Main</div>
             <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
-            
             <div class="nav-category">教養・指導要領</div>
             <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
             <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
-
             <div class="nav-category">専門科目</div>
             <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
             <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
@@ -379,21 +399,6 @@
     <script>
         lucide.createIcons();
 
-        // MathJax レンダリング補助関数
-        function runMathJax(elementId) {
-            const el = document.getElementById(elementId);
-            if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise([el]).catch((err) => console.log('MathJax error:', err));
-            } else {
-                // v3 の初期化待ち
-                window.addEventListener('load', () => {
-                    if (window.MathJax && MathJax.typesetPromise) {
-                        MathJax.typesetPromise([el]);
-                    }
-                });
-            }
-        }
-
         // サイドバー制御
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
@@ -472,7 +477,6 @@
                 container.appendChild(card);
             });
 
-            // MathJax 変換を実行
             if (window.MathJax && MathJax.typesetPromise) {
                 MathJax.typesetPromise([container]);
             }
