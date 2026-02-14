@@ -38,6 +38,12 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
@@ -95,9 +101,11 @@
         .main-content {
             flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
             display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border: none !important;
         }
         .page-header {
             background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border: none !important;
         }
         .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
         .breadcrumb a { color: #94a3b8; text-decoration: none; }
@@ -105,6 +113,7 @@
 
         .container {
             width: 100%; max-width: 1200px; margin: 0 auto; padding: 24px; padding-bottom: 140px; flex: 1;
+            border: none !important;
         }
         
         footer {
@@ -125,40 +134,36 @@
         /* =========================================
            数学基礎 固有スタイル
            ========================================= */
-        h1 { font-size: 1.5rem; color: var(--math-color); margin: 0; }
-        h2 {
-            color: #0c4a6e; margin-top: 50px; margin-bottom: 20px; font-size: 1.3rem;
-            border-bottom: 2px solid #bae6fd; padding-bottom: 8px; display: flex; align-items: center; gap: 8px;
+        h1 { font-size: 1.6rem; color: var(--math-color); margin: 0; }
+        h2.section-title {
+            color: #0c4a6e; margin-top: 50px; margin-bottom: 25px; font-size: 1.4rem;
+            border-left: 6px solid var(--math-color); padding-left: 15px;
+            background: linear-gradient(to right, #fff, transparent);
         }
-        h3 {
-            color: #0369a1; margin-top: 25px; margin-bottom: 15px; font-size: 1.1rem;
-            border-left: 4px solid #38bdf8; padding-left: 10px; background: #f0f9ff;
-            padding: 8px 12px; border-radius: 0 4px 4px 0;
-        }
-
+        
         /* 公式カード */
         .formula-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px;
         }
         .formula-card {
             background: #fff; border: 1px solid #e0f2fe; border-radius: 8px; padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.03); position: relative;
         }
         .formula-title {
-            font-weight: bold; color: #0284c7; margin-bottom: 15px; font-size: 0.95rem;
-            background: #e0f2fe; display: inline-block; padding: 4px 10px; border-radius: 4px;
+            font-weight: bold; color: #0284c7; margin-bottom: 15px; font-size: 1rem;
+            background: #e0f2fe; display: inline-block; padding: 4px 12px; border-radius: 4px;
         }
         .formula-content {
-            font-size: 1.05rem; color: #334155; line-height: 2.0;
-        }
-        .formula-note {
-            font-size: 0.85rem; color: #64748b; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #e2e8f0;
-        }
-        .check-point {
-            background-color: #fffbeb; border: 1px solid #fcd34d; padding: 10px; border-radius: 6px;
-            margin-top: 10px; font-size: 0.95rem; color: #92400e;
+            font-size: 1.05rem; color: #334155; line-height: 2.2;
         }
         
+        /* 裏技・重要ポイント */
+        .check-point {
+            background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; border-radius: 6px;
+            margin-top: 15px; font-size: 0.95rem; color: #92400e; display: flex; gap: 8px; align-items: start;
+        }
+        .check-point i { color: #d97706; flex-shrink: 0; margin-top: 3px; }
+
         /* データ分析テーブル */
         .data-table {
             width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 10px;
@@ -170,64 +175,51 @@
             background-color: #f0f9ff; color: #0284c7; width: 30%; white-space: nowrap;
         }
 
-        /* クイズエリア */
-        .quiz-section {
-            background: #fff; border: 2px solid #bae6fd; border-radius: 12px;
-            padding: 25px; margin-top: 50px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            min-height: 400px; /* 高さ確保 */
+        /* 問題カード */
+        .problem-card {
+            background-color: #fff; border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px;
+            margin-bottom: 25px; border: none;
+            transition: transform 0.2s;
         }
-        .quiz-header {
-            text-align: center; margin-bottom: 25px;
-        }
-        .stage-badge {
-            display: inline-block; background: #bae6fd; color: #0369a1; padding: 4px 12px;
-            border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 10px;
-        }
-        .quiz-card {
-            background: #f8fafc; border-radius: 8px; padding: 25px; margin-bottom: 20px;
-            border-left: 5px solid var(--math-color);
-        }
-        .q-text { font-weight: bold; font-size: 1.1rem; margin-bottom: 20px; color: #1e293b; line-height: 1.8; }
-        .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        @media (max-width: 600px) { .q-options { grid-template-columns: 1fr; } }
-        
-        .option-btn {
-            background: #fff; border: 1px solid #cbd5e1; padding: 16px; border-radius: 8px;
-            text-align: left; font-size: 1rem; cursor: pointer; transition: all 0.1s; color: var(--text-color);
-            display: flex; align-items: center; min-height: 60px;
-        }
-        .option-btn:hover:not(:disabled) { background-color: #f0f9ff; border-color: var(--math-color); }
-        .option-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #14532d; font-weight: bold; }
-        .option-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
-        .option-btn:disabled { cursor: default; opacity: 0.8; }
+        .problem-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
 
-        .feedback {
-            margin-top: 20px; padding: 20px; background: #f0f9ff; border-radius: 8px;
-            color: #0369a1; display: none; font-size: 0.95rem; border: 1px solid #bae6fd;
-            line-height: 1.8;
+        .problem-header {
+            display: flex; align-items: baseline; margin-bottom: 15px;
         }
-        .next-btn {
-            display: block; width: 100%; background-color: var(--math-color); color: white;
-            border: none; padding: 14px; border-radius: 50px; font-weight: bold; font-size: 1rem;
-            cursor: pointer; text-align: center; margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.2); transition: transform 0.1s;
+        .problem-number {
+            background-color: var(--math-color); color: white;
+            padding: 5px 12px; border-radius: 8px; font-weight: bold;
+            font-size: 0.9em; margin-right: 15px; white-space: nowrap;
         }
-        .next-btn:active { transform: scale(0.98); }
+        .problem-text { font-size: 1.05em; font-weight: 500; width: 100%; }
 
-        /* 結果画面 */
-        .result-screen { text-align: center; padding: 40px 20px; display: none; }
-        .result-score { font-size: 2.5rem; font-weight: 900; color: var(--math-color); line-height: 1.2; margin: 15px 0; }
-        .result-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        
-        .retry-btn {
-            background-color: #e11d48; color: white; border: none; padding: 14px 30px;
-            border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1rem;
-            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+        /* 解答エリア */
+        .answer-section {
+            margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 15px;
         }
-        .next-stage-btn {
-            background-color: #16a34a; color: white; border: none; padding: 14px 30px;
-            border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1rem;
-            box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
+        .toggle-btn {
+            background-color: #f1f5f9; color: var(--text-color); border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer;
+            font-size: 0.9em; display: inline-flex; align-items: center;
+            width: 100%; justify-content: center; font-weight: bold;
+        }
+        .toggle-btn:hover { background-color: #e2e8f0; }
+
+        .answer-content {
+            display: none; margin-top: 15px; padding: 20px;
+            background-color: #f0f9ff; border-radius: 8px;
+            border-left: 4px solid var(--math-color);
+        }
+        .answer-content.show { display: block; animation: fadeIn 0.4s ease; }
+        .answer-title {
+            font-weight: bold; color: #0284c7; margin-bottom: 10px; display: block;
+        }
+
+        .step { margin-bottom: 12px; font-size: 0.95em; line-height: 1.7; }
+        .result {
+            font-weight: bold; color: #dc2626; font-size: 1.1em;
+            background-color: #fef2f2; padding: 2px 8px; border-radius: 4px;
         }
 
         /* ページ内ナビボタン */
@@ -240,18 +232,23 @@
             display: flex; align-items: center; gap: 5px;
         }
         .page-nav-btn:hover { background: #e0f2fe; }
-        
+
         /* 固定トップへ戻るボタン */
         .scroll-top-btn {
             position: fixed; bottom: 25px; right: 20px;
-            width: 50px; height: 50px; background: #64748b; color: #fff;
+            width: 50px; height: 50px; background: #374151; color: #fff;
             border-radius: 50%; border: none; font-size: 1.5rem; opacity: 0.9;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; z-index: 900;
             display: flex; align-items: center; justify-content: center;
         }
-
+        
         /* MathJax調整 */
         mjx-container { font-size: 110% !important; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -296,181 +293,291 @@
         <div class="content-container">
             <div style="text-align:center; margin-bottom:30px;">
                 <h1 style="color:#0369a1; font-size:1.8rem; margin-bottom:10px;">数学 基礎公式集</h1>
-                <p style="color:#64748b; font-size:0.95rem;">数と式・数列・図形・データの重要事項</p>
+                <p style="color:#64748b; font-size:0.95rem;">数と式・図形・データ・数列の重要事項まとめ</p>
             </div>
 
             <div class="nav-buttons">
                 <button class="page-nav-btn" onclick="scrollToId('sec1')">1. 数と式</button>
-                <button class="page-nav-btn" onclick="scrollToId('sec2')">2. 数列</button>
-                <button class="page-nav-btn" onclick="scrollToId('sec3')">3. 図形と計量</button>
-                <button class="page-nav-btn" onclick="scrollToId('sec4')">4. データの分析</button>
-                <button class="page-nav-btn" onclick="scrollToId('quiz-area')">5. 演習クイズ</button>
+                <button class="page-nav-btn" onclick="scrollToId('sec2')">2. 図形と計量</button>
+                <button class="page-nav-btn" onclick="scrollToId('sec3')">3. データの分析</button>
+                <button class="page-nav-btn" onclick="scrollToId('sec4')">4. 数列</button>
+                <button class="page-nav-btn" onclick="scrollToId('sec-quiz')">5. 総合演習</button>
             </div>
 
             <!-- 1. 数と式 -->
-            <h2 id="sec1"><i data-lucide="hash"></i>1. 数と式</h2>
-            <h3>Point Check: 基本公式</h3>
-            <div class="formula-grid">
-                <div class="formula-card">
-                    <div class="formula-title">指数法則・展開</div>
-                    <div class="formula-content">
-                        • $(a + b)c = ac + bc$<br>
-                        • $a^m \times a^n = a^{m+n}$<br>
-                        • $(a^m)^n = a^{mn}$<br>
-                        • $(a + b)^2 = a^2 + 2ab + b^2$<br>
-                        • $(a + b)(a - b) = a^2 - b^2$
+            <section id="sec1">
+                <h2 class="section-title">数と式</h2>
+                <div class="formula-grid">
+                    <div class="formula-card">
+                        <div class="formula-title">指数法則・展開</div>
+                        <div class="formula-content">
+                            • $(a + b)c = ac + bc$<br>
+                            • $a^m \times a^n = a^{m+n}$<br>
+                            • $(a^m)^n = a^{mn}$<br>
+                            • $(a + b)^2 = a^2 + 2ab + b^2$<br>
+                            • $(a + b)(a - b) = a^2 - b^2$
+                        </div>
                     </div>
-                    <div class="check-point">
-                        <strong>重要:</strong> 展開公式は因数分解の逆。どちら方向も即座に変換できるように！
+                    <div class="formula-card">
+                        <div class="formula-title">因数分解・有理化</div>
+                        <div class="formula-content">
+                            • 共通因数でくくる: $ax + ay = a(x + y)$<br>
+                            • たすき掛け: $acx^2+(ad+bc)x+bd = (ax+b)(cx+d)$<br>
+                            • 分母の有理化：<br>
+                            $\displaystyle \frac{c}{\sqrt{a}+\sqrt{b}} = \frac{c(\sqrt{a}-\sqrt{b})}{a-b}$
+                        </div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">約数</div>
+                        <div class="formula-content">
+                            素因数分解が $p^a \times q^b \times \dots$ のとき<br>
+                            • <strong>約数の個数</strong> $= (a+1)(b+1)\dots$
+                        </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>時短テクニック:</strong><br>約数の個数を聞かれたら、素因数分解して「指数+1」を掛け算！<br>例: $12=2^2 \times 3^1 \to (2+1)(1+1)=6$個</div>
+                        </div>
                     </div>
                 </div>
-                <div class="formula-card">
-                    <div class="formula-title">因数分解・有理化</div>
-                    <div class="formula-content">
-                        • <strong>共通因数</strong>でくくる: $ax + ay = a(x + y)$<br>
-                        • <strong>たすき掛け</strong>: $acx^2+(ad+bc)x+bd = (ax+b)(cx+d)$<br>
-                        • <strong>分母の有理化</strong>：<br>
-                        $\displaystyle \frac{c}{\sqrt{a}+\sqrt{b}} = \frac{c(\sqrt{a}-\sqrt{b})}{a-b}$
-                    </div>
-                </div>
-                <div class="formula-card">
-                    <div class="formula-title">約数の個数</div>
-                    <div class="formula-content">
-                        素因数分解が $N = p^a \times q^b \times \dots$ のとき<br>
-                        • <strong>約数の個数</strong> $= (a+1)(b+1)\dots$
-                    </div>
-                    <div class="check-point">
-                        例: $12 = 2^2 \times 3^1$ なので $(2+1)(1+1)=6$個。
-                    </div>
-                </div>
-            </div>
+            </section>
 
-            <!-- 2. 数列 -->
-            <h2 id="sec2"><i data-lucide="list-ordered"></i>2. 数列</h2>
-            <h3>Point Check: 数列の公式と規則性</h3>
-            <div class="formula-grid">
-                <div class="formula-card">
-                    <div class="formula-title">等差数列</div>
-                    <div class="formula-content">
-                        初項 $a$, 公差 $d$, 末項 $l$ のとき<br>
-                        • <strong>一般項 ($n$項)</strong>： $a_n = a + (n - 1)d$<br>
-                        • <strong>和 ($S_n$)</strong>：<br>
-                        $\displaystyle S_n = \frac{1}{2}n (a + l)$<br>
-                        $\displaystyle S_n = \frac{1}{2}n \{ 2a + (n - 1)d \}$
+            <!-- 2. 図形と計量 -->
+            <section id="sec2">
+                <h2 class="section-title">図形と計量</h2>
+                <div class="formula-grid">
+                    <div class="formula-card">
+                        <div class="formula-title">平面図形（扇形）</div>
+                        <div class="formula-content">
+                            半径 $r$, 中心角 $a^\circ$ の扇形<br>
+                            • <strong>弧の長さ</strong> $l = 2\pi r \times \frac{a}{360}$<br>
+                            • <strong>面積</strong> $S = \pi r^2 \times \frac{a}{360} = \frac{1}{2}lr$
+                        </div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">空間図形（球・錐）</div>
+                        <div class="formula-content">
+                            半径 $r$ の球<br>
+                            • <strong>表面積</strong> $S = 4\pi r^2$ <span style="font-size:0.9em; color:#64748b;">(心配ある事情)</span><br>
+                            • <strong>体積</strong> $V = \frac{4}{3}\pi r^3$ <span style="font-size:0.9em; color:#64748b;">(身の上に心配ある)</span><br>
+                            <br>
+                            底面積 $S$, 高さ $h$ の錐体<br>
+                            • <strong>体積</strong> $V = \frac{1}{3}Sh$
+                        </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>Point:</strong><br>円錐や角錐の体積は、必ず柱の体積の「3分の1」になる！</div>
+                        </div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">三角比の相互関係</div>
+                        <div class="formula-content">
+                            • $\tan\theta = \frac{\sin\theta}{\cos\theta}$<br>
+                            • $\sin^2\theta + \cos^2\theta = 1$
+                        </div>
                     </div>
                 </div>
-                <div class="formula-card">
-                    <div class="formula-title">自然数の和 (Σ公式)</div>
-                    <div class="formula-content">
-                        • $1$から$n$までの和：<br>
-                        &nbsp;&nbsp;$\displaystyle \sum_{k=1}^n k = \frac{1}{2}n(n + 1)$<br>
-                        • $1$から$2n-1$までの奇数の和：<br>
-                        &nbsp;&nbsp;$\displaystyle 1+3+5+\dots+(2n-1) = n^2$
-                    </div>
-                    <div class="check-point">
-                        <strong>裏技:</strong> 奇数の和は「項数の2乗」になる！（例: 1+3+5 = 3項なので $3^2=9$）
-                    </div>
-                </div>
-                <div class="formula-card">
-                    <div class="formula-title">規則性の問題 (タイル等)</div>
-                    <div class="formula-content">
-                        図形が増えていく問題は、<strong>「前の項との差（階差）」</strong>や<strong>「n番目の式」</strong>を見つけることが鍵。<br>
-                        例: $1, 3, 6, 10\dots$ と増えるなら、<br>
-                        増え方は $+2, +3, +4\dots$ となる。
-                    </div>
-                </div>
-            </div>
+            </section>
 
-            <!-- 3. 図形と計量 -->
-            <h2 id="sec3"><i data-lucide="triangle"></i>3. 図形と計量</h2>
-            <h3>Point Check: 面積・体積・三角比</h3>
-            <div class="formula-grid">
-                <div class="formula-card">
-                    <div class="formula-title">平面図形（扇形）</div>
-                    <div class="formula-content">
-                        半径 $r$, 中心角 $a^\circ$ の扇形<br>
-                        • <strong>弧の長さ</strong> $l = 2\pi r \times \frac{a}{360}$<br>
-                        • <strong>面積</strong> $S = \pi r^2 \times \frac{a}{360} = \frac{1}{2}lr$
+            <!-- 3. データの分析 -->
+            <section id="sec3">
+                <h2 class="section-title">データの分析</h2>
+                <div class="formula-grid">
+                    <div class="formula-card" style="grid-column: span 2;">
+                        <div class="formula-title">代表値と散らばり</div>
+                        <table class="data-table">
+                            <tbody>
+                                <tr><th>平均値 ($\bar{x}$)</th><td>データの総和 $\div$ データの個数</td></tr>
+                                <tr><th>中央値 (メジアン)</th><td>データを大きさ順に並べたときの中央の値。<br>偶数個の場合は中央2つの平均。</td></tr>
+                                <tr><th>最頻値 (モード)</th><td>データの中で最も頻繁に現れる値。</td></tr>
+                                <tr><th>範囲 (レンジ)</th><td>最大値 - 最小値</td></tr>
+                                <tr><th>四分位数</th><td>データを4等分する位置の値。<br>第1($Q_1$), 第2(中央値), 第3($Q_3$)。</td></tr>
+                                <tr><th>四分位範囲</th><td>$Q_3 - Q_1$ (データの真ん中50%の範囲)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">分散と標準偏差</div>
+                        <div class="formula-content">
+                            • <strong>分散</strong> ($s^2$)：<br>
+                            $\displaystyle s^2 = \frac{1}{n} \sum (x_i - \bar{x})^2$<br>
+                            (偏差の2乗の平均)<br><br>
+                            • <strong>標準偏差</strong> ($s$)：<br>
+                            $\displaystyle s = \sqrt{s^2} = \sqrt{\text{分散}}$
+                        </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>意味:</strong><br>標準偏差が大きいほど、データの散らばりが大きい（平均から離れたデータが多い）。</div>
+                        </div>
                     </div>
                 </div>
-                <div class="formula-card">
-                    <div class="formula-title">空間図形（球・錐）</div>
-                    <div class="formula-content">
-                        半径 $r$ の球<br>
-                        • <strong>表面積</strong> $S = 4\pi r^2$ (心配ある事情)<br>
-                        • <strong>体積</strong> $V = \frac{4}{3}\pi r^3$ (身の上に心配ある)<br>
-                        <br>
-                        底面積 $S$, 高さ $h$ の錐体 (円錐・角錐)<br>
-                        • <strong>体積</strong> $V = \frac{1}{3}Sh$
-                    </div>
-                    <div class="check-point">
-                        錐体の体積は「柱の3分の1」と覚える！
-                    </div>
-                </div>
-                <div class="formula-card">
-                    <div class="formula-title">三角比の相互関係</div>
-                    <div class="formula-content">
-                        • $\tan\theta = \frac{\sin\theta}{\cos\theta}$<br>
-                        • $\sin^2\theta + \cos^2\theta = 1$
-                    </div>
-                </div>
-            </div>
+            </section>
 
-            <!-- 4. データの分析 -->
-            <h2 id="sec4"><i data-lucide="bar-chart-2"></i>4. データの分析</h2>
-            <h3>Point Check: 用語まとめ</h3>
-            <div class="formula-grid">
-                <div class="formula-card" style="grid-column: span 2;">
-                    <div class="formula-title">代表値と散らばり</div>
-                    <table class="data-table">
-                        <tbody>
-                            <tr><th>平均値 ($\bar{x}$)</th><td>データの総和 $\div$ データの個数</td></tr>
-                            <tr><th>中央値 (メジアン)</th><td>データを大きさ順に並べたときの中央の値。<br>偶数個の場合は中央2つの平均。</td></tr>
-                            <tr><th>最頻値 (モード)</th><td>データの中で最も頻繁に現れる値。</td></tr>
-                            <tr><th>範囲 (レンジ)</th><td>最大値 - 最小値</td></tr>
-                            <tr><th>四分位数</th><td>データを4等分する位置の値。<br>第1($Q_1$), 第2(中央値), 第3($Q_3$)。</td></tr>
-                            <tr><th>四分位範囲</th><td>$Q_3 - Q_1$ (データの真ん中50%の範囲)</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="formula-card">
-                    <div class="formula-title">分散と標準偏差</div>
-                    <div class="formula-content">
-                        • <strong>偏差</strong>： (データ - 平均値)<br>
-                        • <strong>分散 ($s^2$)</strong>： 偏差の2乗の平均値。<br>
-                        $\displaystyle s^2 = \frac{1}{n} \sum (x_i - \bar{x})^2$<br>
-                        • <strong>標準偏差 ($s$)</strong>： 分散の正の平方根 ($\sqrt{\text{分散}}$)。<br>
-                        単位が元のデータと同じになるため扱いやすい。
+            <!-- 4. 数列 -->
+            <section id="sec4">
+                <h2 class="section-title">数列</h2>
+                <div class="formula-grid">
+                    <div class="formula-card">
+                        <div class="formula-title">等差数列</div>
+                        <div class="formula-content">
+                            初項 $a$, 公差 $d$, 末項 $l$<br>
+                            • <strong>第$n$項</strong>： $a_n = a + (n - 1)d$<br>
+                            • <strong>和</strong>： $\displaystyle S_n = \frac{1}{2}n \{ 2a + (n - 1)d \}$<br>
+                            &nbsp;&nbsp;または $\displaystyle S_n = \frac{1}{2}n (a + l)$
+                        </div>
+                        <div class="check-point">
+                            <i data-lucide="zap"></i>
+                            <div><strong>イメージ:</strong><br>等差数列の和は「(最初 + 最後) × 個数 ÷ 2」と覚える！</div>
+                        </div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">自然数の和 (Σ公式)</div>
+                        <div class="formula-content">
+                            • $1$から$n$までの和：<br>
+                            &nbsp;&nbsp;$\displaystyle \sum_{k=1}^n k = \frac{1}{2}n(n + 1)$<br>
+                            • 奇数の和 ($1, 3, 5\dots$)： $n^2$ (項数$n$の場合)
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- 演習クイズ -->
-            <div id="quiz-area" class="quiz-section">
+            <section id="sec-quiz">
                 <div class="quiz-header">
-                    <div class="stage-badge" id="stage-badge">基礎力チェック</div>
-                    <h2 style="margin:0; border:none; justify-content:center; color:#0ea5e9; background:none; box-shadow:none;">
-                        <i data-lucide="edit-3"></i> 総合確認クイズ
-                    </h2>
-                    <p style="color:#64748b;" id="quiz-desc">まずは基礎を固めましょう！</p>
+                    <h2 class="section-title" style="border:none; text-align:center;">総合演習クイズ</h2>
+                    <p style="text-align:center; color:#64748b; margin-bottom:20px;">基礎知識をチェックしましょう。</p>
                 </div>
-                <div id="quiz-content">
-                    <!-- JSで描画 -->
-                    <div style="text-align:center;">
-                        <button class="start-btn" onclick="initQuiz()">クイズを開始する</button>
+                
+                <!-- Q1 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">Q.1</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">次の式を展開せよ：$(x + 3)(x - 5)$</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解答・解説</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                乗法公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を利用します。<br>
+                                $(x + 3)(x - 5) = x^2 + (3 - 5)x + (3 \times -5)$<br>
+                                $= $ <span class="result">$x^2 - 2x - 15$</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 結果画面 -->
-            <div id="result-area" class="result-screen card" style="display:none;">
-                <h2 style="margin:0 0 20px 0; border:none; justify-content:center; color:#2c3e50; background:none; box-shadow:none;">結果発表</h2>
-                <div class="result-score" id="score-display"></div>
-                <p id="score-msg" style="margin-bottom:20px; font-weight:bold; color:#64748b; font-size:1.1rem;"></p>
-                <div class="result-actions" id="result-actions">
-                    <!-- JSでボタン生成 -->
+                <!-- Q2 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">Q.2</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">$12$の約数の個数を求めよ。</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解答・解説</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                $12$を素因数分解すると $2^2 \times 3^1$ です。<br>
+                                約数の個数は (指数+1) の積なので、<br>
+                                $(2 + 1) \times (1 + 1) = 3 \times 2 = $ <span class="result">6個</span><br>
+                                (約数: 1, 2, 3, 4, 6, 12)
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Q3 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">Q.3</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">初項 $3$, 公差 $4$ の等差数列の第$10$項はいくつか。</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解答・解説</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                等差数列の一般項 $a_n = a + (n-1)d$ を使います。<br>
+                                $a=3, d=4, n=10$ なので、<br>
+                                $3 + (10 - 1) \times 4 = 3 + 36 = $ <span class="result">39</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">Q.4</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">半径 $3\text{cm}$ の球の表面積はいくつか。</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解答・解説</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                球の表面積 $S = 4\pi r^2$ より、<br>
+                                $4\pi \times 3^2 = 4\pi \times 9 = $ <span class="result">$36\pi \text{cm}^2$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">Q.5</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">データの最大値から最小値を引いた値を何というか。</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解答・解説</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                最大値 - 最小値 は <span class="result">範囲 (レンジ)</span> です。<br>
+                                ※四分位範囲は $Q_3 - Q_1$ です。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">Q.6</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">底面の半径が $3\text{cm}$、高さが $4\text{cm}$ の円錐の体積は？</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解答・解説</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                円錐の体積 $V = \frac{1}{3}Sh = \frac{1}{3} \pi r^2 h$。<br>
+                                $V = \frac{1}{3} \pi (3^2) \times 4 = \frac{1}{3} \pi (9) (4) = $ <span class="result">$12\pi \text{cm}^3$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q7 -->
+                <div class="problem-card">
+                    <div class="problem-header"><span class="problem-number">Q.7</span></div>
+                    <div class="problem-body">
+                        <div class="problem-text">$1$から$10$までの自然数の和はいくつか。</div>
+                    </div>
+                    <div class="answer-section">
+                        <button class="toggle-btn" onclick="toggleAnswer(this)">解答・解説</button>
+                        <div class="answer-content">
+                            <span class="answer-title">【解答】</span>
+                            <div class="step">
+                                自然数の和の公式 $S = \frac{1}{2} n(n+1)$ を使います。<br>
+                                $\frac{1}{2} \times 10 \times (10 + 1) = 5 \times 11 = $ <span class="result">55</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
 
             <!-- 注意書き -->
             <p style="font-size:0.8rem; color:#94a3b8; margin-top:40px; text-align:center;">
@@ -484,15 +591,33 @@
         </footer>
     </main>
 
-    <!-- トップへ戻るボタン -->
-    <button class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+    <button id="back-to-top" class="scroll-top-btn" onclick="scrollToTop()" title="トップへ戻る">
         <i data-lucide="chevron-up"></i>
     </button>
 
     <script>
-        lucide.createIcons();
+        function scrollToId(id) {
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: "smooth" });
+        }
 
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZhvVExnkiseSTiPJDqYK4W6aMGy5kKT8uMW0z3nU2ZdWDeYVMd6FJttE0NSxZMhwr/exec"; 
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function toggleAnswer(btn) {
+            const content = btn.nextElementSibling;
+            const isShown = content.classList.contains('show');
+            if (isShown) {
+                content.classList.remove('show');
+                btn.innerHTML = "解説を見る";
+            } else {
+                content.classList.add('show');
+                btn.innerHTML = "解説を隠す";
+            }
+        }
+
+        lucide.createIcons();
 
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
@@ -509,322 +634,6 @@
 
         menuToggle.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
-
-        function scrollToId(id) {
-            const el = document.getElementById(id);
-            if(el) el.scrollIntoView({ behavior: "smooth" });
-        }
-
-        /* --- クイズデータ --- */
-        // レベル1: 基礎問題
-        const level1_questions = [
-            {
-                q: "次の式を展開せよ：$(x + 3)(x - 5)$",
-                options: ["$x^2 - 2x - 15$", "$x^2 + 2x - 15$", "$x^2 - 8x - 15$", "$x^2 - 15$"],
-                a: 0,
-                exp: "乗法公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を利用。<br>$(x + 3)(x - 5) = x^2 + (3 - 5)x + (3 \\times -5) = x^2 - 2x - 15$"
-            },
-            {
-                q: "$12$の約数の個数はいくつか。",
-                options: ["$4$個", "$5$個", "$6$個", "$8$個"],
-                a: 2,
-                exp: "$12 = 2^2 \\times 3^1$。約数の個数は (指数+1) の積なので、<br>$(2 + 1) \\times (1 + 1) = 3 \\times 2 = 6$個。<br>(約数: 1, 2, 3, 4, 6, 12)"
-            },
-            {
-                q: "初項 $3$, 公差 $4$ の等差数列の第$10$項は？",
-                options: ["$36$", "$39$", "$40$", "$43$"],
-                a: 1,
-                exp: "$a_n = a + (n-1)d$ より、<br>$3 + (10 - 1) \\times 4 = 3 + 36 = 39$"
-            },
-            {
-                q: "半径 $3\\text{cm}$ の球の表面積はいくつか。",
-                options: ["$9\\pi \\text{cm}^2$", "$12\\pi \\text{cm}^2$", "$27\\pi \\text{cm}^2$", "$36\\pi \\text{cm}^2$"],
-                a: 3,
-                exp: "球の表面積 $S = 4\\pi r^2$ より、<br>$4\\pi \\times 3^2 = 4\\pi \\times 9 = 36\\pi \\text{cm}^2$"
-            },
-            {
-                q: "半径 $6\\text{cm}$, 中心角 $120^\\circ$ の扇形の面積は？",
-                options: ["$6\\pi \\text{cm}^2$", "$12\\pi \\text{cm}^2$", "$18\\pi \\text{cm}^2$", "$24\\pi \\text{cm}^2$"],
-                a: 1,
-                exp: "扇形の面積 $S = \\pi r^2 \\times \\frac{a}{360}$ より、<br>$\\pi \\times 6^2 \\times \\frac{120}{360} = 36\\pi \\times \\frac{1}{3} = 12\\pi \\text{cm}^2$"
-            },
-            {
-                q: "データの最大値から最小値を引いた値を何というか。",
-                options: ["分散", "範囲 (レンジ)", "四分位範囲", "標準偏差"],
-                a: 1,
-                exp: "最大値 - 最小値 は「範囲 (レンジ)」です。<br>四分位範囲は $Q_3 - Q_1$ です。"
-            },
-            {
-                q: "分散の正の平方根を何というか。",
-                options: ["平均値", "中央値", "偏差", "標準偏差"],
-                a: 3,
-                exp: "分散のルートをとったものが「標準偏差」($\\sqrt{\\text{分散}}$)です。"
-            },
-            {
-                q: "$1$から$10$までの自然数の和はいくつか。",
-                options: ["$45$", "$50$", "$55$", "$60$"],
-                a: 2,
-                exp: "自然数の和の公式 $S = \\frac{1}{2} n(n+1)$ を使います。<br>$\\frac{1}{2} \\times 10 \\times (10 + 1) = 5 \\times 11 = 55$"
-            }
-        ];
-
-        // レベル2: 類題・応用
-        const level2_questions = [
-            {
-                q: "式を展開せよ：$(2x + 3)(2x - 3)$",
-                options: ["$4x^2 - 9$", "$4x^2 + 9$", "$2x^2 - 9$", "$4x^2 - 12x - 9$"],
-                a: 0,
-                exp: "和と差の積の公式 $(a+b)(a-b) = a^2 - b^2$ を利用。<br>$(2x)^2 - 3^2 = 4x^2 - 9$"
-            },
-            {
-                q: "次の式を因数分解せよ：$x^2 - 8x + 16$",
-                options: ["$(x+4)^2$", "$(x-4)^2$", "$(x-2)(x-8)$", "$(x-4)(x+4)$"],
-                a: 1,
-                exp: "公式 $a^2 - 2ab + b^2 = (a-b)^2$ を利用。<br>$x^2 - 2(4)x + 4^2 = (x-4)^2$"
-            },
-            {
-                q: "次の分母を有理化せよ：$\\frac{1}{\\sqrt{3}+\\sqrt{2}}$",
-                options: ["$\\sqrt{3}+\\sqrt{2}$", "$\\sqrt{3}-\\sqrt{2}$", "$3-2$", "$1$"],
-                a: 1,
-                exp: "分母分子に $(\\sqrt{3}-\\sqrt{2})$ を掛ける。<br>$\\frac{\\sqrt{3}-\\sqrt{2}}{(\\sqrt{3}+\\sqrt{2})(\\sqrt{3}-\\sqrt{2})} = \\frac{\\sqrt{3}-\\sqrt{2}}{3-2} = \\sqrt{3}-\\sqrt{2}$"
-            },
-            {
-                q: "$72$の約数の個数はいくつか。",
-                options: ["$6$個", "$9$個", "$12$個", "$16$個"],
-                a: 2,
-                exp: "$72 = 8 \\times 9 = 2^3 \\times 3^2$。<br>約数の個数は $(3+1)(2+1) = 4 \\times 3 = 12$個。"
-            },
-            {
-                q: "底面の半径 $3\\text{cm}$, 高さ $4\\text{cm}$ の円錐の体積は？",
-                options: ["$12\\pi \\text{cm}^3$", "$36\\pi \\text{cm}^3$", "$4\\pi \\text{cm}^3$", "$16\\pi \\text{cm}^3$"],
-                a: 0,
-                exp: "円錐の体積 $V = \\frac{1}{3}Sh = \\frac{1}{3} \\pi r^2 h$。<br>$V = \\frac{1}{3} \\pi (3^2) \\times 4 = 12\\pi$"
-            },
-            {
-                q: "次のデータ $2, 5, 2, 7, 2, 8$ の最頻値（モード）は？",
-                options: ["$2$", "$4.3$", "$3.5$", "$5$"],
-                a: 0,
-                exp: "最頻値は最も多く現れる値。<br>$2$が3回出ているので、モードは$2$。"
-            },
-            {
-                q: "初項$2$, 末項$20$, 項数$10$ の等差数列の和は？",
-                options: ["$90$", "$100$", "$110$", "$220$"],
-                a: 2,
-                exp: "等差数列の和 $S_n = \\frac{1}{2}n(a+l)$ を利用。<br>$\\frac{1}{2} \\times 10 (2 + 20) = 5 \\times 22 = 110$"
-            },
-            {
-                q: "$1$から$9$までの奇数の和 $1+3+5+7+9$ は？",
-                options: ["$20$", "$24$", "$25$", "$30$"],
-                a: 2,
-                exp: "奇数の和は $n^2$（項数の2乗）。<br>項数は5なので $5^2 = 25$。<br>（普通に足しても $1+9=10, 3+7=10, 10+10+5=25$）"
-            }
-        ];
-
-        const quizSets = [
-            { name: "基礎編", data: level1_questions },
-            { name: "類題編", data: level2_questions }
-        ];
-
-        let currentSetIndex = 0;
-        let activeQueue = []; // 出題待ちリスト
-        let retryQueue = [];  // 間違えた問題リスト
-        let score = 0;
-        let totalQuestionCount = 0; // そのセットの総問題数
-
-        const quizContent = document.getElementById('quiz-content');
-        const resultArea = document.getElementById('result-area');
-        const quizArea = document.getElementById('quiz-area');
-        const stageBadge = document.getElementById('stage-badge');
-        const quizDesc = document.getElementById('quiz-desc');
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // 初期化（ページロード時）
-        function initQuiz() {
-            // 最初は基礎編から
-            currentSetIndex = 0;
-            startLevel();
-        }
-
-        // レベル開始処理
-        function startLevel() {
-            const currentSet = quizSets[currentSetIndex];
-            
-            // 問題セットをコピーしてシャッフル
-            activeQueue = shuffle([...currentSet.data]);
-            retryQueue = [];
-            score = 0;
-            totalQuestionCount = activeQueue.length;
-            
-            // UI更新
-            stageBadge.textContent = currentSet.name;
-            quizDesc.textContent = `全${totalQuestionCount}問`;
-            if (currentSetIndex > 0) {
-                stageBadge.style.background = "#e0f2fe"; // 色変え
-                stageBadge.style.color = "#0369a1";
-            }
-            
-            resultArea.style.display = 'none';
-            quizArea.style.display = 'block';
-            
-            renderQuestion();
-        }
-
-        function renderQuestion() {
-            // 出題すべき問題がない場合 -> リザルトへ
-            if (activeQueue.length === 0) {
-                showResult();
-                return;
-            }
-
-            const data = activeQueue[0]; // 先頭の問題
-            const progressText = `残り ${activeQueue.length} 問`;
-
-            let optionsHtml = '';
-            data.options.forEach((opt, idx) => {
-                optionsHtml += `<button class="option-btn" onclick="checkAnswer(${idx})">${opt}</button>`;
-            });
-
-            quizContent.innerHTML = `
-                <div class="quiz-card">
-                    <div style="text-align:right; font-size:0.9rem; color:#64748b; margin-bottom:5px;">${progressText}</div>
-                    <div class="q-text">${data.q}</div>
-                    <div class="q-options">
-                        ${optionsHtml}
-                    </div>
-                    <div class="feedback" id="feedback">
-                        <div style="font-weight:bold; margin-bottom:5px;" id="fb-title"></div>
-                        <div>${data.exp}</div>
-                        <button class="next-btn" onclick="nextQuestion()">次へ ▶</button>
-                    </div>
-                </div>
-            `;
-            
-            // MathJax再レンダリング
-            if (window.MathJax) {
-                MathJax.typesetPromise([quizContent]).then(() => {});
-            }
-        }
-
-        window.checkAnswer = function(selectedIndex) {
-            const data = activeQueue[0];
-            const btns = document.querySelectorAll('.option-btn');
-            const feedback = document.getElementById('feedback');
-            const fbTitle = document.getElementById('fb-title');
-
-            btns.forEach(b => b.disabled = true);
-
-            if (selectedIndex === data.a) {
-                btns[selectedIndex].classList.add('correct');
-                btns[selectedIndex].innerHTML += ' ⭕';
-                fbTitle.innerHTML = '<span style="color:#16a34a">正解！</span>';
-                score++;
-            } else {
-                btns[selectedIndex].classList.add('wrong');
-                btns[selectedIndex].innerHTML += ' ❌';
-                fbTitle.innerHTML = '<span style="color:#dc2626">不正解...</span>';
-                btns[data.a].classList.add('correct');
-                btns[data.a].innerHTML += ' ⭕';
-                
-                // 間違えたのでリトライキューに追加
-                retryQueue.push(data);
-            }
-            feedback.style.display = 'block';
-        }
-
-        window.nextQuestion = function() {
-            // 答えた問題をキューから削除
-            activeQueue.shift();
-            renderQuestion();
-        }
-
-        function showResult() {
-            quizArea.style.display = 'none';
-            resultArea.style.display = 'block';
-            
-            const scoreDisplay = document.getElementById('score-display');
-            const scoreMsg = document.getElementById('score-msg');
-            const actionArea = document.getElementById('result-actions');
-            
-            scoreDisplay.textContent = "";
-            actionArea.innerHTML = "";
-
-            if (retryQueue.length === 0) {
-                // 全問正解クリア！
-                scoreDisplay.innerHTML = `<span style="color:#16a34a">CLEAR!</span>`;
-                
-                if (currentSetIndex < quizSets.length - 1) {
-                    // 次のレベルへ
-                    scoreMsg.textContent = "おめでとうございます！基礎マスターです！";
-                    const nextBtn = document.createElement("button");
-                    nextBtn.className = "retry-btn";
-                    nextBtn.textContent = "類題（応用）に挑戦する";
-                    nextBtn.style.backgroundColor = "#d97706"; // アンバー色
-                    nextBtn.onclick = () => {
-                        currentSetIndex++;
-                        startLevel();
-                    };
-                    actionArea.appendChild(nextBtn);
-                } else {
-                    // 全レベルクリア -> 最初に戻る
-                    scoreMsg.textContent = "完全制覇！素晴らしい実力です！";
-                    const resetBtn = document.createElement("button");
-                    resetBtn.className = "retry-btn";
-                    resetBtn.textContent = "最初からもう一度（ループ）";
-                    resetBtn.onclick = () => {
-                        currentSetIndex = 0;
-                        startLevel();
-                    };
-                    actionArea.appendChild(resetBtn);
-                }
-
-            } else {
-                // 間違いあり
-                scoreDisplay.innerHTML = `${retryQueue.length}問 <span style="font-size:1.5rem; color:#64748b;">ミス</span>`;
-                scoreMsg.textContent = "間違えた問題を復習して、全問正解を目指そう！";
-                
-                const retryBtn = document.createElement("button");
-                retryBtn.className = "retry-btn";
-                retryBtn.textContent = "間違えた問題だけ解く";
-                retryBtn.onclick = () => {
-                    // リトライモード開始（activeQueueにretryQueueを移してシャッフル）
-                    activeQueue = shuffle([...retryQueue]);
-                    retryQueue = []; // リトライキューは空にする（再間違えでまた入る）
-                    quizArea.style.display = 'block';
-                    resultArea.style.display = 'none';
-                    renderQuestion();
-                };
-                actionArea.appendChild(retryBtn);
-            }
-        }
-
-        // スタートボタン
-        const startBtn = document.createElement("button");
-        startBtn.className = "start-btn";
-        startBtn.textContent = "基礎問題スタート";
-        startBtn.onclick = initQuiz;
-        startBtn.style.display = "block";
-        startBtn.style.margin = "0 auto";
-        startBtn.style.padding = "14px 40px";
-        startBtn.style.borderRadius = "50px";
-        startBtn.style.border = "none";
-        startBtn.style.background = "#0ea5e9";
-        startBtn.style.color = "#fff";
-        startBtn.style.fontWeight = "bold";
-        startBtn.style.cursor = "pointer";
-        startBtn.style.fontSize = "1.1rem";
-
-        if(!quizContent.hasChildNodes() || quizContent.innerHTML.trim() === "<!-- JSで描画 -->") {
-             quizContent.innerHTML = "";
-             quizContent.appendChild(startBtn);
-        }
-
     </script>
 </body>
 </html>
