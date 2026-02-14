@@ -1,0 +1,573 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語 会話 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --english-color: #f97316; /* 英語（会話）用のテーマカラー（オレンジ） */
+            --english-dark: #c2410c;
+            --bg-color: #fff7ed;      /* 薄いオレンジ背景 */
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
+            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--english-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active { color: var(--english-color); background-color: #f1f5f9; font-weight: bold; }
+
+        /* モバイル用トグルボタン */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 48px; height: 48px; background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border-right: none !important;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border-right: none !important;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            border-right: none !important;
+        }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 80px; }
+            .container { padding: 10px; width: 100%; }
+        }
+
+        /* =========================================
+           英語（会話）固有スタイル
+           ========================================= */
+        header {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            text-align: center;
+            border-top: 5px solid var(--english-color);
+        }
+
+        h1 { color: var(--english-dark); margin-bottom: 10px; font-size: 1.5rem; }
+
+        .nav-menu-inner {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+        }
+
+        .nav-btn-inner {
+            background: var(--bg-color);
+            color: var(--english-dark);
+            border: 1px solid var(--english-color);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-btn-inner:hover, .nav-btn-inner:active {
+            background: var(--english-color); color: white;
+        }
+
+        section {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        h2 {
+            border-left: 5px solid var(--english-color);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        /* 穴埋めスタイル */
+        .fill-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        
+        .fill-blank {
+            display: inline-block;
+            min-width: 60px;
+            border-bottom: 2px solid var(--english-color);
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: color 0.3s;
+            background: rgba(249, 115, 22, 0.1);
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .fill-blank.revealed { color: var(--english-dark); background: none; }
+        
+        .translation {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-left: 8px;
+        }
+
+        .show-ans-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        /* 対話文ボックス */
+        .dialogue-box {
+            background: #fffaf0;
+            border: 1px solid #fed7aa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        .speaker { font-weight: bold; color: var(--english-dark); margin-right: 5px; }
+        .dialogue-slot {
+            display: inline-block;
+            background: white;
+            border: 1px solid var(--english-color);
+            color: var(--english-color);
+            padding: 0 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* クイズ（選択式） */
+        .quiz-item { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
+        .quiz-question { font-weight: bold; margin-bottom: 12px; color: var(--text-color); }
+        .choices-container { display: flex; flex-direction: column; gap: 8px; }
+        
+        .choice-btn {
+            background: white; border: 2px solid #e2e8f0; padding: 12px 15px;
+            border-radius: 8px; text-align: left; cursor: pointer;
+            font-size: 0.95rem; color: var(--text-color); position: relative;
+        }
+        .choice-btn:hover { background-color: #fff7ed; border-color: var(--english-color); }
+        .choice-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #15803d; font-weight: bold; }
+        .choice-btn.correct::after { content: "◎"; position: absolute; right: 10px; }
+        .choice-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+        .choice-btn.wrong::after { content: "✕"; position: absolute; right: 10px; }
+
+        .quiz-explanation {
+            display: none; margin-top: 12px; padding: 12px;
+            background: #f1f5f9; border-radius: 6px; font-size: 0.9rem;
+        }
+
+        /* ランダムクイズ */
+        #random-quiz-area {
+            background: white; border: 2px solid #0ea5e9;
+            padding: 20px; border-radius: 12px; text-align: center; margin-top: 30px;
+        }
+        .next-btn {
+            background: #0ea5e9; color: white; border: none;
+            padding: 12px 24px; border-radius: 20px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 3px 6px rgba(14, 165, 233, 0.3); margin-top: 15px;
+        }
+
+        /* FAB */
+        #fab-top {
+            position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px;
+            background: var(--english-color); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 1100;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <!-- 指定: ../index.html で一般教養トップへ -->
+            <a href="../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="index.html" class="nav-item"><i data-lucide="languages"></i>英語</a>
+            <a href="../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../index.html">ホーム</a> ＞ <a href="../index.html">一般教養</a> ＞ <a href="index.html">英語</a> ＞ 会話
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">会話編</h1>
+        </div>
+
+        <div class="container">
+            <header>
+                <h1>英語演習</h1>
+                <nav class="nav-menu-inner">
+                    <a href="#section1" class="nav-btn-inner js-scroll">定番表現</a>
+                    <a href="#section2" class="nav-btn-inner js-scroll">対話文 I</a>
+                    <a href="#section3" class="nav-btn-inner js-scroll">対話文 II</a>
+                    <a href="#random" class="nav-btn-inner js-scroll">ランダムQ</a>
+                </nav>
+            </header>
+
+            <!-- 1. Unique Expressions -->
+            <section id="section1">
+                <h2>1. 定番表現 <button class="show-ans-btn" onclick="toggleSectionBlanks('section1')">全て表示</button></h2>
+                <p style="font-size:0.85em; color:#64748b; margin-bottom:15px;">空所に適語を補い、英文を完成させよ。タップで解答表示。</p>
+                
+                <div class="fill-item">
+                    (1) お塩をとっていただけませんか？<br>
+                    Will you <span class="fill-blank" onclick="toggleBlank(this)">pass</span> me the salt?
+                </div>
+                <div class="fill-item">
+                    (2) どこか具合が悪いんですか？<br>
+                    Is anything <span class="fill-blank" onclick="toggleBlank(this)">wrong</span> with you?
+                </div>
+                <div class="fill-item">
+                    (3) そのジャケットを試着させて下さい。<br>
+                    Let me <span class="fill-blank" onclick="toggleBlank(this)">try</span> on the jacket.
+                </div>
+                <div class="fill-item">
+                    (4) 余計なお世話です。<br>
+                    It's none of your <span class="fill-blank" onclick="toggleBlank(this)">business</span>.
+                </div>
+                <div class="fill-item">
+                    (5) 伝言をお願いできますか？<br>
+                    Can I <span class="fill-blank" onclick="toggleBlank(this)">leave</span> a message?
+                </div>
+                <div class="fill-item">
+                    (6) ここでタバコを吸ってもいいですか？―――いいえ、構いませんよ。<br>
+                    Do you <span class="fill-blank" onclick="toggleBlank(this)">mind</span> if I smoke here? ――― <span class="fill-blank" onclick="toggleBlank(this)">Not</span> in the least.
+                </div>
+                <div class="fill-item">
+                    (7) それはお気の毒に。<br>
+                    I'm sorry to <span class="fill-blank" onclick="toggleBlank(this)">hear</span> that.
+                </div>
+                <div class="fill-item">
+                    (8) （電話で）どうぞ、そのまま少しお待ち下さい。<br>
+                    Just <span class="fill-blank" onclick="toggleBlank(this)">hold</span> on a minute, please.
+                </div>
+                <div class="fill-item">
+                    (9) 番号が間違っていますよ。<br>
+                    I'm afraid you have the <span class="fill-blank" onclick="toggleBlank(this)">wrong</span> number.
+                </div>
+                <div class="fill-item">
+                    (10) 私はこの辺には不案内です。<br>
+                    I'm a <span class="fill-blank" onclick="toggleBlank(this)">stranger</span> here.
+                </div>
+            </section>
+
+            <!-- 2. Dialogue I -->
+            <section id="section2">
+                <h2>2. 対話文 I</h2>
+                <p style="font-size:0.85em; color:#64748b; margin-bottom:15px;">【 】に入る適当なものを選べ。</p>
+
+                <div class="quiz-item">
+                    <div class="quiz-question">(1) A: I'd like to send this letter by the special delivery.<br>B: All right. That's 75 cent, please.<br>A: 【 1 】</div>
+                    <div class="choices-container">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. Here I am.</button>
+                        <button class="choice-btn" data-correct="true" data-explanation="正解：<b>Here you are.</b><br>（お金や物を渡す時）「はい、どうぞ」" onclick="checkAnswer(this, true)">イ. Here you are.</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. Here it comes.</button>
+                    </div>
+                    <div class="quiz-explanation"></div>
+                </div>
+
+                <div class="quiz-item">
+                    <div class="quiz-question">(2) A: Is it okay if I borrow these books?<br>B: 【 2 】 I'm going to use them.</div>
+                    <div class="choices-container">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. Sure.</button>
+                        <button class="choice-btn" data-correct="true" data-explanation="正解：<b>I'm afraid not.</b><br>後ろに「私が使う予定だ（＝貸せない）」とあるので、断る表現が適切。" onclick="checkAnswer(this, true)">イ. I'm afraid not.</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. No problem.</button>
+                    </div>
+                    <div class="quiz-explanation"></div>
+                </div>
+
+                <div class="quiz-item">
+                    <div class="quiz-question">(3) A: I find it very difficult to sleep.<br>B: 【 3 】 don't you try counting sheep?</div>
+                    <div class="choices-container">
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ア. How</button>
+                        <button class="choice-btn" data-correct="true" data-explanation="正解：<b>Why</b><br>Why don't you ～? （～してはどうですか？）という提案の表現。" onclick="checkAnswer(this, true)">イ. Why</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">ウ. Now</button>
+                    </div>
+                    <div class="quiz-explanation"></div>
+                </div>
+            </section>
+
+            <!-- 3. Dialogue II -->
+            <section id="section3">
+                <h2>3. 対話文 II</h2>
+                <p style="font-size:0.85em; color:#64748b; margin-bottom:15px;">空所【 1 】～【 4 】に入る適当なものを選べ。</p>
+
+                <div class="dialogue-box">
+                    <span class="speaker">Hidekazu:</span> Excuse me, operator.<br>
+                    <span class="speaker">Operator:</span> <span class="dialogue-slot">【 1 】</span><br>
+                    <span class="speaker">Hidekazu:</span> I'd like to make a direct call to Osaka in Japan, here from Boston.<br>
+                    <span class="speaker">Operator:</span> You need to call four sets of numbers when using International Direct Dialing.<br>
+                    <span class="speaker">Hidekazu:</span> <span class="dialogue-slot">【 2 】</span><br>
+                    <span class="speaker">Operator:</span> You have to dial 9 first if you want to use the hotel telephone.<br>
+                    <span class="speaker">Hidekazu:</span> <span class="dialogue-slot">【 3 】</span><br>
+                    <span class="speaker">Operator:</span> Then dial the prefix 011, country code 81 and area code 6. Lastly the local number.<br>
+                    <span class="speaker">Hidekazu:</span> Thank you very much.<br>
+                    <span class="speaker">Operator:</span> <span class="dialogue-slot">【 4 】</span>
+                </div>
+
+                <div class="quiz-item">
+                    <div class="quiz-question">【 1 】</div>
+                    <div class="choices-container">
+                        <button class="choice-btn" data-correct="true" data-explanation="正解：<b>What's the matter with you?</b><br>用件を尋ねる場面。" onclick="checkAnswer(this, true)">ア. What's the matter with you?</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">イ. You're welcome.</button>
+                    </div>
+                    <div class="quiz-explanation"></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-question">【 2 】</div>
+                    <div class="choices-container">
+                        <button class="choice-btn" data-correct="true" data-explanation="正解：<b>Could you tell me how to do?</b>" onclick="checkAnswer(this, true)">ア. Could you tell me how to do?</button>
+                        <button class="choice-btn" onclick="checkAnswer(this, false)">イ. That's enough.</button>
+                    </div>
+                    <div class="quiz-explanation"></div>
+                </div>
+            </section>
+
+            <!-- Random Quiz -->
+            <section id="random">
+                <h2>ランダム・クイズ (Random Challenge)</h2>
+                <div id="random-quiz-area">
+                    <div id="rq-content">
+                        <p style="color:#64748b;">「次へ」を押すとランダムに問題が出ます</p>
+                    </div>
+                    <button class="next-btn" onclick="generateRandomQuiz()">次の問題へ</button>
+                </div>
+            </section>
+
+            <!-- Footer / FAB -->
+            <a href="#top" id="fab-top">↑</a>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // --- Data for Random Quiz ---
+        const quizData = [
+            {q: "Will you [        ] me the salt? (塩を取って)", a: "pass"},
+            {q: "Is anything [        ] with you? (具合が悪い)", a: "wrong"},
+            {q: "It's none of your [        ]. (余計なお世話)", a: "business"},
+            {q: "Can I [        ] a message? (伝言を残す)", a: "leave"},
+            {q: "I'm a [        ] here. (不案内です)", a: "stranger"},
+            {q: "Shall we take a break? - Yes, [ let's ].", a: "let's"},
+            {q: "Passed test. - [ Well done! ]", a: "Well done!"}
+        ];
+
+        // --- Interactive Functions ---
+        function toggleBlank(element) {
+            element.classList.toggle('revealed');
+        }
+        
+        function toggleSectionBlanks(sectionId) {
+            const section = document.getElementById(sectionId);
+            const blanks = section.querySelectorAll('.fill-blank');
+            let allRevealed = true;
+            blanks.forEach(b => { if(!b.classList.contains('revealed')) allRevealed = false; });
+            blanks.forEach(b => {
+                if(allRevealed) b.classList.remove('revealed');
+                else b.classList.add('revealed');
+            });
+        }
+
+        function checkAnswer(btn, isCorrect, explanation) {
+            const container = btn.closest('.quiz-item');
+            const buttons = container.querySelectorAll('.choice-btn');
+            const expBox = container.querySelector('.quiz-explanation');
+
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                expBox.innerHTML = `<strong style="color:green">正解！</strong><br>${explanation}`;
+            } else {
+                btn.classList.add('wrong');
+                const correctBtn = container.querySelector('button[data-correct="true"]');
+                if (correctBtn) correctBtn.classList.add('correct');
+                expBox.innerHTML = `<strong style="color:red">不正解...</strong><br>${explanation}`;
+            }
+            expBox.style.display = 'block';
+        }
+
+        function generateRandomQuiz() {
+            const index = Math.floor(Math.random() * quizData.length);
+            const data = quizData[index];
+            const contentDiv = document.getElementById('rq-content');
+            
+            contentDiv.innerHTML = `
+                <div style="width:100%;">
+                    <div style="font-weight:bold; margin:10px 0; font-size:1.1em;">${data.q}</div>
+                    <div id="rq-answer" style="display:none; color:var(--english-dark); font-weight:bold; margin-top:10px; font-size:1.2em;">${data.a}</div>
+                    <button onclick="document.getElementById('rq-answer').style.display='block'" 
+                            style="background:#e2e8f0; border:none; padding:8px 20px; border-radius:15px; margin-top:10px; cursor:pointer; font-size:0.9em;">
+                        答えを見る
+                    </button>
+                </div>
+            `;
+        }
+
+        // Smooth Scroll & FAB
+        document.querySelectorAll('.js-scroll').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) window.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+            });
+        });
+
+        const fab = document.getElementById('fab-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { fab.style.opacity = '1'; fab.style.pointerEvents = 'auto'; }
+            else { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
+        });
+        
+        generateRandomQuiz();
+    </script>
+</body>
+</html>
