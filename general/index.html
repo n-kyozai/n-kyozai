@@ -1,3 +1,4 @@
+<!-- Canvas: ON, Preview: ON -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -164,7 +165,7 @@
             padding-bottom: 10px;
         }
 
-        /* 科目別グリッド（トップの構成に準拠） */
+        /* 科目別グリッド */
         .subject-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -185,10 +186,19 @@
             box-shadow: var(--shadow);
         }
 
-        .subject-card:hover {
+        /* 通常カード（disabledでないもの）のホバー効果 */
+        .subject-card:not(.disabled):hover {
             transform: translateY(-4px);
             border-color: var(--accent-color);
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* 準備中（disabled）用スタイル */
+        .subject-card.disabled {
+            opacity: 0.6;
+            cursor: default;
+            background-color: #f8fafc;
+            border-style: dashed;
         }
 
         .subject-icon {
@@ -203,9 +213,35 @@
             flex-shrink: 0;
         }
 
+        /* 準備中のアイコン色 */
+        .subject-card.disabled .subject-icon {
+            color: #94a3b8;
+            background: #e2e8f0;
+        }
+
         .subject-info { flex: 1; }
-        .subject-name { font-weight: bold; color: var(--primary-color); font-size: 1rem; margin-bottom: 4px; }
+        
+        .subject-name { 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            font-size: 1rem; 
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
         .subject-desc { font-size: 0.75rem; color: #64748b; line-height: 1.4; }
+
+        /* バッジ */
+        .badge-soon {
+            font-size: 0.6rem;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 4px;
+            padding: 1px 6px;
+            white-space: nowrap;
+        }
 
         footer {
             background-color: white;
@@ -270,7 +306,7 @@
             <section class="section-box">
                 <h2 class="section-title"><i data-lucide="layers"></i>科目別まとめ</h2>
                 <div class="subject-grid">
-                    <!-- 国語（リンク修正済み） -->
+                    <!-- 国語 -->
                     <a href="japanese/" class="subject-card">
                         <div class="subject-icon"><i data-lucide="languages"></i></div>
                         <div class="subject-info">
@@ -310,12 +346,13 @@
                             <div class="subject-desc">歴史、地理、現代社会の重要トピック。</div>
                         </div>
                     </a>
-                    <!-- 時事問題 -->
-                    <a href="#" class="subject-card">
+                    
+                    <!-- 時事問題（近日公開） -->
+                    <a href="#" class="subject-card disabled" onclick="return false;">
                         <div class="subject-icon"><i data-lucide="newspaper"></i></div>
                         <div class="subject-info">
-                            <div class="subject-name">時事問題</div>
-                            <div class="subject-desc">最新ニュースや教育の動向をチェック。</div>
+                            <div class="subject-name">時事問題 <span class="badge-soon">近日公開</span></div>
+                            <div class="subject-desc">現在準備中です。公開までしばらくお待ちください。</div>
                         </div>
                     </a>
                 </div>
@@ -354,8 +391,8 @@
             document.body.style.overflow = isActive ? '' : 'hidden';
         };
 
-        menuToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
     </script>
 </body>
 </html>
