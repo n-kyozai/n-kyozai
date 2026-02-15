@@ -1,0 +1,425 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>専門科目 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe; /* アクセントカラーに合わせた薄い背景 */
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* メニューグリッド */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .menu-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        /* 通常カードのホバー */
+        .menu-card:not(.disabled):hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* 無効化カード（近日公開） */
+        .menu-card.disabled {
+            opacity: 0.6;
+            cursor: default;
+            background-color: #f8fafc;
+            border-style: dashed;
+        }
+
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            background: #e0f2fe; /* 薄い青 */
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .menu-card.disabled .icon-box {
+            color: #94a3b8;
+            background: #e2e8f0;
+        }
+
+        .card-info { flex: 1; }
+        
+        .card-title { 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            font-size: 1rem; 
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .card-desc { font-size: 0.75rem; color: #64748b; line-height: 1.4; }
+
+        /* バッジ */
+        .badge-soon {
+            font-size: 0.6rem;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 4px;
+            padding: 1px 6px;
+            white-space: nowrap;
+        }
+
+        .badge-sub {
+            font-size: 0.6rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            border-radius: 4px;
+            padding: 1px 6px;
+            white-space: nowrap;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <!-- ホームへのリンクを一つ上の階層へ変更 -->
+            <a href="../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="./general.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="./teaching.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="./guidelines.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="./world-history.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="./japanese-history.html" class="nav-item"><i data-lucide="book"></i>日本史</a>
+            <a href="./geography.html" class="nav-item"><i data-lucide="send"></i>地理</a>
+            <a href="./politics.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="./economics.html" class="nav-item"><i data-lucide="trending-up"></i>経済</a>
+            <a href="./ethics.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+
+            <div class="nav-category">演習</div>
+            <a href="./comprehensive.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <!-- ホームへのリンクを一つ上の階層へ変更 -->
+                <a href="../index.html">ホーム</a> ＞ 専門科目
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">専門科目</h1>
+        </div>
+
+        <div class="container">
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="library"></i>学習科目を選択</h2>
+                <div class="menu-grid">
+                    
+                    <!-- 1. 世界史 -->
+                    <a href="./world-history.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="globe"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">世界史</div>
+                            <div class="card-desc">古代から現代までの世界の歴史的出来事と流れを体系的に学びます。</div>
+                        </div>
+                    </a>
+
+                    <!-- 2. 日本史 -->
+                    <a href="./japanese-history.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="book"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">日本史</div>
+                            <div class="card-desc">原始・古代から近現代に至る日本の歴史と文化の変遷を学習します。</div>
+                        </div>
+                    </a>
+
+                    <!-- 3. 地理 -->
+                    <a href="./geography.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="send"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">地理</div>
+                            <div class="card-desc">系統地理と地誌を中心に、自然環境や産業、生活文化を理解します。</div>
+                        </div>
+                    </a>
+
+                    <!-- 4. 政治 -->
+                    <a href="./politics.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="landmark"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">政治</div>
+                            <div class="card-desc">民主政治の原理、日本国憲法、国際政治の仕組みなどを学びます。</div>
+                        </div>
+                    </a>
+
+                    <!-- 5. 経済 -->
+                    <a href="./economics.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="trending-up"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">経済</div>
+                            <div class="card-desc">経済理論、金融、財政、日本経済の歴史と現状を分析します。</div>
+                        </div>
+                    </a>
+
+                    <!-- 6. 倫理 -->
+                    <a href="./ethics.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="heart"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">倫理</div>
+                            <div class="card-desc">青年期の課題、諸思想の源流、現代社会の倫理的課題を探求します。</div>
+                        </div>
+                    </a>
+
+                     <!-- 7. 総合問題 -->
+                     <a href="./comprehensive.html" class="menu-card" style="grid-column: 1 / -1;">
+                        <div class="icon-box" style="background-color: #fff7ed; color: #f97316;"><i data-lucide="layers"></i></div>
+                        <div class="card-info">
+                            <div class="card-title" style="color: #f97316;">総合問題 <span class="badge-sub" style="color: #f97316; background-color: #fff7ed;">実戦演習</span></div>
+                            <div class="card-desc">複数分野にまたがる複合問題や、実戦形式の演習問題です。仕上げに最適です。</div>
+                        </div>
+                    </a>
+
+                </div>
+            </section>
+
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="info"></i>学習のポイント</h2>
+                <p style="font-size: 0.8rem; color: #64748b; line-height: 1.6;">
+                    教員採用試験の専門科目は、出題範囲が広く、深い知識が問われます。まずは各科目の基本事項を整理し、過去問演習を通じて知識の定着を図りましょう。特に苦手分野を作らないことが合格への鍵となります。
+                </p>
+            </section>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
