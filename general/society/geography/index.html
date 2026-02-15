@@ -1,0 +1,608 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理 暗記ノート - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* =========================================
+           サイト共通スタイル
+           ========================================= */
+        :root {
+            --primary-color: #2c3e50;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            
+            /* 地理・暗記ノート固有カラー (Green系) */
+            --geo-color: #15803d;      /* メインカラー (Green 700) */
+            --geo-light: #f0fdf4;      /* 背景用薄い緑 (Green 50) */
+            --geo-accent: #16a34a;     /* アクセント (Green 600) */
+            --cloze-bg: #ef4444;       /* 暗記用赤シート色 */
+            --detail-bg: #f0f9ff;
+            --detail-border: #bae6fd;
+            --border-color: #86efac;   /* Green 300 */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            border: none !important;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
+            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--geo-accent); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        /* アクティブなナビゲーション */
+        .nav-item.active { 
+            color: var(--geo-accent); 
+            background-color: var(--geo-light); 
+            font-weight: bold; 
+            border-right: 3px solid var(--geo-accent); 
+        }
+
+        /* モバイル用トグル */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 42px; height: 42px; background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc; border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+            border: none !important;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+            border-right: none !important;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 100%; max-width: 900px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
+            border-right: none !important;
+        }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 70px; }
+            .container { padding: 12px; padding-bottom: 100px; }
+        }
+
+        /* =========================================
+           地理・暗記ノート 固有スタイル
+           ========================================= */
+        
+        /* タイトル */
+        h1 { 
+            font-size: 1.6rem; 
+            color: var(--geo-color); 
+            margin: 0; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* コントロールボタン（PC用） */
+        .controls-pc {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            background-color: var(--geo-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn:active { transform: translateY(2px); box-shadow: none; }
+        .btn:hover { opacity: 0.9; }
+        
+        .btn-outline {
+            background-color: white;
+            border: 2px solid var(--geo-color);
+            color: var(--geo-color);
+        }
+        .btn-outline:hover { background-color: var(--geo-light); }
+
+        /* モバイル用固定フッターコントロール */
+        .mobile-footer-controls {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            justify-content: space-around;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid #e2e8f0;
+        }
+        .mobile-footer-controls .btn {
+            flex: 1;
+            font-size: 0.85rem;
+            padding: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .controls-pc { display: none; }
+            .mobile-footer-controls { display: flex; }
+        }
+
+        /* カードスタイル */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            border-left: 6px solid var(--geo-accent);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--geo-color);
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+        }
+
+        .content-box { font-size: 1rem; color: var(--text-color); }
+
+        /* リストスタイル */
+        .content-box ul { list-style-type: none; padding-left: 0; }
+        .content-box li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 20px;
+        }
+        .content-box li::before {
+            content: "•";
+            color: var(--geo-accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 画像ボックス */
+        .img-container {
+            text-align: center;
+            margin: 20px 0;
+            background-color: #f1f5f9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .img-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        /* 穴埋め（Cloze）スタイル */
+        .cloze {
+            display: inline-block;
+            min-width: 60px;
+            padding: 2px 8px;
+            margin: 0 3px;
+            border-radius: 4px;
+            background-color: var(--cloze-bg);
+            color: var(--cloze-bg); /* 文字色を背景色と同じにして隠す */
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            user-select: none;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid #b91c1c;
+            font-size: 0.95em;
+            vertical-align: bottom;
+        }
+        .cloze.revealed {
+            background-color: #fff;
+            color: #b91c1c;
+            border: 1px solid #b91c1c;
+        }
+        .cloze:hover { opacity: 0.9; }
+
+        /* 詳細エリア（アコーディオン） */
+        .detail-section {
+            margin-top: 20px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 15px;
+        }
+        .detail-toggle-btn {
+            background: none;
+            border: none;
+            color: #0369a1;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            padding: 5px 0;
+            width: 100%;
+            text-align: left;
+        }
+        .detail-toggle-btn:hover { text-decoration: underline; }
+
+        .detail-content {
+            display: none;
+            background-color: var(--detail-bg);
+            border: 1px solid var(--detail-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #0c4a6e;
+            animation: fadeIn 0.3s ease;
+        }
+        .detail-content.show { display: block; }
+        
+        .detail-tag {
+            display: inline-block;
+            background-color: #0ea5e9;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        /* スクロールトップ */
+        .scroll-top-btn {
+            position: fixed; bottom: 80px; /* フッターの上 */
+            right: 20px;
+            width: 48px; height: 48px; background: #374151; color: #fff;
+            border-radius: 50%; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            cursor: pointer; z-index: 900; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .scroll-top-btn.show { opacity: 0.9; visibility: visible; }
+        .scroll-top-btn:hover { background-color: #1f2937; transform: translateY(-2px); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* モバイルレスポンシブ補正 */
+        @media (max-width: 768px) {
+            .card { padding: 16px; margin-bottom: 20px; }
+            .cloze { min-width: 40px; padding: 2px 4px; margin: 2px; }
+            .scroll-top-btn { bottom: 90px; right: 15px; width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="sidebar-overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="../../index.html" class="nav-item active"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../../pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="../../../guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="../../../world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="../../../japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="../../../politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="../../../ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="../../../comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">社会</a> ＞ 地理
+            </div>
+            <h1><i data-lucide="compass"></i> 地理 暗記ノート</h1>
+        </div>
+
+        <div class="container">
+            <!-- コントロールエリア（PC用） -->
+            <div class="controls-pc">
+                <button class="btn" onclick="revealAll()"><i data-lucide="eye"></i> 全て表示</button>
+                <button class="btn btn-outline" onclick="hideAll()"><i data-lucide="eye-off"></i> 全て隠す</button>
+            </div>
+
+            <!-- 世界の農業 -->
+            <div class="card">
+                <h2 class="card-title"><i data-lucide="wheat"></i> 世界の農業</h2>
+                <div class="content-box">
+                    <ul>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">混合</span>農業 … 小麦・ライ麦などの穀物や飼料作物の輪作と、家畜の飼育とを組み合わせた農業。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">地中海式</span>農業 … 地中海性気候の地域でみられる。夏は乾燥に強いオリーブやオレンジ、ブドウなどの果樹を、冬に小麦などを栽培。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">園芸</span>農業 … 都市向けの草花や果実、野菜などを栽培する集約的農業。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">プランテーション</span>農業 … 熱帯・亜熱帯地域で大規模に栽培する農業。欧米諸国によって開発され、単一耕作（
+                            <span class="cloze" onclick="toggleCloze(this)">モノカルチャー</span> ）であることが多い。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">オアシス</span>農業 … 乾燥地域で行われている集約的な農業。人工的な灌漑を利用して、なつめやしや綿花などが栽培される。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">焼畑</span>農業 … 主に熱帯の内陸でみられる自給的な農業。森林や草原を焼いた灰を肥料とし、キャッサバやヤムイモなどの根菜類を栽培。
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 世界の鉱産資源とエネルギー -->
+            <div class="card">
+                <h2 class="card-title"><i data-lucide="gem"></i> 世界の鉱産資源とエネルギー</h2>
+                <div class="content-box">
+                    <p>次の図は、エネルギー資源と鉱産資源の産出量に占める主産国の割合を示している（2019-2021年データ）。</p>
+                    
+                    <div class="img-container">
+                        <img src="2026-02-15_23h58_41.jpg" alt="エネルギー資源グラフ">
+                    </div>
+                    <ul>
+                        <li>グラフ１：<span class="cloze" onclick="toggleCloze(this)">原油</span></li>
+                        <li>グラフ２：<span class="cloze" onclick="toggleCloze(this)">石炭</span></li>
+                        <li>グラフ３：<span class="cloze" onclick="toggleCloze(this)">天然ガス</span></li>
+                    </ul>
+
+                    <div class="img-container">
+                        <img src="2026-02-15_23h59_03.jpg" alt="鉱産資源グラフ">
+                    </div>
+                    <ul>
+                        <li>鉄鉱石 (4)：<span class="cloze" onclick="toggleCloze(this)">オーストラリア</span></li>
+                        <li>鉄鉱石 (5)：<span class="cloze" onclick="toggleCloze(this)">中国</span></li>
+                        <li>銅鉱 (6)：<span class="cloze" onclick="toggleCloze(this)">チリ</span></li>
+                        <li>銀鉱 (7)：<span class="cloze" onclick="toggleCloze(this)">メキシコ</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 日本の農業 -->
+            <div class="card">
+                <h2 class="card-title"><i data-lucide="sprout"></i> 日本の農業</h2>
+                <div class="content-box">
+                    <div class="sub-title">農業技法</div>
+                    <ul>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">促成</span>栽培 … 温室などを利用して農産物の生育を促進し出荷時期を早める方法。高知平野、宮崎平野など。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">園芸</span>農業 … 都市への出荷を目的として果樹・花卉などを集約的に栽培する農業。大都市近郊で行われる場合、特に
+                            <span class="cloze" onclick="toggleCloze(this)">近郊</span>農業という。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">高冷地</span>農業 … 冷涼な気候を利用して行われる農業。中央高地での高原野菜（レタス、キャベツ、はくさい）栽培が有名。
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 日本の漁業 -->
+            <div class="card">
+                <h2 class="card-title"><i data-lucide="fish"></i> 日本の漁業</h2>
+                <div class="content-box">
+                    <div class="img-container">
+                        <img src="2026-02-15_23h59_28.jpg" alt="日本の漁獲量の推移">
+                    </div>
+                    <div class="sub-title">漁獲量の推移</div>
+                    <p>1970年代後半以降、漁獲量は減少傾向。特に、<span class="cloze" onclick="toggleCloze(this)">沖合</span>漁業(1)、<span class="cloze" onclick="toggleCloze(this)">遠洋</span>漁業(2)の衰退が著しい。</p>
+                    <p>※グラフ3は<span class="cloze" onclick="toggleCloze(this)">沿岸</span>漁業。</p>
+
+                    <div class="sub-title">育てる漁業</div>
+                    <ul>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">養殖</span>漁業 … 人工のいけすなどで稚魚や稚貝を育て、成長させてから獲る漁業。
+                        </li>
+                        <li>
+                            <span class="cloze" onclick="toggleCloze(this)">栽培</span>漁業 … 人工的にふ化させた稚魚や稚貝をある程度育ててから海や川に放流し、成長してから獲る漁業。
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 日本の工業 -->
+            <div class="card">
+                <h2 class="card-title"><i data-lucide="factory"></i> 日本の工業</h2>
+                <div class="content-box">
+                    <div class="img-container">
+                        <img src="2026-02-15_23h59_59.jpg" alt="日本の工業地帯・地域">
+                    </div>
+                    <ul>
+                        <li>1：<span class="cloze" onclick="toggleCloze(this)">京葉</span>工業地域</li>
+                        <li>2：<span class="cloze" onclick="toggleCloze(this)">京浜</span>工業地帯（機械工業中心、出版・印刷も発達）</li>
+                        <li>3：<span class="cloze" onclick="toggleCloze(this)">東海</span>工業地域</li>
+                        <li>4：<span class="cloze" onclick="toggleCloze(this)">中京</span>工業地帯（自動車工業中心で工業出荷額日本一）</li>
+                        <li>5：<span class="cloze" onclick="toggleCloze(this)">阪神</span>工業地帯（鉄鋼・石油化学など素材型工業が発達）</li>
+                        <li>6：<span class="cloze" onclick="toggleCloze(this)">瀬戸内</span>工業地域</li>
+                        <li>7：<span class="cloze" onclick="toggleCloze(this)">太平洋ベルト</span>（工業地帯・地域が集中）</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <footer><p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p></footer>
+    </main>
+
+    <!-- モバイル用固定フッターコントロール -->
+    <div class="mobile-footer-controls">
+        <button class="btn" onclick="revealAll()"><i data-lucide="eye"></i> 全て表示</button>
+        <button class="btn btn-outline" onclick="hideAll()"><i data-lucide="eye-off"></i> 全て隠す</button>
+    </div>
+
+    <!-- スクロールトップボタン -->
+    <button id="scrollTopBtn" class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <i data-lucide="arrow-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        /* --- サイドバー制御 --- */
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        /* --- 穴埋め・詳細表示制御 --- */
+        // 穴埋めトグル
+        function toggleCloze(element) {
+            element.classList.toggle('revealed');
+        }
+
+        // 全て表示
+        function revealAll() {
+            const clozes = document.querySelectorAll('.cloze');
+            clozes.forEach(cloze => {
+                cloze.classList.add('revealed');
+            });
+        }
+
+        // 全て隠す
+        function hideAll() {
+            const clozes = document.querySelectorAll('.cloze');
+            clozes.forEach(cloze => {
+                cloze.classList.remove('revealed');
+            });
+        }
+
+        // 詳細エリアトグル
+        function toggleDetail(btn) {
+            const content = btn.nextElementSibling;
+            const isShown = content.classList.contains('show');
+            content.classList.toggle('show');
+            
+            if (!isShown) {
+                btn.innerHTML = '<i data-lucide="chevron-up"></i> 閉じる';
+                btn.style.color = '#64748b';
+            } else {
+                btn.innerHTML = '<i data-lucide="lightbulb"></i> ポイント・詳細を見る';
+                btn.style.color = '#0369a1';
+            }
+            lucide.createIcons();
+        }
+
+        /* --- スクロールトップボタン --- */
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
