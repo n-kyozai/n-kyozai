@@ -1,0 +1,999 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公民（指導要領・問題演習） - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* サイト共通カラー */
+            --primary-color: #2c3e50;
+            --accent-color: #4f46e5; /* Indigo */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --header-height: 50px;
+
+            /* クイズ固有カラー */
+            --quiz-bg: #eef2ff;       /* 薄いIndigo */
+            --card-bg: #ffffff;
+            --correct-color: #16a34a; /* Green */
+            --incorrect-color: #dc2626; /* Red */
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #eef2ff;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 0;
+            padding-bottom: 100px;
+            flex: 1;
+        }
+
+        /* --- クイズスタイル --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--quiz-bg);
+        }
+
+        #quiz-progress {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .quit-btn {
+            background-color: transparent;
+            border: 1px solid var(--incorrect-color);
+            color: var(--incorrect-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quit-btn:hover { background-color: var(--incorrect-color); color: white; }
+        .quit-btn.confirming { background-color: var(--incorrect-color); color: white; font-weight: bold; }
+
+        #question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            white-space: pre-wrap;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        /* 選択肢ボタン */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        @media (min-width: 600px) {
+            .options-container { flex-direction: row; flex-wrap: wrap; }
+            .option-btn { flex: 1 1 calc(50% - 12px); }
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #cbd5e1;
+            color: var(--text-color);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--quiz-bg);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .option-btn.correct {
+            background-color: #dcfce7;
+            border-color: var(--correct-color);
+            color: var(--correct-color);
+            font-weight: bold;
+            position: relative;
+        }
+        .option-btn.correct::after { content: "⭕"; position: absolute; right: 10px; }
+
+        .option-btn.incorrect {
+            background-color: #fee2e2;
+            border-color: var(--incorrect-color);
+            color: var(--incorrect-color);
+            text-decoration: line-through;
+        }
+
+        /* 解説エリア */
+        #feedback-area {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            background-color: var(--quiz-bg);
+            border-left: 5px solid var(--accent-color);
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        #feedback-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        .feedback-correct { color: var(--correct-color); }
+        .feedback-incorrect { color: var(--incorrect-color); }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: opacity 0.2s ease;
+            text-align: center;
+        }
+        .action-btn:hover { opacity: 0.9; }
+
+        /* 結果画面 */
+        #result-area { text-align: center; display: none; }
+        #score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 1rem 0;
+        }
+
+        /* 復習用穴埋めカード */
+        #flashcards-section { margin-top: 3rem; text-align: left; }
+        #flashcards-section h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .flashcard {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #cbd5e1;
+        }
+        .flashcard h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .flashcard-explanation {
+            margin-top: 1rem !important;
+            padding-top: 1rem;
+            border-top: 1px dashed #e2e8f0;
+            font-size: 0.9rem !important;
+            color: #64748b;
+            display: none;
+        }
+
+        .blank-spot {
+            display: inline-block;
+            background-color: #f1f5f9;
+            color: transparent;
+            border-bottom: 2px solid var(--incorrect-color); /* 赤線 */
+            padding: 0 5px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            user-select: none;
+            transition: all 0.2s ease;
+            min-width: 60px;
+            text-align: center;
+        }
+        .blank-spot:hover { background-color: #e2e8f0; }
+        .blank-spot.revealed {
+            background-color: transparent;
+            color: var(--incorrect-color);
+            border-bottom: none;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toggle-all-btn:hover { background-color: var(--quiz-bg); }
+
+        /* スクロールトップ */
+        #back-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none; border-radius: 50%;
+            font-size: 1.2rem; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        #back-to-top:hover { transform: translateY(-5px); }
+
+        /* フッター */
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            text-align: center; /* 中央配置 */
+            color: #94a3b8;     /* 程よい濃さのグレー */
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+        
+        footer p {
+            margin: 0;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">Main</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item active"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/world-history/index.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="/n-kyozai/japanese-history/index.html" class="nav-item"><i data-lucide="map"></i>日本史</a>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="/n-kyozai/ethics/index.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+            <div class="nav-category">演習</div>
+            <a href="/n-kyozai/comprehensive/index.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/guidelines/index.html">指導要領</a> ＞ <a href="../index.html">高等学校 公民</a> ＞ 問題演習
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">公民 問題演習</h1>
+        </div>
+
+        <div class="container">
+            <!-- クイズ画面 -->
+            <div class="card" id="quiz-card">
+                <div class="quiz-header">
+                    <div id="quiz-progress">問題 1 / 24</div>
+                    <button class="quit-btn" id="quit-btn" onclick="handleQuitClick()">途中で終了して結果へ</button>
+                </div>
+                <div id="question-text">ここに問題文が表示されます。</div>
+                
+                <div class="options-container" id="options-container">
+                    <!-- 選択肢がJavaScriptで生成されます -->
+                </div>
+
+                <div id="feedback-area">
+                    <h3 id="feedback-title"></h3>
+                    <p id="explanation-text"></p>
+                    <button class="action-btn" id="next-btn" onclick="nextQuestion()">次の問題へ</button>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div class="card" id="result-area">
+                <h2 id="result-title">学習完了！お疲れ様でした。</h2>
+                <p id="result-subtitle">あなたの正答率は…</p>
+                <div id="score-display">0 / 24</div>
+                <p id="result-message"></p>
+                <div id="result-action-container">
+                    <!-- ここにボタンが動的に追加されます -->
+                </div>
+
+                <!-- 穴埋め暗記カード一覧エリア -->
+                <div id="flashcards-section" style="display: none;">
+                    <hr style="margin: 3rem 0; border: none; border-top: 2px dashed #bdc3c7;">
+                    <h3>📚 復習用 穴埋め暗記カード</h3>
+                    <p style="font-size: 0.95rem; color: #666; margin-bottom: 1.5rem;">タップすると正解が表示・非表示になります。知識の定着に活用してください。</p>
+                    <div style="margin-bottom: 1rem; display: flex; gap: 10px;">
+                        <button class="toggle-all-btn" onclick="toggleAllBlanks(true)">すべて表示する</button>
+                        <button class="toggle-all-btn" onclick="toggleAllBlanks(false)">すべて隠す</button>
+                    </div>
+                    <div id="flashcards-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- トップへ戻るボタン -->
+    <button id="back-to-top" title="トップへ戻る" onclick="scrollToTop()">
+        <i data-lucide="arrow-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // クイズデータ
+        const quizData = [
+            {
+                question: "【第1款 目標】\n「（　　）な見方・考え方を働かせ，現代の諸課題を追究したり解決したりする活動を通して，広い視野に立ち，グローバル化する国際社会に主体的に生きる平和で民主的な国家及び社会の有為な形成者に必要な公民としての資質・能力を…育成することを目指す。」",
+                options: ["歴史的", "地理的", "社会的", "多角的"],
+                correctAnswer: 2,
+                explanation: "正解は「社会的」です。地理歴史科と同様に、公民科でも「社会的な見方・考え方」を働かせることが目標の柱です。"
+            },
+            {
+                question: "【第1款 目標】\n「（　　）について，事実を基に概念などを活用して多面的・多角的に考察したり，解決に向けて公正に判断したりする力…を養う。」",
+                options: ["現代の諸課題", "歴史の転換点", "地域社会の課題", "国際情勢"],
+                correctAnswer: 0,
+                explanation: "正解は「現代の諸課題」です。公民科では、現代の諸課題について考察し、解決に向けて公正に判断する力を養います。"
+            },
+            {
+                question: "【第1款 目標（態度）】\n「人間としての（　　）についての自覚や，国民主権を担う公民として，自国を愛し，その平和と繁栄を図ることや，各国が相互に主権を尊重し，各国民が協力し合うことの大切さについての自覚などを深める。」",
+                options: ["権利と義務", "尊厳と価値", "在り方生き方", "自由と責任"],
+                correctAnswer: 2,
+                explanation: "正解は「在り方生き方」です。「人間としての在り方生き方についての自覚」は公民科、特に「公共」において重要なキーワードです。"
+            },
+            {
+                question: "【第1款 目標（思考・判断・表現）】\n「解決に向けて（　　）に判断したりする力や，合意形成や社会参画を視野に入れながら構想したことを議論する力を養う。」",
+                options: ["客観的", "公正", "主体的", "論理的"],
+                correctAnswer: 1,
+                explanation: "正解は「公正」です。解決に向けて「公正」に判断する力が求められます。"
+            },
+            {
+                question: "【第1 公共 目標】\n「人間としての在り方生き方についての見方・考え方を働かせ…広い視野に立ち，人間尊重の精神と（　　）に対する畏敬の念に基づいて…公民としての資質・能力を…育成することを目指す。」",
+                options: ["自然", "伝統", "生命", "法"],
+                correctAnswer: 2,
+                explanation: "正解は「生命」です。「人間尊重の精神と生命に対する畏敬の念」が、公共の目標における精神的基盤として示されています。"
+            },
+            {
+                question: "【第1 公共 目標（知識・技能）】\n「古今東西の幅広い（　　）を通して，現代の諸課題を捉え，より深く思索するための手掛かりとなる概念や理論について理解するとともに…」",
+                options: ["文化遺産", "歴史的事象", "社会通念", "知的蓄積"],
+                correctAnswer: 3,
+                explanation: "正解は「知的蓄積」です。先哲の考え方などを含む「古今東西の幅広い知的蓄積」を通して理解を深めます。"
+            },
+            {
+                question: "【第1 公共 目標（思考・判断・表現）】\n「自立した人間として他者と共によりよく生きる自己の生き方についてより深く思索する力や…説明したり（　　）したりする力を養う。」",
+                options: ["発表", "対話", "論述", "協力"],
+                correctAnswer: 1,
+                explanation: "正解は「対話」です。論理的に思考し、思索を深め、説明したり「対話」したりする力が求められます。"
+            },
+            {
+                question: "【第1 公共 内容A】\n大項目Aの名称は「現代に生きる自己の課題と（　　）」である。",
+                options: ["人間としての尊厳", "人間としての在り方生き方", "社会契約の理論", "青年の心理"],
+                correctAnswer: 1,
+                explanation: "正解は「人間としての在り方生き方」です。「A 現代に生きる自己の課題と人間としての在り方生き方」として、青年期や自己形成について扱います。"
+            },
+            {
+                question: "【第1 公共 内容A】\n「古今東西の（　　）の考え方を手掛かりとして、より広い視野から人間としての在り方生き方について多面的・多角的に考察し、表現すること。」",
+                options: ["偉人", "哲学者", "先哲", "思想家"],
+                correctAnswer: 2,
+                explanation: "正解は「先哲」です。ソクラテスや孔子、カントなど、古今東西の先哲の考え方を手掛かりとします。"
+            },
+            {
+                question: "【第1 公共 内容】\n科目「公共」の内容構成（大項目A・B・C）として正しい組み合わせはどれか。",
+                options: [
+                    "A 公共の精神 / B 現代社会の諸課題 / C グローバル社会と私たち",
+                    "A 公共の扉 / B 自立した個人としての在り方生き方 / C 平和で民主的な国家及び社会",
+                    "A 公共の扉 / B 自立した主体としてよりよい社会の形成に参画する私たち / C 持続可能な社会づくりの主体となる私たち",
+                    "A 人間としての在り方生き方 / B 現代の諸課題と倫理 / C 現代の諸課題と政治・経済"
+                ],
+                correctAnswer: 2,
+                explanation: "正解は「A 公共の扉 / B 自立した主体としてよりよい社会の形成に参画する私たち / C 持続可能な社会づくりの主体となる私たち」です。\n特にCの「持続可能な」というキーワードは、新学習指導要領の重要なポイントです。"
+            },
+            {
+                question: "【第2 政治・経済 目標】\n「国家及び社会の形成者として必要な（　　）の基準となる考え方や政治・経済に関する概念や理論などを活用して…」",
+                options: ["善悪・正邪", "選択・判断", "権利・義務", "自由・平等"],
+                correctAnswer: 1,
+                explanation: "正解は「選択・判断」です。主権者として必要な「選択・判断の基準」となる考え方を身に付けることが重視されます。"
+            },
+            {
+                question: "【第2 政治・経済 目標（思考・判断・表現）】\n「構想したことの妥当性や効果，実現可能性などを指標にして議論し公正に判断して，（　　）や社会参画に向かう力を養う。」",
+                options: ["問題解決", "意思決定", "合意形成", "地域貢献"],
+                correctAnswer: 2,
+                explanation: "正解は「合意形成」です。他者と議論し、公正に判断して「合意形成」や社会参画に向かう力を養います。"
+            },
+            {
+                question: "【第2 政治・経済 内容A】\n「個人の尊厳と（　　）の尊重，対立，協調，効率，公正などに着目して…」",
+                options: ["基本的人権", "民主主義", "平和主義", "公共の福祉"],
+                correctAnswer: 0,
+                explanation: "正解は「基本的人権」です。政治・経済の学習における着目点として「個人の尊厳と基本的人権の尊重」が挙げられています。"
+            },
+            {
+                question: "【第2 政治・経済 内容A】\n現代日本の政治・経済を考察する際の着目点として、対立、協調、公正と並んで挙げられている概念は何か。",
+                options: ["平等", "自由", "効率", "博愛"],
+                correctAnswer: 2,
+                explanation: "正解は「効率」です。資源の希少性など経済分野に関連し、「効率」と「公正」のバランスなどが重要な視点となります。"
+            },
+            {
+                question: "【第3款 指導計画の作成】\n公民科の科目構成において、原則として入学年度及びその次の年次の2か年のうちに履修させることとされている「全ての生徒に履修させる科目（必履修科目）」はどれか。",
+                options: ["現代社会", "倫理", "政治・経済", "公共"],
+                correctAnswer: 3,
+                explanation: "正解は「公共」です。新学習指導要領では「公共」が必履修科目となり、その後選択科目として「倫理」「政治・経済」を履修できる構造になっています。"
+            },
+            {
+                question: "【第3款 指導計画の作成】\n公民科の目標を達成するため、特に関連を図ることが明記されている教科として、地理歴史科、家庭科、特別活動のほかに挙げられているものはどれか。",
+                options: ["国語科", "数学科", "理科", "情報科"],
+                correctAnswer: 3,
+                explanation: "正解は「情報科」です。情報の収集・処理や情報モラルの観点から、地理歴史科・家庭科とともに「情報科」との関連が明記されています。"
+            },
+            {
+                question: "【第3款 指導計画の作成】\n「（　　）生徒などについては，学習活動を行う場合に生じる困難さに応じた指導内容や指導方法の工夫を計画的，組織的に行うこと。」",
+                options: ["特別な支援を要する", "日本語指導が必要な", "不登校傾向にある", "障害のある"],
+                correctAnswer: 3,
+                explanation: "正解は「障害のある」です。地理歴史科と同様に、障害のある生徒への計画的・組織的な配慮が求められています。"
+            },
+            {
+                question: "【第3款 内容の取扱い（見解の多様性）】\n「多様な見解のある事柄、未確定な事柄を取り上げる場合には（中略）生徒が…事実を客観的に捉え、（　　）に判断したりすることを妨げることのないよう留意すること。」",
+                options: ["主体的", "民主的", "公正", "批判的"],
+                correctAnswer: 2,
+                explanation: "正解は「公正」です。特定の事柄を強調し過ぎるなどの偏った指導を避け、生徒が「公正」に判断できるように留意する必要があります。"
+            },
+            {
+                question: "【第3款 内容の取扱い（情報の収集）】\n「課題の追究や解決の見通しをもって生徒が主体的に情報手段を活用できるようにするとともに、（　　）の指導にも留意すること。」",
+                options: ["情報セキュリティ", "情報モラル", "プログラミング", "著作権"],
+                correctAnswer: 1,
+                explanation: "正解は「情報モラル」です。コンピュータや情報通信ネットワークを活用する際、「情報モラル」の指導にも留意することが重要です。"
+            },
+            {
+                question: "【第3款 内容の指導に当たっての配慮事項】\n「教育基本法第14条及び第15条の規定に基づき，適切に行うよう特に慎重に配慮して，政治及び（　　）に関する教育を行うものとする。」",
+                options: ["思想", "信条", "宗教", "道徳"],
+                correctAnswer: 2,
+                explanation: "正解は「宗教」です。特定の政党や宗教の支持・反対教育にならないよう、政治および「宗教」に関する教育は慎重な配慮が求められます。"
+            },
+            {
+                question: "【第3款 指導計画の作成】\n「単元など内容や時間のまとまりを見通して，その中で育む資質・能力の育成に向けて，生徒の（　　）学びの実現を図るようにすること。」",
+                options: ["自律的・協調的で深い", "主体的・対話的で深い", "活動的・体験的で深い", "論理的・実践的で深い"],
+                correctAnswer: 1,
+                explanation: "正解は「主体的・対話的で深い」です。いわゆる「アクティブ・ラーニング」の視点による授業改善が求められています。"
+            },
+            {
+                question: "【第2款 各科目（公共）】\n公共の目標において、「（　　）の精神と生命に対する畏敬の念」に基づいて資質・能力を育成するとされている。",
+                options: ["遵法", "博愛", "人間尊重", "互恵"],
+                correctAnswer: 2,
+                explanation: "正解は「人間尊重」です。公共の科目では「人間尊重の精神」と「生命に対する畏敬の念」が基盤となります。"
+            },
+            {
+                question: "【第2款 各科目（政治・経済）】\n政治・経済の目標において、よりよい社会の実現のために現実社会の諸課題を（　　）に解決しようとする態度を養うとされる。",
+                options: ["協調的", "主体的", "科学的", "効率的"],
+                correctAnswer: 1,
+                explanation: "正解は「主体的」です。公民科全体を通じて、諸課題を「主体的」に解決しようとする態度の育成が目指されています。"
+            },
+            {
+                question: "【第1款 目標】\n公民科の目標において、グローバル化する国際社会に主体的に生きる平和で民主的な国家及び社会の（　　）に必要な公民としての資質・能力を育成することを目指す。",
+                options: ["主権者", "指導者", "有為な形成者", "責任ある構成員"],
+                correctAnswer: 2,
+                explanation: "正解は「有為な形成者」です。「国家及び社会の有為な形成者」というフレーズは、公民科および地理歴史科の目標において共通する重要な表現です。"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let currentQuizList = [];
+        let reviewQueue = [];
+        let isReviewMode = false;
+        let isAnswered = false;
+        let quitConfirmTimeout;
+
+        // DOM要素
+        const progressEl = document.getElementById('quiz-progress');
+        const questionEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const explanationText = document.getElementById('explanation-text');
+        const nextBtn = document.getElementById('next-btn');
+        const quizCard = document.getElementById('quiz-card');
+        const resultArea = document.getElementById('result-area');
+        const scoreDisplay = document.getElementById('score-display');
+        const resultMessage = document.getElementById('result-message');
+        const resultTitle = document.getElementById('result-title');
+        const resultSubtitle = document.getElementById('result-subtitle');
+        const actionContainer = document.getElementById('result-action-container');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const quitBtn = document.getElementById('quit-btn');
+        const flashcardsSection = document.getElementById('flashcards-section');
+
+        // クイズの初期化
+        function initQuiz() {
+            currentQuizList = [...quizData];
+            reviewQueue = [];
+            isReviewMode = false;
+            currentQuestionIndex = 0;
+            score = 0;
+            isAnswered = false;
+            resetQuitButton();
+            
+            resultArea.style.display = 'none';
+            flashcardsSection.style.display = 'none';
+            quizCard.style.display = 'block';
+            nextBtn.textContent = "次の問題へ";
+            
+            if (resultTitle && resultSubtitle) {
+                resultTitle.textContent = "学習完了！お疲れ様でした。";
+                resultSubtitle.style.display = "block";
+            }
+
+            loadQuestion();
+        }
+
+        // クイズの表示
+        function loadQuestion() {
+            const currentQuiz = currentQuizList[currentQuestionIndex];
+            isAnswered = false;
+            resetQuitButton();
+            
+            // 進捗表示
+            if (isReviewMode) {
+                progressEl.textContent = `復習モード：問題 ${currentQuestionIndex + 1} / ${currentQuizList.length}`;
+            } else {
+                progressEl.textContent = `問題 ${currentQuestionIndex + 1} / ${currentQuizList.length}`;
+            }
+            questionEl.textContent = currentQuiz.question;
+            
+            // 選択肢生成
+            optionsContainer.innerHTML = '';
+            currentQuiz.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = `${index + 1}. ${option}`;
+                button.classList.add('option-btn');
+                button.onclick = () => checkAnswer(index, button);
+                optionsContainer.appendChild(button);
+            });
+
+            feedbackArea.style.display = 'none';
+        }
+
+        // 解答チェック
+        function checkAnswer(selectedIndex, selectedButton) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const currentQuiz = currentQuizList[currentQuestionIndex];
+            const optionButtons = document.querySelectorAll('.option-btn');
+            
+            optionButtons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === currentQuiz.correctAnswer) {
+                selectedButton.classList.add('correct');
+                feedbackTitle.textContent = "⭕ 正解！";
+                feedbackTitle.className = "feedback-correct";
+                if (!isReviewMode) score++;
+            } else {
+                selectedButton.classList.add('incorrect');
+                optionButtons[currentQuiz.correctAnswer].classList.add('correct');
+                feedbackTitle.textContent = "❌ 不正解...";
+                feedbackTitle.className = "feedback-incorrect";
+                reviewQueue.push(currentQuiz);
+            }
+
+            explanationText.textContent = currentQuiz.explanation;
+            feedbackArea.style.display = 'block';
+
+            if (currentQuestionIndex === currentQuizList.length - 1) {
+                if (isReviewMode && reviewQueue.length > 0) {
+                    nextBtn.textContent = "間違えた問題をもう一度復習する";
+                } else {
+                    nextBtn.textContent = "結果を見る";
+                }
+            } else {
+                nextBtn.textContent = "次の問題へ";
+            }
+        }
+
+        // 次の問題へ
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizList.length) {
+                loadQuestion();
+            } else {
+                if (isReviewMode) {
+                    if (reviewQueue.length > 0) {
+                        startReviewRound();
+                    } else {
+                        showPerfectResult();
+                    }
+                } else {
+                    showResult();
+                }
+            }
+        }
+
+        // 復習ラウンド
+        function startReviewRound() {
+            isReviewMode = true;
+            currentQuizList = [...reviewQueue];
+            reviewQueue = [];
+            currentQuestionIndex = 0;
+            isAnswered = false;
+            resetQuitButton();
+            
+            resultArea.style.display = 'none';
+            flashcardsSection.style.display = 'none';
+            quizCard.style.display = 'block';
+            nextBtn.textContent = "次の問題へ";
+            
+            loadQuestion();
+        }
+
+        // 結果画面
+        function showResult() {
+            quizCard.style.display = 'none';
+            resultArea.style.display = 'block';
+            scoreDisplay.textContent = `${score} / ${quizData.length}`;
+            
+            actionContainer.innerHTML = '';
+
+            let msg = "";
+            const percentage = score / quizData.length;
+            if (percentage === 1) {
+                msg = "全問正解！学習指導要領の読み込みは完璧ですね！";
+                const restartBtn = document.createElement('button');
+                restartBtn.className = 'action-btn';
+                restartBtn.textContent = "最初からやり直す";
+                restartBtn.onclick = initQuiz;
+                actionContainer.appendChild(restartBtn);
+            } else {
+                if (percentage >= 0.6) {
+                    msg = "素晴らしい成績です！間違えた箇所を復習して本番に備えましょう。";
+                } else {
+                    msg = "学習指導要領をもう一度確認し、頻出キーワードを押さえましょう。";
+                }
+                
+                const reviewBtn = document.createElement('button');
+                reviewBtn.className = 'action-btn';
+                reviewBtn.style.backgroundColor = 'var(--incorrect-color)';
+                reviewBtn.textContent = `間違えた問題（${reviewQueue.length}問）を復習する`;
+                reviewBtn.onclick = startReviewRound;
+                actionContainer.appendChild(reviewBtn);
+
+                const restartBtn = document.createElement('button');
+                restartBtn.className = 'action-btn';
+                restartBtn.style.marginTop = '1rem';
+                restartBtn.textContent = "最初からやり直す";
+                restartBtn.onclick = initQuiz;
+                actionContainer.appendChild(restartBtn);
+            }
+            resultMessage.textContent = msg;
+            generateFlashcards();
+        }
+
+        // 復習完了画面
+        function showPerfectResult() {
+            quizCard.style.display = 'none';
+            resultArea.style.display = 'block';
+            resultTitle.textContent = "復習完了！🎉";
+            resultSubtitle.style.display = "none";
+            scoreDisplay.textContent = "PERFECT";
+            resultMessage.textContent = "間違えた問題をすべて正解できました。この調子で頑張りましょう！";
+            
+            actionContainer.innerHTML = '';
+            const restartBtn = document.createElement('button');
+            restartBtn.className = 'action-btn';
+            restartBtn.textContent = "最初からやり直す";
+            restartBtn.onclick = initQuiz;
+            actionContainer.appendChild(restartBtn);
+
+            generateFlashcards();
+        }
+
+        // 終了ボタン
+        function handleQuitClick() {
+            if (quitBtn.classList.contains('confirming')) {
+                clearTimeout(quitConfirmTimeout);
+                finishQuizEarly();
+            } else {
+                quitBtn.textContent = "本当に終了しますか？";
+                quitBtn.classList.add('confirming');
+                quitConfirmTimeout = setTimeout(resetQuitButton, 3000);
+            }
+        }
+
+        function resetQuitButton() {
+            if(quitBtn) {
+                quitBtn.textContent = "途中で終了して結果へ";
+                quitBtn.classList.remove('confirming');
+            }
+        }
+
+        function finishQuizEarly() {
+            let startIndex = isAnswered ? currentQuestionIndex + 1 : currentQuestionIndex;
+            for (let i = startIndex; i < currentQuizList.length; i++) {
+                if (!reviewQueue.includes(currentQuizList[i])) {
+                    reviewQueue.push(currentQuizList[i]);
+                }
+            }
+            if (isReviewMode && reviewQueue.length === 0) {
+                showPerfectResult();
+            } else {
+                showResult();
+            }
+        }
+
+        // 暗記カード
+        function toggleBlank(el) {
+            const card = el.closest('.flashcard');
+            const explanation = card.querySelector('.flashcard-explanation');
+            
+            if (el.classList.contains('revealed')) {
+                el.textContent = el.getAttribute('data-placeholder');
+                el.classList.remove('revealed');
+            } else {
+                el.textContent = el.getAttribute('data-answer');
+                el.classList.add('revealed');
+            }
+
+            const allBlanks = card.querySelectorAll('.blank-spot');
+            const anyRevealed = Array.from(allBlanks).some(blank => blank.classList.contains('revealed'));
+            if (anyRevealed) explanation.style.display = 'block';
+            else explanation.style.display = 'none';
+        }
+
+        function toggleAllBlanks(show) {
+            const blanks = document.querySelectorAll('.blank-spot');
+            blanks.forEach(el => {
+                if (show && !el.classList.contains('revealed')) {
+                    el.textContent = el.getAttribute('data-answer');
+                    el.classList.add('revealed');
+                } else if (!show && el.classList.contains('revealed')) {
+                    el.textContent = el.getAttribute('data-placeholder');
+                    el.classList.remove('revealed');
+                }
+            });
+            const explanations = document.querySelectorAll('.flashcard-explanation');
+            explanations.forEach(exp => exp.style.display = show ? 'block' : 'none');
+        }
+
+        function generateFlashcards() {
+            const container = document.getElementById('flashcards-container');
+            container.innerHTML = '';
+            
+            quizData.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'flashcard';
+                
+                let qText = q.question;
+                let titleMatch = qText.match(/^【(.*?)】/);
+                let titleStr = titleMatch ? titleMatch[0] : `問題 ${index + 1}`;
+                if (titleMatch) qText = qText.replace(titleMatch[0], '').trim();
+
+                const correctAnswerText = q.options[q.correctAnswer];
+                let htmlText = '';
+
+                if (qText.includes('（　　）')) {
+                    htmlText = qText.replace(/（　　）/g, `<span class="blank-spot" data-answer="${correctAnswerText}" data-placeholder="　　　" onclick="toggleBlank(this)">　　　</span>`);
+                } else {
+                    htmlText = `${qText}<br><br><strong>正解：</strong><span class="blank-spot" data-answer="${correctAnswerText}" data-placeholder="　　　" onclick="toggleBlank(this)">　　　</span>`;
+                }
+
+                card.innerHTML = `
+                    <h4>${titleStr}</h4>
+                    <p>${htmlText}</p>
+                    <p class="flashcard-explanation"><strong>解説：</strong>${q.explanation}</p>
+                `;
+                container.appendChild(card);
+            });
+            flashcardsSection.style.display = 'block';
+        }
+
+        // スクロールトップ
+        window.onscroll = function() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTopBtn.style.display = "flex";
+            } else {
+                backToTopBtn.style.display = "none";
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>
