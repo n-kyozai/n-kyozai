@@ -1,0 +1,601 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育心理確認テスト - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content { flex: 1; margin-left: var(--sidebar-width); padding: 24px; width: 100%; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+
+        /* クイズカード */
+        .quiz-card {
+            background: white; border-radius: 16px; padding: 24px;
+            box-shadow: var(--shadow); border: 1px solid #e2e8f0;
+        }
+        .quiz-body { display: flex; flex-direction: column; gap: 24px; }
+
+        @media (min-width: 769px) {
+            .quiz-body { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 32px; }
+        }
+
+        .progress-container { margin-bottom: 20px; background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; }
+        .progress-bar { background: var(--accent-color); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+        .question-lesson { font-size: 0.75rem; color: var(--accent-color); font-weight: bold; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .question-text { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; line-height: 1.6; }
+
+        .options-grid { display: grid; gap: 10px; }
+        .option-btn {
+            padding: 16px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px;
+            text-align: left; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; color: var(--text-color);
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent-color); background: #f5f3ff; }
+        .option-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; font-weight: bold; }
+        .option-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+        /* 右側解説セクション */
+        .explanation-side {
+            padding: 24px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0;
+            display: none; flex-direction: column; gap: 16px; min-height: 200px;
+        }
+        .explanation-side.show { display: flex; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn {
+            padding: 14px 24px; border: none; border-radius: 12px; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 8px; transition: all 0.2s; font-size: 0.95rem;
+        }
+        .btn-primary { background: var(--primary-color); color: white; width: 100%; }
+        .btn-primary:hover { background: #1e293b; }
+        .btn-accent { background: var(--accent-color); color: white; width: 100%; }
+        .btn-accent:hover { opacity: 0.9; }
+        .btn-outline { background: white; border: 1px solid #cbd5e1; color: #64748b; width: 100%; }
+        .btn-outline:hover { background: #f1f5f9; border-color: #94a3b8; }
+
+        /* 結果表示 */
+        #result-view { text-align: center; display: none; }
+        .score-circle {
+            width: 160px; height: 160px; border: 10px solid var(--accent-color);
+            border-radius: 50%; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; margin: 32px auto;
+        }
+        .score-num { font-size: 3rem; font-weight: bold; color: var(--primary-color); }
+
+        /* レッスン選択 */
+        #lesson-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .lesson-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 20px; text-align: center; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .lesson-card:hover { border-color: var(--accent-color); transform: translateY(-4px); box-shadow: var(--shadow); }
+        .lesson-card i { color: var(--accent-color); width: 28px; height: 28px; }
+        .lesson-card div { font-size: 0.9rem; font-weight: bold; color: var(--primary-color); }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            #lesson-selector { grid-template-columns: 1fr 1fr; }
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    確認テスト
+                </div>
+                <h1 id="main-title" style="font-size: 1.6rem; color: var(--primary-color);">教育心理 確認テスト</h1>
+            </div>
+
+            <!-- チャプター選択 -->
+            <div id="selection-view">
+                <p style="margin-bottom: 24px; font-size: 0.95rem; color: #64748b;">
+                    「教育心理学」全14回の振り返り課題を完全網羅しています。<br>
+                    苦手な章を選んで演習するか、全問まとめて挑戦してください。
+                </p>
+                <div id="lesson-selector"></div>
+                <button class="btn btn-accent" style="margin-top:32px; padding: 16px; font-size: 1.1rem;" onclick="startQuiz('all')">
+                    <i data-lucide="play-circle"></i> 全14章（100問以上）にまとめて挑戦
+                </button>
+            </div>
+
+            <!-- クイズ画面 -->
+            <div id="quiz-view" style="display:none;">
+                <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+                <div class="quiz-card">
+                    <div class="quiz-body">
+                        <div class="quiz-main-section">
+                            <div class="question-lesson">
+                                <span id="lesson-label">Lesson</span>
+                                <span id="counter-label">0 / 0</span>
+                            </div>
+                            <div id="question-text" class="question-text">質問内容</div>
+                            <div id="options-container" class="options-grid"></div>
+                        </div>
+                        
+                        <!-- 右側：解説・操作エリア -->
+                        <div class="quiz-side-section">
+                            <div id="explanation-box" class="explanation-side">
+                                <div>
+                                    <div id="result-label" style="font-size: 1.2rem; font-weight:bold; margin-bottom:8px;"></div>
+                                    <div id="explanation-text" style="font-size: 0.9rem; line-height: 1.6; color: #475569;"></div>
+                                </div>
+                                <button id="next-btn" class="btn btn-primary" onclick="handleNext()">
+                                    次の問題へ <i data-lucide="arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-view">
+                <div class="quiz-card">
+                    <h2 style="font-size: 1.5rem; color: var(--primary-color);">演習結果</h2>
+                    <div class="score-circle">
+                        <span id="final-score" class="score-num">0</span>
+                        <span style="font-size: 0.9rem; color: #94a3b8; margin-top: 4px;">/ <span id="total-q-display">0</span> 問中</span>
+                    </div>
+                    <p id="result-message" style="margin-bottom: 32px; font-weight: bold; font-size: 1.1rem; color: var(--primary-color);"></p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <button id="retry-wrong-btn" class="btn btn-accent" style="display:none;" onclick="startWrongOnlyPractice()">
+                            <i data-lucide="rotate-ccw"></i> 間違えた問題のみ再挑戦
+                        </button>
+                        <button class="btn btn-outline" onclick="backToHome()">
+                            <i data-lucide="list"></i> チャプター選択へ戻る
+                        </button>
+                        <button class="btn btn-primary" onclick="restartCurrent()">
+                            <i data-lucide="refresh-cw"></i> 最初からやり直す
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const lessons = [
+            { id: 1, title: "第1回 教育心理学とは", icon: "book-open" },
+            { id: 2, title: "第2回 発達と教育", icon: "baby" },
+            { id: 3, title: "第3回 乳幼児期の発達", icon: "smile" },
+            { id: 4, title: "第4回 児童期の発達", icon: "school" },
+            { id: 5, title: "第5回 青年期の発達", icon: "user" },
+            { id: 6, title: "第6回 行動論から見た学習", icon: "activity" },
+            { id: 7, title: "第7回 認知論から見た学習", icon: "cpu" },
+            { id: 8, title: "第8回 動機づけ", icon: "flame" },
+            { id: 9, title: "第9回 パーソナリティ", icon: "fingerprint" },
+            { id: 10, title: "第10回 適応の理解と支援", icon: "heart-handshake" },
+            { id: 11, title: "第11回 教師と児童・生徒", icon: "users" },
+            { id: 12, title: "第12回 学級集団", icon: "network" },
+            { id: 13, title: "第13回 発達障害の理解", icon: "puzzle" },
+            { id: 14, title: "第14回 教育評価", icon: "clipboard-check" }
+        ];
+
+        // 完全版クイズデータ（振り返り課題全問網羅）
+        const quizData = [
+            // 第1回
+            { lesson: 1, q: "【問1】教育に関するテーマは、主として人間の理性的な志向によってその本質を見出していくという（　）からのアプローチで扱われてきた。", options: ["行動学", "哲学", "社会学", "倫理学"], answer: "哲学", exp: "教育学の源流はプラトンやアリストテレスなどの古代哲学にあります。彼らは「人間はどうあるべきか」という理想を追求しました。" },
+            { lesson: 1, q: "【問2-1】教育の目的を倫理学に、教育の方法を心理学に求めた人物は？", options: ["ヴント", "ヘルバルト", "ソーンダイク", "プラトン"], answer: "ヘルバルト", exp: "ヘルバルトは「近代教育学の父」と呼ばれ、著書『一般教育学』の中で、教育学を体系化しました。" },
+            { lesson: 1, q: "【問2-2】実験によって心を研究する方法を開発した人物たちは？", options: ["ヘルバルトとプラトン", "ヴント、エビングハウス、ジェームズ", "ソーンダイクとワトソン", "文部省"], answer: "ヴント、エビングハウス、ジェームズ", exp: "1879年、ヴントがライプツィヒ大学に世界初の心理学実験室を創設したことが、近代心理学の始まりとされています。" },
+            { lesson: 1, q: "【問2-3】1910年に「The Journal of Educational Psychology」を創刊し、教育心理学を価値づけたのは？", options: ["ジェームズ", "ソーンダイク", "丸山良二", "ヘルバルト"], answer: "ソーンダイク", exp: "ソーンダイクは「教育心理学の父」と呼ばれ、測定と統計を用いた科学的なアプローチを確立しました。" },
+            { lesson: 1, q: "【問2-4】第二次大戦後、日本で「教育心理」を発刊した組織は？", options: ["文部省", "厚生省", "内閣府", "日本心理学会"], answer: "文部省", exp: "1947年に当時の文部省から発刊され、日本の教育心理学の方向性に大きな影響を与えました。" },
+            { lesson: 1, q: "【問3-1】一度に多数の対象者に調査を実施することができるが、質問の主旨の誤解などに対応が難しい研究法は？", options: ["実験法", "観察法", "質問紙法", "面接法"], answer: "質問紙法", exp: "アンケート調査のことです。効率的ですが、回答者が質問を読み違えても修正できない欠点があります。" },
+            { lesson: 1, q: "【問3-2】対象者の意識や経験の全体を取り出しやすく質の良い情報を得やすいが、多人数への実施が難しい研究法は？", options: ["質問紙法", "面接法", "心理検査法", "実験法"], answer: "面接法", exp: "個別の深掘りに適していますが、一人ひとりに時間がかかるためコストが高いのが特徴です。" },
+            { lesson: 1, q: "【問3-3】因果関係の検証に適しているが、変数のコントロール（統制）が難しい研究法は？", options: ["実験法", "観察法", "心理検査法", "面接法"], answer: "実験法", exp: "実験室以外の「フィールド実験」などでは、騒音や気温などの条件を一定に保つことが困難です。" },
+            { lesson: 1, q: "【問3-4】あるがままの行動を理解することで興味深い仮説が見えてくることがあるが、内面の状態は確実に把握できない研究法は？", options: ["実験法", "観察法", "質問紙法", "心理検査法"], answer: "観察法", exp: "自然な行動を記録できますが、「なぜそうしたか」という内面までは推測の域を出ないことがあります。" },
+            { lesson: 1, q: "【問3-5】観察だけではわからない内面の状態を理解する助けとなるが、結果の解釈には熟練が必要な研究法は？", options: ["面接法", "心理検査法", "実験法", "質問紙法"], answer: "心理検査法", exp: "知能検査や性格検査など。マニュアルに従った実施と、専門的な解釈が求められます。" },
+
+            // 第2回
+            { lesson: 2, q: "【問1】遺伝要因と環境要因が加算的に（足し算のように）影響しあうという考え方は？", options: ["環境閾値説", "成熟優位説", "輻輳説", "白紙論"], answer: "輻輳説", exp: "シュテルンが提唱。「遺伝＋環境＝発達」という考え方で、両方の要因を認めました。" },
+            { lesson: 2, q: "【問2】「発達のプロセスは生まれながらにして備わっており、経験や学習は決定的ではない」とする説を唱えたのは？", options: ["ワトソン", "ピアジェ", "ゲゼル", "ローレンツ"], answer: "ゲゼル", exp: "成熟優位説。双生児の階段登りの実験で、レディネス（準備性）の重要性を証明しました。" },
+            { lesson: 2, q: "【問3-1】「適切な環境さえあればどんな人間にも育てられる」と環境の重要性を強調したのは？", options: ["ロック", "ワトソン", "ゲゼル", "ヴィゴツキー"], answer: "ワトソン", exp: "環境優位説の代表者。「私に1ダースの健康な子供を与えよ」という言葉で有名です。" },
+            { lesson: 2, q: "【問3-2】ワトソンの考えの背景にある「生まれたての心は白紙である」とする思想は？", options: ["ロックの白紙説", "ピアジェの認知発達", "ジェンセンの環境閾値", "臨界期"], answer: "ロックの白紙説", exp: "ジョン・ロックの「タブラ・ラサ（磨かれた板＝白紙）」説です。経験によって心に文字が書かれていくと考えました。" },
+            { lesson: 2, q: "【問4】特定の訓練や好適な環境条件がない限り顕現しない特性もあるとする説は？", options: ["輻輳説", "環境閾値説", "成熟優位説", "敏感期"], answer: "環境閾値説", exp: "ジェンセンが提唱。身長などは環境の影響が少なく、絶対音感などは環境（訓練）が不可欠であるとしました。" },
+            { lesson: 2, q: "【問5】心身が成熟し、学習が成立するために必要な準備が整った状態を？", options: ["敏感期", "臨界期", "レディネス", "社会化"], answer: "レディネス", exp: "学習準備性とも訳されます。早すぎる早期教育への警鐘となりました。" },
+            { lesson: 2, q: "【問6】「自力可能な水準」と「援助により到達可能な水準」の間の領域を？", options: ["発達の最近接領域", "内言", "外言", "成熟領域"], answer: "発達の最近接領域", exp: "ヴィゴツキーのZPD。教育はこの領域に働きかけることで、発達を牽引できるとしました。" },
+            { lesson: 2, q: "【問8】ある集団に属する個人として身に付けるべき技能や態度を何と言う？", options: ["社会化", "内言化", "社会性", "適応"], answer: "社会性", exp: "社会性を身につけていく過程を「社会化」と呼びます。" },
+
+            // 第3回
+            { lesson: 3, q: "【問1-1】ポルトマンは人間が未熟な状態で生まれることを何と呼んだ？", options: ["口唇期", "子宮外胎児期", "喃語期", "感覚運動期"], answer: "子宮外胎児期", exp: "人間は他の哺乳類と異なり、歩行もできない未熟な状態で生まれ、1年かけて子宮外で成熟するため「生理的早産」とも呼ばれます。" },
+            { lesson: 3, q: "【問1-2-1】口元に触れた方向に頭を向ける反射は？", options: ["モロー反射", "バビンスキー反射", "探索反射", "把握反射"], answer: "探索反射", exp: "ルーティング反射とも言います。乳首を探して栄養を摂取するための原始反射です。" },
+            { lesson: 3, q: "【問1-2-2】頭の支えをはずすと抱きつくような動作をする反射は？", options: ["バビンスキー反射", "把握反射", "探索反射", "モロー反射"], answer: "モロー反射", exp: "落下への恐怖からしがみつくような動作をする、防御的な反射です。" },
+            { lesson: 3, q: "【問1-3】生後2ヶ月頃からの意味不明な発声（アウアウ等）を何と言う？", options: ["喃語", "一語文", "二語文", "前言語"], answer: "喃語", exp: "発声練習のような声であり、世界中の赤ちゃんで共通して見られます。" },
+            { lesson: 3, q: "【問1-4】交流を持ちながら同じ遊びをするが、役割分担やルールがない段階は？", options: ["並行遊び", "ひとり遊び", "連合遊び", "協同遊び"], answer: "連合遊び", exp: "パーテンの遊びの発達段階。協同遊びの前段階にあたります。" },
+            { lesson: 3, q: "【問2-1】幼児期は自己中心性が強く、直感的な判断に依存するとした人物は？", options: ["ボウルビー", "エリクソン", "ピアジェ", "フロイト"], answer: "ピアジェ", exp: "「前操作期」の特徴です。三つ山の課題などで、他者の視点に立てないことを示しました。" },
+            { lesson: 3, q: "【問2-2】性的エネルギーが唇に集中する段階を唱えたのは？", options: ["エリクソン", "フロイト", "ハーロー", "ピアジェ"], answer: "フロイト", exp: "「口唇期」です。授乳を通じて快感を得る時期とされます。" },
+            { lesson: 3, q: "【問2-3】特定の人との心理的絆を「愛着」という概念で表したのは？", options: ["ハーロー", "ボウルビー", "エリクソン", "ポルトマン"], answer: "ボウルビー", exp: "アタッチメント理論の提唱者です。愛着は生存のための本能的行動システムであると考えました。" },
+
+            // 第4回
+            { lesson: 4, q: "【問1-1】児童期に、客観的思考が可能になり、自己中心性から脱却することを？", options: ["同一化", "保存", "脱中心化", "具体化"], answer: "脱中心化", exp: "自分以外の視点からも物事を見ることができるようになることです。具体的操作期の重要な特徴です。" },
+            { lesson: 4, q: "【問1-2】男児が母に性的関心、父に敵意を抱くことを何と呼ぶ？", options: ["エレクトラ・コンプレックス", "エディプス・コンプレックス", "自律的道徳", "脱中心化"], answer: "エディプス・コンプレックス", exp: "フロイトの男根期（3-6歳）の概念。この葛藤を解決することで超自我が形成されます。" },
+            { lesson: 4, q: "【問1-3】ピアジェは児童期に（　）道徳性から自律的道徳性へ移行するとした。", options: ["他律的", "社会的", "直観的", "慣習的"], answer: "他律的", exp: "「大人がダメと言ったからダメ」という他律的な判断から、自分たちでルールを作る自律的な判断へと変化します。" },
+            { lesson: 4, q: "【問1-4】エリクソンが提唱した、6歳から11歳頃の心理社会的危機は？", options: ["信頼 対 不信", "積極性 対 罪悪感", "勤勉性 対 劣等感", "同一性 対 拡散"], answer: "勤勉性 対 劣等感", exp: "学校生活を通じて「やればできる」という勤勉性を獲得するか、挫折して劣等感を抱くかの分岐点です。" },
+            { lesson: 4, q: "【問1-5】「植物」の中に「木」があり「花」があるというように知識を整理することを？", options: ["一般化", "抽象化", "階層化", "精緻化"], answer: "階層化", exp: "上位概念と下位概念の関係を理解し、知識を体系的に整理できるようになります。" },
+            { lesson: 4, q: "【問2-1】ギャングエイジの小集団は、閉鎖的かつ排他的である？", options: ["○", "×"], answer: "○", exp: "自分たちだけの秘密やルールを共有し、外部（特に大人や異性）を排除することで結束を強めます。" },
+            { lesson: 4, q: "【問2-2】ギャングエイジでは、自分の所属する集団に強い忠誠心を持つ？", options: ["○", "×"], answer: "○", exp: "仲間からの承認が何よりも重要になり、集団の掟を絶対視します。" },
+            { lesson: 4, q: "【問2-3】ギャングエイジでは、親や教師など親しい存在は仲間に含める？", options: ["○", "×"], answer: "×", exp: "大人の干渉を拒絶し、自分たちだけの世界を作ろうとするのが特徴です。" },
+            { lesson: 4, q: "【問2-4】ギャングエイジの集団は、異性も含めて構成される？", options: ["○", "×"], answer: "×", exp: "通常は同性同士（男児のみ、女児のみ）で徒党を組みます。" },
+            { lesson: 4, q: "【問2-5】ギャングエイジは、集団内での秘密やルールを守ろうとする？", options: ["○", "×"], answer: "○", exp: "秘密基地作りなどが典型例です。ルールを守ることで仲間意識を確認します。" },
+
+            // 第5回
+            { lesson: 5, q: "【問1-1】身体発達が加速され、生理的成熟が早期化する現象を？", options: ["思春期スパート", "発達加速現象", "心理的離乳", "成熟優位"], answer: "発達加速現象", exp: "栄養状態の改善などにより、親世代よりも体格が向上したり初潮年齢が早まったりする現象です。" },
+            { lesson: 5, q: "【問1-2】青年期に精神的に親から独立していくことを何と言う？", options: ["第二次反抗期", "心理的離乳", "モラトリアム", "自己同一性"], answer: "心理的離乳", exp: "ホリングワースが提唱。親への反抗や批判を通じて、一人の人間として自立しようとする過程です。" },
+            { lesson: 5, q: "【問1-3】青年期の「自分とは何か」という問いの確立をエリクソンは何と呼んだ？", options: ["自己肯定感", "自己同一性", "自己決定", "自己効力感"], answer: "自己同一性", exp: "アイデンティティ（自我同一性）。過去・現在・未来の自分が連続しており、社会の中で自分の位置が定まっている感覚です。" },
+            { lesson: 5, q: "【問1-4】レヴィンは子供と大人の中間でどちらにも属さない者を何と呼んだ？", options: ["ヤングケアラー", "モラトリアム", "マージナル・マン", "チャム"], answer: "マージナル・マン", exp: "境界人・周辺人。どちらの集団にも完全には所属していないため、不安定になりやすいとされます。" },
+            { lesson: 5, q: "【問1-5】関与すべきものは見つかっていないが、達成へ移行を積極的に模索している状態を？", options: ["早期完了", "拡散", "モラトリアム", "達成"], answer: "モラトリアム", exp: "マーシャのアイデンティティ・ステータスの一つ。危機（迷い）の中にあり、自分探しをしている状態です。" },
+            { lesson: 5, q: "【問2-1】青年期になるとほとんどの人は形式的操作期に達する？", options: ["○", "×"], answer: "×", exp: "ピアジェの最終段階ですが、すべての成人が抽象的な論理操作を完全に習得するわけではないことが分かっています。" },
+            { lesson: 5, q: "【問2-2】青年期は社会秩序を捉え、誰もが等しく従うことを求める？", options: ["○", "×"], answer: "○", exp: "コールバーグの道徳性発達段階における「法と秩序志向」の段階です。" },
+            { lesson: 5, q: "【問2-3】思春期は自己評価が低下し、特に女子は容姿が自己概念に重要となる？", options: ["○", "×"], answer: "○", exp: "急激な身体変化に伴い、ボディ・イメージへの関心が高まり、理想と現実のギャップに悩みやすい時期です。" },
+            { lesson: 5, q: "【問2-4】中学生前後の同質性を重視するグループをピアグループと言う？", options: ["○", "×"], answer: "×", exp: "同質性を重視するのは「チャム・グループ」です。ピア・グループは互いの異質性を認め合う関係です。" },
+            { lesson: 5, q: "【問2-5】職業的同一性の獲得は青年期の主要な課題である？", options: ["○", "×"], answer: "○", exp: "「どのような職業に就くか」は「どのように生きるか」と直結するため、アイデンティティ形成の核となります。" },
+
+            // 第6回
+            { lesson: 6, q: "【問1-1】以前の経験が後の学習を促進することを？", options: ["正の転移", "負の転移", "般化", "自発的回復"], answer: "正の転移", exp: "例えば、自転車に乗れることがバイクの運転習得を早めるような場合です。逆に阻害する場合は「負の転移」と言います。" },
+            { lesson: 6, q: "【問1-2】満足を伴う反応は結合が強まり、不満足は弱まるという法則は？", options: ["練習の法則", "効果の法則", "準備性の法則", "強化の法則"], answer: "効果の法則", exp: "ソーンダイクが猫の問題箱実験から導き出しました。成功体験が行動を定着させるという原理です。" },
+            { lesson: 6, q: "【問1-3-1】学習材料を分けることなくまとめて学習する方法を？", options: ["分習法", "集中法", "全習法", "分散法"], answer: "全習法", exp: "全体の見通しが良い場合や、学習者の能力が高い場合に有効です。" },
+            { lesson: 6, q: "【問1-3-2】学習材料をいくつかの部分に分けて学習する方法を？", options: ["全習法", "分習法", "集中法", "分散法"], answer: "分習法", exp: "ピアノの片手練習のように、複雑な技能を習得する際に有効です。" },
+            { lesson: 6, q: "【問1-4-1】報酬を与えて望まれる行動を増やすのは？", options: ["正の強化", "負の強化", "正の罰", "負の罰"], answer: "正の強化", exp: "「ご褒美（正の刺激）」を「与える（出現）」ことで行動を強化します。" },
+            { lesson: 6, q: "【問1-4-2】不快な刺激を除去することによって望まれる行動を増やすのは？", options: ["正の強化", "負の強化", "正の罰", "負の罰"], answer: "負の強化", exp: "「嫌なこと（負の刺激）」を「取り除く（消失）」ことで、その行動を増やします。" },
+            { lesson: 6, q: "【問1-5】他者の行動とそれに対する強化を観察して行動を変化させるのは？", options: ["模倣学習", "観察学習", "試行錯誤学習", "洞察学習"], answer: "観察学習", exp: "バンデューラの社会的学習理論。直接強化を受けなくても、モデルを見るだけで学習が成立します。" },
+            { lesson: 6, q: "【問2-1】問題箱のネコの実験から「試行錯誤説」を提唱したのは？", options: ["スキナー", "ソーンダイク", "パブロフ", "ワトソン"], answer: "ソーンダイク", exp: "無駄な動きが減り、正解に至る時間が短縮されるプロセスを示しました。" },
+            { lesson: 6, q: "【問2-2】パブロフが犬の実験で明らかにした、受動的な条件づけは？", options: ["オペラント条件づけ", "レスポンデント条件づけ", "洞察学習", "観察学習"], answer: "レスポンデント条件づけ", exp: "古典的条件づけとも呼ばれます。梅干しを見て唾液が出るような生理的反射の学習です。" },
+            { lesson: 6, q: "【問2-3】スキナー箱のネズミがレバーで餌を得る学習の理論名は？", options: ["レスポンデント条件づけ", "オペラント条件づけ", "洞察学習", "社会的学習"], answer: "オペラント条件づけ", exp: "道具的条件づけとも呼ばれます。自発的な行動（オペラント）の結果によって行動頻度が変わります。" },
+
+            // 第7回
+            { lesson: 7, q: "【問1-1】否定形式の推論は難しいため、肯定形式に推論が偏ることを？", options: ["確証バイアス", "マッチング・バイアス", "肯定性バイアス", "ハロー効果"], answer: "肯定性バイアス", exp: "「Aではない」という処理よりも「Aである」という処理の方が認知的に楽なために起こります。" },
+            { lesson: 7, q: "【問1-2-1】機械的に繰り返すだけのリハーサルを何と言う？", options: ["精緻化リハーサル", "維持リハーサル", "作動記憶", "体制化"], answer: "維持リハーサル", exp: "電話番号を忘れないように復唱するような、一時的な保持のためのリハーサルです。" },
+            { lesson: 7, q: "【問1-2-2】意味づけやイメージ化を伴う効率的なリハーサルを何と言う？", options: ["維持リハーサル", "精緻化リハーサル", "作動記憶", "体制化"], answer: "精緻化リハーサル", exp: "語呂合わせや関連付けを行うことで、長期記憶への転送を促進します。" },
+            { lesson: 7, q: "【問1-3】ネズミの迷路実験から「認知地図」の形成が学習であるとしたのは？", options: ["トールマン", "ケーラー", "スキナー", "パブロフ"], answer: "トールマン", exp: "S-R結合ではなく、S-S接近（サイン・ゲシュタルト説）を唱えました。場所の構造を理解していると考えました。" },
+            { lesson: 7, q: "【問1-4】チンパンジーの観察から「洞察」による学習を提唱したのは？", options: ["トールマン", "ソーンダイク", "ケーラー", "ヴント"], answer: "ケーラー", exp: "試行錯誤ではなく、場面の全体構造を把握（再体制化）することで一気に解決に至るとしました。" },
+            { lesson: 7, q: "【問2-1】個別の事実から一般的な法則を導く思考は？", options: ["演繹的推論", "帰納的推論", "メタ認知", "確証バイアス"], answer: "帰納的推論", exp: "多くの事例（データ）から共通点を見つけて結論を出します。結論は必ずしも真とは限りません。" },
+            { lesson: 7, q: "【問2-2】前提から論理規則に則って結論を導く思考は？", options: ["帰納的推論", "演繹的推論", "洞察", "マッチング"], answer: "演繹的推論", exp: "三段論法が代表的です。前提が真であれば結論も必ず真となります。" },
+            { lesson: 7, q: "【問2-3】日時や場所と結びついた個人的な経験に関する記憶は？", options: ["意味記憶", "エピソード記憶", "手続き的記憶", "短期記憶"], answer: "エピソード記憶", exp: "「いつ、どこで、何をした」という自伝的な記憶です。" },
+            { lesson: 7, q: "【問2-4】一般的な知識、概念、法則に関する記憶は？", options: ["意味記憶", "エピソード記憶", "短期記憶", "作動記憶"], answer: "意味記憶", exp: "辞書的な知識の記憶です。" },
+            { lesson: 7, q: "【問2-5】もう一段高いレベルから行う「認知に対する認知」は？", options: ["自己効力感", "スキーマ", "メタ認知", "モニタリング"], answer: "メタ認知", exp: "自分の思考プロセスを客観的に監視（モニタリング）し、制御（コントロール）する機能です。" },
+            { lesson: 7, q: "【問2-6】提示情報が保持情報と合致するか判断する検索タイプは？", options: ["再生", "再認", "符合化", "検索"], answer: "再認", exp: "選択肢問題のように、目の前のものが正解かどうかを判断する想起方法です。" },
+
+            // 第8回
+            { lesson: 8, q: "【問1-1】「自分がその行動をうまく実行できるか」という予測（期待）を？", options: ["結果期待", "効力期待", "自己同一性", "有能感"], answer: "効力期待", exp: "バンデューラの自己効力感理論において、行動の結果への期待（結果期待）と区別される概念です。" },
+            { lesson: 8, q: "【問1-2】行動すること自体が目的となっている動機づけは？", options: ["外発的動機づけ", "内発的動機づけ", "自己決定", "達成動機"], answer: "内発的動機づけ", exp: "知的好奇心や関心に基づき、報酬がなくても行う状態です。" },
+            { lesson: 8, q: "【問1-3】賞罰など自分以外の影響によって行動する動機づけは？", options: ["内発的動機づけ", "外発的動機づけ", "統合的調整", "達成動機"], answer: "外発的動機づけ", exp: "行動は目的を達成するための「手段」となります。" },
+            { lesson: 8, q: "【問1-4-1】能力を伸ばし課題に習熟することを重視する目標は？", options: ["遂行目標", "学習目標", "達成目標", "自律目標"], answer: "学習目標", exp: "ドヴェックの達成目標理論。失敗を学習の機会と捉え、粘り強く取り組む傾向があります。" },
+            { lesson: 8, q: "【問1-4-2】有能さを他者に示し、高い評価を受けることを目指す目標は？", options: ["学習目標", "遂行目標", "外的調整", "回避目標"], answer: "遂行目標", exp: "評価を得ることや、無能さを隠すことに焦点が当たり、困難な課題を避ける傾向があります。" },
+            { lesson: 8, q: "【問2-2】外的報酬が内発的動機づけを低下させる現象を？", options: ["エンハンシング効果", "アンダーマイニング効果", "ピグマリオン効果", "ハロー効果"], answer: "アンダーマイニング効果", exp: "「過正当化効果」とも呼ばれます。報酬が行動の理由になってしまい、自発性が失われます。" },
+            { lesson: 8, q: "【問2-3】ある出来事の原因を何かに求める（帰属する）ことを？", options: ["内面化", "原因帰属", "状況判断", "自己認識"], answer: "原因帰属", exp: "ワイナーは、成功・失敗の原因を「能力・努力・課題・運」の4要素に分類しました。" },
+            { lesson: 8, q: "【問2-4】不可避な不快刺激を受け続けることで無力になる状態を？", options: ["抑うつ", "学習性無力感", "達成回避", "劣等感"], answer: "学習性無力感", exp: "セリグマンが提唱。自分の行動では結果を変えられないという信念（無力感）が学習されてしまった状態です。" },
+            { lesson: 8, q: "【問2-5】外発的動機づけの中で最も自律的で価値が内在化された状態は？", options: ["同一化的調整", "統合的調整", "取り入れ的調整", "外的調整"], answer: "統合的調整", exp: "自己決定理論において、外発的動機づけであっても、完全に自分の価値観と一致している状態です。" },
+            { lesson: 8, q: "【問2-6】成功動機と失敗回避動機の（　）によって達成行動が決まる。", options: ["総和", "平均", "相対的な強さ", "有無"], answer: "相対的な強さ", exp: "アトキンソンの期待×価値モデル。成功動機が強ければ中程度の難易度を好み、失敗回避が強ければ極端な難易度を選びます。" },
+
+            // 第9回
+            { lesson: 9, q: "【問1-1】体型によるパーソナリティの分類（肥満型ー躁うつ等）を示したのは？", options: ["ユング", "シュプランガー", "クレッチマー", "キャッテル"], answer: "クレッチマー", exp: "精神疾患患者の観察から、体型と気質・性格に関連があるとする類型論を唱えました。" },
+            { lesson: 9, q: "【問1-2】生活領域の価値（理論、審美、宗教等）による類型を示したのは？", options: ["ユング", "クレッチマー", "シュプランガー", "フロイト"], answer: "シュプランガー", exp: "人が何を価値あるものとして追求するかによって6つの型に分類しました。" },
+            { lesson: 9, q: "【問1-3】人格をエス、自我、超自我の3領域からなる全体構造としたのは？", options: ["ユング", "フロイト", "オルポート", "ロジャース"], answer: "フロイト", exp: "本能的なエス、現実的な自我、道徳的な超自我のバランスで人格が決まるとしました。" },
+            { lesson: 9, q: "【問1-4-1】インクのシミを見せて、何に見えるかを問う投影法検査は？", options: ["バウム・テスト", "TAT", "ロールシャッハ・テスト", "SCT"], answer: "ロールシャッハ・テスト", exp: "曖昧な図形への反応から、無意識的な欲求や性格傾向を分析します。" },
+            { lesson: 9, q: "【問1-4-2】未完成の文章を完成させるよう求める投影法検査は？", options: ["文章完成法(SCT)", "TAT", "バウム・テスト", "P-Fスタディ"], answer: "文章完成法(SCT)", exp: "「子供の頃私は...」などの刺激文に続けて自由に記述させます。" },
+            { lesson: 9, q: "【問2-1】パーソナリティは生まれつきで変化しないという考えが主流である？", options: ["○", "×"], answer: "×", exp: "遺伝的基盤はありますが、環境との相互作用によって変容していくと考えられています。" },
+            { lesson: 9, q: "【問2-2】投影法は曖昧な刺激を与え、それに対する自由な反応から探る？", options: ["○", "×"], answer: "○", exp: "回答を意図的に操作しにくいという特徴があります。" },
+            { lesson: 9, q: "【問2-3】心理学においてパーソナリティと性格(character)は区別して捉えられる？", options: ["○", "×"], answer: "○", exp: "パーソナリティは全体的な個性を、性格は意志や感情などより限定的な側面を指すことが多いです。" },
+            { lesson: 9, q: "【問2-5】内田クレペリン検査は、質問紙法による検査である？", options: ["○", "×"], answer: "×", exp: "一桁の足し算を連続して行う「作業検査法」です。作業曲線から性格を判定します。" },
+
+            // 第10回
+            { lesson: 10, q: "【問1-1】不安を低いものから順に慣れさせ制止する「系統的脱感作法」の考案者は？", options: ["エリス", "ウォルピ", "ロジャース", "ベック"], answer: "ウォルピ", exp: "レスポンデント条件づけ（逆制止）を利用した行動療法です。" },
+            { lesson: 10, q: "【問1-2】目標行動までを段階的に分け、スモールステップで強化する方法を？", options: ["トークンエコノミー", "タイムアウト", "シェーピング法", "脱感作"], answer: "シェーピング法", exp: "オペラント条件づけの原理を用い、徐々に目標行動へ近づけます。" },
+            { lesson: 10, q: "【問1-3】論理療法で、修正の対象となる不合理な「〜すべき」等の思い込みを何と言う？", options: ["スキーマ", "不合理な信念", "自動思考", "認知の歪み"], answer: "不合理な信念", exp: "イラショナル・ビリーフ。これを論駁（D）して効果（E）を得るのがABCDE理論です。" },
+            { lesson: 10, q: "【問1-4】ロジャースの来談者中心療法において、治療者は（　）に徹する。", options: ["指示", "傾聴", "解釈", "論破"], answer: "傾聴", exp: "クライエント自身の成長力を信じ、指示や助言をせず、話を聴くことに徹します。" },
+            { lesson: 10, q: "【問2-1】来談者中心療法は、指示的カウンセリングとも呼ばれる？", options: ["○", "×"], answer: "×", exp: "「非指示的カウンセリング」と呼ばれます。" },
+            { lesson: 10, q: "【問2-2】ロジャースの3原則は、自己一致、受容、共感的理解である？", options: ["○", "×"], answer: "○", exp: "カウンセラーに必要な3つの態度は、現在でも心理臨床の基本とされています。" },
+            { lesson: 10, q: "【問2-3】ユングは、夢や絵画などの創造的活動を用いてイメージを活性化させる？", options: ["○", "×"], answer: "○", exp: "箱庭療法や絵画療法など、言語以外のアプローチも重視しました。" },
+            { lesson: 10, q: "【問2-4】防衛機制は適応のためのメカニズム（適応機制）に含まれる？", options: ["○", "×"], answer: "○", exp: "無意識に不安を処理し、適応しようとする心の働きです。" },
+            { lesson: 10, q: "【問2-5】家族療法では、個人に原因があるかをまず評価する？", options: ["○", "×"], answer: "×", exp: "特定の個人（患者）だけでなく、家族全体を一つのシステムとして捉え、関係性の修正を図ります。" },
+
+            // 第11回
+            { lesson: 11, q: "【問1-1】教師は、表情やしぐさなどの（　）にも気を配る必要がある。", options: ["言語的表現", "指示的表現", "非言語的表現", "評価的表現"], answer: "非言語的表現", exp: "ノンバーバル・コミュニケーション。言葉以上に教師の意図や感情を伝えることがあります。" },
+            { lesson: 11, q: "【問1-2】学習者の適性と指導法の組み合わせで効果が変わる適性処遇交互作用(ATI)を提唱したのは？", options: ["クロンバック", "ブルーム", "スキナー", "ロジャース"], answer: "クロンバック", exp: "万能な指導法はなく、相手に合わせて変える必要があるという理論です。" },
+            { lesson: 11, q: "【問1-3】個人の好きな相手、嫌いな相手を挙げさせて集団構造を客観化する手法は？", options: ["ゲス・フー・テスト", "ソシオメトリック・テスト", "ロールシャッハ", "プロフィール"], answer: "ソシオメトリック・テスト", exp: "モレノが考案。人間関係を図示したものをソシオグラムと言います。" },
+            { lesson: 11, q: "【問1-4】PM理論において、目標達成(P)と集団維持(M)の両方が高い教師の型は？", options: ["pm型", "Pm型", "pM型", "PM型"], answer: "PM型", exp: "三隅二不二による理論。PM型が最も望ましく、pm型が最も効果が低いとされます。" },
+            { lesson: 11, q: "【問2-1】一つの良い印象で他も良いと判断してしまう現象は？", options: ["確証バイアス", "ハロー効果", "脱中心化", "アンダーマイニング"], answer: "ハロー効果", exp: "ある際立った特徴（後光）に目がくらみ、全体評価が歪む現象です。" },
+            { lesson: 11, q: "【問2-2】教師の期待によって、実際に学習者の成績が向上する現象は？", options: ["ピグマリオン効果", "ハロー効果", "プラシーボ効果", "ホーソン効果"], answer: "ピグマリオン効果", exp: "ローゼンソールらが提唱。教師の期待が非言語的なメッセージとして伝わり、学習者の意欲を高めます。" },
+            { lesson: 11, q: "【問2-3】集団の方針を決め、権威的な命令でまとめようとするリーダーは？", options: ["専制型", "民主型", "放任型", "PM型"], answer: "専制型", exp: "ホワイトとリピットの実験による分類。作業効率は高いですが、集団の雰囲気は悪くなりやすいです。" },
+            { lesson: 11, q: "【問2-4】PM理論の「集団を維持し、友好的な雰囲気を作る」機能は？", options: ["P機能", "M機能", "L機能", "S機能"], answer: "M機能", exp: "Maintenance（維持）機能。人間関係への配慮などです。" },
+            { lesson: 11, q: "【問2-5】PM理論の「課題解決を促進し、指示・命令を与える」機能は？", options: ["M機能", "P機能", "I機能", "T機能"], answer: "P機能", exp: "Performance（目標達成）機能。ルール遵守や作業指示などです。" },
+
+            // 第12回
+            { lesson: 12, q: "【問1-1】集団成員の行動様式や考えが似てくることを何と言う？", options: ["社会化", "同一化", "斉一化", "内面化"], answer: "斉一化", exp: "集団特有の空気感やルール（集団規範）が形成される基礎となります。" },
+            { lesson: 12, q: "【問1-2-1】心理的な繋がりができ、情緒的関わりが中心の集団は？", options: ["ソシオグループ", "サイキグループ", "公式集団", "内集団"], answer: "サイキグループ", exp: "「仲良しグループ」のように、一緒にいること自体が目的となる集団です。" },
+            { lesson: 12, q: "【問1-2-2】それぞれが果たすべき役割をこなす、社会的・役割的な集団は？", options: ["サイキグループ", "ソシオグループ", "準拠集団", "インフォーマル"], answer: "ソシオグループ", exp: "「会社」や「係活動」のように、目的達成のために機能する集団です。" },
+            { lesson: 12, q: "【問1-3】自分の判断や態度の拠り所を置く集団を何と言う？", options: ["所属集団", "準拠集団", "生活集団", "学習集団"], answer: "準拠集団", exp: "リファレンス・グループ。自分が「こうありたい」と参考にする集団です。" },
+            { lesson: 12, q: "【問1-4】成員の自由意思で構成され、流動的な非公式集団は？", options: ["フォーマル・グループ", "インフォーマル・グループ", "サイキグループ", "ソシオグループ"], answer: "インフォーマル・グループ", exp: "公式な組織（学級など）の中に自然発生的に生まれる集団です。" },
+            { lesson: 12, q: "【問1-5-1】いじめにおいて、はやし立てたり面白がったりする立場は？", options: ["傍観者", "加害者", "観衆", "仲裁者"], answer: "観衆", exp: "いじめを積極的に支持し、加害者を助長させる層です。" },
+            { lesson: 12, q: "【問1-5-2】いじめの周辺で暗黙の了解を与えている立場は？", options: ["観衆", "傍観者", "仲裁者", "被害者"], answer: "傍観者", exp: "見て見ぬふりをすることで、いじめを容認する雰囲気を作ってしまいます。" },
+            { lesson: 12, q: "【問2-1】ピア・サポートで解決できないものは大人に引き継ぐ必要がある？", options: ["○", "×"], answer: "○", exp: "子供だけで抱え込むと事態が悪化したり、サポーター自身が傷ついたりする危険があるためです。" },
+            { lesson: 12, q: "【問2-2】凝集性が高まると満足感は高いが、多面的な意見が出にくくなる？", options: ["○", "×"], answer: "○", exp: "まとまりが強すぎると、同調圧力が働き、異論を排除する閉鎖的な集団になるリスクがあります。" },
+            { lesson: 12, q: "【問2-3】学級規範は圧力になるので、いかなる場合も作らない方が良い？", options: ["○", "×"], answer: "×", exp: "適切な規範は、安心できる学級運営のために不可欠です。" },
+
+            // 第13回
+            { lesson: 13, q: "【問1-1】個々人が尊重され多様性を認め合う社会を（　）と言う。", options: ["情報社会", "管理社会", "共生社会", "平等社会"], answer: "共生社会", exp: "障害の有無にかかわらず、誰もが相互に人格と個性を尊重し支え合う社会です。" },
+            { lesson: 13, q: "【問1-2】2007年署名、2014年批准の障害者支援に関する条約は？", options: ["児童権利条約", "障害者の権利に関する条約", "人権規約", "教育条約"], answer: "障害者の権利に関する条約", exp: "これにより、日本でも合理的配慮の提供が法的に義務化される流れとなりました。" },
+            { lesson: 13, q: "【問1-3】LD、ADHD、高機能自閉症等を対象に含む教育形態を？", options: ["特殊教育", "統合教育", "特別支援教育", "個別教育"], answer: "特別支援教育", exp: "従来の「特殊教育」の対象に加え、発達障害を含む障害のある児童生徒の自立を支援する教育です。" },
+            { lesson: 13, q: "【問1-4】障害理解が求められるのは、学校の（　）である。", options: ["担任のみ", "養護教諭のみ", "すべての教員", "校長のみ"], answer: "すべての教員", exp: "通常学級に在籍する発達障害の児童生徒も多いため、全教員の理解と連携が必要です。" },
+            { lesson: 13, q: "【問2-1】自閉症の特徴を持つが、知的発達の遅れを伴わないのは？", options: ["知的障害", "ADHD", "高機能自閉症", "LD"], answer: "高機能自閉症", exp: "言葉の遅れもない場合は「アスペルガー症候群」と呼ばれましたが、現在はASD（自閉スペクトラム症）として包括されています。" },
+            { lesson: 13, q: "【問2-2】不注意、多動性、衝動性を特徴とする障害は？", options: ["LD", "ASD", "ADHD", "吃音"], answer: "ADHD", exp: "注意欠陥多動性障害。授業中に座っていられない、忘れ物が多いなどの特徴が見られます。" },
+            { lesson: 13, q: "【問2-3】知的遅れはないが、読み・書き等特定の習得に著しい困難があるのは？", options: ["LD", "ADHD", "ASD", "ダウン症"], answer: "LD", exp: "学習障害。聞く、話す、読む、書く、計算する、推論する能力のうち、特定のものに困難を示します。" },
+            { lesson: 13, q: "【問2-4】詳細な観察や検査が必要と思われる子供を見分ける手法を？", options: ["診断", "スクリーニング", "鑑定", "査定"], answer: "スクリーニング", exp: "チェックリストなどを用いて、支援が必要な可能性のある子供を早期に発見することです。" },
+            { lesson: 13, q: "【問2-5】WHOが作成した国際疾病分類の略称は？", options: ["DSM", "WHO-IB", "ICD", "LD-Q"], answer: "ICD", exp: "現在は第11版（ICD-11）が公表されています。米国のDSMと並ぶ診断基準です。" },
+
+            // 第14回
+            { lesson: 14, q: "【問1-1】習得度を確認するために学習途中に行われる評価は？", options: ["診断的評価", "形成的評価", "総括的評価", "量的評価"], answer: "形成的評価", exp: "授業の途中で行い、教師は指導法の改善に、学習者は学習の修正に役立てます。" },
+            { lesson: 14, q: "【問1-2】開始前に知識やスキルを確認する「レディネス」の評価は？", options: ["形成的評価", "総括的評価", "診断的評価", "量的評価"], answer: "診断的評価", exp: "学習を始める前に、前提となる知識や興味・関心の実態を把握するために行います。" },
+            { lesson: 14, q: "【問1-3】成果物を系統的に収集し、成長の証拠とする評価法は？", options: ["相対評価", "ポートフォリオ評価", "作業評価", "総括的評価"], answer: "ポートフォリオ評価", exp: "テストの点数だけでなく、作文や作品、日誌などをファイルし、学習プロセスや変容を評価します。" },
+            { lesson: 14, q: "【問1-4】学期終了時などに習得を確認する評価は？", options: ["診断的評価", "形成的評価", "総括的評価", "絶対評価"], answer: "総括的評価", exp: "一定の教育活動が終了した段階で、目標の達成度を判定し、成績をつけるための評価です。" },
+            { lesson: 14, q: "【問2-1】質的評価では、数値化できない子供の努力などを評価できる？", options: ["○", "×"], answer: "○", exp: "文章記述などにより、意欲や関心、態度などの側面をきめ細かく評価できます。" },
+            { lesson: 14, q: "【問2-2】相対評価では、学習者が集団内のどの位置にいるかを示すことができる？", options: ["○", "×"], answer: "○", exp: "偏差値や順位など、他者との比較において自分の位置を知ることができます。" },
+            { lesson: 14, q: "【問2-3】相対評価では、集団の属性に注意する必要はない？", options: ["○", "×"], answer: "×", exp: "集団全体のレベルが高いか低いかによって、同じ能力でも評価が変わってしまうため、母集団の性質に注意が必要です。" }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let currentRunMissed = [];
+        let practiceMode = 'normal'; // 'normal' or 'wrong_only'
+
+        window.onload = () => {
+            renderLessonSelector();
+        };
+
+        function renderLessonSelector() {
+            const selector = document.getElementById('lesson-selector');
+            selector.innerHTML = '';
+            lessons.forEach(l => {
+                const card = document.createElement('div');
+                card.className = 'lesson-card';
+                card.onclick = () => startQuiz(l.id);
+                // 本物の問題数を取得
+                const realCount = quizData.filter(q => q.lesson === l.id).length;
+                card.innerHTML = `
+                    <i data-lucide="${l.icon}"></i>
+                    <div>${l.title}</div>
+                    <span style="font-size:0.7rem; color:#94a3b8;">${realCount}問</span>
+                `;
+                selector.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function startQuiz(lessonId) {
+            practiceMode = 'normal';
+            if(lessonId === 'all') {
+                currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+                document.getElementById('main-title').textContent = "全章 まとめテスト";
+            } else {
+                currentQuestions = quizData.filter(q => q.lesson === lessonId);
+                const title = lessons.find(l => l.id === lessonId).title;
+                document.getElementById('main-title').textContent = title;
+            }
+            initSession();
+        }
+
+        function initSession() {
+            currentIndex = 0;
+            score = 0;
+            currentRunMissed = [];
+            document.getElementById('selection-view').style.display = 'none';
+            document.getElementById('quiz-view').style.display = 'block';
+            document.getElementById('result-view').style.display = 'none';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById('lesson-label').textContent = practiceMode === 'wrong_only' ? 'Review Mode' : `Lesson ${q.lesson}`;
+            document.getElementById('counter-label').textContent = `${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('question-text').textContent = q.q;
+            document.getElementById('progress-bar').style.width = `${(currentIndex / currentQuestions.length) * 100}%`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('explanation-box').classList.remove('show');
+        }
+
+        function checkAnswer(selected, btn) {
+            const q = currentQuestions[currentIndex];
+            const isCorrect = selected === q.answer;
+            const btns = document.querySelectorAll('.option-btn');
+            
+            btns.forEach(b => {
+                b.disabled = true;
+                if(b.textContent === q.answer) b.classList.add('correct');
+            });
+
+            const resultLabel = document.getElementById('result-label');
+            if(isCorrect) {
+                score++;
+                resultLabel.textContent = "正解！";
+                resultLabel.style.color = "#166534";
+            } else {
+                btn.classList.add('wrong');
+                resultLabel.textContent = "不正解...";
+                resultLabel.style.color = "#991b1b";
+                currentRunMissed.push(q); // 間違えた問題を保存
+            }
+
+            document.getElementById('explanation-text').textContent = q.exp;
+            document.getElementById('explanation-box').classList.add('show');
+            lucide.createIcons();
+        }
+
+        function handleNext() {
+            currentIndex++;
+            if(currentIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-view').style.display = 'none';
+            document.getElementById('result-view').style.display = 'block';
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('total-q-display').textContent = currentQuestions.length;
+            
+            let msg = "";
+            const rate = currentQuestions.length === 0 ? 0 : score / currentQuestions.length;
+            
+            if(practiceMode === 'wrong_only' && currentRunMissed.length === 0) {
+                msg = "弱点克服完了！素晴らしいです。";
+            } else if(rate === 1) {
+                msg = "完璧です！全問正解！";
+            } else if(rate >= 0.8) {
+                msg = "素晴らしい！合格圏内です。";
+            } else {
+                msg = "間違えた箇所を復習して再挑戦しましょう。";
+            }
+            
+            document.getElementById('result-message').textContent = msg;
+
+            // 間違えた問題がある場合のみボタン表示
+            const retryBtn = document.getElementById('retry-wrong-btn');
+            if (currentRunMissed.length > 0) {
+                retryBtn.style.display = 'flex';
+                // 前回のモードが通常なら「再挑戦」、既に再挑戦中なら「残りの間違いに挑戦」
+                retryBtn.innerHTML = `<i data-lucide="rotate-ccw"></i> 間違えた ${currentRunMissed.length} 問に再挑戦`;
+                lucide.createIcons();
+            } else {
+                retryBtn.style.display = 'none';
+            }
+        }
+
+        function startWrongOnlyPractice() {
+            if(currentRunMissed.length === 0) return;
+            practiceMode = 'wrong_only';
+            currentQuestions = [...currentRunMissed]; // 間違えた問題のみを新しいセットにする
+            document.getElementById('main-title').textContent = "弱点克服演習";
+            initSession();
+        }
+
+        function backToHome() {
+            document.getElementById('result-view').style.display = 'none';
+            document.getElementById('selection-view').style.display = 'block';
+            document.getElementById('main-title').textContent = "教育心理 確認テスト";
+            renderLessonSelector();
+        }
+
+        function restartCurrent() {
+            // 現在のモードのまま最初から
+            initSession();
+        }
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
