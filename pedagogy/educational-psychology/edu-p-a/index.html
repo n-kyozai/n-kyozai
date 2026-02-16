@@ -1,0 +1,511 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育心理学とは何か - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー（Violet） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8; /* 読みやすさのため行間を少し広げる */
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: #059669; /* 教職教養カテゴリ色 */
+            background-color: #ecfdf5;
+            font-weight: bold;
+            border-right: 3px solid #059669;
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        /* 暗記ノート風スタイル */
+        .note-container {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .note-header {
+            background-color: #ede9fe; /* 薄い紫 */
+            padding: 16px 24px;
+            border-bottom: 1px solid #ddd6fe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5b21b6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toggle-all-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .note-content {
+            padding: 24px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #4c1d95;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 32px 0 16px 0;
+        }
+        h3:first-child { margin-top: 0; }
+
+        .note-section {
+            margin-bottom: 24px;
+        }
+        
+        .note-text {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .note-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .note-list li {
+            margin-bottom: 8px;
+            padding-left: 1.2em;
+            position: relative;
+        }
+
+        .note-list li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 暗記マーカー */
+        .cloze {
+            display: inline-block;
+            background-color: #c4b5fd; /* 隠れている時の色 */
+            color: transparent; /* 文字を透明に */
+            border-bottom: 2px solid #7c3aed;
+            padding: 0 4px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none; /* 選択不可 */
+            transition: all 0.2s ease;
+            font-weight: bold;
+            min-width: 1.5em;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .cloze.revealed {
+            background-color: transparent;
+            color: #db2777; /* 正解の色（ピンク） */
+            border-bottom-color: #db2777;
+        }
+
+        .cloze:hover {
+            opacity: 0.8;
+        }
+
+        .important-text {
+            font-weight: bold;
+            color: #334155;
+            background: linear-gradient(transparent 60%, #fef08a 60%); /* 黄色マーカー */
+            padding: 0 2px;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="../../pedagogy/index.html" class="nav-item active"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <!-- 具体的な科目リンクを削除し、専門科目トップへのリンクに変更 -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+
+            <!-- 演習カテゴリを削除 -->
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../index.html">ホーム</a> ＞ <a href="../../pedagogy/index.html">教職教養</a> ＞ <a href="./educational-psychology.html">教育心理</a> ＞ 教育心理学とは何か
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">教育心理学とは何か</h1>
+        </div>
+
+        <div class="container">
+            
+            <div class="note-container">
+                <div class="note-header">
+                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
+                    <button class="toggle-all-btn" id="toggleAllBtn">
+                        <i data-lucide="eye"></i> すべて表示
+                    </button>
+                </div>
+                <div class="note-content">
+                    
+                    <h3>1. 心理学とは</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            心理学は、「<span class="cloze">行動</span>と<span class="cloze">心的過程</span>についての科学的研究」と定義できる（アトキンソンら、2000）。
+                            心理学の研究では、<span class="cloze">行動</span>、<span class="cloze">意識</span>、<span class="cloze">脳</span>の3つの側面を考慮する。
+                            行動は観察や実験で捉え、意識は<span class="cloze">質問紙法</span>や面接法である程度把握できる。脳については脳科学者と共同したり研究結果を参考にして、心理学の理論に矛盾がないか確認する。
+                        </p>
+                        <p class="note-text">
+                            心理学には大きく2つの目標がある。1つは、心についての理論を作り、心の現象を説明できるようにすることを目標とする<span class="cloze">基礎</span>研究である。
+                            もう1つは、実際の社会や生活において役立つ知見を作り出すことを目標とする<span class="cloze">応用</span>研究であり、教育心理学や臨床心理学はこちらに分類される。
+                        </p>
+                        <p class="note-text">
+                            また、心理学は特定の個人の心の中を明らかにしようとするものではなく、できるだけ多くの人に当てはまる<span class="important-text">普遍的・一般的</span>な事実を明らかにしようとする。
+                            ただし、1人の個性を理解するためには、多くの理論を複合し、総合して理解する必要がある。
+                        </p>
+                    </div>
+
+                    <h3>2. 教育心理学の成り立ち</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            教育に関連したテーマは、古くは人間の理性的な志向によってその本質を見出そうとする<span class="cloze">哲学</span>からのアプローチ（プラトンやアリストテレスなど）によって扱われてきた。
+                        </p>
+                        <p class="note-text">
+                            近代（19世紀中頃〜）になると、ドイツの<span class="cloze">ヘルバルト</span>は、著書『一般教育学』（1806年）において、教育の目的を<span class="cloze">倫理学</span>に、教育の方法を<span class="cloze">心理学</span>に求めた。
+                            その後、ドイツのヴントやエビングハウス、アメリカのジェームズらによって、<span class="cloze">実験</span>によって心を研究する方法が開発された。
+                        </p>
+                        <p class="note-text">
+                            アメリカの<span class="cloze">ソーンダイク</span>は、『The Journal of Educational Psychology』（1910年）を創刊し、以下の3点で教育心理学を価値づけた。
+                        </p>
+                        <ul class="note-list">
+                            <li>① 教育心理学を<span class="cloze">科学</span>へ価値づけた（机上の推論ではなく、理論と実証的研究の組み合わせ）。</li>
+                            <li>② 注意深い分析や<span class="cloze">数量化</span>を価値づけた（実験データの統計的仮説検定など）。</li>
+                            <li>③ <span class="cloze">現実的課題</span>の解明へ価値づけた（教育という現象の理解と問題解決）。</li>
+                        </ul>
+                        <p class="note-text">
+                            わが国では、明治・大正期に松本亦太郎や楢崎浅太郎、丸山良二らが活躍し、戦後（1947年）には<span class="cloze">文部省</span>から『教育心理』が発刊された。これは今日の主要領域である「成長・発達」「学習」「測定・評価」「<span class="cloze">人格・適応</span>」の4領域を含んでいる。
+                            教育心理学の意義は、教育という現象を明らかにすること、および教育活動を社会が効率的・効果的に行うことを<span class="cloze">支える</span>ことにある。
+                        </p>
+                    </div>
+
+                    <h3>3. 研究方法の種類</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            研究のタイプには、あらかじめ設定した仮説についてデータを分析し検証する「仮説<span class="cloze">検証</span>型研究」と、得られたデータを分析して新たな仮説を生み出す「仮説<span class="cloze">生成</span>型研究」がある。
+                        </p>
+                        <p class="note-text">
+                            時間軸による分類では、同じ対象を追跡しながらデータを収集し変化を記述する<span class="cloze">縦断</span>的研究と、同時期に異なる年齢集団を比較する<span class="cloze">横断</span>的研究がある。
+                            また、異なる年齢集団を対象としながら縦断的研究を行うものを<span class="cloze">コホート</span>研究と呼ぶ。
+                        </p>
+                    </div>
+
+                    <h3>4. 主な研究手法の特徴</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            <strong>(1) <span class="cloze">質問紙法</span></strong><br>
+                            質問を紙等に記して回答してもらう方法。一度に<span class="cloze">大量</span>の対象者に実施できる長所があるが、質問の意図の<span class="cloze">誤解</span>などへの対応が難しく、表面的な事項に限られることがある。
+                        </p>
+                        <p class="note-text">
+                            <strong>(2) <span class="cloze">実験法</span></strong><br>
+                            因果関係の仮説検証に適する。原因となる<span class="cloze">独立</span>変数、結果となる<span class="cloze">従属</span>変数、それ以外の<span class="cloze">剰余</span>変数を扱う。
+                            変数のコントロール（統制）が必要なため、人工的な環境で行う「実験室実験」が多いが、日常環境で行う「フィールド実験」もある。短所は変数の統制が難しいことである。
+                        </p>
+                        <p class="note-text">
+                            <strong>(3) <span class="cloze">観察法</span></strong><br>
+                            研究対象の<span class="cloze">日常生活</span>をそのまま観察する自然観察法と、特殊な仕掛けを施す実験的観察法がある。
+                            あるがままの行動から仮説が見えてくる長所があるが、<span class="cloze">内面</span>の状態は確実に把握できず、客観的なデータとするには観察者の高い技能が求められる。
+                        </p>
+                        <p class="note-text">
+                            <strong>(4) <span class="cloze">面接法</span></strong><br>
+                            研究者が対象者に対して尋ねて記録する方法。手順が厳格に決まっている<span class="cloze">構造化</span>面接、標準リストを使用しない非構造化面接、ある程度決めておく<span class="cloze">半構造化</span>面接がある。
+                            対象者の意識の<span class="cloze">全体</span>を取り出しやすく質の良い情報を得やすいが、多人数への実施は難しく、面接者の技能が必要である。
+                        </p>
+                        <p class="note-text">
+                            <strong>(5) <span class="cloze">心理検査法</span></strong><br>
+                            使用方法や診断のガイドラインが明確な検査（知能検査、発達検査、パーソナリティ検査など）を用いる。観察だけではわからない内面の理解を助けるが、検査者の熟練が必要である。
+                        </p>
+                        <p class="note-text">
+                            <strong>(6) <span class="cloze">事例研究法</span></strong><br>
+                            一事例あるいは極めて少数事例を対象に、多角的に研究を行う。個性記述的研究とも呼ばれる。
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <a href="./educational-psychology.html" class="inline-flex items-center text-gray-500 hover:text-indigo-600 transition">
+                    <i data-lucide="arrow-left" class="mr-1"></i> 教育心理メニューへ戻る
+                </a>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            document.body.style.overflow = isActive ? '' : 'hidden';
+            lucide.createIcons();
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // 暗記マーカー制御
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        // 個別のクリックイベント
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        // すべて表示ボタン
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) {
+                    cloze.classList.add('revealed');
+                } else {
+                    cloze.classList.remove('revealed');
+                }
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+                toggleAllBtn.classList.add('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.remove('bg-white', 'text-indigo-600');
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+                toggleAllBtn.classList.remove('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.add('bg-white', 'text-indigo-600');
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const all = clozes.length;
+            const revealed = document.querySelectorAll('.cloze.revealed').length;
+            if (revealed === all) {
+                allRevealed = true;
+            } else if (revealed === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+    </script>
+</body>
+</html>
