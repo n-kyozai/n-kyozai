@@ -1,0 +1,566 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>動機づけ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー（Violet） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        /* 暗記ノート風スタイル */
+        .note-container {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .note-header {
+            background-color: #ede9fe; /* 薄い紫 */
+            padding: 16px 24px;
+            border-bottom: 1px solid #ddd6fe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5b21b6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toggle-all-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .note-content {
+            padding: 24px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #4c1d95;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 32px 0 16px 0;
+        }
+        h3:first-child { margin-top: 0; }
+
+        h4 {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #5b21b6;
+            margin: 24px 0 12px 0;
+        }
+
+        .note-section {
+            margin-bottom: 24px;
+        }
+        
+        .note-text {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .note-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .note-list li {
+            margin-bottom: 8px;
+            padding-left: 1.2em;
+            position: relative;
+        }
+
+        .note-list li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 暗記マーカー */
+        .cloze {
+            display: inline-block;
+            background-color: #c4b5fd; /* 隠れている時の色 */
+            color: transparent; /* 文字を透明に */
+            border-bottom: 2px solid #7c3aed;
+            padding: 0 4px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none; /* 選択不可 */
+            transition: all 0.2s ease;
+            font-weight: bold;
+            min-width: 1.5em;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .cloze.revealed {
+            background-color: transparent;
+            color: #db2777; /* 正解の色（ピンク） */
+            border-bottom-color: #db2777;
+        }
+
+        .cloze.revealed:hover {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .cloze:hover {
+            opacity: 0.8;
+        }
+
+        .important-text {
+            font-weight: bold;
+            color: #334155;
+            background: linear-gradient(transparent 60%, #fef08a 60%); /* 黄色マーカー */
+            padding: 0 2px;
+        }
+
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #374151; /* Dark Gray */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: #1f2937;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                動機づけ
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">動機づけ</h1>
+        </div>
+
+        <div class="container">
+            
+            <div class="note-container">
+                <div class="note-header">
+                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
+                    <button class="toggle-all-btn" id="toggleAllBtn">
+                        <i data-lucide="eye"></i> すべて表示
+                    </button>
+                </div>
+                <div class="note-content">
+                    
+                    <h3>1. 動機づけのプロセス</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            人は様々な欲求を持っており、欲求が満たされない状況（欲求不満）から「<span class="cloze">動機・誘因</span>」が生じ、目標を獲得する「<span class="cloze">行動</span>」が引き起こされる。この一連のプロセスを<span class="important-text">動機づけ</span> (motivation) と呼ぶ。
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>動機（動因）：</strong>行動を導く内的要因（例：空腹、知的好奇心）。</li>
+                            <li><strong>誘因：</strong>欲求を満たすために求める外的対象（例：食べ物、金銭、賞賛）。</li>
+                        </ul>
+                    </div>
+
+                    <h3>2. 内発的動機づけ・外発的動機づけ</h3>
+                    <div class="note-section">
+                        <h4>(1) 内発的動機づけ</h4>
+                        <p class="note-text">
+                            自分の興味や関心に従い、行動すること自体が目的となっている状態。他者が関わらなくても行動が「<span class="cloze">自発的</span>」に継続する。
+                        </p>
+                        <h4>(2) 外発的動機づけ</h4>
+                        <p class="note-text">
+                            賞罰や他者の影響によって行動する状態。行動は目的ではなく、目的を達成するための「<span class="cloze">手段</span>」となる（例：褒美のために勉強する）。
+                        </p>
+                        <h4>(3) 自己決定理論 (Deci & Ryan)</h4>
+                        <p class="note-text">
+                            多様な動機づけを「<span class="cloze">自己決定（自律）</span>」の程度で捉える理論。外発的動機づけは自律性の低い順に以下の4段階に分けられる。
+                        </p>
+                        <div class="ml-6 pl-6 mb-4 text-gray-700">
+                            <p class="mb-1">① <strong>外的調整：</strong>外部からの圧力、報酬、罰による行動。</p>
+                            <p class="mb-1">② <strong>取り入れ的調整：</strong>恥ずかしさの回避や有能感の追求による行動（他者の価値観を部分的に取り込む）。</p>
+                            <p class="mb-1">③ <strong>同一化的調整：</strong>活動が自分にとって重要で価値があると受け止めて行う行動。</p>
+                            <p>④ <strong>統合的調整：</strong>価値が自分の中で他の欲求と調和し、完全に内在化された状態。</p>
+                        </div>
+                    </div>
+
+                    <h3>3. 動機づけの変化現象</h3>
+                    <div class="note-section">
+                        <ul class="note-list">
+                            <li><strong><span class="cloze">アンダーマイニング</span>効果：</strong>内発的に動機づけられている活動に対し、外的報酬を与えることで、かえって内発的動機づけが低下する現象（統制されている感覚が生じるため）。</li>
+                            <li><strong>エンハンシング効果：</strong>外的報酬（特に賞賛などの言語的報酬）が内発的動機づけを高める効果。</li>
+                        </ul>
+                    </div>
+
+                    <h3>4. 帰属と動機づけ</h3>
+                    <div class="note-section">
+                        <h4>(1) ワイナーの帰属理論</h4>
+                        <p class="note-text">
+                            出来事の「<span class="cloze">原因</span>」を何かに求めることを原因帰属という。ワイナーは学業達成の原因を「統制の位置」と「安定性」の2次元で整理した。
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>能力：</strong>内的・安定的。</li>
+                            <li><strong>努力：</strong>内的・不安定的（変えられる要素）。</li>
+                            <li><strong>課題の困難度：</strong>外的・安定的。</li>
+                            <li><strong>運：</strong>外的・不安定的。</li>
+                        </ul>
+                        <p class="note-text">
+                            失敗の原因を「能力不足（安定的）」に求めると無力感が生じやすいが、「<span class="cloze">努力不足</span>（不安定的）」に求めると、次は頑張ろうという意欲につながる。
+                        </p>
+
+                        <h4>(2) 学習性無力感</h4>
+                        <p class="note-text">
+                            セリグマンらが提唱。自分の行動とは「<span class="cloze">無関係</span>」に不快な刺激を受け続けることで、回避可能な状況になっても行動を起こさなくなる状態。
+                            失敗の原因が「内的・安定的・全般的」であると考える<span class="cloze">個人</span>（帰属スタイル）ほど陥りやすい。
+                        </p>
+                    </div>
+
+                    <h3>5. 達成動機づけ</h3>
+                    <div class="note-section">
+                        <h4>(1) 期待×価値モデル (Atkinson)</h4>
+                        <p class="note-text">
+                            達成行動は「成功動機」と「失敗回避動機」の相対的な強さで決まる。
+                            成功動機が強い人は、成功の確率が「<span class="cloze">五分五分</span>」程度の適度な困難度の課題を好む。逆に、失敗回避動機が強い人は、五分五分の課題を最も避ける。
+                        </p>
+                        <h4>(2) 自己効力感 (Bandura)</h4>
+                        <p class="note-text">
+                            自分がその行動をうまく実行できるかという予測（「<span class="cloze">効力期待</span>」）。自己効力感が高いほど、動機づけが高まり、困難な課題にも挑戦しやすくなる。
+                        </p>
+                        <h4>(3) 達成目標理論 (Dweck)</h4>
+                        <ul class="note-list">
+                            <li><strong><span class="cloze">学習</span>目標：</strong>自分の能力を伸ばし、習熟することを重視する（挑戦的）。</li>
+                            <li><strong>遂行目標：</strong>他者から高い評価を受けることや、有能さを示すことを重視する（失敗を恐れる）。</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- Topへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            document.body.style.overflow = isActive ? '' : 'hidden';
+            lucide.createIcons();
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // 暗記マーカー制御
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) {
+                    cloze.classList.add('revealed');
+                } else {
+                    cloze.classList.remove('revealed');
+                }
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+                toggleAllBtn.classList.add('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.remove('bg-white', 'text-indigo-600');
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+                toggleAllBtn.classList.remove('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.add('bg-white', 'text-indigo-600');
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const all = clozes.length;
+            const revealed = document.querySelectorAll('.cloze.revealed').length;
+            if (revealed === all) {
+                allRevealed = true;
+            } else if (revealed === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+
+        // Topへ戻るボタン制御
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+    </script>
+</body>
+</html>
