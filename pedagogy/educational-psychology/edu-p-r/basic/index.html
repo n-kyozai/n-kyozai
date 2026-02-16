@@ -1,0 +1,536 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記述対策(基礎) - 教育心理学</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* Violet */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 24px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* コントロールバー */
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        .toggle-all-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-all-btn:hover { opacity: 0.9; }
+        .toggle-all-btn.active { background-color: #475569; }
+
+        /* 問題カード */
+        .q-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .q-header {
+            background: #f8fafc;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .q-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            margin-top: 2px;
+        }
+
+        .q-body {
+            padding: 24px;
+        }
+
+        .model-answer {
+            line-height: 2;
+            font-size: 1rem;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .answer-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .explanation {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            border: 1px solid #bae6fd;
+            font-size: 0.9rem;
+            color: #0c4a6e;
+        }
+
+        /* 虫食いスタイル */
+        .cloze {
+            display: inline-block;
+            background-color: #ddd6fe; /* 隠れている色 */
+            color: transparent;
+            border-bottom: 2px solid #8b5cf6;
+            padding: 0 6px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+            font-weight: bold;
+            min-width: 3em;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .cloze.revealed {
+            background-color: transparent;
+            color: #db2777; /* 正解色 */
+            border-bottom-color: #db2777;
+        }
+
+        .cloze:hover { opacity: 0.8; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+        
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background-color: #374151; color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            z-index: 2000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; }
+        .scroll-to-top:hover { background-color: #1f2937; transform: translateY(-2px); }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            text-align: center; /* 中央揃え */
+            color: #94a3b8; /* 薄く調整 */
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-descriptive.html">記述対策</a> ＞ 
+                    基礎問題
+                </div>
+                <h1 class="main-title"><i data-lucide="book-a"></i>記述対策（基礎問題）</h1>
+            </div>
+
+            <div class="control-bar">
+                <div>
+                    <div style="font-weight:bold; color:#475569;">重要語句の穴埋め</div>
+                    <div style="font-size:0.8rem; color:#94a3b8;">隠れている部分をクリックして答えを確認しましょう。</div>
+                </div>
+                <button class="toggle-all-btn" id="toggleAllBtn">
+                    <i data-lucide="eye"></i> すべて表示
+                </button>
+            </div>
+
+            <!-- 問題リスト -->
+            <div id="question-list">
+                
+                <!-- 問1 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">心理学概論</span>
+                        <div>教育心理学という学問の意義について、具体例を挙げて説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            教育心理学の意義は2点ある。1つは、教育という社会的活動において生じる<span class="cloze">現象</span>を明らかにすることである。例えば、積極的に掃除をする子供とそうでない子供の違いを明らかにすることなどである。もう1つは、教育活動を社会が<span class="cloze">効率的・効果的</span>に行うことを支えることである。例えば、掃除に取り組む要因が明らかになれば、それを踏まえて指導や介入を行い、行動変容を促すことができる。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問2 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">発達</span>
+                        <div>学習における「臨界期」と「敏感期」について説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            学習が成立するための特定の限られた期間を<span class="cloze">臨界期</span>という。ローレンツの刷り込みなどで示された概念である。人間においても言語獲得などに臨界期があると考えられていたが、一定期間を過ぎても学習が不可能になるわけではないため、近年では<span class="cloze">敏感期</span>という用語が用いられる。すなわち、敏感期とはその学習にとって非常に効果的で、成立しやすい特定の時期のことである。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問3 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">発達</span>
+                        <div>幼児期における「ことば」の発達過程を説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            1歳前後になると、喃語とは異なる有意味語である<span class="cloze">一語文</span>（「マンマ」など）を発するようになる。1歳半から2歳頃には、「ワンワン キタ」などの2つの単語をつなげた<span class="cloze">二語文</span>を話し始め、語彙が爆発的に増加する（語彙爆発）。3歳から4歳頃には、助詞を用いた<span class="cloze">多語文</span>を話すようになり、日常会話が可能となる。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問4 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">発達・社会性</span>
+                        <div>「ギャング・エイジ」について説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            <span class="cloze">小学校中学年</span>頃（9歳頃）から見られる、同性・同年代の仲間で作られる排他的な小集団の時期を指す。教師や親など大人の干渉や権威を拒絶し、自分たちだけの秘密やルールを共有することで強い<span class="cloze">連帯感</span>を持つ。この集団での活動を通して、対人関係のスキルや社会性、集団のルールなどを学んでいく。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 追加: ピアジェ -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">発達</span>
+                        <div>ピアジェの認知発達段階における「前操作期」と「具体的操作期」の違いを説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            前操作期（2〜7歳頃）は、言葉やイメージを使えるようになるが、思考は<span class="cloze">自己中心的</span>であり、他者の視点に立つことが難しい。また、見かけの変化に惑わされやすく、<span class="cloze">保存</span>の概念が未獲得である。一方、具体的操作期（7〜11歳頃）は、<span class="cloze">脱中心化</span>が進み他者の視点を理解できるようになる。保存の概念も獲得し、具体的な事物に関してであれば論理的な操作が可能となる。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 追加: エリクソン -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">発達</span>
+                        <div>エリクソンの青年期の発達課題について説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            エリクソンは青年期の心理社会的危機を「<span class="cloze">同一性</span> 対 同一性拡散」とした。自分は何者であり、社会の中でどう生きていくかという一貫した自己感覚（<span class="cloze">アイデンティティ</span>）を確立することが課題である。この課題に取り組むための社会的責任の猶予期間を<span class="cloze">心理的モラトリアム</span>と呼ぶ。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 追加: 学習・動機づけ -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">学習・動機づけ</span>
+                        <div>「内発的動機づけ」と「外発的動機づけ」の違い、および指導上の留意点を説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            内発的動機づけは、興味や関心など活動そのものを目的とする意欲であり、外発的動機づけは、報酬や賞罰など活動を手段とする意欲である。指導においては、持続性の高い内発的動機づけを重視すべきだが、きっかけとして外発的動機づけを用いることも有効である。ただし、内発的に動機づけられている行動に報酬を与えると意欲が低下する<span class="cloze">アンダーマイニング効果</span>に注意が必要である。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 追加: ピグマリオン効果 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">教育心理</span>
+                        <div>「ピグマリオン効果」について説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            教師が児童生徒に対して「成績が伸びる」などの肯定的<span class="cloze">期待</span>を持つと、無意識のうちに熱心な指導や励ましなどの行動変容が起き、実際に児童生徒の成績が向上する現象を指す。ローゼンソールらが提唱したため、教師期待効果とも呼ばれる。逆に、期待されないことで成績が低下する現象を<span class="cloze">ゴーレム効果</span>という。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 追加: 適性処遇交互作用 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">学習指導</span>
+                        <div>適性処遇交互作用（ATI）について説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            <span class="cloze">クロンバック</span>が提唱した理論で、どのような学習者にも効果的な唯一絶対の指導法（処遇）は存在せず、学習者の性格や能力などの<span class="cloze">適性</span>と、指導法との組み合わせによって学習効果が異なるという考え方である。教師は個々の児童生徒の適性を把握し、それに適した指導法を選択する必要がある。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 追加: いじめ -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">生徒指導</span>
+                        <div>いじめの「四層構造」について説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            いじめを加害者と被害者の二者関係だけで捉えるのではなく、周囲の集団を含めた構造として捉える考え方。いじめをはやし立てたり面白がったりする「<span class="cloze">観衆</span>」と、見て見ぬふりをして暗黙の了解を与える「<span class="cloze">傍観者</span>」が存在し、これらが数において大多数を占める。いじめ解決には、この層へ働きかけ、いじめを許さない雰囲気を醸成することが重要である。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問12 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">学級集団</span>
+                        <div>「集団規範（学級規範）」とはどのようなものか説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            集団成員の行動様式や考えが似てくることを<span class="cloze">斉一化</span>と呼び、それが行動の判断基準となったものを集団規範と呼ぶ。規範が形成されると、成員を従わせようとする<span class="cloze">集団圧力</span>（同調圧力）が発生する。学級規範には、暗黙的な規範と、学級目標などの<span class="cloze">明文化</span>された規範がある。適切な規範の形成は、学級がまとまり機能するために不可欠である。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問13 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">特別支援</span>
+                        <div>21世紀の社会における障害のとらえかたについて、過去との比較を交えて説明せよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label">【模範解答】</div>
+                        <div class="model-answer">
+                            かつては障害を個人の病気や欠損と捉え、治療による正常化を目指す「<span class="cloze">医学モデル</span>」が主流であった。しかし1980年のWHOの提案以降、障害を環境との相互作用による社会的な不利と捉える「<span class="cloze">社会モデル</span>（心理・社会モデル）」へと移行した。これにより、個人の治療だけでなく、環境の改善や<span class="cloze">合理的配慮</span>によって障害を軽減し、共に生きる<span class="cloze">共生社会</span>の実現を目指す考え方が定着している。
+                        </div>
+                        <div class="explanation">
+                            <i data-lucide="info" style="width:16px; display:inline; vertical-align:middle;"></i> <strong>ポイント：</strong> 医学モデルから社会モデルへの転換、そしてインクルーシブ教育や共生社会への流れを記述できるようにしましょう。
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- Topへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Topへ戻るボタン制御
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 虫食い機能
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) cloze.classList.add('revealed');
+                else cloze.classList.remove('revealed');
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+                toggleAllBtn.classList.add('active');
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+                toggleAllBtn.classList.remove('active');
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const revealedCount = document.querySelectorAll('.cloze.revealed').length;
+            if (revealedCount === clozes.length) {
+                allRevealed = true;
+            } else if (revealedCount === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+    </script>
+</body>
+</html>
