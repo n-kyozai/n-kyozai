@@ -20,6 +20,8 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html { scroll-behavior: smooth; }
+
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
@@ -261,6 +263,11 @@
             border-bottom-color: #db2777;
         }
 
+        .cloze.revealed:hover {
+            opacity: 1;
+            cursor: default;
+        }
+
         .cloze:hover {
             opacity: 0.8;
         }
@@ -270,6 +277,38 @@
             color: #334155;
             background: linear-gradient(transparent 60%, #fef08a 60%); /* 黄色マーカー */
             padding: 0 2px;
+        }
+
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #374151; /* Dark Gray */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: #1f2937;
+            transform: translateY(-2px);
         }
 
         footer {
@@ -305,7 +344,8 @@
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
         <nav class="nav-menu">
             <div class="nav-category">MAIN</div>
-            <a href="../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            <!-- ホーム：3つ上の階層に変更 -->
+            <a href="../../../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
             <div class="nav-category">教養・指導要領</div>
             <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
@@ -313,17 +353,15 @@
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
 
             <div class="nav-category">専門科目</div>
-            <!-- 具体的な科目リンクを削除し、専門科目トップへのリンクに変更 -->
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
-
-            <!-- 演習カテゴリを削除 -->
         </nav>
     </aside>
 
     <main class="main-content">
         <div class="page-header">
             <div class="breadcrumb">
-                <a href="../index.html">ホーム</a> ＞ <a href="../../pedagogy/index.html">教職教養</a> ＞ <a href="./educational-psychology.html">教育心理</a> ＞ 教育心理学とは何か
+                <!-- パンくずリスト：3つ上の階層に変更 -->
+                <a href="../../../index.html">ホーム</a> ＞ <a href="../../pedagogy/index.html">教職教養</a> ＞ <a href="../educational-psychology.html">教育心理</a> ＞ 教育心理学とは何か
             </div>
             <h1 style="font-size: 1.4rem; color: var(--primary-color);">教育心理学とは何か</h1>
         </div>
@@ -431,6 +469,11 @@
         </footer>
     </main>
 
+    <!-- Topへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
     <script>
         lucide.createIcons();
 
@@ -500,6 +543,27 @@
             }
             updateToggleButton();
         }
+
+        // Topへ戻るボタン制御
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        // スクロール検知
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        // クリックイベント
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
     </script>
 </body>
 </html>
