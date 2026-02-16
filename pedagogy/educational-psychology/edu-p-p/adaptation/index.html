@@ -1,0 +1,658 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>適応 - 教育心理学演習</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* Violet */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px; /* カード3列表示のために幅を確保 */
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* まとめセクション */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .summary-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* 3列カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+        }
+        
+        /* デスクトップで3列 */
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.6; flex-grow: 1; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 0 4px; border-radius: 2px; }
+
+        /* クイズセクション */
+        .quiz-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none; /* 初期状態は非表示 */
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        /* クイズレイアウト（2カラム） */
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左：問題、右：解説 */
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
+        .question-meta {
+            display: flex; justify-content: space-between; 
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1; /* 全幅 */
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: var(--primary-color);
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            background: #f5f3ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* 解説・次へボタン */
+        .feedback-area {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        .next-btn:active { transform: translateY(2px); }
+
+        /* 結果画面 */
+        .result-screen {
+            text-align: center;
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: #1e293b; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-p/index.html">問題演習１</a> ＞ 
+                    適応
+                </div>
+                <h1 class="main-title"><i data-lucide="heart-handshake"></i>適応（欲求・防衛機制）</h1>
+            </div>
+
+            <!-- まとめセクション -->
+            <div id="summary-section">
+                <div class="summary-card">
+                    <h2 class="summary-header"><i data-lucide="book-open-check"></i>学習のポイント：適応と不適応</h2>
+                    
+                    <div class="card-grid">
+                        
+                        <!-- 1. 欲求階層説 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="layers"></i>マズローの欲求階層説</div>
+                            <div class="info-content">
+                                <p><strong>低次から高次への5段階</strong>：</p>
+                                <ol style="padding-left:1.4em; margin:4px 0;">
+                                    <li><span class="keyword">生理的</span>欲求</li>
+                                    <li>安全の欲求</li>
+                                    <li><span class="keyword">所属と愛情</span>の欲求</li>
+                                    <li>承認と尊重の欲求</li>
+                                    <li><span class="keyword">自己実現</span>の欲求</li>
+                                </ol>
+                                <p class="mt-2">下位4つは<strong>欠乏欲求</strong>、自己実現は<strong>成長欲求</strong>。</p>
+                            </div>
+                        </div>
+
+                        <!-- 2. 適応機制 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="shield"></i>防衛機制（フロイト）</div>
+                            <div class="info-content">
+                                <p>不安や葛藤から自我を守る無意識の働き。</p>
+                                <p><strong>抑圧</strong>：不快な記憶を無意識に押し込める。</p>
+                                <p><strong>投射（投影）</strong>：自分の感情を他人のものと思い込む。</p>
+                                <p><strong>反動形成</strong>：本心と裏腹の行動をとる。</p>
+                                <p><strong>退行</strong>：幼い段階に戻る。</p>
+                                <p><strong>昇華</strong>：社会的に価値ある行動へ置き換える。</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. その他の適応機制 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="shuffle"></i>その他の適応機制</div>
+                            <div class="info-content">
+                                <p><strong>合理化</strong>：もっともらしい理屈をつけて正当化する（酸っぱい葡萄）。</p>
+                                <p><strong>補償</strong>：劣等感を他の分野での優越感で補う。</p>
+                                <p><strong>同一化</strong>：他者の特性を自分のもののようにみなす。</p>
+                                <p><strong>置き換え（代償）</strong>：欲求の対象を別のものにすり替える（八つ当たりなど）。</p>
+                                <p><strong>逃避</strong>：困難な場面から逃げる（空想への逃避など）。</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startQuiz()">
+                    <i data-lucide="play-circle" style="margin-right: 8px;"></i>問題演習を開始する
+                </button>
+            </div>
+
+            <!-- クイズセクション -->
+            <div id="quiz-section" class="quiz-container">
+                <div class="question-card">
+                    <div class="question-meta">
+                        <span>Question <span id="q-number">1</span></span>
+                        <span>全6問</span>
+                    </div>
+
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
+
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
+
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-section" class="result-screen">
+                <h2><i data-lucide="award" style="vertical-align: middle; color: var(--accent-color);"></i> 演習結果</h2>
+                <div class="score-display">
+                    <span id="score-num">0</span> / 6 問正解
+                </div>
+                <p id="result-msg" style="margin-bottom: 30px; font-weight: bold; color: #64748b;"></p>
+                
+                <button class="start-btn" style="margin: 0 auto; background: #64748b;" onclick="resetToSummary()">
+                    <i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>戻る
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                q: "【問題10】次のア~オの記述のうち、マズローの欲求階層説について正しく述べているものの組合せとして、最も適切なものを選びなさい。<br><br>ア 最も低次の欲求は「安全の欲求」であり、安全性、よい健康状態の維持など、予測可能で秩序だった状態を得ようとする欲求のことをいう。<br>イ 「所属と愛情の欲求」とは、人に愛されたい、仲間がほしいという欲求であり、これが満たされないと非社会的,反社会的行動を引き起こす可能性がある。<br>ウ マズローは、人間の欲求は低次の欲求が満たされていなくても、年齢が上がるに伴って高次の欲求が順に現れると提言している。<br>エ 低次の欲求は欠乏欲求とよばれ、一般に他者によって実現されるものであり、高次の欲求は、成長したいという動機づけによって行動に駆り立てられるものであると考えられている。<br>オ 最も高次の欲求は「自立の欲求」であり、自分の可能性を発揮し、具現化したいという欲求のことをいう。",
+                options: [
+                    "アとイ",
+                    "ウとエ",
+                    "イとエ",
+                    "アとオ",
+                    "ウとオ"
+                ],
+                answer: 2, // 3番目が正解
+                exp: "<strong>正解：3 (イとエ)</strong><br>ア：最も低次は<strong>生理的欲求</strong>です。<br>ウ：低次の欲求が（ある程度）満たされて初めて高次の欲求が現れるとしました。<br>オ：最も高次は<strong>自己実現の欲求</strong>です。"
+            },
+            {
+                q: "【問題11】マズローの欲求階層説において、最も低次の①欲求から、最も高次の②欲求まで、5段階に整理される。正しい組み合わせは？",
+                options: [
+                    "①精神的　②自己尊重",
+                    "①精神的　②自己実現",
+                    "①生理的　②自己尊重",
+                    "①生理的　②自己実現"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>低次から順に、<strong>生理的</strong>→安全→所属と愛情→承認（尊重）→<strong>自己実現</strong>となります。"
+            },
+            {
+                q: "【問題12】次のア〜エの適応機制(防衛機制)と名称の組合せとして最も適切なものを選びなさい。<br><br>ア 承認したくない欲求や行為に適当な理由を付けて正当化すること。<br>イ 自己の欲求、感情等を他人のうちにあるものとみること。<br>ウ 自分の弱点を克服するよりも他の特徴を伸ばすことで、心理的な安定を図ろうとすること。<br>エ 社会的に容認されない欲求を、社会的に承認される他の形に置き換えること。",
+                options: [
+                    "ア:補償 イ:投射 ウ:昇華 エ:合理化",
+                    "ア:合理化 イ:投射(投影) ウ:補償 エ:昇華",
+                    "ア:合理化 イ:補償 ウ:昇華 エ:投射",
+                    "ア:投射 イ:昇華 ウ:合理化 エ:補償",
+                    "ア:合理化 イ:補償 ウ:投射 エ:昇華"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>ア：<strong>合理化</strong>（理屈づけ）<br>イ：<strong>投射（投影）</strong>（自分の気持ちを他人のものとする）<br>ウ：<strong>補償</strong>（劣等感を他で補う）<br>エ：<strong>昇華</strong>（価値ある行動へ置換）"
+            },
+            {
+                q: "【問題13】防衛機制に関する記述A~Dと語句ア~クの正しい組合せを選びなさい。<br><br>A 自己の攻撃的感情を抑圧して、相手が自分を攻撃していると思い込む。<br>B 自分の行動や態度の本当の動機を隠して、もっともらしい理由を意識的に考えて、自らを正当化しようとする。<br>C 無能力感・劣等感をカバーしたり、他の望ましい特性を強調したりすることによって、特定の領域の欲求不満を補おうとする。<br>D 適応困難な事態で、より幼い発達段階に退却して、その段階で満足を得ようとする。<br><br>【語群】ア:昇華 イ:投射 ウ:合理化 エ:反動形成 オ:補償 カ:同一化 キ:逃避 ク:退行",
+                options: [
+                    "A:ア B:ウ C:オ D:ク",
+                    "A:ア B:ウ C:カ D:ク",
+                    "A:オ B:キ C:ア D:エ",
+                    "A:イ B:ウ C:オ D:ク",
+                    "A:カ B:キ C:イ D:エ"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>A：<strong>投射(イ)</strong><br>B：<strong>合理化(ウ)</strong><br>C：<strong>補償(オ)</strong><br>D：<strong>退行(ク)</strong>"
+            },
+            {
+                q: "【問題14】防衛機制に関わる用語について正しいものの組合せを選びなさい。<br><br>ア 投射：抑圧された衝動や感情、欲求と正反対の行動をとり、危険な衝動や感情、欲求が表出するのを防ぐこと<br>イ 置き換え：自分にとって認めたくない内的な感情や欲求、考えを無意識的に他者がもっているかのように反応する心の働きのこと<br>ウ 反動形成：特定の対象への感情を、最初にその感情を引き起こした対象より危険の少ない対象または無害の対象に移しかえて心の緊張状態を解消しようとすること<br>エ 抑圧：危険な考えや不都合な感情を意識にのぼらないように防ぎ、無意識下に閉じ込めること<br>オ 退行：適応困難な事態で、より幼い発達段階に退却して、その段階で満足を得ようとすること",
+                options: [
+                    "ア、イ",
+                    "ア、ウ",
+                    "ア、エ",
+                    "ア、オ",
+                    "エ、オ"
+                ],
+                answer: 4,
+                exp: "<strong>正解：5 (エ、オ)</strong><br>ア：記述は「反動形成」です。<br>イ：記述は「投射」です。<br>ウ：記述は「置き換え」です。<br>エ・オ：正しい記述です。"
+            },
+            {
+                q: "【問題15】次の記述ア・イの適応機制として最も適切な組合せを選びなさい。<br><br>ア 生徒Xは試合でのミスでチームが負けた際、「不慣れな会場だったし、雨も降ってきていつもの力が出せなかった」と言った。<br>イ 生徒Yは、自分がテストで100点を取れず悔しかったが、98点を取って悔しがる生徒Zを見て「点数にこだわりすぎでみっともない」と非難した。",
+                options: [
+                    "ア:克服困難な状況に対して合理的な解決を避ける(逃避)　イ:欲求不満の対象を攻撃する(攻撃)",
+                    "ア:克服困難な状況に対して合理的な解決を避ける(逃避)　イ:自分の好ましくない特質を他者に見出す(投射)",
+                    "ア:自分の弱点や失敗にもっともらしい理屈づけをする(合理化)　イ:欲求不満の対象を攻撃する(攻撃)",
+                    "ア:自分の弱点や失敗にもっともらしい理屈づけをする(合理化)　イ:自分の好ましくない特質を他者に見出す(投射)",
+                    "ア:欲求不満の対象を攻撃する(攻撃)　イ:自分の好ましくない特質を他者に見出す(投射)"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>ア：失敗をもっともらしい理由（雨や会場のせい）で正当化しているので<strong>合理化</strong>です。<br>イ：自分が点数にこだわって悔しいという感情を認めず、相手がこだわっているとして非難しているので<strong>投射</strong>です。"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function startQuiz() {
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('q-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const optionsContainer = document.getElementById('options-area');
+            optionsContainer.innerHTML = '';
+
+            // 次へボタンと解説を隠す
+            document.getElementById('next-area').style.display = 'none';
+            document.getElementById('feedback-area').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="font-weight:bold; margin-right:8px;">${index + 1}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-btn');
+
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === q.answer) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                options[q.answer].classList.add('correct');
+            }
+
+            document.getElementById('explanation-content').innerHTML = q.exp;
+            document.getElementById('feedback-area').style.display = 'block';
+            
+            // 選択肢の上に次へボタンを表示
+            const nextArea = document.getElementById('next-area');
+            nextArea.style.display = 'block';
+            
+            const nextBtn = nextArea.querySelector('button');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
+            } else {
+                nextBtn.innerHTML = '次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle;"></i>';
+            }
+            
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('score-num').textContent = score;
+            
+            let msg = "";
+            if (score === 6) msg = "完璧です！適応機制をしっかり理解しています。";
+            else if (score >= 4) msg = "合格圏内です。間違えた問題を見直しましょう。";
+            else msg = "もう一度まとめを読んで、用語の定義を確認しましょう。";
+            
+            document.getElementById('result-msg').textContent = msg;
+        }
+
+        function resetToSummary() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
