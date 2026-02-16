@@ -1,0 +1,550 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>適応の理解と支援 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー（Violet） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        /* 暗記ノート風スタイル */
+        .note-container {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .note-header {
+            background-color: #ede9fe; /* 薄い紫 */
+            padding: 16px 24px;
+            border-bottom: 1px solid #ddd6fe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5b21b6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toggle-all-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .note-content {
+            padding: 24px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #4c1d95;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 32px 0 16px 0;
+        }
+        h3:first-child { margin-top: 0; }
+
+        h4 {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #5b21b6;
+            margin: 20px 0 12px 0;
+        }
+
+        .note-section {
+            margin-bottom: 24px;
+        }
+        
+        .note-text {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .note-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .note-list li {
+            margin-bottom: 8px;
+            padding-left: 1.2em;
+            position: relative;
+        }
+
+        .note-list li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 暗記マーカー */
+        .cloze {
+            display: inline-block;
+            background-color: #c4b5fd; /* 隠れている時の色 */
+            color: transparent; /* 文字を透明に */
+            border-bottom: 2px solid #7c3aed;
+            padding: 0 4px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none; /* 選択不可 */
+            transition: all 0.2s ease;
+            font-weight: bold;
+            min-width: 1.5em;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .cloze.revealed {
+            background-color: transparent;
+            color: #db2777; /* 正解の色（ピンク） */
+            border-bottom-color: #db2777;
+        }
+
+        .cloze.revealed:hover {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .cloze:hover {
+            opacity: 0.8;
+        }
+
+        .important-text {
+            font-weight: bold;
+            color: #334155;
+            background: linear-gradient(transparent 60%, #fef08a 60%); /* 黄色マーカー */
+            padding: 0 2px;
+        }
+
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #374151; /* Dark Gray */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: #1f2937;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                適応の理解と支援
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">適応の理解と支援</h1>
+        </div>
+
+        <div class="container">
+            
+            <div class="note-container">
+                <div class="note-header">
+                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
+                    <button class="toggle-all-btn" id="toggleAllBtn">
+                        <i data-lucide="eye"></i> すべて表示
+                    </button>
+                </div>
+                <div class="note-content">
+                    
+                    <h3>1. 防衛機制（適応機制）</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            フロイトによれば、自我が耐えがたい苦痛や情緒にさらされたとき、それを回避しようとする無意識的な心の働きを<span class="cloze">防衛機制</span> (defense mechanism) と呼ぶ。
+                            これは内外の<span class="cloze">環境への適応</span>のために人がとりうる方法の一部であり、<span class="cloze">適応機制</span>に含まれる。
+                        </p>
+                        <p class="note-text">
+                            （例：抑圧、退行、投影、合理化、昇華など。習慣化すると不登校等の不適応に繋がることもある）
+                        </p>
+                    </div>
+
+                    <h3>2. 不適応への介入技法（心理療法）</h3>
+                    <div class="note-section">
+                        <h4>(1) 行動論的アプローチ（行動療法）</h4>
+                        <p class="note-text">
+                            学習理論に基づき、不適応行動の変容を図る技法。
+                        </p>
+                        <div class="ml-6 pl-6 mb-4 text-gray-700">
+                            <p class="mb-1">① <strong><span class="cloze">系統的脱感作法</span>：</strong>ウォルピが考案。リラクセーションと不安階層表を使い、低い不安から順に慣れさせて<span class="cloze">不安</span>を制止する。</p>
+                            <p class="mb-1">② <strong>トークンエコノミー法：</strong>望ましい行動に対し代用貨幣（トークン）を与えて強化する。</p>
+                            <p class="mb-1">③ <strong>タイムアウト法：</strong>問題行動時に、正の強化子（仲間との活動等）を一定期間除去する（<span class="cloze">負の罰</span>）。</p>
+                            <p class="mb-1">④ <strong>シェーピング法：</strong>目標行動までを段階的に分け、<span class="cloze">スモールステップ</span>で強化する。</p>
+                            <p>⑤ <strong>モデリング法：</strong>他者の適切な行動を観察させることで学習を促す（社会的学習理論）。</p>
+                        </div>
+
+                        <h4>(2) 認知論的アプローチ（認知行動療法）</h4>
+                        <p class="note-text">
+                            思考パターンや信念のあり方に働きかけるアプローチ。
+                        </p>
+                        <div class="ml-6 pl-6 mb-4 text-gray-700">
+                            <p class="mb-1">① <strong>エリスの論理療法：</strong><span class="cloze">ABC図式</span>（出来事-信念-結果）を用いる。不合理な信念（<span class="cloze">イラショナル・ビリーフ</span>）を論破し、合理的なものへ修正する。</p>
+                            <p>② <strong>ベックの認知療法：</strong>うつ状態等の改善に有効。自動思考やその根底にある<span class="cloze">スキーマ</span>を探り、<span class="cloze">認知の歪み</span>を修正する（5つのコラム法など）。</p>
+                        </div>
+
+                        <h4>(3) 精神分析的アプローチ</h4>
+                        <p class="note-text">
+                            フロイトが提唱。<span class="cloze">無意識</span>に押し込められた体験（抑圧）を<span class="cloze">意識化</span>し、洞察することで症状の消失を目指す。
+                        </p>
+                        <div class="ml-6 pl-6 mb-4 text-gray-700">
+                            <p class="mb-1">① <strong>自由連想法：</strong>心に浮かぶことを何でも語らせる。</p>
+                            <p>② <strong>夢分析：</strong>睡眠中の自我が緩んだときに出る夢を素材に自己理解を深める。</p>
+                        </div>
+                        <p class="note-text">
+                            ユングの分析心理学では、意識と無意識の<span class="cloze">バランス</span>を重視し、箱庭療法やコラージュ等の<span class="cloze">創造的活動</span>も用いる。
+                        </p>
+
+                        <h4>(4) ヒューマニスティックアプローチ</h4>
+                        <p class="note-text">
+                            人間の自己成長能力を信頼する。ロジャースの<span class="cloze">来談者中心療法</span>が代表的で、<span class="cloze">非指示的</span>カウンセリングとも呼ばれる。
+                        </p>
+                        <!-- 黄色のマーカーを削除し、太字のデザインに変更 -->
+                        <p style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【治療者の3原則】</p>
+                        <div class="ml-6 pl-6 mb-4 text-gray-700">
+                            <p class="mb-1">① <strong>自己一致：</strong>カウンセラーが自分の内側にも誠実であること。</p>
+                            <p class="mb-1">② <strong>無条件の肯定的関心（<span class="cloze">受容</span>）：</strong>あるがままの相手を受け入れること。</p>
+                            <p>③ <strong><span class="cloze">共感的理解</span>：</strong>相手の内面を内側から理解し、それを伝達すること。</p>
+                        </div>
+
+                        <h4>(5) システム理論と家族療法</h4>
+                        <p class="note-text">
+                            家族を一つのまとまったシステムと見なす。個人の問題をその人だけのせいにせず、家族という<span class="cloze">システム</span>の修正を図る。
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- Topへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            document.body.style.overflow = isActive ? '' : 'hidden';
+            lucide.createIcons();
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // 暗記マーカー制御
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        // 個別のクリックイベント
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        // すべて表示ボタン
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) {
+                    cloze.classList.add('revealed');
+                } else {
+                    cloze.classList.remove('revealed');
+                }
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+                toggleAllBtn.classList.add('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.remove('bg-white', 'text-indigo-600');
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+                toggleAllBtn.classList.remove('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.add('bg-white', 'text-indigo-600');
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const all = clozes.length;
+            const revealed = document.querySelectorAll('.cloze.revealed').length;
+            if (revealed === all) {
+                allRevealed = true;
+            } else if (revealed === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+
+        // Topへ戻るボタン制御
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+    </script>
+</body>
+</html>
