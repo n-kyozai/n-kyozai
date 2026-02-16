@@ -63,7 +63,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px; /* カード3列対応のため幅を拡大 */
             margin: 0 auto;
         }
 
@@ -94,40 +94,44 @@
             color: var(--accent-color);
             border-bottom: 2px solid #f1f5f9;
             padding-bottom: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
             display: flex; align-items: center; gap: 8px;
         }
 
-        .note-section h3 {
-            font-size: 1rem;
-            color: var(--primary-color);
-            border-left: 4px solid var(--accent-color);
-            padding-left: 10px;
-            margin: 24px 0 12px 0;
-        }
-        
-        .note-text { margin-bottom: 12px; font-size: 0.95rem; }
-        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 2px 4px; border-radius: 4px; }
-
-        .person-grid {
+        /* 3列カードグリッド */
+        .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
-        .person-item {
-            background: #f8fafc;
-            padding: 16px;
-            border-radius: 8px;
+        .info-card {
+            background: #fff;
             border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%;
         }
-        .person-name { font-weight: bold; color: var(--primary-color); display: block; margin-bottom: 6px; }
-        .person-desc { font-size: 0.9rem; color: #475569; }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.6; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 0 4px; border-radius: 2px; }
 
         /* クイズセクション */
         .quiz-container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             display: none;
         }
@@ -141,10 +145,27 @@
             margin-bottom: 24px;
         }
 
+        /* 2カラムレイアウト用コンテナ */
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
         .question-meta {
             display: flex; justify-content: space-between; 
             color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
             border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1;
         }
 
         .question-text {
@@ -194,18 +215,18 @@
 
         /* 解説・次へボタン */
         .feedback-area {
-            margin-top: 24px;
             display: none;
             animation: fadeIn 0.3s ease;
         }
 
         .explanation-box {
-            background: #f1f5f9;
-            padding: 20px;
+            background: #f8fafc;
+            padding: 24px;
             border-radius: 12px;
-            margin-bottom: 16px;
             font-size: 0.95rem;
             border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
         }
 
         .next-btn {
@@ -234,6 +255,8 @@
             border-radius: 16px;
             box-shadow: var(--shadow);
             border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .score-display {
@@ -277,7 +300,7 @@
             .main-content { margin-left: 0; padding: 16px; }
             .mobile-toggle-btn { display: flex; }
             .container { padding-top: 40px; }
-            .person-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -323,42 +346,71 @@
             <!-- まとめセクション -->
             <div id="summary-section">
                 <div class="summary-card">
-                    <h2 class="summary-header"><i data-lucide="user-check"></i>重要人物とキーワードまとめ</h2>
-                    <p style="margin-bottom: 24px; color: #64748b;">学習理論（行動論・認知論）、記憶、動機づけに関する重要人物です。</p>
+                    <h2 class="summary-header"><i data-lucide="book-open-check"></i>学習のポイント：学習理論と重要人物</h2>
+                    <p style="margin-bottom: 24px; color: #64748b;">学習理論（行動論・認知論）、記憶、動機づけに関する重要人物とキーワードを整理しましょう。</p>
                     
-                    <div class="person-grid">
-                        <div class="person-item">
-                            <span class="person-name">パブロフ (Pavlov)</span>
-                            <span class="person-desc"><span class="keyword">レスポンデント条件づけ</span>（古典的条件づけ）。条件反射の研究。</span>
+                    <div class="card-grid">
+                        
+                        <!-- 1. 行動論 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="zap"></i>行動論的アプローチ</div>
+                            <div class="info-content">
+                                <p><strong>パブロフ</strong>：<span class="keyword">レスポンデント条件づけ</span>（古典的条件づけ）。犬の唾液分泌実験。</p>
+                                <p><strong>ソーンダイク</strong>：猫の問題箱。<span class="keyword">試行錯誤説</span>、効果の法則（満足な結果が結合を強める）。</p>
+                                <p><strong>スキナー</strong>：<span class="keyword">オペラント条件づけ</span>。自発的な行動に対する強化。プログラム学習。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">ソーンダイク (Thorndike)</span>
-                            <span class="person-desc">猫の問題箱実験。<span class="keyword">試行錯誤説</span>、効果の法則。結合主義。</span>
+
+                        <!-- 2. 認知論 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="brain-circuit"></i>認知論的アプローチ</div>
+                            <div class="info-content">
+                                <p><strong>ケーラー</strong>：チンパンジーの実験。<span class="keyword">洞察説</span>（全体構造の把握による解決）。ゲシュタルト心理学。</p>
+                                <p><strong>トールマン</strong>：ネズミの迷路実験。<span class="keyword">サイン・ゲシュタルト説</span>（認知地図の形成）。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">スキナー (Skinner)</span>
-                            <span class="person-desc"><span class="keyword">オペラント条件づけ</span>（道具的条件づけ）。スキナー箱。プログラム学習。</span>
+
+                        <!-- 3. 社会的学習 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="users"></i>社会的学習</div>
+                            <div class="info-content">
+                                <p><strong>バンデューラ</strong>：<span class="keyword">観察学習</span>（モデリング）。他者の行動とその結果を見るだけで学習が成立する。</p>
+                                <p><span class="keyword">自己効力感</span>（セルフ・エフィカシー）：課題を遂行できるという確信。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">ケーラー (Köhler)</span>
-                            <span class="person-desc"><span class="keyword">洞察説</span>。チンパンジーの実験。ゲシュタルト心理学。</span>
+
+                        <!-- 4. 動機づけ -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="flame"></i>動機づけ</div>
+                            <div class="info-content">
+                                <p><strong>内発的動機づけ</strong>：活動自体が目的。</p>
+                                <p><strong>外発的動機づけ</strong>：賞罰などが目的。</p>
+                                <p><strong>デシ</strong>：<span class="keyword">アンダーマイニング効果</span>（報酬による意欲低下）と自己決定理論。</p>
+                                <p><strong>アトキンソン</strong>：達成動機＝(成功動機－失敗回避動機)×確率×価値。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">トールマン (Tolman)</span>
-                            <span class="person-desc"><span class="keyword">サイン・ゲシュタルト説</span>（認知説）。ネズミの迷路実験。認知地図。</span>
+
+                        <!-- 5. 記憶 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="hard-drive"></i>記憶と忘却</div>
+                            <div class="info-content">
+                                <p><strong>エビングハウス</strong>：無意味綴りの実験。<span class="keyword">忘却曲線</span>。</p>
+                                <p><strong>宣言的記憶</strong>：言葉で記述できる（エピソード記憶・意味記憶）。</p>
+                                <p><strong>手続き的記憶</strong>：技能やノウハウ。</p>
+                                <p><strong>精緻化リハーサル</strong>：意味づけや関連付けを行う記憶方略。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">バンデューラ (Bandura)</span>
-                            <span class="person-desc">社会的学習理論（<span class="keyword">観察学習</span>、モデリング）。<span class="keyword">自己効力感</span>（セルフ・エフィカシー）。</span>
+
+                        <!-- 6. その他の重要概念 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="puzzle"></i>その他の概念</div>
+                            <div class="info-content">
+                                <p><strong>学習の転移</strong>：前の学習が後の学習に影響する（正の転移／負の転移）。</p>
+                                <p><strong>メタ認知</strong>：自分の認知プロセスを客観的に捉え、制御すること。</p>
+                                <p><strong>学習性無力感</strong>：セリグマン提唱。不可避な不快刺激による無気力。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">エビングハウス (Ebbinghaus)</span>
-                            <span class="person-desc">忘却曲線。無意味綴りを用いた記憶の実験的研究。</span>
-                        </div>
-                        <div class="person-item">
-                            <span class="person-name">デシ (Deci)</span>
-                            <span class="person-desc"><span class="keyword">内発的動機づけ</span>。アンダーマイニング効果。自己決定理論。</span>
-                        </div>
+
                     </div>
                 </div>
 
@@ -374,27 +426,35 @@
                         <span>Question <span id="q-number">1</span></span>
                         <span>全9問</span>
                     </div>
-                    
-                    <div id="question-text" class="question-text">
-                        <!-- 問題文 -->
-                    </div>
-                    
-                    <!-- 選択肢の上に「次へ」ボタンエリアを配置 (初期は非表示) -->
-                    <div id="next-area" style="display: none; margin-bottom: 20px;">
-                        <button class="next-btn" onclick="nextQuestion()">
-                            次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
-                        </button>
-                    </div>
 
-                    <div id="options-area" class="option-container">
-                        <!-- 選択肢 -->
-                    </div>
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
 
-                    <div id="feedback-area" class="feedback-area">
-                        <div class="explanation-box">
-                            <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
-                            <div id="explanation-content">
-                                <!-- 解説本文 -->
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
+
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -422,10 +482,10 @@
             {
                 q: "【問題6】心理学の研究に携わった人物に関する記述として適切なものを一つ選びなさい。",
                 options: [
-                    "ハーローは、空腹のネコを問題箱に入れ、試行錯誤説を唱えた。効果の法則を挙げた。",
-                    "ウェクスラーは、言語性検査と動作性検査とによって構成される知能検査(WISCやWAIS)を開発した。",
+                    "ハーローは、空腹のネコやイヌを問題箱の中に入れ、学習の試行錯誤説を唱えた。",
+                    "ウェクスラーは、個人の知能を診断的に捉える、言語性検査と動作性検査とによって構成される知能検査(WISCやWAIS)を開発した。",
                     "ソーンダイクは、無意味綴りを用いた忘却リストの研究を行い、保持曲線を示した。",
-                    "エビングハウスは、ネズミの行動研究（オペラント行動）を行い、ティーチングマシンを開発した。",
+                    "エビングハウスは、自ら装置を考案し、その装置の中でてこ押しを学習するネズミの行動の研究（オペラント行動）を行った。",
                     "スキナーは、アカゲザルの代理母実験を行い、愛着（安全基地）の機能を明らかにした。"
                 ],
                 answer: 1, 
@@ -613,8 +673,8 @@
             document.getElementById('score-num').textContent = score;
             
             let msg = "";
-            if (score === 9) msg = "完璧です！学習理論をマスターしています。";
-            else if (score >= 6) msg = "合格圏内です。間違えた問題を見直しましょう。";
+            if (score === 9) msg = "素晴らしい！学習理論をマスターしています。";
+            else if (score >= 6) msg = "合格圏内です。間違えた箇所を復習しましょう。";
             else msg = "もう一度まとめを読んで、理論と人物を整理しましょう。";
             
             document.getElementById('result-msg').textContent = msg;
