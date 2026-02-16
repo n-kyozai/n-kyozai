@@ -1,0 +1,454 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記述対策(実践) - 教育心理学</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e11d48; /* 実践編は赤系(Rose)で区別 */
+            --bg-color: #fff1f2;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: #f8fafc; /* 背景は落ち着いた色に戻す */
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #fff1f2; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 24px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* コントロールバー */
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .toggle-all-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-all-btn:hover { opacity: 0.9; }
+        .toggle-all-btn.active { background-color: #475569; }
+
+        /* 問題カード */
+        .q-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .q-header {
+            background: #fff1f2;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: bold;
+            color: #9f1239;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .q-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            margin-top: 3px;
+        }
+
+        .q-body {
+            padding: 24px;
+        }
+
+        .q-question-text {
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+            line-height: 1.6;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #94a3b8;
+        }
+
+        .model-answer {
+            line-height: 2.2; /* 虫食いを読みやすく */
+            font-size: 1rem;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .answer-label {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 虫食いスタイル */
+        .cloze {
+            display: inline-block;
+            background-color: #fda4af; /* 隠れている色(薄い赤) */
+            color: transparent;
+            border-bottom: 2px solid #e11d48;
+            padding: 0 6px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+            font-weight: bold;
+            min-width: 3em;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .cloze.revealed {
+            background-color: transparent;
+            color: #be123c; /* 正解色 */
+            border-bottom-color: #be123c;
+        }
+
+        .cloze:hover { opacity: 0.8; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+        
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background-color: #374151; color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            z-index: 2000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; }
+        .scroll-to-top:hover { background-color: #1f2937; transform: translateY(-2px); }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-r/index.html">記述対策</a> ＞ 
+                    実践問題
+                </div>
+                <h1 class="main-title"><i data-lucide="edit-3"></i>記述対策（実践問題）</h1>
+            </div>
+
+            <div class="control-bar">
+                <div>
+                    <div style="font-weight:bold; color:#475569;">重要語句の穴埋め</div>
+                    <div style="font-size:0.8rem; color:#94a3b8;">隠れている部分をクリックして答えを確認しましょう。</div>
+                </div>
+                <button class="toggle-all-btn" id="toggleAllBtn">
+                    <i data-lucide="eye"></i> すべて表示
+                </button>
+            </div>
+
+            <!-- 問題リスト -->
+            <div id="question-list">
+                
+                <!-- 問1: 不登校対応 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">生徒指導</span>
+                        <div>不登校の兆候が見られる児童生徒への、初期段階における学校としての適切な対応について述べよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label"><i data-lucide="pen-tool" style="width:14px;"></i> 模範解答例</div>
+                        <div class="model-answer">
+                            不登校の初期段階においては、無理に登校を促したり、安易に原因を追及したりすることは避け、まずは本人の<span class="cloze">心情</span>を理解し、安心感を与えることが重要である。そのためには、家庭との<span class="cloze">連携</span>を密にし、生活リズムや家庭での様子を共有する。また、学校としては、担任一人で抱え込むことなく、管理職や養護教諭、スクールカウンセラー等と連携した<span class="cloze">組織的</span>な対応を行う必要がある。さらに、別室登校や<span class="cloze">教育支援センター</span>（適応指導教室）の活用など、本人が社会とのつながりを保てるような柔軟な支援体制を検討する。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問2: いじめ対応 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">生徒指導</span>
+                        <div>「いじめ防止対策推進法」を踏まえ、いじめの疑いがある事案を認知した際の学校の対応について述べよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label"><i data-lucide="pen-tool" style="width:14px;"></i> 模範解答例</div>
+                        <div class="model-answer">
+                            いじめの疑いがある場合、教職員は直ちに<span class="cloze">管理職</span>に報告し、学校全体で情報を共有する義務がある。特定の教員による抱え込みは厳禁である。「<span class="cloze">いじめ対策組織</span>（委員会）」を中心として、事実確認のためのアンケートや聞き取り調査を速やかに行う。被害児童生徒に対しては、その<span class="cloze">安全</span>を最優先に確保し、徹底して守り抜く姿勢を示すとともに、加害児童生徒に対しては、その行為の非を理解させ、健全な人間関係を構築できるよう粘り強く指導する。必要に応じて関係機関や警察とも連携し、組織的に対応する。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問3: 発達障害（ADHD） -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">特別支援</span>
+                        <div>授業中に離席や多動が目立つADHD（注意欠陥多動性障害）の傾向がある児童に対し、担任としてどのような配慮や指導を行うか述べよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label"><i data-lucide="pen-tool" style="width:14px;"></i> 模範解答例</div>
+                        <div class="model-answer">
+                            まず、本人の行動を叱責するのではなく、その特性を理解し、落ち着いて学習できる<span class="cloze">環境調整</span>を行う。具体的には、刺激の少ない座席位置への変更や、教室前面の掲示物を減らすなどの<span class="cloze">ユニバーサルデザイン</span>の視点を取り入れた工夫を行う。また、授業の節目を明確にし、見通しを持たせることや、離席したくなった際のクールダウンの方法を事前に約束しておくなどの<span class="cloze">合理的配慮</span>を提供する。さらに、できたことを具体的に褒め、<span class="cloze">自己肯定感</span>を高める支援を行うとともに、周囲の児童に対しても、多様性を認め合う学級風土づくりに努める。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問4: 学習意欲の向上 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">学習指導</span>
+                        <div>学習に対して無気力な状態（学習性無力感）にある生徒に対し、意欲を喚起するためにどのような指導を行うか述べよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label"><i data-lucide="pen-tool" style="width:14px;"></i> 模範解答例</div>
+                        <div class="model-answer">
+                            学習性無力感は、努力しても結果が変わらないという経験の積み重ねによって生じる。これを改善するには、生徒の<span class="cloze">自己効力感</span>（セルフ・エフィカシー）を高めることが重要である。具体的には、課題を細分化し、容易に達成できる目標を設定する<span class="cloze">スモールステップ</span>の原理を活用する。小さな成功体験を積ませ、「やればできる」という感覚を育むとともに、結果だけでなく努力のプロセスを評価する言葉かけを行う。また、失敗の原因を「能力」ではなく「<span class="cloze">努力</span>」や「やり方」に帰属させるよう（原因帰属の変容）導くことも有効である。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問5: 学級経営 -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">学級経営</span>
+                        <div>「学級崩壊」を未然に防ぎ、望ましい学級集団を形成するために、教師はどのようなリーダーシップを発揮すべきか述べよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label"><i data-lucide="pen-tool" style="width:14px;"></i> 模範解答例</div>
+                        <div class="model-answer">
+                            学級集団を適切に機能させるには、目標達成機能（P機能）と集団維持機能（M機能）の両方を備えた<span class="cloze">PM型</span>のリーダーシップが望ましい。まず、明確なルールや目標を示し、学習規律を確立することで安心できる秩序ある環境を作る。同時に、児童生徒一人一人の良さを認め、受容的・共感的な態度で接することで、温かい人間関係や<span class="cloze">居場所</span>づくりを行う。また、学級内の人間関係を把握するために<span class="cloze">ソシオメトリック・テスト</span>や日常観察を活用し、いじめや排斥の芽を早期に摘み取るきめ細かな指導を行うことが重要である。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問6: 情報モラル -->
+                <div class="q-card">
+                    <div class="q-header">
+                        <span class="q-badge">生徒指導</span>
+                        <div>SNS等によるトラブルを防ぐために、学校における情報モラル教育をどのように進めるか述べよ。</div>
+                    </div>
+                    <div class="q-body">
+                        <div class="answer-label"><i data-lucide="pen-tool" style="width:14px;"></i> 模範解答例</div>
+                        <div class="model-answer">
+                            情報モラル教育においては、単に危険性を強調して使用を禁止するだけでなく、児童生徒が自らリスクを判断し、適切に行動できる<span class="cloze">自律</span>的な力を育成することが重要である。具体的には、文字だけのコミュニケーションによる誤解や、一度発信した情報の<span class="cloze">拡散性・記録性</span>について、具体的な事例を用いた話し合い活動を通して考えさせる。また、家庭と連携し、フィルタリングの利用や、家庭内でのルール作りを推進する。被害者にも加害者にもなり得ることを認識させ、対面でのコミュニケーションの大切さについても指導する。
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- Topへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Topへ戻るボタン制御
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 虫食い機能
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) cloze.classList.add('revealed');
+                else cloze.classList.remove('revealed');
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+                toggleAllBtn.classList.add('active');
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+                toggleAllBtn.classList.remove('active');
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const revealedCount = document.querySelectorAll('.cloze.revealed').length;
+            if (revealedCount === clozes.length) {
+                allRevealed = true;
+            } else if (revealedCount === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+    </script>
+</body>
+</html>
