@@ -89,7 +89,7 @@
         /* 右側解説セクション */
         .explanation-side {
             padding: 24px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0;
-            display: none; flex-direction: column; gap: 16px; min-height: 200px;
+            display: none; flex-direction: column; gap: 16px; min-height: 150px;
         }
         .explanation-side.show { display: flex; animation: fadeIn 0.3s ease; }
 
@@ -200,19 +200,24 @@
                                 <span id="counter-label">0 / 0</span>
                             </div>
                             <div id="question-text" class="question-text">質問内容</div>
+                            
+                            <!-- 変更箇所：次の問題へ進むボタンを選択肢の上に配置 -->
+                            <div id="next-action-area" style="display:none; margin-bottom: 20px;">
+                                <button id="next-btn" class="btn btn-primary" style="width:100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" onclick="handleNext()">
+                                    次の問題へ <i data-lucide="arrow-right"></i>
+                                </button>
+                            </div>
+
                             <div id="options-container" class="options-grid"></div>
                         </div>
                         
-                        <!-- 右側：解説・操作エリア -->
+                        <!-- 右側：解説エリア -->
                         <div class="quiz-side-section">
                             <div id="explanation-box" class="explanation-side">
                                 <div>
                                     <div id="result-label" style="font-size: 1.2rem; font-weight:bold; margin-bottom:8px;"></div>
                                     <div id="explanation-text" style="font-size: 0.9rem; line-height: 1.6; color: #475569;"></div>
                                 </div>
-                                <button id="next-btn" class="btn btn-primary" onclick="handleNext()">
-                                    次の問題へ <i data-lucide="arrow-right"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -457,7 +462,7 @@
             practiceMode = 'normal';
             if(lessonId === 'all') {
                 currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
-                document.getElementById('main-title').textContent = "全章 まとめテスト";
+                document.getElementById('main-title').textContent = "まとめテスト";
             } else {
                 currentQuestions = quizData.filter(q => q.lesson === lessonId);
                 const title = lessons.find(l => l.id === lessonId).title;
@@ -494,7 +499,9 @@
                 container.appendChild(btn);
             });
 
+            // 解説エリアとボタンを初期化
             document.getElementById('explanation-box').classList.remove('show');
+            document.getElementById('next-action-area').style.display = 'none';
         }
 
         function checkAnswer(selected, btn) {
@@ -521,6 +528,14 @@
 
             document.getElementById('explanation-text').textContent = q.exp;
             document.getElementById('explanation-box').classList.add('show');
+            
+            // ボタン表示 (選択肢の上に配置したエリアを表示)
+            const nextArea = document.getElementById('next-action-area');
+            const nextBtn = document.getElementById('next-btn');
+            nextArea.style.display = 'block';
+            nextBtn.innerHTML = (currentIndex === currentQuestions.length - 1) 
+                ? '結果を見る <i data-lucide="bar-chart-2"></i>' 
+                : '次の問題へ <i data-lucide="arrow-right"></i>';
             lucide.createIcons();
         }
 
@@ -533,14 +548,16 @@
             }
         }
 
-        function showResult() {
+        function showResult(interruptedCount = null) {
             document.getElementById('quiz-view').style.display = 'none';
             document.getElementById('result-view').style.display = 'block';
             document.getElementById('final-score').textContent = score;
-            document.getElementById('total-q-display').textContent = currentQuestions.length;
+            
+            const total = interruptedCount !== null ? interruptedCount : currentQuestions.length;
+            document.getElementById('total-q-display').textContent = total;
             
             let msg = "";
-            const rate = currentQuestions.length === 0 ? 0 : score / currentQuestions.length;
+            const rate = total === 0 ? 0 : score / total;
             
             if(practiceMode === 'wrong_only' && currentRunMissed.length === 0) {
                 msg = "弱点克服完了！素晴らしいです。";
