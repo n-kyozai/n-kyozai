@@ -1,0 +1,645 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学習 - 教育心理学演習</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* Violet */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* まとめセクション */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .summary-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .note-section h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 24px 0 12px 0;
+        }
+        
+        .note-text { margin-bottom: 12px; font-size: 0.95rem; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 2px 4px; border-radius: 4px; }
+
+        .person-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .person-item {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .person-name { font-weight: bold; color: var(--primary-color); display: block; margin-bottom: 6px; }
+        .person-desc { font-size: 0.9rem; color: #475569; }
+
+        /* クイズセクション */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .question-meta {
+            display: flex; justify-content: space-between; 
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: var(--primary-color);
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            background: #f5f3ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* 解説・次へボタン */
+        .feedback-area {
+            margin-top: 24px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        .next-btn:active { transform: translateY(2px); }
+
+        /* 結果画面 */
+        .result-screen {
+            text-align: center;
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: #1e293b; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .person-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-p/index.html">問題演習１</a> ＞ 
+                    学習
+                </div>
+                <h1 class="main-title"><i data-lucide="activity"></i>学習（行動・認知・動機）</h1>
+            </div>
+
+            <!-- まとめセクション -->
+            <div id="summary-section">
+                <div class="summary-card">
+                    <h2 class="summary-header"><i data-lucide="user-check"></i>重要人物とキーワードまとめ</h2>
+                    <p style="margin-bottom: 24px; color: #64748b;">学習理論（行動論・認知論）、記憶、動機づけに関する重要人物です。</p>
+                    
+                    <div class="person-grid">
+                        <div class="person-item">
+                            <span class="person-name">パブロフ (Pavlov)</span>
+                            <span class="person-desc"><span class="keyword">レスポンデント条件づけ</span>（古典的条件づけ）。条件反射の研究。</span>
+                        </div>
+                        <div class="person-item">
+                            <span class="person-name">ソーンダイク (Thorndike)</span>
+                            <span class="person-desc">猫の問題箱実験。<span class="keyword">試行錯誤説</span>、効果の法則。結合主義。</span>
+                        </div>
+                        <div class="person-item">
+                            <span class="person-name">スキナー (Skinner)</span>
+                            <span class="person-desc"><span class="keyword">オペラント条件づけ</span>（道具的条件づけ）。スキナー箱。プログラム学習。</span>
+                        </div>
+                        <div class="person-item">
+                            <span class="person-name">ケーラー (Köhler)</span>
+                            <span class="person-desc"><span class="keyword">洞察説</span>。チンパンジーの実験。ゲシュタルト心理学。</span>
+                        </div>
+                        <div class="person-item">
+                            <span class="person-name">トールマン (Tolman)</span>
+                            <span class="person-desc"><span class="keyword">サイン・ゲシュタルト説</span>（認知説）。ネズミの迷路実験。認知地図。</span>
+                        </div>
+                        <div class="person-item">
+                            <span class="person-name">バンデューラ (Bandura)</span>
+                            <span class="person-desc">社会的学習理論（<span class="keyword">観察学習</span>、モデリング）。<span class="keyword">自己効力感</span>（セルフ・エフィカシー）。</span>
+                        </div>
+                        <div class="person-item">
+                            <span class="person-name">エビングハウス (Ebbinghaus)</span>
+                            <span class="person-desc">忘却曲線。無意味綴りを用いた記憶の実験的研究。</span>
+                        </div>
+                        <div class="person-item">
+                            <span class="person-name">デシ (Deci)</span>
+                            <span class="person-desc"><span class="keyword">内発的動機づけ</span>。アンダーマイニング効果。自己決定理論。</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startQuiz()">
+                    <i data-lucide="play-circle" style="margin-right: 8px;"></i>問題演習を開始する
+                </button>
+            </div>
+
+            <!-- クイズセクション -->
+            <div id="quiz-section" class="quiz-container">
+                <div class="question-card">
+                    <div class="question-meta">
+                        <span>Question <span id="q-number">1</span></span>
+                        <span>全9問</span>
+                    </div>
+                    
+                    <div id="question-text" class="question-text">
+                        <!-- 問題文 -->
+                    </div>
+                    
+                    <!-- 選択肢の上に「次へ」ボタンエリアを配置 (初期は非表示) -->
+                    <div id="next-area" style="display: none; margin-bottom: 20px;">
+                        <button class="next-btn" onclick="nextQuestion()">
+                            次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                        </button>
+                    </div>
+
+                    <div id="options-area" class="option-container">
+                        <!-- 選択肢 -->
+                    </div>
+
+                    <div id="feedback-area" class="feedback-area">
+                        <div class="explanation-box">
+                            <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                            <div id="explanation-content">
+                                <!-- 解説本文 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-section" class="result-screen">
+                <h2><i data-lucide="award" style="vertical-align: middle; color: var(--accent-color);"></i> 演習結果</h2>
+                <div class="score-display">
+                    <span id="score-num">0</span> / 9 問正解
+                </div>
+                <p id="result-msg" style="margin-bottom: 30px; font-weight: bold; color: #64748b;"></p>
+                
+                <button class="start-btn" style="margin: 0 auto; background: #64748b;" onclick="resetToSummary()">
+                    <i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>戻る
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                q: "【問題6】心理学の研究に携わった人物に関する記述として適切なものを一つ選びなさい。",
+                options: [
+                    "ハーローは、空腹のネコを問題箱に入れ、試行錯誤説を唱えた。効果の法則を挙げた。",
+                    "ウェクスラーは、言語性検査と動作性検査とによって構成される知能検査(WISCやWAIS)を開発した。",
+                    "ソーンダイクは、無意味綴りを用いた忘却リストの研究を行い、保持曲線を示した。",
+                    "エビングハウスは、ネズミの行動研究（オペラント行動）を行い、ティーチングマシンを開発した。",
+                    "スキナーは、アカゲザルの代理母実験を行い、愛着（安全基地）の機能を明らかにした。"
+                ],
+                answer: 1, 
+                exp: "<strong>正解：2</strong><br>ウェクスラー式知能検査（WAIS、WISCなど）は現在最も広く使われています。<br><br>1：問題箱の実験は<strong>ソーンダイク</strong>。<br>3：忘却曲線は<strong>エビングハウス</strong>。<br>4：オペラント条件づけとティーチングマシンは<strong>スキナー</strong>。<br>5：アカゲザルの実験は<strong>ハーロー</strong>。"
+            },
+            {
+                q: "【問題7】学習に関する心理学の研究に携わった人物に関する記述として適切なものを一つ選びなさい。",
+                options: [
+                    "ガスリーは、刺激と反応が同時に生じることで学習が起こるという近接学習理論を説いた。",
+                    "セリグマンは、観察学習（モデリング）によって攻撃行動が形成されることを見出した。",
+                    "ケーラーは、迷路とネズミの実験を行い、目的的行動主義を展開した。",
+                    "トールマンは、チンパンジーの実験を行い、洞察によって問題解決が行われるとした。",
+                    "バンデューラは、犬の実験で学習性無力感を提案した。"
+                ],
+                answer: 0,
+                exp: "<strong>正解：1</strong><br>ガスリーは「近接の原理」による学習を提唱しました。<br><br>2：観察学習（モデリング）は<strong>バンデューラ</strong>。<br>3：ネズミの迷路実験と目的的行動主義は<strong>トールマン</strong>。<br>4：チンパンジーの洞察学習は<strong>ケーラー</strong>。<br>5：学習性無力感は<strong>セリグマン</strong>。"
+            },
+            {
+                q: "【問題8】次の記述のうち適切ではないものの組合せを選びなさい。<br><br>(ア) パブロフは、条件刺激と無条件刺激を繰り返し、オペラント条件づけを提唱した。<br>(イ) スキナーは、報酬を与えることで反応の生起率を高めることを説明した。<br>(ウ) トールマンは、目標と手段の関係が認知地図としてできると考えた（サイン・ゲシュタルト説）。<br>(エ) ケーラーは、チンパンジーの実験で洞察説を提唱した。<br>(オ) ソーンダイクは、モデルを見て反応を形成するモデリング学習を提唱した。",
+                options: [
+                    "(ア)と(イ)",
+                    "(イ)と(ウ)",
+                    "(ウ)と(エ)",
+                    "(エ)と(オ)",
+                    "(ア)と(オ)"
+                ],
+                answer: 4,
+                exp: "<strong>正解：5（アとオが誤り）</strong><br>(ア) パブロフは「レスポンデント条件づけ（古典的条件づけ）」です。オペラントはスキナー。<br>(オ) モデリング学習（観察学習）は「バンデューラ」です。ソーンダイクは試行錯誤説。"
+            },
+            {
+                q: "【問題9】学習の理論における認知説の記述として最も適切なものを選びなさい。",
+                options: [
+                    "学習を問題場面に関する認知構造の変化とみなした説であり、トールマンのサイン・ゲシュタルト説があげられる。",
+                    "学習を刺激と反応の結合の成立とみなした説であり、ワトソンの行動主義があげられる。",
+                    "学習を問題場面に関する認知構造の変化とみなした説であり、パヴロフの古典的条件付けがあげられる。",
+                    "学習を刺激と反応の結合の成立とみなした説であり、ソーンダイクの結合主義があげられる。",
+                    "学習を問題場面に関する認知構造の変化とみなした説であり、ハルの動因低減説があげられる。"
+                ],
+                answer: 0,
+                exp: "<strong>正解：1</strong><br>認知説は、学習を「S-S接近（サインと意味の結合）」や「認知地図の形成」として捉えます。トールマンやケーラーが代表的です。<br><br>ワトソン、パブロフ、ソーンダイク、ハルはいずれも「S-R連合（刺激と反応の結びつき）」を重視する連合説・行動主義の立場です。"
+            },
+            {
+                q: "【問題10】学習理論に関する記述として適切なものを選びなさい。",
+                options: [
+                    "ソーンダイクは、ネコの実験から試行錯誤による学習を提唱した。",
+                    "ケーラーは、チンパンジーの実験から接近説を提唱した。",
+                    "ハルは、媒介変数を否定し、行動を単純なS-R結合で説明した。",
+                    "パブロフは、条件反射の発見から、学習は大脳皮質の働きではないと考えた。",
+                    "トールマンは、ネズミの実験で潜在学習を指摘したが、これは連合説に近い考え方である。"
+                ],
+                answer: 0,
+                exp: "<strong>正解：1</strong><br>ソーンダイクの試行錯誤説（効果の法則）は正しい記述です。<br><br>2：ケーラーは「洞察説」。接近説はガスリー。<br>3：ハルはSとRの間に「習慣強度」などの媒介変数を導入しました（新行動主義）。<br>5：トールマンの潜在学習や認知地図は、「認知説」の代表的な考え方です。"
+            },
+            {
+                q: "【問題11】動機づけに関するデシの研究について、空欄に当てはまる語句の組み合わせとして適切なものを選びなさい。<br><br>【ア】に動機づけられている行動に対して報酬を与えると、【イ】動機づけが低下してしまうことがある。子どもの【ウ】が高いほど、自分から積極的に行動を起こす。",
+                options: [
+                    "ア：内発的　イ：内発的　ウ：自己決定感や有能感",
+                    "ア：外発的　イ：外発的　ウ：自己決定感や有能感",
+                    "ア：内発的　イ：外発的　ウ：責任感や義務感",
+                    "ア：外発的　イ：内発的　ウ：責任感や義務感",
+                    "ア：内発的　イ：内発的　ウ：責任感や義務感"
+                ],
+                answer: 0,
+                exp: "<strong>正解：1</strong><br>内発的に動機づけられている行動に報酬を与えると、内発的動機づけが低下する現象を<strong>アンダーマイニング効果</strong>といいます。<br>また、デシの自己決定理論では、自己決定感や有能感が高いほど自律的な動機づけが高まるとされます。"
+            },
+            {
+                q: "【問題12】動機づけについての記述として最も適切なものを選びなさい。",
+                options: [
+                    "自己決定感や自己効力感を感じていることが、内発的動機づけを可能にする心理的基盤につながる。",
+                    "外的な報酬による行為の成功を繰り返すことで内発的な動機づけに変わることをアンダーマイニング効果という。",
+                    "成功することを恐れて、成功しそうになるとそれを回避しようとする動機を失敗回避動機という。",
+                    "仲良くなりたい、協力したい、友好的な関係を維持したいと欲する動機を達成動機という。"
+                ],
+                answer: 0,
+                exp: "<strong>正解：1</strong><br>自ら決定したという感覚（自己決定感）や、自分にはできるという感覚（自己効力感）は内発的動機づけを高めます。<br><br>2：これはエンハンシング効果の説明に近いです。アンダーマイニングは低下する現象。<br>3：失敗回避動機は「失敗すること」を恐れる動機です。<br>4：これは「親和動機」の説明です。達成動機は卓越した水準で成し遂げたいという動機です。"
+            },
+            {
+                q: "【問題13】「動機づけ」に関する記述として正しいものを選びなさい。",
+                options: [
+                    "内発的動機づけとは、何らかの行動に対する報酬が目的となっている際の動機づけをいう。",
+                    "機能的自律性とは、何かに動機づけられていた行動が、動機自体に発展する傾向であり、行動がもともとの動機から独立することをいう。",
+                    "学習性無力感とは、物質的な報酬を与えた場合に動機づけが低下することをいう。",
+                    "アンダーマイニング効果とは、言語的報酬によって動機づけが高まることをいう。",
+                    "エンハンシング効果とは、統制できないような不快な出来事や刺激にさらされた後で、行為の動機づけを失うことをいう。"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>オルポートの「機能的自律性」の正しい説明です（例：最初は健康のために始めた散歩が、歩くこと自体が楽しくなる）。<br><br>1：これは外発的動機づけの説明。<br>3：学習性無力感は、不可避な不快刺激によって生じます。<br>4：アンダーマイニング効果は低下すること。<br>5：これは学習性無力感の説明。エンハンシングは報酬によって内発的動機が高まること。"
+            },
+            {
+                q: "【問題14】記憶や知識に関する記述の空欄ア～ウに当てはまる語句の組み合わせを選びなさい。<br><br>日時や場所や特定された個人的な出来事、思い出に関する記憶を【ア】という。<br>【イ】とは世界に関する一般的な記憶であり、「知識」といってよい。<br>【ウ】は事柄を知ることであり、教科書などによって蓄積していくことが比較的容易である。",
+                options: [
+                    "ア：エピソード記憶　イ：意味記憶　ウ：宣言的知識",
+                    "ア：意味記憶　イ：短期記憶　ウ：手続き的知識",
+                    "ア：エピソード記憶　イ：短期記憶　ウ：宣言的知識",
+                    "ア：長期記憶　イ：エピソード記憶　ウ：手続き的知識",
+                    "ア：意味記憶　イ：長期記憶　ウ：宣言的知識"
+                ],
+                answer: 0,
+                exp: "<strong>正解：1</strong><br>ア：個人的な思い出は<strong>エピソード記憶</strong>。<br>イ：一般的な知識は<strong>意味記憶</strong>。<br>ウ：言語化できる知識は<strong>宣言的知識</strong>です（自転車の乗り方などの言語化しにくいものは手続き的知識）。"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function startQuiz() {
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('q-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const optionsContainer = document.getElementById('options-area');
+            optionsContainer.innerHTML = '';
+
+            // 次へボタンと解説を隠す
+            document.getElementById('next-area').style.display = 'none';
+            document.getElementById('feedback-area').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="font-weight:bold; margin-right:8px;">${index + 1}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-btn');
+
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === q.answer) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                options[q.answer].classList.add('correct');
+            }
+
+            document.getElementById('explanation-content').innerHTML = q.exp;
+            document.getElementById('feedback-area').style.display = 'block';
+            
+            // 選択肢の上に次へボタンを表示
+            const nextArea = document.getElementById('next-area');
+            nextArea.style.display = 'block';
+            
+            const nextBtn = nextArea.querySelector('button');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
+            } else {
+                nextBtn.innerHTML = '次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle;"></i>';
+            }
+            
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('score-num').textContent = score;
+            
+            let msg = "";
+            if (score === 9) msg = "完璧です！学習理論をマスターしています。";
+            else if (score >= 6) msg = "合格圏内です。間違えた問題を見直しましょう。";
+            else msg = "もう一度まとめを読んで、理論と人物を整理しましょう。";
+            
+            document.getElementById('result-msg').textContent = msg;
+        }
+
+        function resetToSummary() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
