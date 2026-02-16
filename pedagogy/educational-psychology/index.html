@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教育心理学とは何か - 教員採用試験対策</title>
+    <title>教育心理 - 教員採用試験対策まとめ</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
             --primary-color: #2c3e50;
-            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー（Violet） */
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー（Violet: 心理・深層のイメージ） */
             --bg-color: #f8fafc;
             --text-color: #334155;
             --sidebar-width: 200px;
@@ -20,13 +20,11 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html { scroll-behavior: smooth; }
-
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.8; /* 読みやすさのため行間を少し広げる */
+            line-height: 1.5;
             display: flex;
             min-height: 100vh;
         }
@@ -80,8 +78,11 @@
         .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
         .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
         
+        /* 教育心理ページですが、サイドバー上は「教職教養」カテゴリの一部なので、
+           教職教養をアクティブ表示にするか、もしくはアクティブなしにするのが一般的です。
+           今回は階層関係を明確にするため「教職教養」をアクティブ風（ただし色は緑のまま）にします。 */
         .nav-item.active {
-            color: #059669; /* 教職教養カテゴリ色 */
+            color: #059669; /* 教職教養の緑色 */
             background-color: #ecfdf5;
             font-weight: bold;
             border-right: 3px solid #059669;
@@ -142,173 +143,108 @@
 
         .container {
             width: 95%;
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 24px 0;
             flex: 1;
         }
 
-        /* 暗記ノート風スタイル */
-        .note-container {
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
+        .section-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
             box-shadow: var(--shadow);
-            overflow: hidden;
-            margin-bottom: 40px;
-        }
-
-        .note-header {
-            background-color: #ede9fe; /* 薄い紫 */
-            padding: 16px 24px;
-            border-bottom: 1px solid #ddd6fe;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .note-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #5b21b6;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .toggle-all-btn {
-            background-color: white;
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .toggle-all-btn:hover {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .note-content {
-            padding: 24px;
-        }
-
-        h3 {
-            font-size: 1rem;
-            font-weight: bold;
-            color: #4c1d95;
-            border-left: 4px solid var(--accent-color);
-            padding-left: 10px;
-            margin: 32px 0 16px 0;
-        }
-        h3:first-child { margin-top: 0; }
-
-        .note-section {
+            border: 1px solid #e2e8f0;
             margin-bottom: 24px;
         }
-        
-        .note-text {
+
+        .section-title {
+            font-size: 1rem;
             margin-bottom: 16px;
-            text-align: justify;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
         }
 
-        .note-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 16px;
+        /* メニューグリッド */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
         }
 
-        .note-list li {
-            margin-bottom: 8px;
-            padding-left: 1.2em;
-            position: relative;
+        .menu-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
         }
 
-        .note-list li::before {
-            content: "•";
-            color: var(--accent-color);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
+        /* 通常カードのホバー */
+        .menu-card:not(.disabled):hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
 
-        /* 暗記マーカー */
-        .cloze {
-            display: inline-block;
-            background-color: #c4b5fd; /* 隠れている時の色 */
-            color: transparent; /* 文字を透明に */
-            border-bottom: 2px solid #7c3aed;
-            padding: 0 4px;
-            margin: 0 2px;
-            border-radius: 4px;
-            cursor: pointer;
-            user-select: none; /* 選択不可 */
-            transition: all 0.2s ease;
-            font-weight: bold;
-            min-width: 1.5em;
-            text-align: center;
-            vertical-align: bottom;
-        }
-
-        .cloze.revealed {
-            background-color: transparent;
-            color: #db2777; /* 正解の色（ピンク） */
-            border-bottom-color: #db2777;
-        }
-
-        .cloze.revealed:hover {
-            opacity: 1;
+        /* 無効化カード（近日公開） */
+        .menu-card.disabled {
+            opacity: 0.6;
             cursor: default;
+            background-color: #f8fafc;
+            border-style: dashed;
         }
 
-        .cloze:hover {
-            opacity: 0.8;
-        }
-
-        .important-text {
-            font-weight: bold;
-            color: #334155;
-            background: linear-gradient(transparent 60%, #fef08a 60%); /* 黄色マーカー */
-            padding: 0 2px;
-        }
-
-        /* Topへ戻るボタン */
-        .scroll-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: #374151; /* Dark Gray */
-            color: white;
-            border-radius: 50%;
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            background: #f5f3ff; /* 薄い紫 */
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 2000;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: none;
+            color: var(--accent-color);
+            flex-shrink: 0;
         }
 
-        .scroll-to-top.show {
-            opacity: 1;
-            visibility: visible;
+        .menu-card.disabled .icon-box {
+            color: #94a3b8;
+            background: #e2e8f0;
         }
 
-        .scroll-to-top:hover {
-            background-color: #1f2937;
-            transform: translateY(-2px);
+        .card-info { flex: 1; }
+        
+        .card-title { 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            font-size: 0.95rem; 
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .card-desc { font-size: 0.75rem; color: #64748b; line-height: 1.4; display: none; /* 今回は項目が多いので説明文は省略またはシンプルに */ }
+
+        /* バッジ */
+        .badge-soon {
+            font-size: 0.6rem;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 4px;
+            padding: 1px 6px;
+            white-space: nowrap;
         }
 
         footer {
@@ -328,6 +264,7 @@
             .main-content { margin-left: 0; }
             .page-header { padding-left: 60px; }
             .container { padding: 16px; width: 100%; }
+            .menu-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -348,7 +285,7 @@
             
             <div class="nav-category">教養・指導要領</div>
             <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
-            <a href="/n-kyozai/pedagogy/index.html" class="nav-item active"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
 
             <div class="nav-category">専門科目</div>
@@ -359,118 +296,109 @@
     <main class="main-content">
         <div class="page-header">
             <div class="breadcrumb">
-                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ <a href="../educational-psychology.html">教育心理</a> ＞ 教育心理学とは何か
+                <a href="../index.html">ホーム</a> ＞ <a href="./teaching.html">教職教養</a> ＞ 教育心理
             </div>
-            <h1 style="font-size: 1.4rem; color: var(--primary-color);">教育心理学とは何か</h1>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">教育心理</h1>
         </div>
 
         <div class="container">
-            
-            <div class="note-container">
-                <div class="note-header">
-                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
-                    <button class="toggle-all-btn" id="toggleAllBtn">
-                        <i data-lucide="eye"></i> すべて表示
-                    </button>
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="brain"></i>基礎・発達</h2>
+                <div class="menu-grid">
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="book-open"></i></div>
+                        <div class="card-info"><div class="card-title">教育心理学とは何か</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="baby"></i></div>
+                        <div class="card-info"><div class="card-title">発達と教育</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="smile"></i></div>
+                        <div class="card-info"><div class="card-title">乳幼児期の発達</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="school"></i></div>
+                        <div class="card-info"><div class="card-title">児童期の発達</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="user"></i></div>
+                        <div class="card-info"><div class="card-title">青年期の発達</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="fingerprint"></i></div>
+                        <div class="card-info"><div class="card-title">パーソナリティ</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="puzzle"></i></div>
+                        <div class="card-info"><div class="card-title">発達障害の理解</div></div>
+                    </a>
                 </div>
-                <div class="note-content">
-                    
-                    <h3>1. 心理学とは</h3>
-                    <div class="note-section">
-                        <p class="note-text">
-                            心理学は、「<span class="cloze">行動</span>と<span class="cloze">心的過程</span>についての科学的研究」と定義できる（アトキンソンら、2000）。
-                            心理学の研究では、<span class="cloze">行動</span>、<span class="cloze">意識</span>、<span class="cloze">脳</span>の3つの側面を考慮する。
-                            行動は観察や実験で捉え、意識は<span class="cloze">質問紙法</span>や面接法である程度把握できる。脳については脳科学者と共同したり研究結果を参考にして、心理学の理論に矛盾がないか確認する。
-                        </p>
-                        <p class="note-text">
-                            心理学には大きく2つの目標がある。1つは、心についての理論を作り、心の現象を説明できるようにすることを目標とする<span class="cloze">基礎</span>研究である。
-                            もう1つは、実際の社会や生活において役立つ知見を作り出すことを目標とする<span class="cloze">応用</span>研究であり、教育心理学や臨床心理学はこちらに分類される。
-                        </p>
-                        <p class="note-text">
-                            また、心理学は特定の個人の心の中を明らかにしようとするものではなく、できるだけ多くの人に当てはまる<span class="important-text">普遍的・一般的</span>な事実を明らかにしようとする。
-                            ただし、1人の個性を理解するためには、多くの理論を複合し、総合して理解する必要がある。
-                        </p>
-                    </div>
+            </section>
 
-                    <h3>2. 教育心理学の成り立ち</h3>
-                    <div class="note-section">
-                        <p class="note-text">
-                            教育に関連したテーマは、古くは人間の理性的な志向によってその本質を見出そうとする<span class="cloze">哲学</span>からのアプローチ（プラトンやアリストテレスなど）によって扱われてきた。
-                        </p>
-                        <p class="note-text">
-                            近代（19世紀中頃〜）になると、ドイツの<span class="cloze">ヘルバルト</span>は、著書『一般教育学』（1806年）において、教育の目的を<span class="cloze">倫理学</span>に、教育の方法を<span class="cloze">心理学</span>に求めた。
-                            その後、ドイツのヴントやエビングハウス、アメリカのジェームズらによって、<span class="cloze">実験</span>によって心を研究する方法が開発された。
-                        </p>
-                        <p class="note-text">
-                            アメリカの<span class="cloze">ソーンダイク</span>は、『The Journal of Educational Psychology』（1910年）を創刊し、以下の3点で教育心理学を価値づけた。
-                        </p>
-                        <ul class="note-list">
-                            <li>① 教育心理学を<span class="cloze">科学</span>へ価値づけた（机上の推論ではなく、理論と実証的研究の組み合わせ）。</li>
-                            <li>② 注意深い分析や<span class="cloze">数量化</span>を価値づけた（実験データの統計的仮説検定など）。</li>
-                            <li>③ <span class="cloze">現実的課題</span>の解明へ価値づけた（教育という現象の理解と問題解決）。</li>
-                        </ul>
-                        <p class="note-text">
-                            わが国では、明治・大正期に松本亦太郎や楢崎浅太郎、丸山良二らが活躍し、戦後（1947年）には<span class="cloze">文部省</span>から『教育心理』が発刊された。これは今日の主要領域である「成長・発達」「学習」「測定・評価」「<span class="cloze">人格・適応</span>」の4領域を含んでいる。
-                            教育心理学の意義は、教育という現象を明らかにすること、および教育活動を社会が効率的・効果的に行うことを<span class="cloze">支える</span>ことにある。
-                        </p>
-                    </div>
-
-                    <h3>3. 研究方法の種類</h3>
-                    <div class="note-section">
-                        <p class="note-text">
-                            研究のタイプには、あらかじめ設定した仮説についてデータを分析し検証する「仮説<span class="cloze">検証</span>型研究」と、得られたデータを分析して新たな仮説を生み出す「仮説<span class="cloze">生成</span>型研究」がある。
-                        </p>
-                        <p class="note-text">
-                            時間軸による分類では、同じ対象を追跡しながらデータを収集し変化を記述する<span class="cloze">縦断</span>的研究と、同時期に異なる年齢集団を比較する<span class="cloze">横断</span>的研究がある。
-                            また、異なる年齢集団を対象としながら縦断的研究を行うものを<span class="cloze">コホート</span>研究と呼ぶ。
-                        </p>
-                    </div>
-
-                    <h3>4. 主な研究手法の特徴</h3>
-                    <div class="note-section">
-                        <p class="note-text">
-                            <strong>(1) <span class="cloze">質問紙法</span></strong><br>
-                            質問を紙等に記して回答してもらう方法。一度に<span class="cloze">大量</span>の対象者に実施できる長所があるが、質問の意図の<span class="cloze">誤解</span>などへの対応が難しく、表面的な事項に限られることがある。
-                        </p>
-                        <p class="note-text">
-                            <strong>(2) <span class="cloze">実験法</span></strong><br>
-                            因果関係の仮説検証に適する。原因となる<span class="cloze">独立</span>変数、結果となる<span class="cloze">従属</span>変数、それ以外の<span class="cloze">剰余</span>変数を扱う。
-                            変数のコントロール（統制）が必要なため、人工的な環境で行う「実験室実験」が多いが、日常環境で行う「フィールド実験」もある。短所は変数の統制が難しいことである。
-                        </p>
-                        <p class="note-text">
-                            <strong>(3) <span class="cloze">観察法</span></strong><br>
-                            研究対象の<span class="cloze">日常生活</span>をそのまま観察する自然観察法と、特殊な仕掛けを施す実験的観察法がある。
-                            あるがままの行動から仮説が見えてくる長所があるが、<span class="cloze">内面</span>の状態は確実に把握できず、客観的なデータとするには観察者の高い技能が求められる。
-                        </p>
-                        <p class="note-text">
-                            <strong>(4) <span class="cloze">面接法</span></strong><br>
-                            研究者が対象者に対して尋ねて記録する方法。手順が厳格に決まっている<span class="cloze">構造化</span>面接、標準リストを使用しない非構造化面接、ある程度決めておく<span class="cloze">半構造化</span>面接がある。
-                            対象者の意識の<span class="cloze">全体</span>を取り出しやすく質の良い情報を得やすいが、多人数への実施は難しく、面接者の技能が必要である。
-                        </p>
-                        <p class="note-text">
-                            <strong>(5) <span class="cloze">心理検査法</span></strong><br>
-                            使用方法や診断のガイドラインが明確な検査（知能検査、発達検査、パーソナリティ検査など）を用いる。観察だけではわからない内面の理解を助けるが、検査者の熟練が必要である。
-                        </p>
-                        <p class="note-text">
-                            <strong>(6) <span class="cloze">事例研究法</span></strong><br>
-                            一事例あるいは極めて少数事例を対象に、多角的に研究を行う。個性記述的研究とも呼ばれる。
-                        </p>
-                    </div>
-
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="lightbulb"></i>学習・適応</h2>
+                <div class="menu-grid">
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="activity"></i></div>
+                        <div class="card-info"><div class="card-title">行動論から見た学習</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="cpu"></i></div>
+                        <div class="card-info"><div class="card-title">認知論から見た学習</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="flame"></i></div>
+                        <div class="card-info"><div class="card-title">動機づけ</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="heart-handshake"></i></div>
+                        <div class="card-info"><div class="card-title">適応の理解と支援</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="users"></i></div>
+                        <div class="card-info"><div class="card-title">教師と児童・生徒</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="network"></i></div>
+                        <div class="card-info"><div class="card-title">学級集団における人間関係</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="clipboard-check"></i></div>
+                        <div class="card-info"><div class="card-title">教育評価</div></div>
+                    </a>
                 </div>
-            </div>
+            </section>
 
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="pen-tool"></i>演習・対策</h2>
+                <div class="menu-grid">
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="check-circle"></i></div>
+                        <div class="card-info"><div class="card-title">確認テスト</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="edit-3"></i></div>
+                        <div class="card-info"><div class="card-title">問題演習１</div></div>
+                    </a>
+                    <a href="#" class="menu-card disabled" onclick="return false;">
+                        <div class="icon-box"><i data-lucide="lock"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">問題演習２ <span class="badge-soon">近日公開</span></div>
+                        </div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="file-edit"></i></div>
+                        <div class="card-info"><div class="card-title">記述対策</div></div>
+                    </a>
+                </div>
+            </section>
         </div>
 
         <footer>
             <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
         </footer>
     </main>
-
-    <!-- Topへ戻るボタン -->
-    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
-        <i data-lucide="chevron-up"></i>
-    </button>
 
     <script>
         lucide.createIcons();
@@ -485,83 +413,12 @@
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
             menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
-            document.body.style.overflow = isActive ? '' : 'hidden';
             lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
         };
 
         if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
         if(overlay) overlay.addEventListener('click', toggleSidebar);
-
-        // 暗記マーカー制御
-        const clozes = document.querySelectorAll('.cloze');
-        const toggleAllBtn = document.getElementById('toggleAllBtn');
-        let allRevealed = false;
-
-        // 個別のクリックイベント
-        clozes.forEach(cloze => {
-            cloze.addEventListener('click', function() {
-                this.classList.toggle('revealed');
-                checkAllStatus();
-            });
-        });
-
-        // すべて表示ボタン
-        toggleAllBtn.addEventListener('click', () => {
-            allRevealed = !allRevealed;
-            clozes.forEach(cloze => {
-                if(allRevealed) {
-                    cloze.classList.add('revealed');
-                } else {
-                    cloze.classList.remove('revealed');
-                }
-            });
-            updateToggleButton();
-        });
-
-        function updateToggleButton() {
-            if(allRevealed) {
-                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
-                toggleAllBtn.classList.add('bg-indigo-600', 'text-white');
-                toggleAllBtn.classList.remove('bg-white', 'text-indigo-600');
-            } else {
-                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
-                toggleAllBtn.classList.remove('bg-indigo-600', 'text-white');
-                toggleAllBtn.classList.add('bg-white', 'text-indigo-600');
-            }
-            lucide.createIcons();
-        }
-
-        function checkAllStatus() {
-            const all = clozes.length;
-            const revealed = document.querySelectorAll('.cloze.revealed').length;
-            if (revealed === all) {
-                allRevealed = true;
-            } else if (revealed === 0) {
-                allRevealed = false;
-            }
-            updateToggleButton();
-        }
-
-        // Topへ戻るボタン制御
-        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-
-        // スクロール検知
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                scrollToTopBtn.classList.add('show');
-            } else {
-                scrollToTopBtn.classList.remove('show');
-            }
-        });
-
-        // クリックイベント
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
     </script>
 </body>
 </html>
