@@ -1,0 +1,432 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育心理 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー（Violet: 心理・深層のイメージ） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        /* 教育心理ページですが、サイドバー上は「教職教養」カテゴリの一部なので、
+           教職教養をアクティブ表示にするか、もしくはアクティブなしにするのが一般的です。
+           今回は階層関係を明確にするため「教職教養」をアクティブ風（ただし色は緑のまま）にします。 */
+        .nav-item.active {
+            color: #059669; /* 教職教養の緑色 */
+            background-color: #ecfdf5;
+            font-weight: bold;
+            border-right: 3px solid #059669;
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* メニューグリッド */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .menu-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        /* 通常カードのホバー */
+        .menu-card:not(.disabled):hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* 無効化カード（近日公開） */
+        .menu-card.disabled {
+            opacity: 0.6;
+            cursor: default;
+            background-color: #f8fafc;
+            border-style: dashed;
+        }
+
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            background: #f5f3ff; /* 薄い紫 */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .menu-card.disabled .icon-box {
+            color: #94a3b8;
+            background: #e2e8f0;
+        }
+
+        .card-info { flex: 1; }
+        
+        .card-title { 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            font-size: 0.95rem; 
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .card-desc { font-size: 0.75rem; color: #64748b; line-height: 1.4; display: none; /* 今回は項目が多いので説明文は省略またはシンプルに */ }
+
+        /* バッジ */
+        .badge-soon {
+            font-size: 0.6rem;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 4px;
+            padding: 1px 6px;
+            white-space: nowrap;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="../index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="./teaching.html" class="nav-item active"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="./world-history.html" class="nav-item"><i data-lucide="globe"></i>世界史</a>
+            <a href="./japanese-history.html" class="nav-item"><i data-lucide="book"></i>日本史</a>
+            <a href="./geography.html" class="nav-item"><i data-lucide="send"></i>地理</a>
+            <a href="./politics.html" class="nav-item"><i data-lucide="landmark"></i>政治</a>
+            <a href="./economics.html" class="nav-item"><i data-lucide="trending-up"></i>経済</a>
+            <a href="./ethics.html" class="nav-item"><i data-lucide="heart"></i>倫理</a>
+
+            <div class="nav-category">演習</div>
+            <a href="./comprehensive.html" class="nav-item"><i data-lucide="layers"></i>総合問題</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../index.html">ホーム</a> ＞ <a href="./teaching.html">教職教養</a> ＞ 教育心理
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">教育心理</h1>
+        </div>
+
+        <div class="container">
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="brain"></i>基礎・発達</h2>
+                <div class="menu-grid">
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="book-open"></i></div>
+                        <div class="card-info"><div class="card-title">教育心理学とは何か</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="baby"></i></div>
+                        <div class="card-info"><div class="card-title">発達と教育</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="smile"></i></div>
+                        <div class="card-info"><div class="card-title">乳幼児期の発達</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="school"></i></div>
+                        <div class="card-info"><div class="card-title">児童期の発達</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="user"></i></div>
+                        <div class="card-info"><div class="card-title">青年期の発達</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="fingerprint"></i></div>
+                        <div class="card-info"><div class="card-title">パーソナリティ</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="puzzle"></i></div>
+                        <div class="card-info"><div class="card-title">発達障害の理解</div></div>
+                    </a>
+                </div>
+            </section>
+
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="lightbulb"></i>学習・適応</h2>
+                <div class="menu-grid">
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="activity"></i></div>
+                        <div class="card-info"><div class="card-title">行動論から見た学習</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="cpu"></i></div>
+                        <div class="card-info"><div class="card-title">認知論から見た学習</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="flame"></i></div>
+                        <div class="card-info"><div class="card-title">動機づけ</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="heart-handshake"></i></div>
+                        <div class="card-info"><div class="card-title">適応の理解と支援</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="users"></i></div>
+                        <div class="card-info"><div class="card-title">教師と児童・生徒</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="network"></i></div>
+                        <div class="card-info"><div class="card-title">学級集団における人間関係</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="clipboard-check"></i></div>
+                        <div class="card-info"><div class="card-title">教育評価</div></div>
+                    </a>
+                </div>
+            </section>
+
+            <section class="section-box">
+                <h2 class="section-title"><i data-lucide="pen-tool"></i>演習・対策</h2>
+                <div class="menu-grid">
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="check-circle"></i></div>
+                        <div class="card-info"><div class="card-title">確認テスト</div></div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="edit-3"></i></div>
+                        <div class="card-info"><div class="card-title">問題演習１</div></div>
+                    </a>
+                    <a href="#" class="menu-card disabled" onclick="return false;">
+                        <div class="icon-box"><i data-lucide="lock"></i></div>
+                        <div class="card-info">
+                            <div class="card-title">問題演習２ <span class="badge-soon">近日公開</span></div>
+                        </div>
+                    </a>
+                    <a href="#" class="menu-card">
+                        <div class="icon-box"><i data-lucide="file-edit"></i></div>
+                        <div class="card-info"><div class="card-title">記述対策</div></div>
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
