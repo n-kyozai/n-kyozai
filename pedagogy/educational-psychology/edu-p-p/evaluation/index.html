@@ -1,0 +1,672 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育評価 - 教育心理学演習</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* Violet */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px; /* カード3列表示のために幅を確保 */
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* まとめセクション */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .summary-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* 3列カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+        }
+        
+        /* デスクトップで3列 */
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.6; flex-grow: 1; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 0 4px; border-radius: 2px; }
+
+        /* クイズセクション */
+        .quiz-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none; /* 初期状態は非表示 */
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        /* クイズレイアウト（2カラム） */
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左：問題、右：解説 */
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
+        .question-meta {
+            display: flex; justify-content: space-between; 
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1; /* 全幅 */
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: var(--primary-color);
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            background: #f5f3ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* 解説・次へボタン */
+        .feedback-area {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        .next-btn:active { transform: translateY(2px); }
+
+        /* 結果画面 */
+        .result-screen {
+            text-align: center;
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: #1e293b; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-p/index.html">問題演習１</a> ＞ 
+                    教育評価
+                </div>
+                <h1 class="main-title"><i data-lucide="clipboard-check"></i>教育評価（方法とバイアス）</h1>
+            </div>
+
+            <!-- まとめセクション -->
+            <div id="summary-section">
+                <div class="summary-card">
+                    <h2 class="summary-header"><i data-lucide="book-open-check"></i>学習のポイント：評価理論とバイアス</h2>
+                    
+                    <div class="card-grid">
+                        
+                        <!-- 1. ブルームの評価分類 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="list"></i>評価の時期と機能</div>
+                            <div class="info-content">
+                                <p><strong>ブルーム (Bloom)</strong>による3分類：</p>
+                                <ul style="padding-left:1.2em; margin:4px 0;">
+                                    <li><span class="keyword">診断的評価</span>：学習開始前。レディネスの把握。</li>
+                                    <li><span class="keyword">形成的評価</span>：学習途中。フィードバックと指導の修正。</li>
+                                    <li><span class="keyword">総括的評価</span>：学習終了時。成績づけ、認定。</li>
+                                </ul>
+                                <p class="mt-2">完全習得学習（マスタリーラーニング）の基礎。</p>
+                            </div>
+                        </div>
+
+                        <!-- 2. 評価の基準 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="scale"></i>評価の基準</div>
+                            <div class="info-content">
+                                <p><strong>相対評価</strong>（集団準拠）：他者との比較。偏差値。順位付け。<br><small>※個人の努力が見えにくい欠点。</small></p>
+                                <p class="mt-2"><strong>絶対評価</strong>（目標準拠）：目標への到達度。現在の学校評価の主流。<br><small>※教師の主観が入りやすい課題も。</small></p>
+                                <p class="mt-2"><strong>個人内評価</strong>：個人の過去の成績との比較。進歩を評価。</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. ポートフォリオ評価 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="folder-open"></i>新しい評価法</div>
+                            <div class="info-content">
+                                <p><strong>ポートフォリオ評価</strong>：</p>
+                                <p>学習者の作品、レポート、テストなどを系統的・継続的にファイル（収集）したものを用いて評価する手法。</p>
+                                <p class="mt-2"><span class="keyword">質的評価</span>に適しており、プロセスや努力、多面的な能力を評価できる。</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. ピグマリオン効果 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="trending-up"></i>教師の期待効果</div>
+                            <div class="info-content">
+                                <p><strong>ピグマリオン効果</strong>（ローゼンソール効果）：</p>
+                                <p>教師が「この子は伸びる」と期待すると、実際に成績が向上する現象。</p>
+                                <p class="mt-2"><strong>ゴーレム効果</strong>：</p>
+                                <p>逆に、教師が期待しないと成績が低下する現象。</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. ハロー効果 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="sun"></i>ハロー効果（光背効果）</div>
+                            <div class="info-content">
+                                <p>ある一つの目立った特徴（字がきれい、挨拶が良いなど）に引きずられて、他の側面まで良く（または悪く）評価してしまうバイアス。</p>
+                                <p class="mt-2">人物評価で最も起こりやすい誤りの一つ。</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. その他のバイアス -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="alert-triangle"></i>その他の評価誤差</div>
+                            <div class="info-content">
+                                <p><strong>寛大化傾向</strong>：評価が全体的に甘くなる。</p>
+                                <p><strong>中心化傾向</strong>：評価が真ん中（3など）に集まる。自信がない時などに起きやすい。</p>
+                                <p><strong>対比誤差</strong>：評価者自身の特性と比較して評価してしまう（自分が几帳面だと、普通の人をだらしないと評価するなど）。</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startQuiz()">
+                    <i data-lucide="play-circle" style="margin-right: 8px;"></i>問題演習を開始する
+                </button>
+            </div>
+
+            <!-- クイズセクション -->
+            <div id="quiz-section" class="quiz-container">
+                <div class="question-card">
+                    <div class="question-meta">
+                        <span>Question <span id="q-number">1</span></span>
+                        <span>全5問</span>
+                    </div>
+
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
+
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
+
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-section" class="result-screen">
+                <h2><i data-lucide="award" style="vertical-align: middle; color: var(--accent-color);"></i> 演習結果</h2>
+                <div class="score-display">
+                    <span id="score-num">0</span> / 5 問正解
+                </div>
+                <p id="result-msg" style="margin-bottom: 30px; font-weight: bold; color: #64748b;"></p>
+                
+                <button class="start-btn" style="margin: 0 auto; background: #64748b;" onclick="resetToSummary()">
+                    <i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>戻る
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                q: "【問題1】教育評価について説明した文として【適切でないもの】を一つ選びなさい。",
+                options: [
+                    "教育評価の目的は、教師の指導と子どもたちの学習活動の改善を目指すために行うものであるということができる。",
+                    "「5段階相対評価」に対しては、どんなに指導しようとも「1」や「2」を付ける子どもが存在することや、排他的な競争が常態化するという批判がある。",
+                    "「到達度評価」は相対評価の一種で、学力内容としての「到達目標」を評価基準とすることによって、どのような学力が形成されたか否かを明らかにすることができる。",
+                    "「個人内評価」とは、心身の特性の個人差を他人との比較ではなく、個人としてその特徴を捉えるものであり、進歩の状況などを明らかにする方法である。"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>「到達度評価」は<strong>絶対評価</strong>（目標準拠評価）の一種です。<br>相対評価（集団準拠評価）は、集団内での順位に基づく評価であり、到達度評価とは異なります。"
+            },
+            {
+                q: "【問題2】次の記述ア・イと、用語A～Cの組合せとして適切なものを選びなさい。<br><br>ア：教師がある児童・生徒に対して期待をもった場合、その期待の通りに結果が得られること。<br>イ：他者がある側面で望ましい特徴をもっていると、その評価を当該人物に対する全体的評価にまで広げてしまうこと。<br><br>A ピグマリオン効果　B 寛大化傾向　C ハロー効果",
+                options: [
+                    "ア-A　イ-B",
+                    "ア-A　イ-C",
+                    "ア-B　イ-C",
+                    "ア-C　イ-A",
+                    "ア-C　イ-B"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>ア：教師の期待効果は<strong>ピグマリオン効果（A）</strong>です。<br>イ：一部の特徴が全体評価に影響するのは<strong>ハロー効果（C）</strong>（光背効果）です。<br>寛大化傾向（B）は、全体的に評価が甘くなることです。"
+            },
+            {
+                q: "【問題3】教育評価に関する説明として【適切なもの】を一つ選びなさい。",
+                options: [
+                    "全般的に好まれている人が、知的、有能、正直と判断されることがあるように、他者の評価がある側面の判断を基になされる傾向を対比誤差という。",
+                    "教師の期待が児童・生徒の振る舞いを期待通りに導く効果のことをピグマリオン効果という。",
+                    "対象人物の評価が同一グループ内の他者のパフォーマンスに影響を受けることをハロー効果という。",
+                    "評定値が平均や中点の周辺付近に固まってしまい、実際には査定可能範囲の全体を反映できないことを寛容効果という。",
+                    "評価者が相手に好意的感情をもっている場合は高く評価するなど、感情によって評価をする傾向を逆算化傾向という。"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>ピグマリオン効果（ローゼンソール効果）の正しい説明です。<br><br>1：「対比誤差」ではなく<strong>ハロー効果</strong>。<br>3：「ハロー効果」ではなく<strong>対比誤差</strong>（他者との対比で歪む）。<br>4：「寛容効果」ではなく<strong>中心化傾向</strong>。<br>5：「逆算化傾向」ではなく<strong>寛大化傾向</strong>（または情緒的バイアス）。"
+            },
+            {
+                q: "【問題4】ローゼンタールが提唱した、教師が「知的に伸びる子」と信じて教えた子どもは実際に成績がよかったという教師期待効果は【ア】である。逆に、教師の否定的な見方によるマイナスの効果は【イ】である。アとイの組み合わせは？",
+                options: [
+                    "ア：ハロー効果　イ：ホーソン効果",
+                    "ア：ハロー効果　イ：ゴーレム効果",
+                    "ア：ピグマリオン効果　イ：ゴーレム効果",
+                    "ア：ピグマリオン効果　イ：ハロー効果",
+                    "ア：ホーソン効果　イ：ピグマリオン効果"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>期待によって成績が向上するのは<strong>ピグマリオン効果</strong>。<br>期待されないことで成績が低下するのは<strong>ゴーレム効果</strong>です。"
+            },
+            {
+                q: "【問題5】ブルームによって分類された評価の3類型（A～C）と名称の組合せとして適切なものは？<br><br>A：学習指導の過程で行う。理解度や学習困難の発見のために行う。<br>B：学習指導の終了時（学期末など）に行う。最終的な到達度の判定。<br>C：学習指導開始前に行う。レディネスの確認や指導計画のために行う。",
+                options: [
+                    "A：総括的　B：形成的　C：診断的",
+                    "A：形成的　B：診断的　C：総括的",
+                    "A：診断的　B：総括的　C：形成的",
+                    "A：形成的　B：総括的　C：診断的",
+                    "A：総括的　B：診断的　C：形成的"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>A（途中）：<strong>形成的評価</strong>（フィードバック用）<br>B（終了後）：<strong>総括的評価</strong>（成績づけ用）<br>C（開始前）：<strong>診断的評価</strong>（実態把握用）"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function startQuiz() {
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('q-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const optionsContainer = document.getElementById('options-area');
+            optionsContainer.innerHTML = '';
+
+            // 次へボタンと解説を隠す
+            document.getElementById('next-area').style.display = 'none';
+            document.getElementById('feedback-area').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="font-weight:bold; margin-right:8px;">${index + 1}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-btn');
+
+            // 選択肢の無効化
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === q.answer) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                options[q.answer].classList.add('correct');
+            }
+
+            // 解説表示
+            document.getElementById('explanation-content').innerHTML = q.exp;
+            document.getElementById('feedback-area').style.display = 'block';
+            
+            // 次へボタン表示
+            const nextArea = document.getElementById('next-area');
+            nextArea.style.display = 'block';
+            
+            const nextBtn = nextArea.querySelector('button');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
+            } else {
+                nextBtn.innerHTML = '次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle;"></i>';
+            }
+            
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('score-num').textContent = score;
+            
+            let msg = "";
+            if (score === 5) msg = "完璧です！評価理論をマスターしています。";
+            else if (score >= 3) msg = "合格圏内です。間違えた箇所を復習しましょう。";
+            else msg = "もう一度まとめを読んで、理論と用語を整理しましょう。";
+            
+            document.getElementById('result-msg').textContent = msg;
+        }
+
+        function resetToSummary() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // アイコン初期化
+        lucide.createIcons();
+    </script>
+</body>
+</html>
