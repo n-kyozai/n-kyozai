@@ -1,0 +1,650 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学級集団 - 教育心理学演習</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* Violet */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px; /* カード3列表示のために幅を確保 */
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* まとめセクション */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .summary-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* 3列カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+        }
+        
+        /* デスクトップで3列 */
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.6; flex-grow: 1; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 0 4px; border-radius: 2px; }
+
+        /* クイズセクション */
+        .quiz-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none; /* 初期状態は非表示 */
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        /* クイズレイアウト（2カラム） */
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左：問題、右：解説 */
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
+        .question-meta {
+            display: flex; justify-content: space-between; 
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1; /* 全幅 */
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: var(--primary-color);
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            background: #f5f3ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* 解説・次へボタン */
+        .feedback-area {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        .next-btn:active { transform: translateY(2px); }
+
+        /* 結果画面 */
+        .result-screen {
+            text-align: center;
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: #1e293b; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-p/index.html">問題演習１</a> ＞ 
+                    学級集団
+                </div>
+                <h1 class="main-title"><i data-lucide="users"></i>学級集団と人間関係</h1>
+            </div>
+
+            <!-- まとめセクション -->
+            <div id="summary-section">
+                <div class="summary-card">
+                    <h2 class="summary-header"><i data-lucide="book-open-check"></i>学習のポイント：学級集団とリーダーシップ</h2>
+                    
+                    <div class="card-grid">
+                        
+                        <!-- 1. 学級集団の機能 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="school"></i>学級の機能</div>
+                            <div class="info-content">
+                                <p><strong>学習集団</strong>：ともに学習を行う場。</p>
+                                <p><strong>生活集団</strong>：遊びや係活動を通じて人間関係を形成する場。</p>
+                                <p><strong><span class="keyword">準拠集団</span></strong>：自分の判断や態度の拠り所となる集団（リファレンス・グループ）。</p>
+                            </div>
+                        </div>
+
+                        <!-- 2. 集団の分類 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="grid"></i>集団の分類</div>
+                            <div class="info-content">
+                                <p><strong>サイキグループ</strong>：心理的・情緒的な繋がりが中心（安心感）。</p>
+                                <p><strong>ソシオグループ</strong>：社会的・役割的な繋がりが中心（目標達成）。</p>
+                                <p><strong>フォーマル（公式）</strong>：学級など制度的な集団。</p>
+                                <p><strong>インフォーマル（非公式）</strong>：友人関係など。</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. リーダーシップ -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="award"></i>リーダーシップ</div>
+                            <div class="info-content">
+                                <p><strong>PM理論</strong>（三隅二不二）：P機能（目標達成）とM機能（集団維持）の2次元で捉える。</p>
+                                <p><strong>PM型</strong>：両方高い（理想的）。</p>
+                                <p><strong>ホワイトら</strong>：専制型、民主型、放任型に分類。民主型が意欲・満足度ともに高い。</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. 測定法 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="search"></i>測定法（モレノ）</div>
+                            <div class="info-content">
+                                <p><strong><span class="keyword">ソシオメトリック・テスト</span></strong>：</p>
+                                <p>好きな相手、一緒に活動したい相手を選択・排斥させる。</p>
+                                <p>結果を「ソシオグラム」として図示し、人間関係の構造を把握する。</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. ゲス・フー・テスト -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="help-circle"></i>ゲス・フー・テスト</div>
+                            <div class="info-content">
+                                <p>「Guess-who test」（誰でしょうテスト）。</p>
+                                <p>「クラスで一番親切な人は？」などの質問で名前を挙げさせ、児童生徒相互の評価により、客観的な地位や特性を把握する。</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. いじめと支援 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="heart-handshake"></i>いじめと支援</div>
+                            <div class="info-content">
+                                <p><strong>いじめの四層構造</strong>：被害者、加害者、<span class="keyword">観衆</span>（はやし立て）、<span class="keyword">傍観者</span>（見て見ぬふり）。</p>
+                                <p><strong>ピア・サポート</strong>：仲間（ピア）による支援。教師よりも相談しやすい利点がある。</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startQuiz()">
+                    <i data-lucide="play-circle" style="margin-right: 8px;"></i>問題演習を開始する
+                </button>
+            </div>
+
+            <!-- クイズセクション -->
+            <div id="quiz-section" class="quiz-container">
+                <div class="question-card">
+                    <div class="question-meta">
+                        <span>Question <span id="q-number">1</span></span>
+                        <span>全4問</span>
+                    </div>
+
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
+
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
+
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-section" class="result-screen">
+                <h2><i data-lucide="award" style="vertical-align: middle; color: var(--accent-color);"></i> 演習結果</h2>
+                <div class="score-display">
+                    <span id="score-num">0</span> / 4 問正解
+                </div>
+                <p id="result-msg" style="margin-bottom: 30px; font-weight: bold; color: #64748b;"></p>
+                
+                <button class="start-btn" style="margin: 0 auto; background: #64748b;" onclick="resetToSummary()">
+                    <i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>戻る
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                q: "【問題19】ソシオメトリック・テストの説明として【適切ではないもの】を1~4から一つ選びなさい。",
+                options: [
+                    "社会集団が組織化されている程度を測定する道具として定義されている。",
+                    "モレノが創始したソシオメトリーの分析技法として開発された。",
+                    "質問の中で選択が集中する子どもをスターと呼ぶ。",
+                    "「クラスで一番親切な人は誰か」などと質問し、子どもたちの関係や性格・行動特性を知る手がかりとする。"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>「クラスで一番親切な人は誰か」という質問を用いるのは<strong>ゲス・フー・テスト</strong>です。<br>ソシオメトリック・テストは、「一緒に遊びたい人」「隣の席になりたい人」などの選択・排斥を問い、集団内の人間関係の構造を明らかにします。<br><br>1,2,3はソシオメトリック・テストに関する正しい記述です。"
+            },
+            {
+                q: "【問題20】学級集団における人間関係や機能に関する記述として、適切なものを一つ選びなさい。",
+                options: [
+                    "学級は、学習を行う「学習集団」としての機能のみを持ち、生活集団としての側面は持たない。",
+                    "自分の判断や態度の拠り所となる集団を「準拠集団」と呼び、必ずしも現在所属している学級と一致するとは限らない。",
+                    "ソシオグループは、心理的なつながりや情緒的な満足を目的とした集団であり、サイキグループは課題達成を目的とした集団である。",
+                    "集団の凝集性が高まると、成員の満足度は高まるが、外部に対して開放的になり、多様な意見を取り入れやすくなる。"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>準拠集団（リファレンス・グループ）は、自分の価値観や行動の基準となる集団で、所属集団と異なる場合もあります（例：前の学校の友達など）。<br><br>1：学級は学習集団であり、かつ生活集団でもあります。<br>3：逆です。サイキ＝情緒的（Psych-）、ソシオ＝社会的（Socio-）。<br>4：凝集性が高すぎると、排他的になりやすく、異論を排除する「集団浅慮」のリスクがあります。"
+            },
+            {
+                q: "【問題21】次の記述ア・イと、これらの研究を行った人物A~Cの組合せとして適切なものを選びなさい。<br><br>ア 集団の目標達成機能(P)と集団維持機能(M)の2次元でリーダーシップを捉え、PM型、Pm型、pM型、pm型の4類型に分類した。PM型が最も生産性や意欲が高い。<br>イ リーダーの指導スタイルとして「専制型」「民主型」「放任型」の三つを設定して実験を行った。民主型の下では能率的で雰囲気もよく、専制型では作業量は多いが意欲に乏しい結果となった。<br><br>A:レヴィン(Lewin)　B:三隅二不二　C:ホワイト(White)とリピット(Lippitt)",
+                options: [
+                    "ア-A　イ-B",
+                    "ア-A　イ-C",
+                    "ア-B　イ-A",
+                    "ア-B　イ-C",
+                    "ア-C　イ-B"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>ア：PM理論は<strong>三隅二不二（B）</strong>が提唱しました。<br>イ：リーダーシップ類型の実験は、レヴィンの弟子である<strong>ホワイトとリピット（C）</strong>が行いました。（レヴィンのグループ研究の一部です）"
+            },
+            {
+                q: "【問題22】いじめの構造や対策に関する記述として、最も適切なものを選びなさい。",
+                options: [
+                    "いじめは、加害者と被害者の二者関係の問題であり、周囲の人間は関係していない。",
+                    "いじめをはやし立てたり面白がったりする「観衆」や、見て見ぬふりをする「傍観者」も、いじめを助長する存在である。",
+                    "ピア・サポート活動は、教師が主導して問題を解決する活動であり、子ども同士の援助活動ではない。",
+                    "いじめの防止には、いじめが発生した後に厳罰を与えることが最も効果的であり、未然防止の教育は重要ではない。"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>いじめは「加害者」「被害者」「観衆」「傍観者」の四層構造で捉えられます。観衆や傍観者の意識を変え、「仲裁者」を育てることが解決の鍵となります。<br><br>1：四層構造で捉えます。<br>3：ピア・サポートは「仲間（ピア）」による支援活動です。<br>4：未然防止や早期発見、心のケアが重要視されます。"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function startQuiz() {
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('q-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const optionsContainer = document.getElementById('options-area');
+            optionsContainer.innerHTML = '';
+
+            // 次へボタンと解説を隠す
+            document.getElementById('next-area').style.display = 'none';
+            document.getElementById('feedback-area').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="font-weight:bold; margin-right:8px;">${index + 1}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-btn');
+
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === q.answer) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                options[q.answer].classList.add('correct');
+            }
+
+            document.getElementById('explanation-content').innerHTML = q.exp;
+            document.getElementById('feedback-area').style.display = 'block';
+            
+            // 選択肢の上に次へボタンを表示
+            const nextArea = document.getElementById('next-area');
+            nextArea.style.display = 'block';
+            
+            const nextBtn = nextArea.querySelector('button');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
+            } else {
+                nextBtn.innerHTML = '次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle;"></i>';
+            }
+            
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('score-num').textContent = score;
+            
+            let msg = "";
+            if (score === 4) msg = "完璧です！集団心理をよく理解しています。";
+            else if (score >= 2) msg = "合格圏内です。用語の違いを確認しましょう。";
+            else msg = "もう一度まとめを読んで、理論と人物を整理しましょう。";
+            
+            document.getElementById('result-msg').textContent = msg;
+        }
+
+        function resetToSummary() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
