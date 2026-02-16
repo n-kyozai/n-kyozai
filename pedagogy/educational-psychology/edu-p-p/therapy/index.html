@@ -1,0 +1,652 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理療法 - 教育心理学演習</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* Violet */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px; /* カード3列表示のために幅を確保 */
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* まとめセクション */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .summary-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* 3列カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+        }
+        
+        /* デスクトップで3列 */
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.6; flex-grow: 1; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 0 4px; border-radius: 2px; }
+
+        /* クイズセクション */
+        .quiz-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none; /* 初期状態は非表示 */
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        /* クイズレイアウト（2カラム） */
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左：問題、右：解説 */
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
+        .question-meta {
+            display: flex; justify-content: space-between; 
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1; /* 全幅 */
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: var(--primary-color);
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            background: #f5f3ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* 解説・次へボタン */
+        .feedback-area {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        .next-btn:active { transform: translateY(2px); }
+
+        /* 結果画面 */
+        .result-screen {
+            text-align: center;
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: #1e293b; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-p/index.html">問題演習１</a> ＞ 
+                    心理療法
+                </div>
+                <h1 class="main-title"><i data-lucide="smile"></i>心理療法とカウンセリング</h1>
+            </div>
+
+            <!-- まとめセクション -->
+            <div id="summary-section">
+                <div class="summary-card">
+                    <h2 class="summary-header"><i data-lucide="book-open-check"></i>学習のポイント：心理療法と関連用語</h2>
+                    
+                    <div class="card-grid">
+                        
+                        <!-- 1. 来談者中心療法 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="heart"></i>来談者中心療法</div>
+                            <div class="info-content">
+                                <p><strong>ロジャース (Rogers)</strong>が提唱。クライエントの自己成長力を信頼する。</p>
+                                <p><strong>非指示的カウンセリング</strong>：指示や助言を行わず、傾聴に徹する。</p>
+                                <p><strong>3つの態度</strong>：①自己一致、②無条件の肯定的関心（受容）、③共感的理解。</p>
+                            </div>
+                        </div>
+
+                        <!-- 2. 行動療法 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="activity"></i>行動療法</div>
+                            <div class="info-content">
+                                <p>学習理論に基づく不適応行動の修正。</p>
+                                <p><strong>ウォルピ (Wolpe)</strong>：<span class="keyword">系統的脱感作法</span>。不安階層表を用いて、リラックス状態で低い不安から順に克服させる。</p>
+                                <p><strong>スキナー</strong>：シェーピング法、トークンエコノミー法。</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. 精神分析・分析心理学 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="key"></i>深層心理へのアプローチ</div>
+                            <div class="info-content">
+                                <p><strong>フロイト</strong>：精神分析。自由連想法、夢分析。<span class="keyword">無意識</span>の意識化。</p>
+                                <p><strong>ユング</strong>：分析心理学。意識と無意識のバランス。夢や描画などのイメージを重視。</p>
+                                <p><strong>ローエンフェルト</strong>：<span class="keyword">箱庭療法</span>（カルフが発展）。</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. 認知行動療法 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="brain"></i>認知行動療法</div>
+                            <div class="info-content">
+                                <p>認知（捉え方）の変容により感情や行動を変える。</p>
+                                <p><strong>エリス (Ellis)</strong>：<span class="keyword">論理療法</span>（REBT）。ABCDE理論。不合理な信念（イラショナル・ビリーフ）を論駁する。</p>
+                                <p><strong>ベック (Beck)</strong>：認知療法。認知の歪みを修正する。</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. 集団・家族療法 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="users"></i>集団・家族療法</div>
+                            <div class="info-content">
+                                <p><strong>モレノ (Moreno)</strong>：<span class="keyword">心理劇</span>（サイコドラマ）。即興演技によるカタルシス。</p>
+                                <p><strong>バーン (Berne)</strong>：<span class="keyword">交流分析</span>（TA）。エゴグラム（P-A-Cモデル）。</p>
+                                <p><strong>家族療法</strong>：家族を一つのシステムとみなし、その相互作用に働きかける。</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. 重要用語 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="tag"></i>重要用語</div>
+                            <div class="info-content">
+                                <p><strong>ラポール</strong>：カウンセラーとクライエントの間の<span class="keyword">信頼関係</span>。</p>
+                                <p><strong>カタルシス</strong>：心の緊張や不安を解放すること（浄化）。</p>
+                                <p><strong>遊戯療法</strong>：プレイセラピー。遊びを通じた自己表現と治癒。</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startQuiz()">
+                    <i data-lucide="play-circle" style="margin-right: 8px;"></i>問題演習を開始する
+                </button>
+            </div>
+
+            <!-- クイズセクション -->
+            <div id="quiz-section" class="quiz-container">
+                <div class="question-card">
+                    <div class="question-meta">
+                        <span>Question <span id="q-number">1</span></span>
+                        <span>全3問</span>
+                    </div>
+
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
+
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
+
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-section" class="result-screen">
+                <h2><i data-lucide="award" style="vertical-align: middle; color: var(--accent-color);"></i> 演習結果</h2>
+                <div class="score-display">
+                    <span id="score-num">0</span> / 3 問正解
+                </div>
+                <p id="result-msg" style="margin-bottom: 30px; font-weight: bold; color: #64748b;"></p>
+                
+                <button class="start-btn" style="margin: 0 auto; background: #64748b;" onclick="resetToSummary()">
+                    <i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>戻る
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                q: "【問題16】次のA~Cの記述に該当する心理療法や理論として、正しい組合せを選びなさい。<br><br>A：ロジャーズ(Rogers)が提唱。カウンセラーがクライエントの自助能力を重要視し、それを側面から援助して開発を促す。<br>B：モレノ(Moreno)が創始。即興的演技を通して、カタルシスや自己洞察に導かれ、葛藤状況の克服を学ぶ。<br>C：ウォルピ(Wolpe)が開発。不安階層表を作成し、リラクセーションを用いて弱い刺激から順に不安を克服させていく。",
+                options: [
+                    "A:ピア・カウンセリング　B:心理劇　C:遊戯療法",
+                    "A:交流分析　B:遊戯療法　C:ピア・カウンセリング",
+                    "A:非指示的カウンセリング　B:心理劇　C:系統的脱感作法",
+                    "A:非指示的カウンセリング　B:心理劇　C:遊戯療法",
+                    "A:非指示的カウンセリング　B:遊戯療法　C:交流分析"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>A：ロジャーズの理論は「来談者中心療法」とも呼ばれ、指示を与えないため<strong>非指示的カウンセリング</strong>とも言われます。<br>B：モレノが創始した即興劇を用いる療法は<strong>心理劇（サイコドラマ）</strong>です。<br>C：ウォルピの不安階層表を用いる行動療法は<strong>系統的脱感作法</strong>です。"
+            },
+            {
+                q: "【問題17】心理学に関わる用語について、正しい説明を3つ選んだ組合せとして適切なものはどれか。<br><br>ア：ホスピタリズム - 施設や病院等への長期収容により生じる、乳幼児の心身の発達障害。<br>イ：強化 - 前の学習が新しい事態での学習に影響を与えること。<br>ウ：高原現象 - 複雑な内容の学習の過程において、一時的な停滞が起こる現象。<br>エ：ピグマリオン効果 - ある特定人物が望ましい特性を持っていると、他の側面も全て望ましいと判断しがちな傾向。<br>オ：ラポール - 心理学的面接における、面接者と被面接者の間の信頼関係。",
+                options: [
+                    "ア、イ、ウ",
+                    "ア、イ、エ",
+                    "ア、イ、オ",
+                    "ア、ウ、エ",
+                    "ア、ウ、オ",
+                    "ア、エ、オ",
+                    "イ、ウ、エ",
+                    "イ、ウ、オ",
+                    "イ、エ、オ",
+                    "ウ、エ、オ"
+                ],
+                answer: 4, // 5番目（ア、ウ、オ）
+                exp: "<strong>正解：5 (ア、ウ、オ)</strong><br>ア：正しい。施設病とも呼ばれます。<br>イ：誤り。これは「学習の転移」の説明です。「強化」は行動の頻度を高める手続きのこと。<br>ウ：正しい。プラトーとも呼ばれます。<br>エ：誤り。これは「ハロー効果（光背効果）」の説明です。ピグマリオン効果は教師の期待効果。<br>オ：正しい。フランス語で「架け橋」を意味します。"
+            },
+            {
+                q: "【問題18】教育心理に関わる用語について、正しいものを2つ選んだ組合せとして適切なものはどれか。<br><br>ア：ソシオメトリー - カウンセリング等における信頼関係を表す言葉。<br>イ：モラトリアム - モレノによって提唱された、集団構造の特徴を明らかにするための理論。<br>ウ：箱庭療法 - ローエンフェルトが考案した技法を原型とする心理療法。<br>エ：ラポール - エリクソンが青年期を称して用いた言葉で、社会的責任を猶予される期間。<br>オ：論理療法 - 誤った思い込みを捨てて、合理的な考え方へ変化していくのを援助する心理療法。",
+                options: [
+                    "ア、イ",
+                    "ア、ウ",
+                    "ア、エ",
+                    "ア、オ",
+                    "イ、ウ",
+                    "イ、エ",
+                    "イ、オ",
+                    "ウ、エ",
+                    "ウ、オ",
+                    "エ、オ"
+                ],
+                answer: 8, // 9番目（ウ、オ）
+                exp: "<strong>正解：9 (ウ、オ)</strong><br>ア：誤り。信頼関係は「ラポール」。ソシオメトリーはモレノの集団測定法。<br>イ：誤り。モレノの理論は「ソシオメトリー」。モラトリアムはエリクソン。<br>ウ：正しい。ローエンフェルトの「世界技法」をカルフが発展させました。<br>エ：誤り。猶予期間は「モラトリアム」。<br>オ：正しい。エリスが創始した認知行動療法の一つです。"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function startQuiz() {
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('q-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const optionsContainer = document.getElementById('options-area');
+            optionsContainer.innerHTML = '';
+
+            // 次へボタンと解説を隠す
+            document.getElementById('next-area').style.display = 'none';
+            document.getElementById('feedback-area').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="font-weight:bold; margin-right:8px;">${index + 1}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-btn');
+
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === q.answer) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                options[q.answer].classList.add('correct');
+            }
+
+            document.getElementById('explanation-content').innerHTML = q.exp;
+            document.getElementById('feedback-area').style.display = 'block';
+            
+            // 選択肢の上に次へボタンを表示
+            const nextArea = document.getElementById('next-area');
+            nextArea.style.display = 'block';
+            
+            const nextBtn = nextArea.querySelector('button');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
+            } else {
+                nextBtn.innerHTML = '次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle;"></i>';
+            }
+            
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('score-num').textContent = score;
+            
+            let msg = "";
+            if (score === 3) msg = "完璧です！心理療法の知識はバッチリです。";
+            else if (score >= 2) msg = "合格圏内です。間違えた箇所を確認しましょう。";
+            else msg = "もう一度まとめを読んで、用語と人物を整理しましょう。";
+            
+            document.getElementById('result-msg').textContent = msg;
+        }
+
+        function resetToSummary() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
