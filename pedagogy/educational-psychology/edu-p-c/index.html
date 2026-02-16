@@ -1,0 +1,589 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乳幼児期の発達 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー（Violet） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: #059669; /* 教職教養カテゴリ色 */
+            background-color: #ecfdf5;
+            font-weight: bold;
+            border-right: 3px solid #059669;
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        /* 暗記ノート風スタイル */
+        .note-container {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .note-header {
+            background-color: #ede9fe; /* 薄い紫 */
+            padding: 16px 24px;
+            border-bottom: 1px solid #ddd6fe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5b21b6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toggle-all-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .note-content {
+            padding: 24px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #4c1d95;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 32px 0 16px 0;
+        }
+        h3:first-child { margin-top: 0; }
+
+        h4 {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #5b21b6;
+            margin: 20px 0 12px 0;
+        }
+
+        .note-section {
+            margin-bottom: 24px;
+        }
+        
+        .note-text {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .note-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .note-list li {
+            margin-bottom: 8px;
+            padding-left: 1.2em;
+            position: relative;
+        }
+
+        .note-list li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 暗記マーカー */
+        .cloze {
+            display: inline-block;
+            background-color: #c4b5fd; /* 隠れている時の色 */
+            color: transparent; /* 文字を透明に */
+            border-bottom: 2px solid #7c3aed;
+            padding: 0 4px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none; /* 選択不可 */
+            transition: all 0.2s ease;
+            font-weight: bold;
+            min-width: 1.5em;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .cloze.revealed {
+            background-color: transparent;
+            color: #db2777; /* 正解の色（ピンク） */
+            border-bottom-color: #db2777;
+        }
+
+        .cloze.revealed:hover {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .cloze:hover {
+            opacity: 0.8;
+        }
+
+        .important-text {
+            font-weight: bold;
+            color: #334155;
+            background: linear-gradient(transparent 60%, #fef08a 60%); /* 黄色マーカー */
+            padding: 0 2px;
+        }
+
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #374151; /* Dark Gray */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: #1f2937;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item active"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                乳幼児期の発達
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">乳幼児期の発達</h1>
+        </div>
+
+        <div class="container">
+            
+            <div class="note-container">
+                <div class="note-header">
+                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
+                    <button class="toggle-all-btn" id="toggleAllBtn">
+                        <i data-lucide="eye"></i> すべて表示
+                    </button>
+                </div>
+                <div class="note-content">
+                    
+                    <h3>1. 乳児期の発達（最初の1年の特殊性）</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            乳児期は出生から1年ないし1年半の間を指す。人間の出生時の平均体重は約<span class="cloze">3</span>kg、平均身長は約<span class="cloze">50</span>cmである。これが1歳時には体重約<span class="cloze">10</span>kg（約3倍）、身長約<span class="cloze">75</span>cm（約1.5倍）となる。
+                        </p>
+                        <p class="note-text">
+                            <span class="cloze">ポルトマン</span> (Portmann, 1951) は、人間は胎内で成熟する期間が短く早く生まれすぎていると考え（<span class="cloze">生理的早産</span>）、乳児期にあたる時期を「<span class="cloze">子宮外胎児期</span>」と呼んだ。
+                            人間は感覚機能は発達しているが、運動機能は未熟な状態で生まれ、養育が不可欠なため、長期にわたる親子関係や社会からの学習機会が増大することになった。
+                        </p>
+                    </div>
+
+                    <h3>2. 乳児期の運動発達</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            出生時は大脳皮質が未熟で、外部刺激に対して脳幹-脊髄性の不随意運動である<span class="cloze">原始反射</span>が生じる。
+                        </p>
+                        <ul class="note-list">
+                            <li><span class="cloze">把握</span>反射：手のひらに触れると握る。</li>
+                            <li><span class="cloze">モロー</span>反射：頭の支えをはずすと抱きつくような動作をする。</li>
+                            <li><span class="cloze">探索</span>反射（ルーティング反射）：口元に触れた方向に頭を向ける。</li>
+                            <li><span class="cloze">吸啜</span>反射（きゅうてつ）：口の中に触れると吸う。</li>
+                            <li><span class="cloze">バビンスキー</span>反射：足の裏をひっかくと足の親指が反り、他の指が扇状に広がる。</li>
+                            <li>自動歩行：支えて足を床につけると歩くような動作をする。</li>
+                        </ul>
+                        <p class="note-text">
+                            身体的発達には一貫した方向性が認められる。<br>
+                            ①「<span class="cloze">頭部</span>から尾部へ」（首すわり→お座り→歩行）<br>
+                            ②「<span class="cloze">中心</span>部から周辺部へ」（腕全体→手首→指先）
+                        </p>
+                    </div>
+
+                    <h3>3. ことばの発達と社会・情緒的発達</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            新生児が他児の泣き声につられて泣くことを<span class="cloze">情動伝染</span>という。また、大人の表情（舌出しや口の開閉）をまねる<span class="cloze">新生児模倣</span>も見られる。
+                        </p>
+                        <p class="note-text">
+                            <span class="cloze">フロイト</span>は、乳児期のリビドー（性的エネルギー）が唇に集中すると考え、この段階を<span class="cloze">口唇期</span>と呼んだ。
+                        </p>
+                        <p class="note-text">
+                            生後2ヶ月頃から1歳頃まで、「アウアウ」「バブバブ」といった意味不明な発声が見られる。これを<span class="cloze">喃語</span>（なんご）という。
+                        </p>
+                    </div>
+
+                    <h3>4. 愛着（アタッチメント）の形成</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            乳児と養育者の間に形成される特定の心理的絆を、<span class="cloze">ボウルビー</span> (Bowlby) は<span class="cloze">愛着</span> (attachment) と呼んだ。
+                        </p>
+                        <p class="note-text">
+                            <span class="cloze">ハーロー</span> (Harlow) のアカゲザルの代理母実験では、ミルクが出る針金製の代理母よりも、ミルクが出なくても触り心地の良い<span class="cloze">布製</span>の代理母との接触時間が長かった。
+                            これにより、愛着は単に空腹を満たすためではなく、接触の心地よさ（<span class="cloze">接触の慰安</span>）や<span class="cloze">安全基地</span>としての存在によって形成されることが示された。
+                        </p>
+                        <p class="note-text">
+                            <span class="cloze">エリクソン</span>の心理社会的発達段階において、乳児期の課題は「<span class="cloze">信頼</span> 対 <span class="cloze">不信</span>」である。
+                        </p>
+                    </div>
+
+                    <h3>5. 幼児期の発達</h3>
+                    <div class="note-section">
+                        <h4>(1) 基本的生活習慣と自我の芽生え</h4>
+                        <p class="note-text">
+                            食事、排泄、着替えなどの自立が進む。自己主張の現れとして<span class="cloze">第一反抗期</span>が見られ、自我が芽生える。
+                        </p>
+
+                        <h4>(2) ピアジェの認知発達段階</h4>
+                        <ul class="note-list">
+                            <li><strong><span class="cloze">感覚運動</span>期（0～2歳）：</strong>
+                                感覚と運動を通して世界を理解する。隠れたものがそこに存在し続けること（<span class="cloze">対象の永続性</span>）を理解するようになる。
+                            </li>
+                            <li><strong><span class="cloze">前操作</span>期（2～7歳）：</strong>
+                                ごっこ遊び（<span class="cloze">象徴</span>遊び）が盛んになる。直観的思考であり、保存概念は未獲得。<span class="cloze">自己中心</span>性が強く、他者の視点に立つのが難しい（三つ山の課題）。
+                            </li>
+                        </ul>
+
+                        <h4>(3) ことばの発達</h4>
+                        <p class="note-text">
+                            1歳前後で「マンマ」などの<span class="cloze">一語文</span>、1歳後半から2歳で「ワンワン キタ」などの<span class="cloze">二語文</span>を話すようになり、語彙が爆発的に増加する。
+                        </p>
+
+                        <h4>(4) 社会性の発達（遊びの段階）</h4>
+                        <p class="note-text">
+                            <span class="cloze">パーテン</span> (Parten, 1932) は、遊びの発達を以下の6段階で説明した。
+                        </p>
+                        <ol class="list-decimal pl-6 mb-4 text-gray-700">
+                            <li>ぼんやり（何もしない）</li>
+                            <li>ひとり遊び</li>
+                            <li>傍観（見るだけ）</li>
+                            <li><span class="cloze">並行</span>遊び：近くで同じ遊びをするが、お互いに交流を持たない。</li>
+                            <li><span class="cloze">連合</span>遊び：交流はあるが、役割分担やルールはない。</li>
+                            <li><span class="cloze">協同</span>遊び：役割分担やルールがあり、組織化されている。</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- Topへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            document.body.style.overflow = isActive ? '' : 'hidden';
+            lucide.createIcons();
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // 暗記マーカー制御
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        // 個別のクリックイベント
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        // すべて表示ボタン
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) {
+                    cloze.classList.add('revealed');
+                } else {
+                    cloze.classList.remove('revealed');
+                }
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+                toggleAllBtn.classList.add('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.remove('bg-white', 'text-indigo-600');
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+                toggleAllBtn.classList.remove('bg-indigo-600', 'text-white');
+                toggleAllBtn.classList.add('bg-white', 'text-indigo-600');
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const all = clozes.length;
+            const revealed = document.querySelectorAll('.cloze.revealed').length;
+            if (revealed === all) {
+                allRevealed = true;
+            } else if (revealed === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+
+        // Topへ戻るボタン制御
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        // スクロール検知
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        // クリックイベント
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+    </script>
+</body>
+</html>
