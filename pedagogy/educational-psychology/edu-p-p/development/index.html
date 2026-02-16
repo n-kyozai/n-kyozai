@@ -63,7 +63,7 @@
         }
 
         .container {
-            max-width: 1200px; /* カード3列表示のために幅を確保 */
+            max-width: 1200px; /* ワイド画面対応 */
             margin: 0 auto;
         }
 
@@ -101,7 +101,6 @@
         /* 3列カードグリッド */
         .card-grid {
             display: grid;
-            /* デスクトップで3列になるように調整 */
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
@@ -112,7 +111,7 @@
             border-radius: 8px;
             padding: 16px;
             transition: transform 0.2s;
-            height: 100%; /* 高さを揃える */
+            height: 100%;
         }
         .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
 
@@ -132,7 +131,7 @@
 
         /* クイズセクション */
         .quiz-container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             display: none; /* 初期状態は非表示 */
         }
@@ -146,10 +145,27 @@
             margin-bottom: 24px;
         }
 
+        /* 2カラムレイアウト用コンテナ */
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
         .question-meta {
             display: flex; justify-content: space-between; 
             color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
             border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1; /* グリッド内で全幅 */
         }
 
         .question-text {
@@ -197,20 +213,20 @@
             color: #991b1b;
         }
 
-        /* 解説・次へボタン */
+        /* 解説エリア（右側） */
         .feedback-area {
-            margin-top: 24px;
             display: none;
             animation: fadeIn 0.3s ease;
         }
 
         .explanation-box {
-            background: #f1f5f9;
-            padding: 20px;
+            background: #f8fafc;
+            padding: 24px;
             border-radius: 12px;
-            margin-bottom: 16px;
             font-size: 0.95rem;
             border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
         }
 
         .next-btn {
@@ -331,7 +347,6 @@
             <div id="summary-section">
                 <div class="summary-card">
                     <h2 class="summary-header"><i data-lucide="book-open-check"></i>学習のポイント：発達理論と重要人物</h2>
-                    <p style="margin-bottom: 24px; color: #64748b;">問題演習の前に、発達に関する主要な理論と人物を整理しましょう。</p>
                     
                     <div class="card-grid">
                         
@@ -420,30 +435,39 @@
                         <span>Question <span id="q-number">1</span></span>
                         <span>全14問</span>
                     </div>
-                    
-                    <div id="question-text" class="question-text">
-                        <!-- 問題文 -->
-                    </div>
-                    
-                    <!-- 選択肢の上に「次へ」ボタンエリアを配置 (初期は非表示) -->
-                    <div id="next-area" style="display: none; margin-bottom: 20px;">
-                        <button class="next-btn" onclick="nextQuestion()">
-                            次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
-                        </button>
-                    </div>
 
-                    <div id="options-area" class="option-container">
-                        <!-- 選択肢 -->
-                    </div>
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
 
-                    <div id="feedback-area" class="feedback-area">
-                        <div class="explanation-box">
-                            <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
-                            <div id="explanation-content">
-                                <!-- 解説本文 -->
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
+
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
