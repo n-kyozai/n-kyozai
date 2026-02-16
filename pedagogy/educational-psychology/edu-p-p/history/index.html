@@ -63,7 +63,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px; /* カード3列表示のために幅を確保 */
             margin: 0 auto;
         }
 
@@ -94,29 +94,59 @@
             color: var(--accent-color);
             border-bottom: 2px solid #f1f5f9;
             padding-bottom: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
             display: flex; align-items: center; gap: 8px;
         }
 
-        .person-grid {
+        /* 3列カードグリッド */
+        .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
         }
 
-        .person-item {
-            background: #f8fafc;
-            padding: 16px;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
+        /* デスクトップで3列 */
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
-        .person-name { font-weight: bold; color: var(--primary-color); display: block; margin-bottom: 6px; font-size: 1.05rem; }
-        .person-desc { font-size: 0.9rem; color: #475569; line-height: 1.5; }
-        .keyword { font-weight: bold; color: #e11d48; }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.6; flex-grow: 1; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 0 4px; border-radius: 2px; }
+
+        .person-item {
+            /* グリッド内アイテムとしてのスタイル */
+        }
+        .person-name { font-weight: bold; color: var(--primary-color); display: block; margin-bottom: 4px; }
+        .person-desc { font-size: 0.9rem; color: #475569; }
 
         /* クイズセクション */
         .quiz-container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             display: none; /* 初期状態は非表示 */
         }
@@ -130,10 +160,27 @@
             margin-bottom: 24px;
         }
 
+        /* クイズレイアウト（2カラム） */
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左：問題、右：解説 */
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
         .question-meta {
             display: flex; justify-content: space-between; 
             color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
             border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1; /* 全幅 */
         }
 
         .question-text {
@@ -183,18 +230,18 @@
 
         /* 解説・次へボタン */
         .feedback-area {
-            margin-top: 24px;
             display: none;
             animation: fadeIn 0.3s ease;
         }
 
         .explanation-box {
-            background: #f1f5f9;
-            padding: 20px;
+            background: #f8fafc;
+            padding: 24px;
             border-radius: 12px;
-            margin-bottom: 16px;
             font-size: 0.95rem;
             border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
         }
 
         .next-btn {
@@ -223,6 +270,8 @@
             border-radius: 16px;
             box-shadow: var(--shadow);
             border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .score-display {
@@ -266,7 +315,7 @@
             .main-content { margin-left: 0; padding: 16px; }
             .mobile-toggle-btn { display: flex; }
             .container { padding-top: 40px; }
-            .person-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -315,39 +364,62 @@
                     <h2 class="summary-header"><i data-lucide="user-check"></i>重要人物とキーワードまとめ</h2>
                     <p style="margin-bottom: 24px; color: #64748b;">以下の人物とキーワードを整理してから、問題演習に進みましょう。</p>
                     
-                    <div class="person-grid">
-                        <div class="person-item">
-                            <span class="person-name">ヘルバルト (Herbart)</span>
-                            <span class="person-desc">教育の目的を<span class="keyword">倫理学</span>に、方法を<span class="keyword">心理学</span>に求めた。四段階教授法を提唱。</span>
+                    <div class="card-grid">
+                        
+                        <!-- 1. 創始期 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="history"></i>心理学の創始</div>
+                            <div class="info-content">
+                                <p><strong>ヴント (Wundt)</strong>：1879年、心理学実験室を開設。<span class="keyword">構成主義心理学</span>。内観法。近代心理学の父。</p>
+                                <p style="margin-top:8px;"><strong>ヘルバルト (Herbart)</strong>：教育の目的を<span class="keyword">倫理学</span>に、方法を<span class="keyword">心理学</span>に求めた。四段階教授法。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">ヴント (Wundt)</span>
-                            <span class="person-desc">1879年に心理学実験室を開設。<span class="keyword">構成主義心理学</span>の祖。内観法を用いた。</span>
+
+                        <!-- 2. 行動主義 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="zap"></i>行動主義</div>
+                            <div class="info-content">
+                                <p><strong>ワトソン (Watson)</strong>：<span class="keyword">行動主義心理学</span>。観察可能な「刺激(S)と反応(R)」を研究対象とした。環境優位説。</p>
+                                <p style="margin-top:8px;"><strong>ソーンダイク (Thorndike)</strong>：<span class="keyword">試行錯誤説</span>（効果の法則）。教育測定運動。『教育心理学』を著す。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">ソーンダイク (Thorndike)</span>
-                            <span class="person-desc">『教育心理学』(1910)を刊行し体系化。<span class="keyword">試行錯誤説</span>、効果の法則、教育測定運動。</span>
+
+                        <!-- 3. ゲシュタルト心理学 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="layers"></i>ゲシュタルト心理学</div>
+                            <div class="info-content">
+                                <p><strong>ヴェルトハイマー (Wertheimer)</strong>：仮現運動の研究。「全体は部分の総和以上である」と主張。</p>
+                                <p style="margin-top:8px;"><strong>ケーラー (Köhler)</strong>：チンパンジーの実験。<span class="keyword">洞察説</span>。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">ワトソン (Watson)</span>
-                            <span class="person-desc"><span class="keyword">行動主義心理学</span>。観察可能な「刺激(S)と反応(R)」を研究対象とした。</span>
+
+                        <!-- 4. 精神分析 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="search"></i>精神分析学</div>
+                            <div class="info-content">
+                                <p><strong>フロイト (Freud)</strong>：<span class="keyword">無意識</span>の探求。エス・自我・超自我の構造論。防衛機制。</p>
+                                <p style="margin-top:8px;"><strong>ユング (Jung)</strong>：分析心理学。集合的無意識。内向・外向。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">ヴェルトハイマー (Wertheimer)</span>
-                            <span class="person-desc"><span class="keyword">ゲシュタルト心理学</span>。全体は部分の総和以上であると主張。仮現運動の研究。</span>
+
+                        <!-- 5. 臨床・発達 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="smile"></i>臨床・発達</div>
+                            <div class="info-content">
+                                <p><strong>ロジャース (Rogers)</strong>：人間性心理学。<span class="keyword">来談者中心療法</span>。受容・共感・自己一致。</p>
+                                <p style="margin-top:8px;"><strong>ヴィゴツキー (Vygotsky)</strong>：<span class="keyword">発達の最近接領域(ZPD)</span>。教育が発達を牽引する。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">フロイト (Freud)</span>
-                            <span class="person-desc"><span class="keyword">精神分析学</span>。無意識、リビドー、防衛機制。</span>
+
+                        <!-- 6. ライフサイクル -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="user"></i>ライフサイクル論</div>
+                            <div class="info-content">
+                                <p><strong>エリクソン (Erikson)</strong>：人生を8段階に分け、<span class="keyword">心理社会的危機</span>（アイデンティティの確立など）を示した。</p>
+                                <p style="margin-top:8px;"><strong>ハヴィガースト (Havighurst)</strong>：<span class="keyword">発達課題</span>を提唱。</p>
+                            </div>
                         </div>
-                        <div class="person-item">
-                            <span class="person-name">ヴィゴツキー (Vygotsky)</span>
-                            <span class="person-desc"><span class="keyword">発達の最近接領域(ZPD)</span>。教育が発達を牽引するとした。</span>
-                        </div>
-                        <div class="person-item">
-                            <span class="person-name">ロジャース (Rogers)</span>
-                            <span class="person-desc">人間性心理学。<span class="keyword">来談者中心療法</span>（クライエント中心療法）。受容・共感・自己一致。</span>
-                        </div>
+
                     </div>
                 </div>
 
@@ -364,29 +436,38 @@
                         <span>全5問</span>
                     </div>
                     
-                    <div id="question-text" class="question-text">
-                        <!-- 問題文 -->
-                    </div>
-                    
-                    <!-- 選択肢の上に「次へ」ボタンエリアを配置 (初期は非表示) -->
-                    <div id="next-area" style="display: none; margin-bottom: 20px;">
-                        <button class="next-btn" onclick="nextQuestion()">
-                            次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
-                        </button>
-                    </div>
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
 
-                    <div id="options-area" class="option-container">
-                        <!-- 選択肢 -->
-                    </div>
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
 
-                    <div id="feedback-area" class="feedback-area">
-                        <div class="explanation-box">
-                            <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
-                            <div id="explanation-content">
-                                <!-- 解説本文 -->
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -407,22 +488,21 @@
     </main>
 
     <script>
-        // PDF資料に基づいた問題データ
         const questions = [
             {
-                q: "【問題1】心理学の研究に携わった人物と、それらの人物が携わった研究等の教育への影響に関する記述として適切なものを一つ選びなさい。",
+                q: "心理学の研究に携わった人物と、教育への影響に関する記述として【適切なもの】を一つ選びなさい。",
                 options: [
-                    "ヴントは、内観心理学に哲学的手法を取り入れた実験心理学を興した。彼の提唱した内観法は、日本の吉本伊信の内観療法に受け継がれた。",
-                    "ロジャースは、「カウンセリングと心理療法」の中でクライエントという語を用い、来談者中心療法を唱えた。日本の教育相談にも大きな影響を与えている。",
-                    "デューイは、構成心理学における心的要素を重要視しなければならないことを説き、構成主義心理学を提唱した。",
-                    "ウィトマーは、心理学は純粋な研究科学であるべきだと主張し、心理学に「臨床」という概念を導入することによって臨床心理学を提唱した。",
-                    "パールズは、過去の体験や生育歴の探索に重点を置いたゲシュタルト療法を創始した。"
+                    "ヴントは、内観法を提唱し、これが日本の吉本伊信の内観療法に直接受け継がれた。",
+                    "ロジャースは、「クライエント」という語を用い、来談者中心療法を唱えた。日本の教育相談にも大きな影響を与えている。",
+                    "デューイは、構成心理学を提唱し、心的要素を重要視すべきだと説いた。",
+                    "ウィトマーは、心理学は純粋な研究科学であるべきだと主張し、臨床という概念を否定した。",
+                    "パールズは、ゲシュタルト療法を創始し、過去の体験や生育歴の探索のみに重点を置いた。"
                 ],
-                answer: 1, // 2番目が正解
-                exp: "<strong>正解：2</strong><br>ロジャースの来談者中心療法は、受容と共感を重視し、日本の学校教育相談の基盤となっています。<br><br>1：吉本伊信の内観療法は仏教由来であり、ヴントの内観法とは異なります。<br>3：デューイは機能主義心理学です。構成心理学はヴントやティチナーです。<br>4：ウィトマーは「臨床」を導入しましたが、純粋科学に留まらず実践的なクリニックを開設しました。<br>5：ゲシュタルト療法は「今、ここ」での気づきを重視します。過去の探索ではありません。"
+                answer: 1, 
+                exp: "<strong>正解：2</strong><br>ロジャースの来談者中心療法は、受容と共感を重視し、日本の教育相談の基盤となっています。<br><br>1：吉本伊信の内観療法は仏教由来であり、ヴントの内観法とは異なります。<br>3：デューイは機能主義心理学です。構成心理学はヴントやティチナーです。<br>4：ウィトマーは心理学に「臨床」を導入し、クリニックを開設しました。<br>5：ゲシュタルト療法は「今、ここ」での気づきを重視します。"
             },
             {
-                q: "【問題2】「要素の総和から構成される全体としての心的現象」という要素主義の考え方を否定し、意識を全体的なものとして捉えた心理学は？<br>1912年にヴェルトハイマーが仮現運動の研究を行い、実証した。",
+                q: "「要素の総和から構成される全体としての心的現象」という要素主義を否定し、意識を全体的なものとして捉えた心理学は？<br>1912年にヴェルトハイマーが仮現運動の研究で実証した。",
                 options: [
                     "実験心理学",
                     "ゲシュタルト心理学",
@@ -430,11 +510,11 @@
                     "認知心理学",
                     "人間性心理学"
                 ],
-                answer: 1, // 2番目が正解
-                exp: "<strong>正解：2 (ゲシュタルト心理学)</strong><br>「全体は部分の総和以上である」という考え方が特徴です。ヴェルトハイマー、ケーラー、コフカらが代表的です。<br><br>3：行動主義はワトソン（S-R理論）。<br>4：認知心理学は情報処理プロセスを重視。<br>5：人間性心理学はマズローやロジャース（自己実現など）。"
+                answer: 1, 
+                exp: "<strong>正解：2 (ゲシュタルト心理学)</strong><br>「全体は部分の総和以上である」という考え方が特徴です。ヴェルトハイマー、ケーラー、コフカらが代表的です。<br><br>3：行動主義はワトソン。<br>5：人間性心理学はマズローやロジャースです。"
             },
             {
-                q: "【問題3】次の記述の空欄ア～オに当てはまる人物名の組合せとして最も適切なものを選びなさい。<br><br>ア：発達の最近接領域に働きかける<br>イ：ライフサイクルを8つの段階に区切った<br>ウ：3水準6段階からなる道徳性発達理論を提唱<br>エ：発達課題という概念を最初に用いた<br>オ：精神分析学の立場から理論を提唱",
+                q: "次の記述の空欄ア～オに当てはまる人物名の組合せとして正しいものは？<br><br>ア：発達の最近接領域を提唱<br>イ：ライフサイクルを8段階に区分<br>ウ：道徳性発達理論を提唱<br>エ：発達課題という概念を使用<br>オ：精神分析学の立場から理論を提唱",
                 options: [
                     "ア：ヴィゴツキー　イ：フロイト　…",
                     "ア：ハヴィガースト　イ：エリクソン　…",
@@ -442,30 +522,30 @@
                     "ア：ヴィゴツキー　イ：エリクソン　ウ：コールバーグ　エ：ハヴィガースト　オ：フロイト",
                     "ア：ハヴィガースト　イ：フロイト　…"
                 ],
-                answer: 3, // 4番目が正解
-                exp: "<strong>正解：4</strong><br>ア：ヴィゴツキー（最近接領域・ZPD）<br>イ：エリクソン（ライフサイクル・アイデンティティ）<br>ウ：コールバーグ（道徳性発達）<br>エ：ハヴィガースト（発達課題）<br>オ：フロイト（精神分析・無意識）"
+                answer: 3, 
+                exp: "<strong>正解：4</strong><br>ア：ヴィゴツキー（最近接領域）<br>イ：エリクソン（ライフサイクル・アイデンティティ）<br>ウ：コールバーグ（道徳性発達）<br>エ：ハヴィガースト（発達課題）<br>オ：フロイト（精神分析・無意識）"
             },
             {
-                q: "【問題4】教育心理に関する人物とその説明の組み合わせとして【誤っているもの】を一つ選びなさい。",
+                q: "教育心理に関する人物と説明の組み合わせとして【誤っているもの】を選びなさい。",
                 options: [
-                    "ヴィゴツキー：発達の最近接領域説を唱えたり、集団独語に関してピアジェと論争を行ったりした。",
-                    "エビングハウス：保持（忘却）曲線が有名である。記憶研究において無意味綴りを用いた。",
-                    "ブルーム：完全習得学習の理論、教育目標の分類学、診断的・形成的・総括的評価を提唱した。",
-                    "ワトソン：モデリング（観察学習）や自己効力感の研究を推進し、ボボ人形の実験を行った。"
+                    "ヴィゴツキー：発達の最近接領域説を唱えた。",
+                    "エビングハウス：忘却曲線を明らかにし、記憶研究を行った。",
+                    "ブルーム：完全習得学習や、診断的・形成的・総括的評価を提唱した。",
+                    "ワトソン：モデリング（観察学習）や自己効力感の研究を推進した。"
                 ],
-                answer: 3, // 4番目が正解
-                exp: "<strong>正解：4</strong><br>ワトソンは「行動主義」の提唱者です（環境優位説）。<br>「モデリング（観察学習）」や「自己効力感」、「ボボ人形実験」を行ったのは<strong>バンデューラ</strong>です。<br>他の選択肢はすべて正しい記述です。"
+                answer: 3, 
+                exp: "<strong>正解：4</strong><br>ワトソンは「行動主義」の提唱者です。<br>「モデリング（観察学習）」や「自己効力感」を提唱したのは<strong>バンデューラ</strong>です。<br>他の選択肢はすべて正しい記述です。"
             },
             {
-                q: "【問題5】教育心理に関する人物とその説明の組み合わせとして【誤っているもの】を一つ選びなさい。",
+                q: "教育心理に関する人物と説明の組み合わせとして【誤っているもの】を選びなさい。",
                 options: [
-                    "スキナー：ロシアの生理学者で、唾液分泌の研究から条件反射現象を発見し、古典的条件づけの研究を発展させた。",
-                    "ゲゼル：アメリカの心理学者で、双生児を用いた階段のぼりの実験を通じて、発達における成熟優位説を唱えた。",
-                    "ソーンダイク：アメリカの心理学者で、ネコを用いた問題箱の試行錯誤実験から、練習の法則や効果の法則を見出した。",
-                    "ユング：スイスの精神分析学者で、人間の無意識を強調する理論を考え、外向性-内向性という性格の分け方を体系化した。"
+                    "スキナー：唾液分泌の研究から条件反射を発見し、古典的条件づけを発展させた。",
+                    "ゲゼル：双生児の階段のぼり実験を通じて、成熟優位説を唱えた。",
+                    "ソーンダイク：猫の問題箱の実験から、試行錯誤説や効果の法則を見出した。",
+                    "ユング：人間の無意識を強調し、外向性・内向性という性格分類を体系化した。"
                 ],
-                answer: 0, // 1番目が正解
-                exp: "<strong>正解：1</strong><br>ロシアの生理学者で、唾液分泌から条件反射（古典的条件づけ）を発見したのは<strong>パブロフ</strong>です。<br>スキナーはアメリカの心理学者で、オペラント条件づけ（道具的条件づけ）を体系化しました。"
+                answer: 0, 
+                exp: "<strong>正解：1</strong><br>唾液分泌から条件反射（古典的条件づけ）を発見したのは<strong>パブロフ</strong>です。<br>スキナーは、自発的な行動に基づく「オペラント条件づけ」を体系化しました。"
             }
         ];
 
@@ -511,9 +591,6 @@
             const q = questions[currentQuestionIndex];
             const options = document.querySelectorAll('.option-btn');
 
-            // すべての選択肢を無効化（見た目だけ）
-            options.forEach(opt => opt.classList.add('disabled'));
-
             // 正誤判定とスタイル適用
             if (selectedIndex === q.answer) {
                 selectedBtn.classList.add('correct');
@@ -528,11 +605,11 @@
             document.getElementById('explanation-content').innerHTML = q.exp;
             document.getElementById('feedback-area').style.display = 'block';
 
-            // 次へボタンを表示（選択肢の上に表示）
-            const nextArea = document.getElementById('next-area');
-            nextArea.style.display = 'block';
+            // 次へボタンを表示（選択肢の上に）
+            document.getElementById('next-area').style.display = 'block';
             
-            const nextBtn = nextArea.querySelector('button');
+            // ボタンのテキスト設定
+            const nextBtn = document.querySelector('.next-btn');
             if (currentQuestionIndex === questions.length - 1) {
                 nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
             } else {
@@ -559,7 +636,7 @@
             
             let msg = "";
             if (score === 5) msg = "素晴らしい！全問正解です。";
-            else if (score >= 3) msg = "合格圏内です。間違えた箇所を復習しましょう。";
+            else if (score >= 3) msg = "合格圏内です。間違えた箇所を見直しましょう。";
             else msg = "もう一度、人物とキーワードの結びつきを確認しましょう。";
             
             document.getElementById('result-msg').textContent = msg;
