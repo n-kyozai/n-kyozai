@@ -1,0 +1,742 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>発達 - 教育心理学演習</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* Violet */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px; /* カード3列表示のために幅を確保 */
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* まとめセクション */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .summary-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* 3列カードグリッド */
+        .card-grid {
+            display: grid;
+            /* デスクトップで3列になるように調整 */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%; /* 高さを揃える */
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.6; }
+        .keyword { font-weight: bold; color: #e11d48; background: #fff1f2; padding: 0 4px; border-radius: 2px; }
+
+        /* クイズセクション */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: none; /* 初期状態は非表示 */
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .question-meta {
+            display: flex; justify-content: space-between; 
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: var(--primary-color);
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            background: #f5f3ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* 解説・次へボタン */
+        .feedback-area {
+            margin-top: 24px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        .next-btn:active { transform: translateY(2px); }
+
+        /* 結果画面 */
+        .result-screen {
+            text-align: center;
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: #1e293b; }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/index.html">教育心理</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/educational-psychology/edu-p-p/index.html">問題演習１</a> ＞ 
+                    発達
+                </div>
+                <h1 class="main-title"><i data-lucide="baby"></i>発達（理論と段階）</h1>
+            </div>
+
+            <!-- まとめセクション -->
+            <div id="summary-section">
+                <div class="summary-card">
+                    <h2 class="summary-header"><i data-lucide="book-open-check"></i>学習のポイント：発達理論と重要人物</h2>
+                    <p style="margin-bottom: 24px; color: #64748b;">問題演習の前に、発達に関する主要な理論と人物を整理しましょう。</p>
+                    
+                    <div class="card-grid">
+                        
+                        <!-- 1. 発達の規定因 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="dna"></i>発達の規定因</div>
+                            <div class="info-content">
+                                <p><strong>ゲゼル (Gesell)</strong>：<span class="keyword">成熟優位説</span>。双生児の階段登り実験。学習には<span class="keyword">レディネス</span>（準備性）が必要。</p>
+                                <p style="margin-top:8px;"><strong>ワトソン (Watson)</strong>：<span class="keyword">環境優位説</span>（行動主義）。「私に健康な1ダースの乳児を与えよ...」</p>
+                                <p style="margin-top:8px;"><strong>シュテルン (Stern)</strong>：<span class="keyword">輻輳説</span>（ふくそうせつ）。遺伝と環境の加算的影響。</p>
+                                <p style="margin-top:8px;"><strong>ジェンセン (Jensen)</strong>：<span class="keyword">環境閾値説</span>。特性によって環境の影響度が異なる。</p>
+                            </div>
+                        </div>
+
+                        <!-- 2. ピアジェの認知発達 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="brain"></i>ピアジェ (Piaget)</div>
+                            <div class="info-content">
+                                <p><strong>感覚運動期</strong>(0-2歳)：対象の永続性。</p>
+                                <p><strong>前操作期</strong>(2-7歳)：<span class="keyword">自己中心性</span>、アニミズム、保存の概念なし。ごっこ遊び。</p>
+                                <p><strong>具体的操作期</strong>(7-11歳)：<span class="keyword">脱中心化</span>、保存の概念獲得、論理的思考（具体物のみ）。</p>
+                                <p><strong>形式的操作期</strong>(11歳-)：抽象的思考、仮説演繹的思考。</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. エリクソンのライフサイクル -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="user"></i>エリクソン (Erikson)</div>
+                            <div class="info-content">
+                                <p>人生を8段階に分け、心理社会的危機を設定。</p>
+                                <p><strong>乳児期</strong>：<span class="keyword">信頼</span> vs 不信</p>
+                                <p><strong>幼児期後期</strong>：<span class="keyword">自主性</span> vs 罪悪感</p>
+                                <p><strong>児童期</strong>：<span class="keyword">勤勉性</span> vs 劣等感</p>
+                                <p><strong>青年期</strong>：<span class="keyword">同一性</span> vs 同一性拡散（アイデンティティの確立）</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. その他の重要人物 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="users"></i>その他の重要人物</div>
+                            <div class="info-content">
+                                <p><strong>ヴィゴツキー</strong>：<span class="keyword">発達の最近接領域</span> (ZPD)。教育が発達を牽引する。</p>
+                                <p><strong>ボウルビー</strong>：<span class="keyword">愛着 (attachment)</span> 理論。</p>
+                                <p><strong>コールバーグ</strong>：<span class="keyword">道徳性発達理論</span>（3水準6段階）。</p>
+                                <p><strong>ハヴィガースト</strong>：<span class="keyword">発達課題</span>（Developmental Tasks）を提唱。</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. 青年期の特徴 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="user-plus"></i>青年期の特徴</div>
+                            <div class="info-content">
+                                <p><strong>心理的離乳</strong>：ホリングワース提唱。親からの精神的自立。</p>
+                                <p><strong>マージナル・マン</strong>（境界人）：レヴィン提唱。子供と大人の中間。</p>
+                                <p><strong>モラトリアム</strong>：エリクソン提唱。社会的責任の猶予期間。</p>
+                                <p><strong>第二の誕生</strong>：ルソー（『エミール』）の言葉。</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. 仲間関係と障害 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="heart-handshake"></i>仲間・障害</div>
+                            <div class="info-content">
+                                <p><strong>ギャングエイジ</strong>（徒党時代）：小中学年頃。閉鎖的で結束が強い。</p>
+                                <p><strong>チャム・グループ</strong>：中学生頃。同質性を重視。</p>
+                                <p><strong>ピア・グループ</strong>：高校生頃。異質性を認める。</p>
+                                <hr style="margin: 8px 0; border: 0; border-top: 1px dashed #cbd5e1;">
+                                <p><strong>ADHD</strong>：不注意・多動性・衝動性。</p>
+                                <p><strong>LD</strong>：読み書き等の特定の困難。</p>
+                                <p><strong>ASD</strong>：社会性・コミュ障害、こだわり。</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startQuiz()">
+                    <i data-lucide="play-circle" style="margin-right: 8px;"></i>問題演習を開始する
+                </button>
+            </div>
+
+            <!-- クイズセクション -->
+            <div id="quiz-section" class="quiz-container">
+                <div class="question-card">
+                    <div class="question-meta">
+                        <span>Question <span id="q-number">1</span></span>
+                        <span>全14問</span>
+                    </div>
+                    
+                    <div id="question-text" class="question-text">
+                        <!-- 問題文 -->
+                    </div>
+                    
+                    <!-- 選択肢の上に「次へ」ボタンエリアを配置 (初期は非表示) -->
+                    <div id="next-area" style="display: none; margin-bottom: 20px;">
+                        <button class="next-btn" onclick="nextQuestion()">
+                            次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                        </button>
+                    </div>
+
+                    <div id="options-area" class="option-container">
+                        <!-- 選択肢 -->
+                    </div>
+
+                    <div id="feedback-area" class="feedback-area">
+                        <div class="explanation-box">
+                            <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                            <div id="explanation-content">
+                                <!-- 解説本文 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-section" class="result-screen">
+                <h2><i data-lucide="award" style="vertical-align: middle; color: var(--accent-color);"></i> 演習結果</h2>
+                <div class="score-display">
+                    <span id="score-num">0</span> / 14 問正解
+                </div>
+                <p id="result-msg" style="margin-bottom: 30px; font-weight: bold; color: #64748b;"></p>
+                
+                <button class="start-btn" style="margin: 0 auto; background: #64748b;" onclick="resetToSummary()">
+                    <i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>戻る
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                q: "【問題15】ピアジェが提唱した思考の発達段階について、①～③にあてはまる語句の正しい組み合わせは？<br><br>感覚運動期(0~2歳) → ①(2~7歳)：自己中心性、直感的思考<br>→ ②(7~11歳)：脱中心化、保存概念、客観的思考<br>→ ③(11歳以降)：抽象的思考、仮説演繹的思考",
+                options: [
+                    "①前操作期　②後操作期　③形式的操作期",
+                    "①主観的操作期　②具体的操作期　③後操作期",
+                    "①前操作期　②具体的操作期　③形式的操作期",
+                    "①主観的操作期　②前操作期　③後操作期"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>ピアジェの認知発達段階は以下の順です。<br>1. 感覚運動期<br>2. <strong>前操作期</strong> (2-7歳)<br>3. <strong>具体的操作期</strong> (7-11歳)<br>4. <strong>形式的操作期</strong> (11歳-)"
+            },
+            {
+                q: "【問題16】ピアジェの理論についての記述として最も適切なものを選びなさい。",
+                options: [
+                    "あるシェマに基づいて外界から情報を取り入れることを同化、既存のシェマを変更することを調節と呼んだ。",
+                    "認知発達の形式的操作期の段階では、見聞きしたことの模倣が時間をおいて再現される「延滞模倣」が活発になる。",
+                    "認知発達の前操作期の段階では、系列化や分類といった論理操作が可能になるとした。",
+                    "子どもの道徳性が「自律的道徳」から「他律的道徳」へと発達することを示した。"
+                ],
+                answer: 0,
+                exp: "<strong>正解：1</strong><br>1は正しい記述です。<br>2：延滞模倣は「感覚運動期」の終わり頃から見られます。<br>3：論理操作が可能になるのは「具体的操作期」です。<br>4：道徳性は「他律的」から「自律的」へ発達します（逆です）。"
+            },
+            {
+                q: "【問題17】ピアジェが提唱した発達段階について、適切ではないものを選びなさい。",
+                options: [
+                    "生後2歳くらいまでの時期を「感覚運動期」といい、対象の永続性を獲得していく。",
+                    "2~7歳くらいの時期を「前操作期」といい、保存の概念が未獲得である（コップの水の課題など）。",
+                    "7~11歳くらいの時期を「具体的操作期」といい、自己中心性が特徴で、抽象的な概念は扱えない。",
+                    "11歳くらい以降の時期を「形式的操作期」といい、仮説演繹的な思考が可能になる。"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>「具体的操作期」は<strong>脱中心化</strong>（自己中心性からの脱却）が特徴です。<br>自己中心性が特徴なのは「前操作期」です。"
+            },
+            {
+                q: "【問題18】E.H.エリクソンが提唱した心理社会的発達段階の発達課題について適切ではないものを選びなさい。",
+                options: [
+                    "乳児期は、養育者との関わりを通して「基本的信頼感」が形成される。",
+                    "幼児期前期は、排泄トレーニング等を通じ「自律性」を身に付ける。失敗が多いと「恥・疑惑」を生じる。",
+                    "幼児期後期は、自発的な行動により「自主性」が高まる。叱責されると「不安感」を抱く。",
+                    "学童期は、学校生活等を通して「勤勉性」を獲得する。達成できないと「劣等感」に陥る。"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>幼児期後期（遊戯期）の危機は「自主性 対 <strong>罪悪感</strong>」です。<br>自発的な行動が抑制されると、自分が悪いことをしたと感じる罪悪感が生じます（不安感ではありません）。"
+            },
+            {
+                q: "【問題19】エリクソンは発達段階を①つに分け、青年期における課題として②の達成を挙げた。",
+                options: [
+                    "①4段階　②自我同一性",
+                    "①4段階　②基本的信頼",
+                    "①8段階　②自我同一性",
+                    "①8段階　②基本的信頼"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>エリクソンは生涯を<strong>8段階</strong>（ライフサイクル論）に分けました。<br>青年期の課題は<strong>自我同一性（アイデンティティ）</strong>の確立です。"
+            },
+            {
+                q: "【問題20】エリクソンの発達段階における心理・社会的危機について、児童期と青年期の組み合わせとして正しいものは？",
+                options: [
+                    "児童期：信頼対不信　　青年期：勤勉性対劣等感",
+                    "児童期：主体性対罪悪感　　青年期：自律性対恥・疑惑",
+                    "児童期：同一性対同一性拡散　　青年期：主体性対罪悪感",
+                    "児童期：勤勉性対劣等感　　青年期：同一性対同一性拡散",
+                    "児童期：自律性対恥・疑惑　　青年期：信頼対不信"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>児童期（学童期）は「勤勉性 vs 劣等感」。<br>青年期は「同一性 vs 同一性拡散」です。"
+            },
+            {
+                q: "【問題21】コールバーグの道徳性発達理論の順序として適切なものは？<br>ア：対人的同調（よい子）<br>イ：罰と服従<br>ウ：社会契約<br>エ：法と秩序<br>オ：普遍的倫理原理<br>カ：報酬と取引",
+                options: [
+                    "ア→イ→ウ→エ→オ→カ",
+                    "ア→カ→イ→エ→ウ→オ",
+                    "イ→ア→カ→ウ→オ→エ",
+                    "イ→カ→ア→エ→ウ→オ",
+                    "カ→ア→イ→オ→エ→ウ"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br><strong>前慣習的水準</strong>：罰と服従(イ) → 報酬と取引(カ)<br><strong>慣習的水準</strong>：対人的同調(ア) → 法と秩序(エ)<br><strong>後慣習的水準</strong>：社会契約(ウ) → 普遍的倫理(オ)"
+            },
+            {
+                q: "【問題22】道徳性の発達に関する記述のうち、適切ではないものを選びなさい。",
+                options: [
+                    "ピアジェは、道徳性が「他律的段階」から「自律的段階」へと移行するとした。",
+                    "アイゼンバーグは、向社会的道徳判断の発達段階を提唱した。",
+                    "コールバーグは、3水準6段階の発達段階説を提唱した。",
+                    "道徳性に関する心理学的研究の先駆けとなったのは、フロイトの「児童の道徳的判断」である。"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>『児童の道徳的判断』という著書・研究は<strong>ピアジェ</strong>によるものです。<br>フロイトは超自我の形成として道徳性を説明しましたが、この研究名はピアジェのものです。"
+            },
+            {
+                q: "【問題23】以下の説明文と人物の正しい組み合わせは？<br>A：道徳性を3水準6段階で示した。<br>B：発達の最近接領域(ZPD)を唱え、教育の主導的役割を強調した。<br>C：「教育の過程」を著し、発見学習や螺旋型カリキュラムを提唱した。",
+                options: [
+                    "A:ヴィゴツキー B:フロイト C:ハヴィガースト",
+                    "A:コールバーグ B:ヴィゴツキー C:ブルーナー",
+                    "A:ピアジェ B:エリクソン C:スキナー",
+                    "A:エリクソン B:ハヴィガースト C:ワトソン"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>A：コールバーグ（道徳性）<br>B：ヴィゴツキー（最近接領域）<br>C：ブルーナー（発見学習、構造主義）"
+            },
+            {
+                q: "【問題24】発達に関する記述として適切なものを選びなさい。",
+                options: [
+                    "ヴィゴツキーは、ライフサイクルを8段階に区分し、青年期をアイデンティティの時期とした。",
+                    "シュテルンは、認知発達を4段階に分け、発生的認識論を説いた。",
+                    "エリクソンは、遺伝と環境が加算的に作用するという輻輳説を説いた。",
+                    "ゲゼルは、学習には適切なレディネス（成熟）が必要であるという成熟優位説を説いた。",
+                    "ピアジェは、発達の最近接領域に関する理論を説いた。"
+                ],
+                answer: 3,
+                exp: "<strong>正解：4</strong><br>ゲゼルの成熟優位説に関する正しい記述です。<br><br>1：エリクソンの説明。<br>2：ピアジェの説明。<br>3：シュテルンの説明。<br>5：ヴィゴツキーの説明。"
+            },
+            {
+                q: "【問題25】心理学の人物に関する記述として適切なものを選びなさい。",
+                options: [
+                    "ピアジェは、形式的操作期にごっこ遊びが見られ、具体的操作期に論理操作ができるとした。",
+                    "フロイトは、自我は本能的欲求(エス)であり、超自我がそれをコントロールするとした。",
+                    "アドラーは、人は劣等感を克服し、共同体感覚を持つことで問題を解決しようとする存在だと考えた。",
+                    "マズローは、承認の欲求を成長欲求、自己実現の欲求を欠乏欲求と分類した。"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>アドラー心理学（個人心理学）に関する正しい記述です。<br><br>1：ごっこ遊びは「前操作期」。<br>2：自我は調整役。本能的欲求は「エス」。<br>4：承認欲求は「欠乏欲求」。自己実現のみが「成長欲求」。"
+            },
+            {
+                q: "【問題26】発達段階に関する説明として最も適切なものを選びなさい。",
+                options: [
+                    "ガードナーは、発達段階を8つに分類し、青年期の課題をアイデンティティとした。",
+                    "ハヴィガーストは、他者の援助があれば達成できる水準を「発達の最近接領域」と呼んだ。",
+                    "フロイトは、愛着の発達について4つの段階に区別した。",
+                    "エリクソンは、発達段階を6つに分類し、児童期の課題を読み書きの習得とした。",
+                    "マーラーは、乳児が母親から心理的に自立していく過程を「分離-個体化過程」としてまとめた。"
+                ],
+                answer: 4,
+                exp: "<strong>正解：5</strong><br>マーラーの分離-個体化理論に関する正しい記述です。<br><br>1：エリクソンの説明。<br>2：ヴィゴツキーの説明。<br>3：愛着はボウルビー。<br>4：6段階の発達課題はハヴィガースト。"
+            },
+            {
+                q: "【問題27】発達障害の特性・症状についての説明として最も適切なものを選びなさい。",
+                options: [
+                    "LDとは、強い恐怖体験によるトラウマ（心的外傷）のことである。",
+                    "ADHDの主な症状として、不注意、衝動性、多動性が特徴としてあげられる。",
+                    "ASDとは、読み書きや計算など特定の能力の習得に著しい困難を示す状態である。",
+                    "PTSDとは、社会的コミュニケーションや対人的相互反応に持続的な障害がある状態である。"
+                ],
+                answer: 1,
+                exp: "<strong>正解：2</strong><br>ADHD（注意欠陥多動性障害）の特徴です。<br><br>1：PTSDの説明。<br>3：LD（学習障害）の説明。<br>4：ASD（自閉スペクトラム症）の説明。"
+            },
+            {
+                q: "【問題28】次のa~cの発達理論と、人物（ア～カ）の正しい組み合わせを選びなさい。<br>a. 生涯を8段階に分け、心理・社会的危機を示した。<br>b. 認知発達を感覚運動期から形式的操作期の4段階に分類した。<br>c. 道徳性の発達について、前慣習的・慣習的・後慣習的の3水準を示した。<br><br>【語群】ア:スキナー イ:エリクソン ウ:ピアジェ エ:ケーラー オ:コールバーグ カ:ロールシャッハ",
+                options: [
+                    "a-ア b-ウ c-オ",
+                    "a-ア b-エ c-カ",
+                    "a-イ b-ウ c-オ",
+                    "a-イ b-エ c-カ"
+                ],
+                answer: 2,
+                exp: "<strong>正解：3</strong><br>a：エリクソン（ライフサイクル）<br>b：ピアジェ（認知発達）<br>c：コールバーグ（道徳性発達）"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function startQuiz() {
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('q-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const optionsContainer = document.getElementById('options-area');
+            optionsContainer.innerHTML = '';
+
+            // 次へボタンと解説を隠す
+            document.getElementById('next-area').style.display = 'none';
+            document.getElementById('feedback-area').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="font-weight:bold; margin-right:8px;">${index + 1}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-btn');
+
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === q.answer) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                options[q.answer].classList.add('correct');
+            }
+
+            document.getElementById('explanation-content').innerHTML = q.exp;
+            document.getElementById('feedback-area').style.display = 'block';
+            
+            // 選択肢の上に次へボタンを表示
+            const nextArea = document.getElementById('next-area');
+            nextArea.style.display = 'block';
+            
+            const nextBtn = nextArea.querySelector('button');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
+            } else {
+                nextBtn.innerHTML = '次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle;"></i>';
+            }
+            
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('score-num').textContent = score;
+            
+            let msg = "";
+            if (score === questions.length) msg = "完璧です！発達理論をマスターしています。";
+            else if (score >= questions.length * 0.6) msg = "合格圏内です。間違えた箇所を復習しましょう。";
+            else msg = "もう一度まとめを読んで、理論と人物を整理しましょう。";
+            
+            document.getElementById('result-msg').textContent = msg;
+        }
+
+        function resetToSummary() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
