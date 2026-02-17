@@ -1,0 +1,459 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特別な支援を必要とする子どもⅢ - 特別支援教育</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #059669; /* 教職教養テーマカラー(Emerald) */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 24px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* 暗記ノート風スタイル */
+        .note-container {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .note-header {
+            background-color: #ecfdf5;
+            padding: 16px 24px;
+            border-bottom: 1px solid #d1fae5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #047857;
+            display: flex;
+            align-items: center; gap: 8px;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center; gap: 4px;
+        }
+        .toggle-all-btn:hover { background-color: var(--accent-color); color: white; }
+
+        .note-content { padding: 24px; }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #065f46;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 32px 0 16px 0;
+        }
+        h3:first-child { margin-top: 0; }
+        
+        h4 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 24px 0 12px 0;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 4px;
+        }
+
+        .note-section { margin-bottom: 24px; }
+        
+        .note-text { 
+            margin-bottom: 16px; 
+            text-align: justify; 
+            font-size: 0.95rem; 
+            line-height: 1.9; 
+            color: #334155;
+        }
+
+        .note-list {
+            list-style: none; padding: 0; margin-bottom: 16px;
+        }
+        .note-list li {
+            margin-bottom: 10px; padding-left: 1.2em; position: relative; font-size: 0.95rem; line-height: 1.8;
+        }
+        .note-list li::before {
+            content: "•"; color: var(--accent-color); font-weight: bold; position: absolute; left: 0;
+        }
+
+        /* 虫食いスタイル */
+        .cloze {
+            display: inline-block;
+            background-color: #a7f3d0;
+            color: transparent;
+            border-bottom: 2px solid #059669;
+            padding: 0 4px; margin: 0 2px;
+            border-radius: 4px; cursor: pointer; user-select: none;
+            transition: all 0.2s; font-weight: bold; min-width: 2em; text-align: center; vertical-align: bottom;
+        }
+        .cloze.revealed { background-color: transparent; color: #be123c; border-bottom-color: #be123c; }
+        .cloze:hover { opacity: 0.8; }
+
+        /* テーブル */
+        .data-table {
+            width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0; padding: 12px; text-align: left; vertical-align: top;
+        }
+        .data-table th { background-color: #f1f5f9; color: var(--primary-color); font-weight: bold; white-space: nowrap; width: 25%; }
+
+        /* コラム風ボックス */
+        .column-box {
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        .column-title {
+            font-weight: bold;
+            color: #b45309;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .data-table th, .data-table td { font-size: 0.8rem; padding: 8px; display: block; width: 100%; }
+            .data-table th { border-bottom: none; background: #f8fafc; }
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+        
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background-color: #374151; color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            z-index: 2000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; }
+        .scroll-to-top:hover { background-color: #1f2937; transform: translateY(-2px); }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/special-needs/index.html">特別支援教育</a> ＞ 
+                    子どもⅢ
+                </div>
+                <h1 class="main-title"><i data-lucide="puzzle"></i>発達障害・情緒障害の理解と支援</h1>
+            </div>
+
+            <div class="note-container">
+                <div class="note-header">
+                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
+                    <button class="toggle-all-btn" id="toggleAllBtn">
+                        <i data-lucide="eye"></i> すべて表示
+                    </button>
+                </div>
+                <div class="note-content">
+                    
+                    <h3>1. 発達障害とは（定義と理解）</h3>
+                    <div class="note-section">
+                        <h4>(1) 法的定義（発達障害者支援法）</h4>
+                        <p class="note-text">
+                            平成17年（2005年）に施行された「発達障害者支援法」において、発達障害は以下のように定義されています。
+                            「自閉症、アスペルガー症候群その他の広汎性発達障害、学習障害、注意欠陥多動性障害その他これに類する<span class="cloze">脳機能</span>の障害であってその症状が通常<span class="cloze">低年齢</span>において発現するものとして政令で定めるもの」。
+                        </p>
+                        <div class="column-box">
+                            <div class="column-title"><i data-lucide="info"></i>理解のポイント</div>
+                            <p>発達障害は生まれつきの脳機能の発達のアンバランスさ（認知機能の凸凹）に起因するものであり、保護者のしつけや本人の努力不足が原因ではありません。早期発見と適切な療育・教育的支援（二次障害の予防を含む）が重要です。</p>
+                        </div>
+                    </div>
+
+                    <h3>2. 各障害の特性と具体的な支援</h3>
+                    <div class="note-section">
+                        <h4>(1) 自閉スペクトラム症 (ASD) / 広汎性発達障害</h4>
+                        <p class="note-text">
+                            <strong>特性：</strong>
+                            ①対人関係・社会的コミュニケーションの困難（相手の気持ちを推し量るのが苦手、暗黙のルールの理解が困難）、②興味や関心の偏り・こだわり（特定の手順や物への執着、変化への抵抗）、③感覚の過敏さ・鈍麻（聴覚過敏で特定の音が苦手など）を特徴とします。知的な遅れを伴う場合と伴わない場合（高機能自閉症、アスペルガー症候群など）があります。
+                        </p>
+                        <p class="note-text">
+                            <strong>支援のポイント：</strong>
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>見通しを持たせる：</strong>予定の変更が苦手なため、スケジュールを事前に予告し、変更がある場合は早めに伝えます。</li>
+                            <li><strong>視覚的支援：</strong>言葉だけの指示よりも、写真、絵カード、文字などを用いて視覚的に情報を提示します（構造化）。</li>
+                            <li><strong>クールダウン：</strong>パニックになった際に、静かで刺激の少ない場所（カームダウンエリア）で落ち着ける環境を確保します。</li>
+                        </ul>
+
+                        <h4>(2) 学習障害 (LD)</h4>
+                        <p class="note-text">
+                            <strong>特性：</strong>
+                            全般的な知的発達に遅れはないものの、「聞く」「話す」「読む」「書く」「計算する」「推論する」能力のうち、<span class="cloze">特定</span>のものの習得と使用に著しい困難を示します。例えば、流暢に会話ができるのに文字を読むことだけが極端に苦手である、といったアンバランスさが見られます。
+                        </p>
+                        <p class="note-text">
+                            <strong>支援のポイント：</strong>
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>代替手段の活用：</strong>「書く」ことが困難な場合、タブレット端末での入力や代筆を認める。「読む」ことが困難な場合、読み上げソフト（Text-to-Speech）を活用する。</li>
+                            <li><strong>教材の工夫：</strong>行間を広げたプリント、分かち書きされた文章、拡大文字の使用など。</li>
+                            <li><strong>評価方法の調整：</strong>試験時間の延長や、別室受験などの合理的配慮を検討します。</li>
+                        </ul>
+
+                        <h4>(3) 注意欠陥多動性障害 (ADHD)</h4>
+                        <p class="note-text">
+                            <strong>特性：</strong>
+                            年齢や発達に不釣り合いな①<span class="cloze">不注意</span>（気が散りやすい、忘れ物が多い）、②<span class="cloze">多動性</span>（じっとしていられない）、③<span class="cloze">衝動性</span>（順番を待てない、急に走り出す）を特徴とします。これらは通常<span class="cloze">7歳</span>以前に現れます。
+                        </p>
+                        <p class="note-text">
+                            <strong>支援のポイント：</strong>
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>環境調整：</strong>教室の前方の座席にする、掲示物を減らして視覚的刺激を少なくするなど、集中しやすい環境を作ります。</li>
+                            <li><strong>肯定的フィードバック：</strong>叱責よりも「できたこと」を即座に褒め、自己肯定感を高めます。</li>
+                            <li><strong>ソーシャルスキルトレーニング (SST)：</strong>衝動的な行動を抑え、適切な対人関係を築くためのスキルをロールプレイ等で練習します。</li>
+                        </ul>
+                    </div>
+
+                    <h3>3. 情緒障害について</h3>
+                    <div class="note-section">
+                        <h4>(1) 定義と分類</h4>
+                        <p class="note-text">
+                            情緒障害とは、情緒の現れ方が偏っていたり、激しかったりする状態が長期にわたって持続し、自らの意志ではコントロールできない状態を指します。
+                            代表的なものとして、家庭では話せるのに学校などの特定の場面で話せなくなる「<span class="cloze">選択性緘黙</span>（場面緘黙）」や、不登校、反応性愛着障害などが含まれます。
+                        </p>
+                        <h4>(2) 支援のポイント</h4>
+                        <p class="note-text">
+                            心理的な不安や緊張が背景にあることが多いため、無理に話させようとしたり、行動を矯正しようとしたりせず、安心できる関係性と居場所づくりを優先します。スクールカウンセラー等との連携も重要です。
+                        </p>
+                    </div>
+
+                    <h3>4. 通常学級における支援のあり方</h3>
+                    <div class="note-section">
+                        <h4>(1) 通級による指導</h4>
+                        <p class="note-text">
+                            小・中学校の通常の学級に在籍しながら、一部の時間（週1〜8単位時間程度）のみ、障害に応じた特別の指導（自立活動や教科の補充指導）を受ける形態を「<span class="cloze">通級</span>による指導」といいます。
+                            対象は、言語障害、自閉症、情緒障害、弱視、難聴、LD、ADHDなどです。
+                            ※東京都など一部の自治体では、教員が各校を巡回して指導する「特別支援教室」という形態をとっています。
+                        </p>
+
+                        <h4>(2) ユニバーサルデザインの授業づくり</h4>
+                        <p class="note-text">
+                            特別な支援を必要とする子ども「だけ」に配慮するのではなく、全ての子どもにとって「わかりやすい」「参加しやすい」授業を目指す考え方です。
+                            例えば、「板書を構造化する」「指示を短く具体的にする」「視覚的な手がかりを併用する」といった工夫は、発達障害のある子どもだけでなく、クラス全員の学習理解を深めることにつながります。
+                        </p>
+
+                        <h4>(3) 学級経営と周囲への理解</h4>
+                        <p class="note-text">
+                            特別な配慮（合理的配慮）を行う際、周囲の子どもたちが「ずるい」「ひいきだ」と感じないよう、公平性についての理解を促すことが不可欠です。「公平とは、全員に同じことをすることではなく、全員が同じゴールにたどり着けるように、一人ひとりに必要な手助けをすること（眼鏡の使用と同じ）」といった説明を行い、<span class="cloze">多様性</span>を認め合う学級風土を醸成することが求められます。
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // 虫食い機能
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) cloze.classList.add('revealed');
+                else cloze.classList.remove('revealed');
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const revealedCount = document.querySelectorAll('.cloze.revealed').length;
+            if (revealedCount === clozes.length) {
+                allRevealed = true;
+            } else if (revealedCount === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+
+        // Topへ戻るボタン
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollToTopBtn.classList.add('show');
+            else scrollToTopBtn.classList.remove('show');
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
