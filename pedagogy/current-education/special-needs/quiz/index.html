@@ -1,0 +1,538 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特別支援教育 確認テスト - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #059669; /* Emerald */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+
+        /* クイズカード */
+        .quiz-card {
+            background: white; border-radius: 16px; padding: 24px;
+            box-shadow: var(--shadow); border: 1px solid #e2e8f0;
+        }
+        .quiz-body { display: flex; flex-direction: column; gap: 24px; }
+
+        /* デスクトップ版2カラムレイアウト */
+        @media (min-width: 769px) {
+            .quiz-body { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 32px; }
+        }
+
+        .progress-container { margin-bottom: 20px; background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; }
+        .progress-bar { background: var(--accent-color); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+        .question-lesson { font-size: 0.75rem; color: var(--accent-color); font-weight: bold; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .question-text { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; line-height: 1.6; }
+
+        .options-grid { display: grid; gap: 10px; }
+        .option-btn {
+            padding: 16px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px;
+            text-align: left; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; color: var(--text-color);
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent-color); background: #ecfdf5; }
+        .option-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; font-weight: bold; }
+        .option-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+        /* 解説エリア */
+        .explanation-side {
+            padding: 24px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0;
+            display: none; flex-direction: column; gap: 16px; min-height: 200px;
+            animation: fadeIn 0.3s ease;
+        }
+        .explanation-side.show { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn {
+            padding: 14px 24px; border: none; border-radius: 12px; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 8px; transition: all 0.2s; font-size: 0.95rem;
+        }
+        .btn-primary { background: var(--primary-color); color: white; width: 100%; }
+        .btn-primary:hover { background: #1e293b; }
+        .btn-accent { background: var(--accent-color); color: white; width: 100%; }
+        .btn-accent:hover { opacity: 0.9; }
+        .btn-outline { background: white; border: 1px solid #cbd5e1; color: #64748b; width: 100%; }
+        .btn-outline:hover { background: #f1f5f9; border-color: #94a3b8; }
+
+        /* 結果表示 */
+        #result-view { text-align: center; display: none; }
+        .score-circle {
+            width: 160px; height: 160px; border: 10px solid var(--accent-color);
+            border-radius: 50%; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; margin: 32px auto;
+        }
+        .score-num { font-size: 3rem; font-weight: bold; color: var(--primary-color); }
+
+        /* レッスン選択 */
+        #lesson-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .lesson-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 20px; text-align: center; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .lesson-card:hover { border-color: var(--accent-color); transform: translateY(-4px); box-shadow: var(--shadow); }
+        .lesson-card i { color: var(--accent-color); width: 28px; height: 28px; }
+        .lesson-card div { font-size: 0.9rem; font-weight: bold; color: var(--primary-color); }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            #lesson-selector { grid-template-columns: 1fr 1fr; }
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/special-needs/index.html">特別支援教育</a> ＞ 
+                    確認テスト
+                </div>
+                <h1 id="main-title" style="font-size: 1.6rem; color: var(--primary-color);">特別支援教育 確認テスト</h1>
+            </div>
+
+            <!-- チャプター選択 -->
+            <div id="selection-view">
+                <p style="margin-bottom: 24px; font-size: 0.95rem; color: #64748b;">
+                    用語確認に加え、実践的な正誤問題を収録しています。<br>
+                    苦手な章を選んで演習するか、全問まとめて挑戦してください。
+                </p>
+                <div id="lesson-selector"></div>
+                <button class="btn btn-accent" style="margin-top:32px; padding: 16px; font-size: 1.1rem;" onclick="startQuiz('all')">
+                    <i data-lucide="play-circle"></i> 全7章（60問）にまとめて挑戦
+                </button>
+            </div>
+
+            <!-- クイズ画面 -->
+            <div id="quiz-view" style="display:none;">
+                <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+                <div class="quiz-card">
+                    <div class="quiz-body">
+                        <!-- 左側：問題エリア -->
+                        <div class="quiz-main-section">
+                            <div class="question-lesson">
+                                <span id="lesson-label">Lesson</span>
+                                <span id="counter-label">0 / 0</span>
+                            </div>
+                            <div id="question-text" class="question-text">質問内容</div>
+                            
+                            <!-- 選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-action-area" style="display:none; margin-bottom: 20px;">
+                                <button id="next-btn" class="btn btn-primary" style="width:100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" onclick="handleNext()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
+
+                            <div id="options-container" class="options-grid"></div>
+                        </div>
+                        
+                        <!-- 右側：解説エリア -->
+                        <div class="quiz-side-section">
+                            <div id="explanation-box" class="explanation-side">
+                                <div>
+                                    <div id="result-label" style="font-size: 1.2rem; font-weight:bold; margin-bottom:8px;"></div>
+                                    <div id="explanation-text" style="font-size: 0.9rem; line-height: 1.6; color: #064e3b;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div id="result-view">
+                <div class="quiz-card">
+                    <h2 style="font-size: 1.5rem; color: var(--primary-color);">演習結果</h2>
+                    <div class="score-circle">
+                        <span id="final-score" class="score-num">0</span>
+                        <span style="font-size: 0.9rem; color: #94a3b8; margin-top: 4px;">/ <span id="total-q-display">0</span> 問中</span>
+                    </div>
+                    <p id="result-message" style="margin-bottom: 32px; font-weight: bold; font-size: 1.1rem; color: var(--primary-color);"></p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <button id="retry-wrong-btn" class="btn btn-accent" style="display:none;" onclick="startWrongOnlyPractice()">
+                            <i data-lucide="rotate-ccw"></i> 間違えた問題のみ再挑戦
+                        </button>
+                        <button class="btn btn-outline" onclick="backToHome()">
+                            <i data-lucide="list"></i> チャプター選択へ戻る
+                        </button>
+                        <button class="btn btn-primary" onclick="restartCurrent()">
+                            <i data-lucide="refresh-cw"></i> 最初からやり直す
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const lessons = [
+            { id: 1, title: "第1回 特別支援教育とは", icon: "book-open" },
+            { id: 2, title: "第2回 子どもⅠ(知的・重複)", icon: "smile" },
+            { id: 3, title: "第3回 子どもⅡ(視覚・聴覚)", icon: "eye" },
+            { id: 4, title: "第4回 子どもⅢ(発達・情緒)", icon: "puzzle" },
+            { id: 5, title: "第5回 子どもⅣ(肢体・病弱)", icon: "accessibility" },
+            { id: 6, title: "第6回 子どもⅤ(貧困・LGBT)", icon: "globe" },
+            { id: 7, title: "第7回 連携・コーディネーター", icon: "users" }
+        ];
+
+        // クイズデータ（資料内容＋追加正誤問題）
+        const quizData = [
+            // --- 第1回 ---
+            { lesson: 1, q: "障害のある人もない人も可能な限り同じ条件のもとに置かれる権利があり、それを実現するための生活条件の改善が必要であるという考え方を何と言う？", options: ["インクルージョン", "ノーマライゼーション", "国際生活機能分類(ICF)", "合理的配慮"], answer: "ノーマライゼーション", exp: "北欧（バンク＝ミケルセンやニィリエ）から始まった考え方で、「障害があっても当たり前に生活できる社会」を目指す理念です。" },
+            { lesson: 1, q: "障害の有無にかかわらず、すべての人の個人主義を尊重し、学習を支援し、個別のニーズに対応するシステムを何と言う？", options: ["インクルージョン", "ノーマライゼーション", "メインストリーミング", "統合教育"], answer: "インクルージョン", exp: "包摂（ほうせつ）とも訳されます。障害のある子どもを排除せず、共に学ぶ仕組み（インクルーシブ教育システム）の基礎となる概念です。" },
+            { lesson: 1, q: "「特別な教育的手だて」を必要とする「学習における困難さ」がある場合を表す用語は？", options: ["発達障害", "特別な教育的ニーズ", "学習障害", "不適応"], answer: "特別な教育的ニーズ", exp: "Special Educational Needs (SEN)。医学的な診断名の有無にかかわらず、教育的支援が必要な状態を指します。" },
+            { lesson: 1, q: "WHOが2001年に採択した、障害を「心身機能」「活動」「参加」の3側面と環境・個人因子の相互作用で捉える分類は？", options: ["ICD-10", "DSM-5", "国際生活機能分類(ICF)", "ICIDH"], answer: "国際生活機能分類(ICF)", exp: "従来の「障害＝マイナス」という捉え方から、「生活機能」というプラスの側面も含めて環境との相互作用で捉えるモデルへと転換しました。" },
+            { lesson: 1, q: "【正誤問題】ICF（国際生活機能分類）では、障害を個人の問題（病気や欠損）としてのみ捉え、環境の影響は考慮しない。", options: ["○", "×"], answer: "×", exp: "ICFは「医学モデル」ではなく「社会モデル（生活モデル）」の視点を取り入れており、環境因子と個人因子の相互作用を重視します。" },
+            { lesson: 1, q: "【正誤問題】特別支援教育は、特別支援学校や特別支援学級に在籍する児童生徒のみを対象としている。", options: ["○", "×"], answer: "×", exp: "通常の学級に在籍する発達障害などのある児童生徒（全体の約8.8%）も対象としています。" },
+            { lesson: 1, q: "【正誤問題】共生社会の形成は、特別支援教育が目指す重要な目的の一つである。", options: ["○", "×"], answer: "○", exp: "障害の有無にかかわらず、誰もが相互に人格と個性を尊重し支え合う共生社会の基礎を培うことが目的です。" },
+            { lesson: 1, q: "【正誤問題】「障害者の権利に関する条約」の批准により、日本でもインクルーシブ教育システムの構築が求められるようになった。", options: ["○", "×"], answer: "○", exp: "2014年の批准以降、障害のある者が一般教育制度から排除されないことなどが求められています。" },
+
+            // --- 第2回 ---
+            { lesson: 2, q: "学校教育法第72条において、特別支援学校の目的として規定されていない障害種は？", options: ["視覚障害者", "聴覚障害者", "知的障害者", "言語障害者"], answer: "言語障害者", exp: "特別支援学校の対象は「視覚障害、聴覚障害、知的障害、肢体不自由、病弱（身体虚弱を含む）」の5種です。言語障害は通級指導教室等の対象です。" },
+            { lesson: 2, q: "特別支援学校の教育課程に特有の領域で、障害による困難の克服を目指して行われる指導は？", options: ["道徳", "総合的な学習の時間", "自立活動", "特別活動"], answer: "自立活動", exp: "個々の障害の状態に応じて、身体の動き、コミュニケーション、人間関係形成などを指導する領域です。" },
+            { lesson: 2, q: "知的障害の定義として、知的機能の制約とともに重視される要件は？", options: ["運動機能の制約", "適応行動の制約", "情緒の不安定さ", "感覚の過敏さ"], answer: "適応行動の制約", exp: "AAIDDなどの定義では、「知的機能」と「適応行動（概念的・社会的・実用的スキル）」の両方に制約があることが要件とされます。" },
+            { lesson: 2, q: "就学先の決定において、最終的な決定権限を持つのは？", options: ["学校長", "専門家チーム", "保護者", "市町村教育委員会"], answer: "市町村教育委員会", exp: "ただし、平成25年の改正により、本人・保護者の意見を最大限尊重し、合意形成を図ることが求められています。" },
+            { lesson: 2, q: "【正誤問題】就学先の決定においては、障害の程度のみが判断基準となり、本人・保護者の意向は考慮されない。", options: ["○", "×"], answer: "×", exp: "本人・保護者の意見を最大限尊重し、教育的ニーズや専門家の意見も総合して判断されます。" },
+            { lesson: 2, q: "【正誤問題】特別支援学校の小学部・中学部は義務教育である。", options: ["○", "×"], answer: "○", exp: "特別支援学校の小・中学部も義務教育に含まれます。" },
+            { lesson: 2, q: "【正誤問題】知的障害特別支援学校では、各教科等を合わせた指導（生活単元学習など）が行われることが多い。", options: ["○", "×"], answer: "○", exp: "児童生徒の実態に応じ、教科の枠を超えて生活上の課題を総合的に学習する指導形態です。" },
+            { lesson: 2, q: "【正誤問題】重症心身障害児とは、重度の知的障害と重度の肢体不自由が重複している児童生徒を指す。", options: ["○", "×"], answer: "○", exp: "大島分類の1～4に該当する児童生徒などがこれにあたり、医療的ケアが必要な場合も多いです。" },
+
+            // --- 第3回 ---
+            { lesson: 3, q: "主として視覚以外の感覚（触覚や聴覚など）を活用して学習や生活を行う程度の視覚障害を何と言う？", options: ["弱視", "盲", "ロービジョン", "全盲"], answer: "盲", exp: "点字を使用するのが一般的です。一方、保有視力を活用する場合は「弱視（ロービジョン）」と呼ばれます。" },
+            { lesson: 3, q: "視覚障害者が歩行時に使用する杖（白杖）の目的として適切でないものは？", options: ["安全性の確保", "情報の入手", "シンボル（注意喚起）", "視力の回復"], answer: "視力の回復", exp: "白杖は障害物を検知し（安全）、路面情報を得て（情報）、周囲に視覚障害者であることを知らせる（シンボル）ために用います。" },
+            { lesson: 3, q: "外耳や中耳の障害により、音が小さく聞こえる難聴を何と言う？", options: ["感音性難聴", "伝音性難聴", "混合性難聴", "機能性難聴"], answer: "伝音性難聴", exp: "補聴器で音を増幅すれば効果が高いタイプです。内耳以降の障害は「感音性難聴」で、音が歪んで聞こえる特徴があります。" },
+            { lesson: 3, q: "聴覚障害児が9歳頃に直面しやすい、抽象的な学習言語の習得につまずく現象を何と言う？", options: ["9歳の壁", "小4の壁", "言語の壁", "抽象化の壁"], answer: "9歳の壁", exp: "生活言語（BICS）だけでなく、学習言語（CALP）の習得が課題となる時期に現れます。" },
+            { lesson: 3, q: "【正誤問題】視覚障害のある児童生徒に対しては、「そっち」「あっち」などの指示代名詞を使わず、具体的に方向や距離を示す言葉がけが重要である。", options: ["○", "×"], answer: "○", exp: "「右に2メートル」や「クロックポジション（3時の方向）」など、客観的な表現を用いる配慮が必要です。" },
+            { lesson: 3, q: "【正誤問題】弱視（ロービジョン）の児童生徒には、拡大読書器や単眼鏡などの補助具は使用させない方が良い。", options: ["○", "×"], answer: "×", exp: "保有視力を最大限活用するために、補助具やICT機器を積極的に活用すべきです。" },
+            { lesson: 3, q: "【正誤問題】聴覚障害児の指導では、手話の使用は禁止され、口話法のみが推奨されている。", options: ["○", "×"], answer: "×", exp: "現在は手話、指文字、筆談など、子どもに合った手段を活用する「トータル・コミュニケーション」が主流です。" },
+            { lesson: 3, q: "【正誤問題】点字は、縦3点・横2点の計6つの点の組み合わせで構成されている。", options: ["○", "×"], answer: "○", exp: "凸面を左から読む形式で構成されています。" },
+
+            // --- 第4回 ---
+            { lesson: 4, q: "発達障害者支援法の定義において、発達障害は「通常（　）において発現するもの」とされている。", options: ["乳児期", "低年齢", "学童期", "青年期"], answer: "低年齢", exp: "生まれつきの脳機能の障害であるため、幼少期から症状が現れるのが特徴です。" },
+            { lesson: 4, q: "全般的な知的発達に遅れはないが、聞く・話す・読む・書く等の特定の能力に困難がある障害は？", options: ["ADHD", "ASD", "LD", "知的障害"], answer: "LD", exp: "学習障害（限局性学習症）。読み書きの障害（ディスレクシア、ディスグラフィア）や算数障害があります。" },
+            { lesson: 4, q: "不注意、多動性、衝動性を主な特徴とする発達障害は？", options: ["ADHD", "ASD", "LD", "選択性緘黙"], answer: "ADHD", exp: "注意欠陥多動性障害。授業中に座っていられない、忘れ物が多いなどの行動が見られます。" },
+            { lesson: 4, q: "通常の学級に在籍しながら、一部の時間のみ障害に応じた特別の指導を受ける形態を？", options: ["特別支援学級", "訪問教育", "通級による指導", "入り込み指導"], answer: "通級による指導", exp: "週に数時間程度、通級指導教室（または巡回指導）で自立活動や教科の補充指導を受けます。" },
+            { lesson: 4, q: "【正誤問題】自閉スペクトラム症(ASD)の特性として、対人関係の形成が難しく、特定の物事に強いこだわりを持つことが挙げられる。", options: ["○", "×"], answer: "○", exp: "社会性・コミュニケーションの障害、限定された反復的な行動や興味が主な診断基準です。" },
+            { lesson: 4, q: "【正誤問題】ADHDの児童生徒に対しては、叱責を繰り返して行動を矯正することが最も効果的である。", options: ["○", "×"], answer: "×", exp: "叱責よりも、できたことを褒める（肯定的フィードバック）や、環境調整（刺激を減らす）が有効です。" },
+            { lesson: 4, q: "【正誤問題】発達障害は、親のしつけや本人の努力不足が原因である。", options: ["○", "×"], answer: "×", exp: "脳機能の障害であり、しつけの問題ではありません。" },
+            { lesson: 4, q: "【正誤問題】ユニバーサルデザインの授業づくりは、特別な支援が必要な子どものためだけのものである。", options: ["○", "×"], answer: "×", exp: "「全員にとって」わかりやすく学びやすい授業を目指すもので、結果として特別な支援が必要な子どもの助けにもなります。" },
+
+            // --- 第5回 ---
+            { lesson: 5, q: "特別支援学校（肢体不自由）において、原因疾患として最も多いのは？", options: ["筋ジストロフィー", "二分脊椎", "脳性まひ", "てんかん"], answer: "脳性まひ", exp: "約7～8割を占めます。運動障害に加え、知的障害やてんかん等を重複する場合も多いです。" },
+            { lesson: 5, q: "発声が困難な子どものための、文字盤やVOCA（音声出力装置）などの代替手段を総称して何と言う？", options: ["AAC", "ICT", "UD", "AT"], answer: "AAC", exp: "拡大・代替コミュニケーション（Augmentative and Alternative Communication）。意思伝達を支援する重要な手段です。" },
+            { lesson: 5, q: "病弱・身体虚弱教育の対象として、近年増加している精神疾患や心身症に含まれないものは？", options: ["起立性調節障害", "過敏性腸症候群", "小児がん", "摂食障害"], answer: "小児がん", exp: "小児がん（白血病など）は「悪性新生物」であり、精神疾患や心身症とは区分されますが、病弱教育の重要な対象です。" },
+            { lesson: 5, q: "【正誤問題】病弱・身体虚弱児は入院等による学習の遅れが生じやすいため、治療を最優先し、学習活動は一切控えるべきである。", options: ["○", "×"], answer: "×", exp: "「病気だから何もさせない」のではなく、可能な範囲で活動を取り入れることが、生きる意欲や自己肯定感につながります。" },
+            { lesson: 5, q: "【正誤問題】教員が医療的ケア（たんの吸引等）を行うことは、法律で一切禁止されている。", options: ["○", "×"], answer: "×", exp: "一定の研修を受け、認定特定行為業務従事者として登録された教員は、医師の指示の下で実施可能です。" },
+            { lesson: 5, q: "【正誤問題】肢体不自由児の支援では、スロープや手すりの設置などのハード面の環境整備が重要である。", options: ["○", "×"], answer: "○", exp: "移動の自由を確保するために物理的な環境整備は不可欠です。" },
+            { lesson: 5, q: "【正誤問題】院内学級や訪問教育は、長期入院中の児童生徒の学習を保障するための仕組みである。", options: ["○", "×"], answer: "○", exp: "病気療養中であっても教育を受ける権利を保障するために設置されています。" },
+
+            // --- 第6回 ---
+            { lesson: 6, q: "その国の文化水準や生活様式と比較して困窮している状態を何と言う？", options: ["絶対的貧困", "相対的貧困", "経済的貧困", "文化的貧困"], answer: "相対的貧困", exp: "先進国で問題となる貧困です。日本では「平均所得の半分未満」で暮らす世帯を指します。" },
+            { lesson: 6, q: "外国籍の子どもなどが、日常会話はできるが授業の内容が分からない状態を何と言う？", options: ["ダブル・リミテッド", "バイリンガル", "マルチリンガル", "サイレント・ピリオド"], answer: "ダブル・リミテッド", exp: "セミリンガルとも言われます。母語も日本語も年齢相応のレベルに達していない状態です。" },
+            { lesson: 6, q: "自分自身の性別をどのように認識しているか（心の性）を指す用語は？", options: ["性的指向", "性自認", "性表現", "身体的性"], answer: "性自認", exp: "Gender Identity。これと身体的性が一致しない場合をトランスジェンダーと呼びます。" },
+            { lesson: 6, q: "恋愛感情などの対象がいずれの性に向かうか（好きになる性）を指す用語は？", options: ["性的指向", "性自認", "性役割", "ジェンダー"], answer: "性的指向", exp: "Sexual Orientation。異性愛、同性愛、両性愛などがあります。" },
+            { lesson: 6, q: "【正誤問題】性的マイノリティである子どもに対して、本人の同意なくその事実を第三者に伝えること（アウティング）は人権侵害にあたる。", options: ["○", "×"], answer: "○", exp: "アウティングは重大なプライバシー侵害であり、学校生活の安全を脅かす行為として厳しく禁止されています。" },
+            { lesson: 6, q: "【正誤問題】日本語指導が必要な児童生徒に対しては、特別の教育課程を編成して日本語指導を行うことができる。", options: ["○", "×"], answer: "○", exp: "取り出し指導などを正規の授業時間として認める制度があります。" },
+            { lesson: 6, q: "【正誤問題】学校は子どもの貧困対策において、福祉機関と連携するプラットフォームとしての役割が期待されている。", options: ["○", "×"], answer: "○", exp: "スクールソーシャルワーカー(SSW)等を活用し、福祉的支援につなぐ役割が重要です。" },
+            { lesson: 6, q: "【正誤問題】LGBTQなどの性的指向・性自認は、本人の趣味や嗜好の問題であり、教育的配慮は不要である。", options: ["○", "×"], answer: "×", exp: "生まれ持った特性であり、自尊感情や学校適応に関わるため、適切な配慮と理解が必要です。" },
+
+            // --- 第7回 ---
+            { lesson: 7, q: "学校において特別支援教育の推進役となり、校内委員会や関係機関との連絡調整を行う教員は？", options: ["スクールカウンセラー", "特別支援教育コーディネーター", "養護教諭", "主幹教諭"], answer: "特別支援教育コーディネーター", exp: "教務主任や特別支援学級担任などが指名されることが多く、校内の要となる役割です。" },
+            { lesson: 7, q: "個別の指導計画は、どのようなスパンでの目標を設定することが望ましい？", options: ["長期的（卒業まで）", "中期的（1年単位）", "短期的（学期・単元）", "超長期的（生涯）"], answer: "短期的（学期・単元）", exp: "具体的な指導内容や手立てを記すため、学期ごとなどの短期的な目標設定と評価・見直しが必要です。" },
+            { lesson: 7, q: "乳幼児期から学校卒業後まで一貫した支援を行うために、関係機関が連携して作成する長期的な計画は？", options: ["個別の指導計画", "個別の教育支援計画", "移行支援計画", "キャリアプラン"], answer: "個別の教育支援計画", exp: "教育、福祉、医療、労働などが連携し、ライフステージを通じた切れ目のない支援を目指す計画です。" },
+            { lesson: 7, q: "特別支援学校が地域の小中学校等に対して助言や援助を行う機能を何と言う？", options: ["センター的機能", "サテライト機能", "アウトリーチ機能", "コンサルテーション"], answer: "センター的機能", exp: "特別支援学校の専門性を地域全体の支援に活かす重要な役割です。" },
+            { lesson: 7, q: "【正誤問題】個別の指導計画や教育支援計画の作成にあたっては、保護者の参画や同意は必要ない。", options: ["○", "×"], answer: "×", exp: "保護者との合意形成は必須です。家庭との連携を図りながら作成・活用することが求められています。" },
+            { lesson: 7, q: "【正誤問題】校内委員会には、管理職（校長・教頭）は参加せず、担当教員のみで構成する。", options: ["○", "×"], answer: "×", exp: "校長のリーダーシップの下、組織的に対応するために管理職の参加は不可欠です。" },
+            { lesson: 7, q: "【正誤問題】特別支援教育コーディネーターは、学校内の連絡調整だけでなく、関係機関との窓口の役割も担う。", options: ["○", "×"], answer: "○", exp: "外部機関や保護者とのパイプ役としての機能も重要です。" },
+            { lesson: 7, q: "【正誤問題】巡回相談とは、専門家が学校を訪れ、教員に対して指導助言（コンサルテーション）を行う仕組みである。", options: ["○", "×"], answer: "○", exp: "臨床心理士や特別支援学校の教員などが巡回し、専門的な助言を行います。" }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let currentRunMissed = [];
+        let practiceMode = 'normal'; // 'normal' or 'wrong_only'
+
+        window.onload = () => {
+            renderLessonSelector();
+        };
+
+        function renderLessonSelector() {
+            const selector = document.getElementById('lesson-selector');
+            selector.innerHTML = '';
+            lessons.forEach(l => {
+                const card = document.createElement('div');
+                card.className = 'lesson-card';
+                card.onclick = () => startQuiz(l.id);
+                // 本物の問題数を取得
+                const realCount = quizData.filter(q => q.lesson === l.id).length;
+                card.innerHTML = `
+                    <i data-lucide="${l.icon}"></i>
+                    <div>${l.title}</div>
+                    <span style="font-size:0.7rem; color:#94a3b8;">${realCount}問</span>
+                `;
+                selector.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function startQuiz(lessonId) {
+            practiceMode = 'normal';
+            if(lessonId === 'all') {
+                currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+                document.getElementById('main-title').textContent = "全範囲まとめテスト";
+            } else {
+                currentQuestions = quizData.filter(q => q.lesson === lessonId);
+                const title = lessons.find(l => l.id === lessonId).title;
+                document.getElementById('main-title').textContent = title;
+            }
+            
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('selection-view').style.display = 'none';
+            document.getElementById('quiz-view').style.display = 'block';
+            document.getElementById('result-view').style.display = 'none';
+            showQuestion();
+        }
+
+        function initSession() {
+            currentIndex = 0;
+            score = 0;
+            currentRunMissed = [];
+            document.getElementById('selection-view').style.display = 'none';
+            document.getElementById('quiz-view').style.display = 'block';
+            document.getElementById('result-view').style.display = 'none';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById('lesson-label').textContent = practiceMode === 'wrong_only' ? 'Review Mode' : `Lesson ${q.lesson}`;
+            document.getElementById('counter-label').textContent = `${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('question-text').textContent = q.q;
+            document.getElementById('progress-bar').style.width = `${(currentIndex / currentQuestions.length) * 100}%`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('explanation-box').classList.remove('show');
+            document.getElementById('next-action-area').style.display = 'none';
+        }
+
+        function checkAnswer(selected, btn) {
+            const q = currentQuestions[currentIndex];
+            const isCorrect = selected === q.answer;
+            const btns = document.querySelectorAll('.option-btn');
+            
+            btns.forEach(b => {
+                b.disabled = true;
+                if(b.textContent === q.answer) b.classList.add('correct');
+            });
+
+            const resultLabel = document.getElementById('result-label');
+            if(isCorrect) {
+                score++;
+                resultLabel.textContent = "正解！";
+                resultLabel.style.color = "#166534";
+            } else {
+                btn.classList.add('wrong');
+                resultLabel.textContent = "不正解...";
+                resultLabel.style.color = "#991b1b";
+                currentRunMissed.push(q);
+            }
+
+            document.getElementById('explanation-text').innerHTML = q.exp;
+            document.getElementById('explanation-box').classList.add('show');
+            
+            // ボタン表示
+            const nextArea = document.getElementById('next-action-area');
+            const nextBtn = document.getElementById('next-btn');
+            nextArea.style.display = 'block';
+            nextBtn.innerHTML = (currentIndex === currentQuestions.length - 1) 
+                ? '結果を見る <i data-lucide="bar-chart-2"></i>' 
+                : '次の問題へ <i data-lucide="arrow-right"></i>';
+            lucide.createIcons();
+        }
+
+        function handleNext() {
+            currentIndex++;
+            if(currentIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult(interruptedCount = null) {
+            document.getElementById('quiz-view').style.display = 'none';
+            document.getElementById('result-view').style.display = 'block';
+            document.getElementById('final-score').textContent = score;
+            
+            const total = interruptedCount !== null ? interruptedCount : currentQuestions.length;
+            document.getElementById('total-q-display').textContent = total;
+            
+            let msg = "";
+            const rate = total === 0 ? 0 : score / total;
+            
+            if(practiceMode === 'wrong_only' && currentRunMissed.length === 0) {
+                msg = "弱点克服完了！素晴らしいです。";
+            } else if(rate === 1) {
+                msg = "完璧です！全問正解！";
+            } else if(rate >= 0.8) {
+                msg = "素晴らしい！合格圏内です。";
+            } else {
+                msg = "解説を読んで復習しましょう。";
+            }
+            
+            document.getElementById('result-message').textContent = msg;
+
+            const retryBtn = document.getElementById('retry-wrong-btn');
+            if (currentRunMissed.length > 0) {
+                retryBtn.style.display = 'flex';
+                retryBtn.innerHTML = `<i data-lucide="rotate-ccw"></i> 間違えた ${currentRunMissed.length} 問に再挑戦`;
+                lucide.createIcons();
+            } else {
+                retryBtn.style.display = 'none';
+            }
+        }
+
+        function startWrongOnlyPractice() {
+            if(currentRunMissed.length === 0) return;
+            practiceMode = 'wrong_only';
+            currentQuestions = [...currentRunMissed];
+            document.getElementById('main-title').textContent = "弱点克服演習";
+            initSession();
+        }
+
+        function backToHome() {
+            document.getElementById('result-view').style.display = 'none';
+            document.getElementById('selection-view').style.display = 'block';
+            document.getElementById('main-title').textContent = "特別支援教育 確認テスト";
+            renderLessonSelector();
+        }
+
+        function restartCurrent() {
+            initSession();
+        }
+
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
