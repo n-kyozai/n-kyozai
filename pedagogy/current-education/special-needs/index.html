@@ -1,0 +1,382 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特別支援教育 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #059669; /* 教職教養テーマカラー(Emerald) */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 24px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* セクションボックス */
+        .section-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* メニューグリッド */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        /* デスクトップ版での調整 */
+        @media (min-width: 1024px) {
+            .menu-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .menu-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            height: 100%;
+            position: relative;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .icon-box {
+            width: 44px;
+            height: 44px;
+            background: #ecfdf5; /* 薄いエメラルド */
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            margin-bottom: 16px;
+        }
+
+        .card-title { 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            font-size: 1rem; 
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            margin-top: 16px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .card-arrow {
+            transition: transform 0.2s;
+            margin-left: 4px;
+            width: 16px;
+        }
+
+        .menu-card:hover .card-arrow {
+            transform: translateX(4px);
+        }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+        
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background-color: #374151; color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            z-index: 2000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; }
+        .scroll-to-top:hover { background-color: #1f2937; transform: translateY(-2px); }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
+                    特別支援教育
+                </div>
+                <h1 class="main-title"><i data-lucide="heart-handshake"></i>特別支援教育</h1>
+            </div>
+
+            <div class="section-box">
+                <h2 class="section-title"><i data-lucide="list"></i>学習テーマを選択</h2>
+                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 24px;">
+                    特別支援教育の理念から、各障害種別の理解、現代的な課題まで、分野別に学習を進めます。
+                </p>
+
+                <div class="menu-grid">
+                    
+                    <!-- 1. 特別支援教育とは -->
+                    <a href="./sn1/index.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="book-open"></i></div>
+                        <div class="card-title">特別支援教育とは</div>
+                        <div class="card-desc">
+                            インクルーシブ教育システム、合理的配慮、特別支援教育の制度的枠組みについて学びます。
+                        </div>
+                        <div class="card-footer">学習する <i data-lucide="chevron-right" class="card-arrow"></i></div>
+                    </a>
+
+                    <!-- 2. 子どもⅠ (特別支援学校など) -->
+                    <a href="./sn2/index.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="school"></i></div>
+                        <div class="card-title">特別な支援を必要とする子どもⅠ</div>
+                        <div class="card-desc">
+                            特別支援学校の対象、知的障害児の支援、重度心身障害児への対応について整理します。
+                        </div>
+                        <div class="card-footer">学習する <i data-lucide="chevron-right" class="card-arrow"></i></div>
+                    </a>
+
+                    <!-- 3. 子どもⅡ (視覚・聴覚) -->
+                    <a href="./sn3/index.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="eye"></i></div>
+                        <div class="card-title">特別な支援を必要とする子どもⅡ</div>
+                        <div class="card-desc">
+                            視覚障害・聴覚障害のある子どもへの配慮や支援機器、指導法について学びます。
+                        </div>
+                        <div class="card-footer">学習する <i data-lucide="chevron-right" class="card-arrow"></i></div>
+                    </a>
+
+                    <!-- 4. 子どもⅢ (発達・情緒) -->
+                    <a href="./sn4/index.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="puzzle"></i></div>
+                        <div class="card-title">特別な支援を必要とする子どもⅢ</div>
+                        <div class="card-desc">
+                            LD、ADHD、自閉スペクトラム症などの発達障害や、情緒障害児への具体的な支援方法。
+                        </div>
+                        <div class="card-footer">学習する <i data-lucide="chevron-right" class="card-arrow"></i></div>
+                    </a>
+
+                    <!-- 5. 子どもⅣ (肢体・病弱) -->
+                    <a href="./sn5/index.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="accessibility"></i></div>
+                        <div class="card-title">特別な支援を必要とする子どもⅣ</div>
+                        <div class="card-desc">
+                            肢体不自由児や病弱・身体虚弱児に対する医療的ケアや学習環境の整備について。
+                        </div>
+                        <div class="card-footer">学習する <i data-lucide="chevron-right" class="card-arrow"></i></div>
+                    </a>
+
+                    <!-- 6. 子どもⅤ (貧困・マイノリティ) -->
+                    <a href="./sn6/index.html" class="menu-card">
+                        <div class="icon-box"><i data-lucide="globe"></i></div>
+                        <div class="card-title">特別な支援を必要とする子どもⅤ</div>
+                        <div class="card-desc">
+                            貧困家庭、日本語指導が必要な児童生徒、性的マイノリティの子どもへの理解と支援。
+                        </div>
+                        <div class="card-footer">学習する <i data-lucide="chevron-right" class="card-arrow"></i></div>
+                    </a>
+
+                    <!-- 7. コーディネーター・連携 -->
+                    <a href="./sn7/index.html" class="menu-card" style="grid-column: 1 / -1;">
+                        <div style="display:flex; gap:16px; align-items:center;">
+                            <div class="icon-box" style="margin-bottom:0;"><i data-lucide="users"></i></div>
+                            <div>
+                                <div class="card-title" style="margin-bottom:4px;">特別支援教育コーディネーターと学内外連携</div>
+                                <div class="card-desc">
+                                    コーディネーターの役割、個別の指導計画・教育支援計画の作成、関係機関との連携について。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer" style="margin-top:12px;">学習する <i data-lucide="chevron-right" class="card-arrow"></i></div>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // Topへ戻るボタン
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollToTopBtn.classList.add('show');
+            else scrollToTopBtn.classList.remove('show');
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
