@@ -1,0 +1,437 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特別な支援を必要とする子どもⅤ - 特別支援教育</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #059669; /* 教職教養テーマカラー(Emerald) */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        .nav-item {
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 24px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* 暗記ノート風スタイル */
+        .note-container {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .note-header {
+            background-color: #ecfdf5; /* 薄いエメラルド */
+            padding: 16px 24px;
+            border-bottom: 1px solid #d1fae5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #047857;
+            display: flex;
+            align-items: center; gap: 8px;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center; gap: 4px;
+        }
+        .toggle-all-btn:hover { background-color: var(--accent-color); color: white; }
+
+        .note-content { padding: 24px; }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #065f46;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 32px 0 16px 0;
+        }
+        h3:first-child { margin-top: 0; }
+        
+        h4 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 24px 0 12px 0;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 4px;
+        }
+
+        .note-section { margin-bottom: 24px; }
+        
+        .note-text { 
+            margin-bottom: 16px; 
+            text-align: justify; 
+            font-size: 0.95rem; 
+            line-height: 1.9; 
+            color: #334155;
+        }
+
+        .note-list {
+            list-style: none; padding: 0; margin-bottom: 16px;
+        }
+        .note-list li {
+            margin-bottom: 10px; padding-left: 1.2em; position: relative; font-size: 0.95rem; line-height: 1.8;
+        }
+        .note-list li::before {
+            content: "•"; color: var(--accent-color); font-weight: bold; position: absolute; left: 0;
+        }
+
+        /* 虫食いスタイル */
+        .cloze {
+            display: inline-block;
+            background-color: #a7f3d0; /* 隠れている色 */
+            color: transparent;
+            border-bottom: 2px solid #059669;
+            padding: 0 4px; margin: 0 2px;
+            border-radius: 4px; cursor: pointer; user-select: none;
+            transition: all 0.2s; font-weight: bold; min-width: 2em; text-align: center; vertical-align: bottom;
+        }
+        .cloze.revealed { background-color: transparent; color: #be123c; border-bottom-color: #be123c; }
+        .cloze:hover { opacity: 0.8; }
+
+        /* コラム・用語ボックス */
+        .term-box {
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+        }
+        .term-title {
+            font-weight: bold;
+            color: #b45309;
+            margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* モバイル対応 */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
+            align-items: center; justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
+        
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background-color: #374151; color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            z-index: 2000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; }
+        .scroll-to-top:hover { background-color: #1f2937; transform: translateY(-2px); }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/special-needs/index.html">特別支援教育</a> ＞ 
+                    子どもⅤ
+                </div>
+                <h1 class="main-title"><i data-lucide="globe"></i>広義の特別支援教育（貧困・母国語・LGBTQ）</h1>
+            </div>
+
+            <div class="note-container">
+                <div class="note-header">
+                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
+                    <button class="toggle-all-btn" id="toggleAllBtn">
+                        <i data-lucide="eye"></i> すべて表示
+                    </button>
+                </div>
+                <div class="note-content">
+                    
+                    <h3>1. 広義の特別支援教育とは</h3>
+                    <div class="note-section">
+                        <p class="note-text">
+                            特別支援教育は、医学的な障害診断のある子どもだけを対象とするものではありません。「特別支援教育の推進について（通知）」（平成19年）にあるように、幼児児童生徒一人ひとりの<span class="cloze">教育的ニーズ</span>を把握し、生活や学習上の困難を改善・克服するために適切な指導や支援を行うものです。
+                            したがって、貧困、外国籍、性的マイノリティなど、様々な背景により特別な配慮を必要とする子どもたちも、広義の特別支援教育の対象として捉え、包括的に支援していく視点が求められます。
+                        </p>
+                    </div>
+
+                    <h3>2. 貧困や家庭的問題を抱える子どもへの支援</h3>
+                    <div class="note-section">
+                        <h4>(1) 貧困のとらえ方</h4>
+                        <p class="note-text">
+                            貧困には、衣食住の最低限の生活水準を維持できない「絶対的貧困」と、その国の文化水準や生活様式と比較して困窮している「<span class="cloze">相対的貧困</span>」があります。
+                            現在の日本で問題となっているのは相対的貧困であり、厚生労働省の調査（平成28年）では子どもの貧困率は13.9%（約7人に1人）となっています。特に<span class="cloze">ひとり親</span>世帯の貧困率は高く、経済的な困窮が教育格差や将来の貧困の連鎖につながる懸念があります。
+                        </p>
+                        
+                        <h4>(2) 子どもの貧困対策と学校の役割</h4>
+                        <p class="note-text">
+                            平成25年に「子どもの貧困対策の推進に関する法律」が成立しました。学校は、すべての子どもが安心して学べる<span class="cloze">居場所</span>（プラットフォーム）としての機能を果たすことが期待されています。
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>就学援助制度の活用：</strong>学用品費、給食費、修学旅行費などの経済的支援を必要とする家庭に、制度の周知や申請のサポートを行います。</li>
+                            <li><strong>学習支援：</strong>家庭での学習習慣が定着しにくい場合があるため、放課後学習教室や補習など、学校での学習時間を確保します。</li>
+                            <li><strong>福祉との連携：</strong>教員だけで解決できない問題（ネグレクト、ヤングケアラー等）に対しては、<span class="cloze">スクールソーシャルワーカー</span> (SSW) を中心に、児童相談所や福祉事務所などの関係機関と連携します。</li>
+                            <li><strong>「見えない貧困」への配慮：</strong>携帯電話を持っていても修学旅行費が払えないなど、外見からは分かりにくい場合があります。服装の乱れ、集金の未納、健康状態の悪化などのサインを見逃さない観察力が求められます。</li>
+                        </ul>
+                    </div>
+
+                    <h3>3. 外国籍・日本語指導が必要な子どもへの支援</h3>
+                    <div class="note-section">
+                        <h4>(1) 現状と課題</h4>
+                        <p class="note-text">
+                            公立学校に在籍する外国籍の児童生徒や、日本国籍でも日本語指導が必要な児童生徒は増加傾向にあります。
+                            日常会話は流暢に話せても、教科書の内容が理解できない（学習言語の未習得）という「<span class="cloze">ダブル・リミテッド</span>（セミリンガル）」の状態に陥りやすく、これが学習不振や不登校の原因となることがあります。
+                        </p>
+                        
+                        <div class="term-box">
+                            <div class="term-title"><i data-lucide="book"></i>重要用語：BICSとCALP</div>
+                            <ul style="margin:0; padding-left:1.2em; font-size:0.9rem;">
+                                <li><strong>BICS（生活言語能力）：</strong>日常会話に必要な言語能力。1〜2年で習得可能。</li>
+                                <li><strong>CALP（<span class="cloze">学習言語能力</span>）：</strong>授業や教科書で使われる抽象的な言語能力。習得には5〜7年かかると言われる。</li>
+                            </ul>
+                            <p style="margin-top:4px; font-size:0.9rem;">
+                                教師は「日常会話ができるから授業も分かるはずだ」と誤解せず、CALPの習得を意識的に支援する必要があります。
+                            </p>
+                        </div>
+
+                        <h4>(2) 具体的な支援</h4>
+                        <ul class="note-list">
+                            <li><strong>特別の教育課程：</strong>日本語指導が必要な児童生徒に対して、正規の教育課程として日本語指導（取り出し指導等）を行うことができます。</li>
+                            <li><strong>母語の尊重：</strong>日本語の習得だけでなく、母語の保持・伸長も重要です。母語はアイデンティティの確立や、深い思考を行うための基盤となります。</li>
+                            <li><strong>視覚的支援：</strong>写真、イラスト、翻訳アプリなどを活用し、言語のみに頼らない授業を行います。</li>
+                            <li><strong>多文化共生教育：</strong>クラスの子どもたちが互いの文化の違いを認め合い、尊重する態度を育てます。</li>
+                        </ul>
+                    </div>
+
+                    <h3>4. 性的マイノリティ（LGBTQ）の子どもへの支援</h3>
+                    <div class="note-section">
+                        <h4>(1) 基本的な理解</h4>
+                        <p class="note-text">
+                            性的マイノリティとは、性的指向や性自認が少数派である人々の総称です。代表的なものとしてLGBT（Lesbian, Gay, Bisexual, Transgender）や、Q（Questioning/Queer）などがあります。
+                            これらは趣味や嗜好ではなく、<span class="cloze">生まれ持った特性</span>であり、本人の意思で変えられるものではありません。
+                        </p>
+                        <ul class="note-list">
+                            <li><strong><span class="cloze">性自認</span> (Gender Identity)：</strong>自分の性をどのように認識しているか（心の性）。</li>
+                            <li><strong><span class="cloze">性的指向</span> (Sexual Orientation)：</strong>どのような性別の人を好きになるか（好きにならないか）。</li>
+                        </ul>
+
+                        <h4>(2) 学校における配慮と支援</h4>
+                        <p class="note-text">
+                            文部科学省の通知（平成27年など）に基づき、以下のようなきめ細かな対応が求められます。
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>服装・設備：</strong>制服の選択制（スラックス・スカートの自由化）、多目的トイレの設置や利用のしやすさ、更衣室の配慮など。</li>
+                            <li><strong>名簿・呼称：</strong>混合名簿の使用や、「さん」「くん」の使い分けへの配慮（本人の希望を聞く）。</li>
+                            <li><strong>アウティングの禁止：</strong>本人の同意なく、性的指向や性自認を第三者に暴露すること（<span class="cloze">アウティング</span>）は重大な人権侵害であり、絶対に行ってはいけません。</li>
+                            <li><strong>相談体制の整備：</strong>養護教諭やスクールカウンセラーを含めたチームでの支援体制を整え、安心して相談できる環境を作ります。</li>
+                            <li><strong>授業での啓発：</strong>「男らしさ」「女らしさ」の押し付けを避け、多様な性のあり方を尊重する人権教育を推進します。</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // 虫食い機能
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) cloze.classList.add('revealed');
+                else cloze.classList.remove('revealed');
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const revealedCount = document.querySelectorAll('.cloze.revealed').length;
+            if (revealedCount === clozes.length) {
+                allRevealed = true;
+            } else if (revealedCount === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+
+        // Topへ戻るボタン
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollToTopBtn.classList.add('show');
+            else scrollToTopBtn.classList.remove('show');
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
