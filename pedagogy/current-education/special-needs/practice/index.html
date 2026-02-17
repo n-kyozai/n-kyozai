@@ -122,14 +122,20 @@
         .progress-container { flex: 1; background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; }
         .progress-bar { background: var(--accent-color); height: 100%; width: 0%; transition: width 0.3s ease; }
         
-        /* 中断ボタン */
+        /* 中断ボタン（少し強調） */
         .quit-btn {
-            border: none; background: none; color: #64748b; 
-            font-size: 0.8rem; font-weight: bold; cursor: pointer; 
-            display: flex; align-items: center; gap: 4px;
-            padding: 4px 8px; border-radius: 4px; transition: all 0.2s;
+            border: 1px solid #cbd5e1; /* 枠線追加 */
+            background: #fff;
+            color: #64748b; 
+            font-size: 0.85rem; font-weight: bold; cursor: pointer; 
+            display: flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: 6px; transition: all 0.2s;
         }
-        .quit-btn:hover { background: #f1f5f9; color: #ef4444; }
+        .quit-btn:hover { 
+            border-color: #ef4444;
+            color: #ef4444; 
+            background: #fef2f2;
+        }
 
         .question-meta { font-size: 0.8rem; color: var(--accent-color); font-weight: bold; margin-bottom: 12px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.05em; }
         .question-text { font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; line-height: 1.6; color: #1e293b; }
@@ -231,14 +237,16 @@
     <main class="main-content">
         <div class="container">
             <div class="page-header">
-                <!-- 階層化リンク (仮) -->
                 <div class="breadcrumb">
-                    <a href="#">ホーム</a> <i data-lucide="chevron-right"></i>
-                    <a href="#">教職教養</a> <i data-lucide="chevron-right"></i>
-                    <a href="#">教育時事</a> <i data-lucide="chevron-right"></i>
-                    <span>特別支援教育</span>
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
+                    <a href="/n-kyozai/pedagogy/current-education/special-needs/index.html">特別支援教育</a> ＞ 
+                    実践演習
                 </div>
-                <h1 id="main-title"><i data-lucide="heart-handshake"></i> 特別支援教育</h1>
+                <h1 class="main-title">実践演習</h1>
+            </div>
+                <h1 id="main-title"><i data-lucide="heart-handshake"></i> 実践演習</h1>
             </div>
 
             <!-- 1. トップ画面 (学習テーマを選択) -->
@@ -248,7 +256,7 @@
                         <i data-lucide="list-video"></i> 学習テーマを選択
                     </h3>
                     <p style="font-size: 0.95rem; color: #6b7280; line-height: 1.6;">
-                        特別支援教育の理念、各障害種別の理解、現代的な課題まで、130問以上のデータから演習できます。<br>
+                        特別支援教育の理念、各障害種別の理解、現代的な課題まで、100問以上のデータから演習できます。<br>
                         「全範囲ランダム演習」では、毎回ランダムに10問が出題されます。
                     </p>
                 </div>
@@ -337,7 +345,7 @@
     <script>
         // カテゴリ定義
         const categories = [
-            { id: 'basic', title: "基礎・用語 (第1-7回)", icon: "book-open", desc: "ICF, 自立活動, 障害特性の基礎" },
+            { id: 'basic', title: "基礎・用語", icon: "book-open", desc: "ICF, 自立活動, 障害特性の基礎" },
             { id: 'person', title: "重要人物・歴史", icon: "users", desc: "ミケルセン, イタード, 糸賀一雄" },
             { id: 'law', title: "法規・条文穴埋め", icon: "scale", desc: "学校教育法, 差別解消法, 学習指導要領" },
             { id: 'exam', title: "教採 応用・事例", icon: "pen-tool", desc: "実践的な事例判断、検査法、指導法" }
@@ -466,6 +474,15 @@
             lucide.createIcons();
         };
 
+        // 配列シャッフル関数
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         function renderLessonSelector() {
             const selector = document.getElementById('lesson-selector');
             selector.innerHTML = '';
@@ -551,7 +568,10 @@
             const container = document.getElementById('options-container');
             container.innerHTML = '';
             
-            q.options.forEach(opt => {
+            // 選択肢をシャッフルして表示
+            const shuffledOptions = shuffleArray([...q.options]);
+            
+            shuffledOptions.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.textContent = opt;
