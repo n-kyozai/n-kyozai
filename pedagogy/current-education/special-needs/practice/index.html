@@ -11,16 +11,17 @@
         :root {
             --primary-color: #334155; /* Slate 700 */
             --accent-color: #0d9488; /* Teal 600 */
+            --accent-dark: #0f766e;  /* Teal 700 */
             --accent-light: #f0fdfa; /* Teal 50 */
             --bg-color: #f8fafc;     /* Slate 50 */
             --sidebar-bg: #ffffff;
-            --sidebar-width: 220px;  /* サイドバーの幅を260pxから220pxに縮小 */
+            --sidebar-width: 220px;
             --text-color: #1e293b;
             --border-color: #e2e8f0;
         }
 
-        /* 全体のフォントサイズを少し縮小 */
-        html { font-size: 92.5%; /* 16px * 0.925 = 14.8px */ }
+        /* 全体のフォントサイズ */
+        html { font-size: 92.5%; }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -87,7 +88,7 @@
 
         .page-header { margin-bottom: 24px; }
         
-        /* パンくずリスト（リンク化） */
+        /* パンくずリスト */
         .breadcrumb { font-size: 0.8rem; color: #94a3b8; margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
         .breadcrumb a { color: #64748b; text-decoration: none; transition: color 0.2s; }
         .breadcrumb a:hover { color: var(--accent-color); text-decoration: underline; }
@@ -122,9 +123,9 @@
         .progress-container { flex: 1; background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; }
         .progress-bar { background: var(--accent-color); height: 100%; width: 0%; transition: width 0.3s ease; }
         
-        /* 中断ボタン（少し強調） */
+        /* 中断ボタン */
         .quit-btn {
-            border: 1px solid #cbd5e1; /* 枠線追加 */
+            border: 1px solid #cbd5e1;
             background: #fff;
             color: #64748b; 
             font-size: 0.85rem; font-weight: bold; cursor: pointer; 
@@ -149,7 +150,7 @@
         }
         .option-btn:hover:not(:disabled) { border-color: var(--accent-color); background: var(--accent-light); transform: translateY(-2px); }
         .option-btn:disabled { cursor: default; opacity: 0.9; }
-        /* 正解・不正解のスタイル */
+        /* 正解・不正解 */
         .option-btn.correct { background: #dcfce7; border-color: #22c55e; color: #14532d; font-weight: bold; }
         .option-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #7f1d1d; opacity: 1; }
 
@@ -162,16 +163,49 @@
         .explanation-side.show { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ボタン共通 */
+        /* 通常ボタン */
         .btn {
             padding: 14px 28px; border: none; border-radius: 10px; font-weight: bold;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             gap: 8px; transition: all 0.2s; font-size: 0.95rem;
         }
         .btn-primary { background: var(--accent-color); color: white; width: 100%; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2); }
-        .btn-primary:hover { background: #0f766e; transform: translateY(-2px); }
+        .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); }
         .btn-outline { background: white; border: 2px solid #cbd5e1; color: #475569; width: 100%; }
         .btn-outline:hover { background: #f8fafc; border-color: #94a3b8; }
+
+        /* 強調CTAボタン（全範囲演習用） */
+        .btn-cta {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-dark) 100%);
+            color: white;
+            width: 100%;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.3), 0 4px 6px -2px rgba(13, 148, 136, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(13, 148, 136, 0.4), 0 10px 10px -5px rgba(13, 148, 136, 0.2);
+        }
+        .btn-cta:hover::before { transform: translateX(100%); }
+        .btn-cta:active { transform: translateY(-1px); }
 
         /* レッスン選択カード */
         #lesson-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
@@ -192,19 +226,26 @@
 
         /* モバイル対応 */
         .mobile-toggle-btn {
-            display: none; position: fixed; bottom: 24px; right: 24px; z-index: 2000;
-            width: 56px; height: 56px; background: var(--accent-color); border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: none; cursor: pointer;
-            align-items: center; justify-content: center; color: white;
+            display: none; position: fixed; 
+            top: 10px; left: 10px; /* 左上に配置 */
+            z-index: 2000;
+            width: 40px; height: 40px; 
+            background: white; /* 白背景 */
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
+            border: 1px solid #e2e8f0; 
+            cursor: pointer;
+            align-items: center; justify-content: center; 
+            color: #475569; /* グレーアイコン */
         }
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); width: 280px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+            .sidebar { transform: translateX(-100%); width: 220px; }
             .sidebar.active { transform: translateX(0); }
             .main-content { margin-left: 0; padding: 20px; padding-bottom: 100px; }
             .mobile-toggle-btn { display: flex; }
-            .container { padding-top: 0; }
+            .container { padding-top: 40px; } /* 左上ボタンのスペース確保 */
             #lesson-selector { grid-template-columns: 1fr; }
-            .breadcrumb { display: none; }
+            .breadcrumb { display: flex; } /* モバイルでもパンくずを表示 */
             h1#main-title { font-size: 1.4rem; }
         }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; backdrop-filter: blur(2px); }
@@ -240,9 +281,9 @@
                     <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
                     <a href="/n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
                     <a href="/n-kyozai/pedagogy/current-education/special-needs/index.html">特別支援教育</a> ＞ 
-                    実践演習
+                    問題演習
                 </div>
-                <h1 class="main-title">実践演習</h1>
+                <h1 class="main-title">問題演習</h1>
             </div>
 
             <!-- 1. トップ画面 (学習テーマを選択) -->
@@ -251,17 +292,17 @@
                     <h3 style="font-size: 1.2rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); display:flex; align-items:center; gap:8px;">
                         <i data-lucide="list-video"></i> 学習テーマを選択
                     </h3>
-                    <p style="font-size: 0.95rem; color: #6b7280; line-height: 1.6;">
+                    <p style="font-size: 0.9rem; color: #64748b; line-height: 1.6;">
                         特別支援教育の理念、各障害種別の理解、現代的な課題まで、100問以上のデータから演習できます。<br>
                         「全範囲ランダム演習」では、毎回ランダムに10問が出題されます。
                     </p>
                 </div>
                 
-                <button class="btn btn-primary" style="padding: 24px; font-size: 1.1rem; width: 100%; justify-content: space-between;" onclick="startQuiz('all')">
+                <button class="btn-cta" onclick="startQuiz('all')">
                     <span style="display:flex; align-items:center; gap:12px;">
                         <i data-lucide="shuffle" stroke-width="3"></i> <strong>全範囲ランダム演習 (10問)</strong>
                     </span>
-                    <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px;">推奨</span>
+                    <span style="font-size: 0.8rem; background: rgba(255,255,255,0.25); padding: 4px 12px; border-radius: 20px; font-weight:bold;">推奨</span>
                 </button>
 
                 <div id="lesson-selector"></div>
@@ -274,7 +315,7 @@
                 <div class="progress-area">
                     <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
                     <button class="quit-btn" onclick="quitQuiz()">
-                        <i data-lucide="x"></i> 中断
+                        <i data-lucide="x" width="16"></i> 中断
                     </button>
                 </div>
 
@@ -325,7 +366,7 @@
                     </div>
                     <p id="result-message" style="margin-bottom: 32px; font-weight: bold; font-size: 1.1rem; color: var(--primary-color);"></p>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
                         <button id="retry-wrong-btn" class="btn btn-primary" style="display:none; background-color: #ef4444;" onclick="startWrongOnlyPractice()">
                             <i data-lucide="rotate-ccw"></i> 間違えた問題のみ
                         </button>
