@@ -4,18 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>特別支援教育とは - 教員採用試験対策</title>
+    <title>特別支援教育とは - 特別支援教育</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
             --primary-color: #2c3e50;
-            --accent-color: #059669; /* Emerald */
+            --accent-color: #059669; /* 教職教養テーマカラー(Emerald) */
             --bg-color: #f8fafc;
             --text-color: #334155;
             --sidebar-width: 200px;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --mask-color: #f97316; /* 暗記用マスク色（オレンジ） */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,6 +24,7 @@
             color: var(--text-color);
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
             line-height: 1.8;
         }
 
@@ -60,11 +60,10 @@
             margin-left: var(--sidebar-width);
             padding: 24px;
             width: 100%;
-            padding-bottom: 80px; /* コントロールバー分 */
         }
 
         .container {
-            max-width: 900px; /* 読みやすさのため少し幅を制限 */
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -77,157 +76,128 @@
             color: var(--primary-color);
             margin-bottom: 16px;
             display: flex; align-items: center; gap: 10px;
-            border-bottom: 3px solid var(--accent-color);
-            padding-bottom: 10px;
         }
 
-        /* 記事コンテンツ */
-        .content-box {
-            background: white;
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: var(--shadow);
+        /* 暗記ノート風スタイル */
+        .note-container {
+            background-color: white;
             border: 1px solid #e2e8f0;
-            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
         }
 
-        h2 {
-            font-size: 1.25rem;
-            color: var(--primary-color);
-            margin-top: 40px;
-            margin-bottom: 20px;
-            padding-left: 10px;
-            border-left: 5px solid var(--accent-color);
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 5px;
+        .note-header {
+            background-color: #ecfdf5; /* 薄いエメラルド */
+            padding: 16px 24px;
+            border-bottom: 1px solid #d1fae5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #047857;
+            display: flex;
+            align-items: center; gap: 8px;
+        }
+
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center; gap: 4px;
+        }
+        .toggle-all-btn:hover { background-color: var(--accent-color); color: white; }
+
+        .note-content { padding: 24px; }
+
         h3 {
             font-size: 1.1rem;
-            color: #475569;
-            margin-top: 30px;
-            margin-bottom: 15px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #f1f5f9;
-            padding: 8px 12px;
-            border-radius: 6px;
+            color: #065f46;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin: 32px 0 16px 0;
         }
-
-        p { margin-bottom: 1.5em; text-align: justify; }
-
-        /* 重要語句（穴埋め対象） */
-        .keyword {
-            font-weight: bold;
-            color: var(--accent-color);
-            padding: 2px 4px;
-            border-bottom: 2px solid var(--accent-color);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        /* 暗記モードON時のスタイル */
-        body.memorize-mode .keyword {
-            background-color: var(--mask-color);
-            color: transparent;
-            border-bottom: none;
-            border-radius: 4px;
-            user-select: none; /* コピー防止 */
-        }
-
-        /* 暗記モードでもクリックで正解を表示するクラス */
-        body.memorize-mode .keyword.revealed {
-            background-color: transparent;
-            color: var(--mask-color);
-            border: 2px solid var(--mask-color);
-        }
-
-        /* 引用・強調ボックス */
-        .highlight-box {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
+        h3:first-child { margin-top: 0; }
         
-        .highlight-title {
-            font-weight: bold;
-            color: #166534;
-            margin-bottom: 10px;
-            display: flex; align-items: center; gap: 6px;
-        }
-
-        .keyword-definition {
-            border-left: 4px solid #f97316;
-            background-color: #fff7ed;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-        }
-        .keyword-definition strong {
-            color: #c2410c;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        ul { margin-bottom: 1.5em; padding-left: 1.5em; }
-        li { margin-bottom: 0.5em; }
-
-        /* 暗記モードコントロールバー */
-        .control-bar {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 100;
-            border: 1px solid #e2e8f0;
-        }
-
-        .switch-label {
-            font-size: 0.9rem;
+        h4 {
+            font-size: 1rem;
             font-weight: bold;
             color: var(--primary-color);
-            display: flex; align-items: center; gap: 6px;
+            margin: 24px 0 12px 0;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 4px;
         }
 
-        /* トグルスイッチ */
-        .switch {
-            position: relative;
+        .note-section { margin-bottom: 24px; }
+        
+        .note-text { 
+            margin-bottom: 16px; 
+            text-align: justify; 
+            font-size: 0.95rem; 
+            line-height: 1.9; 
+            color: #334155;
+        }
+
+        .note-list {
+            list-style: none; padding: 0; margin-bottom: 16px;
+        }
+        .note-list li {
+            margin-bottom: 10px; padding-left: 1.2em; position: relative; font-size: 0.95rem; line-height: 1.8;
+        }
+        .note-list li::before {
+            content: "•"; color: var(--accent-color); font-weight: bold; position: absolute; left: 0;
+        }
+
+        /* 虫食いスタイル */
+        .cloze {
             display: inline-block;
-            width: 50px;
-            height: 26px;
+            background-color: #a7f3d0; /* 隠れている色 */
+            color: transparent;
+            border-bottom: 2px solid #059669;
+            padding: 0 4px; margin: 0 2px;
+            border-radius: 4px; cursor: pointer; user-select: none;
+            transition: all 0.2s; font-weight: bold; min-width: 2em; text-align: center; vertical-align: bottom;
         }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+        .cloze.revealed { background-color: transparent; color: #be123c; border-bottom-color: #be123c; }
+        .cloze:hover { opacity: 0.8; }
+
+        /* テーブル */
+        .data-table {
+            width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;
         }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0; padding: 12px; text-align: left; vertical-align: top;
         }
-        input:checked + .slider { background-color: var(--mask-color); }
-        input:checked + .slider:before { transform: translateX(24px); }
+        .data-table th { background-color: #f1f5f9; color: var(--primary-color); font-weight: bold; white-space: nowrap; width: 25%; }
+
+        /* コラム・用語ボックス */
+        .term-box {
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+        }
+        .term-title {
+            font-weight: bold;
+            color: #b45309;
+            margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
 
         /* モバイル対応 */
         .mobile-toggle-btn {
@@ -236,22 +206,29 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
             align-items: center; justify-content: center;
         }
-
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 16px; padding-bottom: 80px; }
+            .main-content { margin-left: 0; padding: 16px; }
             .mobile-toggle-btn { display: flex; }
-            .content-box { padding: 20px; }
-            .control-bar {
-                left: 20px; right: 20px; bottom: 20px;
-                justify-content: space-between;
-                border-radius: 12px;
-            }
+            .container { padding-top: 40px; }
+            .data-table th, .data-table td { font-size: 0.8rem; padding: 8px; display: block; width: 100%; }
+            .data-table th { border-bottom: none; background: #f8fafc; }
         }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
         .overlay.active { display: block; }
         
+        /* Topへ戻るボタン */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background-color: #374151; color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            z-index: 2000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; }
+        .scroll-to-top:hover { background-color: #1f2937; transform: translateY(-2px); }
+
         footer {
             background-color: white;
             border-top: 1px solid #e2e8f0;
@@ -260,12 +237,6 @@
             color: #94a3b8;
             font-size: 0.7rem;
             margin-top: auto;
-        }
-        
-        /* フッター内のpタグは中央揃えを強制 */
-        footer p {
-            text-align: center;
-            margin-bottom: 0;
         }
     </style>
 </head>
@@ -300,180 +271,119 @@
                     <a href="/n-kyozai/pedagogy/current-education/special-needs/index.html">特別支援教育</a> ＞ 
                     特別支援教育とは
                 </div>
-                <h1 class="main-title">特別支援教育とは</h1>
+                <h1 class="main-title"><i data-lucide="book-open"></i>特別支援教育の理念と歴史</h1>
             </div>
 
-            <div class="content-box">
-                <p>
-                    本ページは、教員採用試験等で頻出の重要語句を穴埋め形式で学習できるように構成されています。<br>
-                    右下の「暗記モード」をONにすると、オレンジ色のキーワードが隠れます。
-                </p>
-
-                <h2>1. 特別支援教育とその背景</h2>
-
-                <h3>1-1. 日本における特別支援教育の考え方</h3>
-                <p>
-                    「特別支援教育の推進について（通知）」（平成19年4月1日付 文部科学省）において、特別支援教育の定義は以下のように示されています。
-                </p>
-                <div class="highlight-box">
-                    <div class="highlight-title"><i data-lucide="file-text"></i>定義：特別支援教育</div>
-                    <p>
-                        特別支援教育は、障害のある幼児児童生徒の自立や社会参加に向けた主体的な取組を支援するという視点に立ち、幼児児童生徒の一人ひとりの<span class="keyword">教育的ニーズ</span>を把握し、その持てる力を高め、生活や学習上の困難を改善又は克服するため、適切な指導及び必要な支援を行うものである。
-                    </p>
-                    <p>
-                        また、特別支援教育は、これまでの特殊教育の対象の障害だけではなく、知的な遅れのない発達障害も含めて、特別な支援を必要とする幼児児童生徒が在籍する<span class="keyword">すべての学校</span>において実施されるものである。
-                    </p>
-                    <p>
-                        さらに、特別支援教育は、障害のある幼児児童生徒への教育にとどまらず、障害の有無やその他の個々の違いを認識しつつ様々な人々が生き生きと活躍できる<span class="keyword">共生社会</span>の形成の基礎となるものであり、我が国の現在及び将来の社会にとって重要な意味を持っている。
-                    </p>
+            <div class="note-container">
+                <div class="note-header">
+                    <div class="note-title"><i data-lucide="book-open-check"></i>暗記ノート</div>
+                    <button class="toggle-all-btn" id="toggleAllBtn">
+                        <i data-lucide="eye"></i> すべて表示
+                    </button>
                 </div>
+                <div class="note-content">
+                    
+                    <h3>1. 特別支援教育の理念</h3>
+                    <div class="note-section">
+                        <h4>(1) 基本的な考え方</h4>
+                        <p class="note-text">
+                            「特別支援教育の推進について（通知）」（平成19年文部科学省）において、特別支援教育は以下のように定義されています。
+                        </p>
+                        <p class="note-text">
+                            「特別支援教育は、障害のある幼児児童生徒の自立や社会参加に向けた主体的な取組を支援するという視点に立ち、幼児児童生徒一人ひとりの【<span class="cloze">教育的ニーズ</span>】を把握し、その持てる力を高め、生活や学習上の困難を改善又は克服するため、適切な指導及び必要な支援を行うものである。」
+                        </p>
+                        <p class="note-text">
+                            また、これまでの「特殊教育」の対象（盲・聾・知的・肢体・病弱）だけでなく、知的な遅れのない発達障害（LD, ADHD, 高機能自閉症等）も含めて、特別な支援を必要とする幼児児童生徒が在籍する【<span class="cloze">すべての学校</span>】（幼稚園、小・中学校、高等学校、特別支援学校）において実施されるものです。
+                        </p>
+                        <p class="note-text">
+                            特別支援教育は、障害の有無やその他の個々の違いを認識しつつ、様々な人々が生き生きと活躍できる【<span class="cloze">共生社会</span>】の形成の基礎となるものであり、我が国の現在および将来の社会にとって重要な意味を持っています。
+                        </p>
 
-                <p><strong>【要約】</strong><br>
-                障がいのある子どもを、障がいの種類で把握・対応する視点から、一人ひとりの<span class="keyword">教育的ニーズ</span>を的確に把握しようとする視点へ転換しました（<span class="keyword">通常学級</span>でも特別支援教育を実施）。これは、個性を尊重し合う<span class="keyword">共生社会</span>実現のための基礎を作るものです。</p>
+                        <h4>(2) 特殊教育から特別支援教育への転換</h4>
+                        <p class="note-text">
+                            平成19年（2007年）の学校教育法改正により、「特殊教育」から「特別支援教育」へと法的に転換されました。この変更は単なる名称変更ではなく、障害の捉え方や支援のあり方のパラダイムシフトを意味しています。
+                        </p>
+                        <table class="data-table">
+                            <tr>
+                                <th></th>
+                                <th>特殊教育（従来）</th>
+                                <th>特別支援教育（現在）</th>
+                            </tr>
+                            <tr>
+                                <td><strong>対象</strong></td>
+                                <td>特定の障害種（盲・聾・養護学校の対象）に限定。</td>
+                                <td>発達障害を含む、支援を必要とするすべての子ども。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>視点</strong></td>
+                                <td>障害の種類や程度に応じて、教育を行う「場（特別支援学校など）」を確保することに重点。</td>
+                                <td>一人ひとりの「<span class="cloze">教育的ニーズ</span>」に応じた適切な指導や支援を行うことに重点。</td>
+                            </tr>
+                        </table>
+                    </div>
 
-                <h3>1-2. 障がい児教育の歴史</h3>
-                <p>
-                    戦後日本（1948年から1990年代初頭まで）は、通常の学校（学級）と障がい児教育（特殊教育）を行う学校（学級）は<span class="keyword">分離</span>していました。
-                </p>
-                <p>
-                    1950年代、北欧で<span class="keyword">ノーマライゼーション</span>の考え方が提唱されました。
-                </p>
-                <div class="keyword-definition">
-                    <strong>Keyword：ノーマライゼーション</strong>
-                    障がいのある人もない人も可能な限り<span class="keyword">同じ条件</span>のもとに置かれる権利があり、それを実現するための生活条件の改善が必要であるという考え方。
+                    <h3>2. 障害の捉え方の変化（ICFの視点）</h3>
+                    <div class="note-section">
+                        <h4>(1) 医学モデルから社会モデルへ</h4>
+                        <p class="note-text">
+                            かつては、障害を個人の心身機能の問題（病気や欠損）と捉え、治療や訓練によって正常に近づけることを目指す「医学モデル」が主流でした。
+                            しかし、1980年代以降、WHO（世界保健機関）などを中心に、障害を環境との相互作用によって生じる社会的な不利と捉える「社会モデル（<span class="cloze">心理・社会モデル</span>）」への転換が進みました。
+                        </p>
+
+                        <h4>(2) ICF（国際生活機能分類）</h4>
+                        <p class="note-text">
+                            2001年にWHOで採択されたICFは、障害をマイナス面だけで捉えるのではなく、「生活機能」というプラスの側面から包括的に捉えるための分類です。以下の構成要素の相互作用として理解します。
+                        </p>
+                        <ul class="note-list">
+                            <li><strong>心身機能・身体構造：</strong>手足の麻痺、視力の低下など、生物レベルの状態。</li>
+                            <li><strong><span class="cloze">活動</span>：</strong>歩く、読む、書く、計算するなど、個人レベルでの生活行為。</li>
+                            <li><strong><span class="cloze">参加</span>：</strong>学校に通う、仕事をする、地域行事に出るなど、社会レベルでの関わり。</li>
+                            <li><strong>背景因子：</strong>
+                                <ul>
+                                    <li><strong>環境因子：</strong>建物、用具、人々の態度、法制度など（バリアにも促進因子にもなる）。</li>
+                                    <li><strong>個人因子：</strong>年齢、性別、性格、興味関心、成育歴など。</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="term-box">
+                            <div class="term-title"><i data-lucide="info"></i>教育的示唆</div>
+                            <p style="margin:0; font-size:0.9rem;">
+                                特別支援教育では、子どもの「できないこと（機能障害）」だけに目を向けるのではなく、「環境因子（教材の工夫や支援員など）」を調整することで、「活動」や「参加」を可能にし、教育的ニーズを満たすという視点が重要になります。
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3>3. インクルーシブ教育システムの構築</h3>
+                    <div class="note-section">
+                        <h4>(1) 定義と目的</h4>
+                        <p class="note-text">
+                            インクルーシブ教育システム（包摂的な教育制度）とは、人間の多様性の尊重等を強化し、障害者が精神的・身体的な能力等を可能な限り発達させ、自由な社会に効果的に参加することを目的とするものです。
+                            障害のある者とない者が<span class="cloze">共</span>に学ぶ仕組みであり、障害のある者が教育制度一般から排除されないこと、自己の生活する地域において初等中等教育の機会が与えられることなどが求められます。
+                        </p>
+
+                        <h4>(2) 連続性のある多様な学びの場（カスケード）</h4>
+                        <p class="note-text">
+                            インクルーシブ教育システムにおいては、同じ場で共に学ぶことを追求しつつも、個々のニーズに応じた的確な指導・支援を行うために、「連続性のある多様な学びの場」を用意することが必要とされています。
+                        </p>
+                        <ul class="note-list">
+                            <li>通常の学級（通常級）</li>
+                            <li>通級による指導（通級指導教室）</li>
+                            <li>特別支援学級</li>
+                            <li>特別支援学校</li>
+                        </ul>
+                        <p class="note-text">
+                            これらの場を固定的なものとせず、児童生徒の状態の変化やニーズに応じて柔軟に行き来できる（交流及び共同学習など）体制が求められています。
+                            文部科学省の調査（令和4年）によると、公立小・中学校の通常の学級に在籍する児童生徒のうち、学習面又は行動面で著しい困難を示す割合は<span class="cloze">8.8</span>%と推定されており、通常学級における支援体制の充実が急務となっています。
+                        </p>
+
+                        <h4>(3) 合理的配慮</h4>
+                        <p class="note-text">
+                            「障害者の権利に関する条約」に基づき、学校設置者や学校は、障害のある児童生徒から（または保護者から）意思の表明があった場合、過度な負担にならない範囲で、障害の状態やニーズに応じた変更や調整を行う義務があります。これを「<span class="cloze">合理的配慮</span>」といいます。
+                            （例：拡大教科書の使用、タブレット端末による筆記の代替、クールダウンのための場所の確保など）
+                        </p>
+                    </div>
+
                 </div>
-                <p>
-                    これまで排除されてきた人々の人権の尊重と、社会への統合が目指されました（<strong><span class="keyword">インテグレーション</span></strong>）。<br>
-                    (例) 障害のある子どもが通常学級で学ぶこと<br>
-                    →インテグレーションは、「障がいの有無で人を分けて考えている」という批判から、新たに<span class="keyword">インクルージョン</span>という概念が登場しました。
-                </p>
-                
-                <div class="highlight-box">
-                    <div class="highlight-title"><i data-lucide="check"></i>重要ポイント</div>
-                    <p>
-                        1994年にユネスコが<span class="keyword">サマランカ声明</span>を採択したことによって、インクルーシブ教育（<span class="keyword">インクルージョン</span>の考えに基づく教育）が国際的に認知されることとなりました。
-                    </p>
-                </div>
-                <p>
-                    <strong><span class="keyword">サマランカ声明</span>（宣言）</strong>とは、1994年スペインのサマランカで開かれた国際連合教育科学文化機関主催の会議で、「特別なニーズ教育における原則、政策、実践に関するサマランカ声明ならびに行動の枠組み」が<span class="keyword">ユネスコ</span>により採択されたものです。
-                </p>
-                <ul>
-                    <li>障がいのある子どものみを対象とするのではなく、すべての子どもが対象となり、<span class="keyword">万人</span>のための教育の達成を目指すものです。</li>
-                </ul>
-
-                <div class="keyword-definition">
-                    <strong>Keyword：インクルージョン（インクルーシブ教育システム）</strong>
-                    障がいの有無にかかわらず、<span class="keyword">すべての人</span>の個人主義を尊重し、学習を支援し、個別のニーズに対応する施設に向けた活動の必要性の認識を求めるもの。<br><br>
-                    多様なニーズのある人が同じ場で学べるように可能な範囲で環境等の整備を行うべきであるが、その子どもの「精神的・身体的な能力等を可能な最大限度まで発達させる」という目的のためには個別支援を重視する環境も必要（例えば、<span class="keyword">特別支援学校</span>など）と考える。<br>
-                    → 連続性のある「<span class="keyword">多様な学びの場</span>」を用意することが大切。
-                </div>
-
-                <p><strong>その他の重要事項：</strong></p>
-                <ul>
-                    <li><strong>特別な教育的ニーズ</strong>：1978年イギリスの<span class="keyword">ウォーノック報告</span>を受けて使用されるようになった概念。「特別な教育的手だて」を必要とする「学習における困難さ」がある場合を表す。</li>
-                    <li><strong><span class="keyword">障害者権利条約</span></strong>：2006年国連採択。ノーマライゼーションとインクルージョンの理念を国際的に具現化（日本批准：<span class="keyword">2014年</span>）。</li>
-                    <li><strong>学校教育法改正（2007年）</strong>：日本で「<span class="keyword">特別支援教育</span>」が法的に位置づけられ、すべての学校で実施されることとなった。</li>
-                </ul>
-
-                <h3>1-3. 障がいのとらえ方の社会的変容</h3>
-                <p>
-                    WHO（世界保健機関）が1980年に発表した<span class="keyword">国際障害分類（ICIDH）</span>は、障害を3つのレベルに分けてとらえましたが、障害のマイナス面を中心にみるもの等の批判がなされていました。
-                </p>
-                <p>
-                    WHOは、2001年に新たな概念として<span class="keyword">国際生活分類（ICF）</span>を採択しました。
-                </p>
-
-                <div class="keyword-definition">
-                    <strong>Keyword：国際生活分類（ICF）</strong>
-                    従来のICIDHが社会的不利の分類にとどまっていたのに対し、ICFには<span class="keyword">環境因子</span>が加えられました。<br>
-                    障害のある人にとどまらず、社会システムの在り方によって困難を改善・解消できる可能性への視点をより持ちやすい概念となっています。
-                </div>
-                <p>
-                    ICFの概念に基づくと、「心身機能・身体構造」に何らかの障がいがあっても、「<span class="keyword">環境要因</span>」の変化（例えば、周囲の理解や支援）によって、個人の「<span class="keyword">活動</span>」や「<span class="keyword">参加</span>」の状況が改善されると考えることができます。
-                </p>
-                <p>
-                    (例) 聴覚過敏があり、運動会のピストルの音がつらくて参加できない生徒<br>
-                    →ピストルから、笛や太鼓に変える（環境の調整）ことで、運動会に参加できるように。
-                </p>
-
-                <h2>2. 特別な教育的ニーズへの対応</h2>
-
-                <h3>2-1. 合理的配慮とは</h3>
-                <p>
-                    <span class="keyword">障害者基本法</span>（2011年改正）や<span class="keyword">障害者差別解消法</span>（2016年施行）において、障害を理由とする不当な差別的扱いの禁止とともに、<span class="keyword">合理的配慮</span>の提供が求められています。
-                </p>
-                <div class="highlight-box">
-                    <div class="highlight-title"><i data-lucide="key"></i>Keyword：合理的配慮 (Reasonable Accommodation)</div>
-                    <p>
-                        障害者が他の者と平等にすべての人権及び基本的自由を享有し、又は行使することを確保するための必要かつ適当な<span class="keyword">変更及び調整</span>であって、特定の場合において必要とされるものであり、かつ、均衡を失した又は<span class="keyword">過度の負担</span>を課さないものをいう。（障害者の権利に関する条約第2条定義）
-                    </p>
-                </div>
-                <p>
-                    <strong>学校教育現場で提供されている合理的配慮の例：</strong>
-                </p>
-                <ul>
-                    <li>疲れるとパニックが起こりやすい子どものために、教室内外に<span class="keyword">退避スペース</span>をつくる。</li>
-                    <li>聴覚過敏のある子どもは防音用<span class="keyword">イヤーマフ</span>をつけて授業を受けてよいとする。</li>
-                    <li>筆記に時間がかかる（あるいは筆記が難しい）場合に、<span class="keyword">タブレット</span>の利用を認める。</li>
-                    <li>行間が狭いと文字がぶれて見えるなど、読字に困難がある子どものために、文字の間隔や大きさを変更できる<span class="keyword">デジタル教材</span>を用いる。</li>
-                    <li>視覚過敏の子どもに緑色のノートの利用を認める。</li>
-                </ul>
-
-                <p>また、合理的配慮として、以下の観点を踏まえた施設・設備の整備も進められています。</p>
-                <div class="keyword-definition">
-                    <strong>Keyword：バリアフリー</strong>
-                    高齢者や障がい者が社会生活を送るうえで障壁となるものを取り除くこと。（例：後からスロープをつける）
-                </div>
-                <div class="keyword-definition">
-                    <strong>Keyword：ユニバーサルデザイン (UD)</strong>
-                    あらかじめ、障害の有無、年齢、性別、人種等にかかわらず多様な人々が利用しやすいよう都市や生活環境をデザインする考え方。（例：多目的トイレ）
-                </div>
-                <p>
-                    ただし、ツールがあっても周囲の無理解があれば形だけの配慮になります。そのため、<span class="keyword">心のバリアフリー</span>の推進が求められます。
-                </p>
-                <p><strong>心のバリアフリーの3つのポイント：</strong></p>
-                <ul style="list-style: none; padding-left: 1.5em; text-indent: -1.5em;">
-                    <li style="margin-bottom: 0.5em;">① 「<span class="keyword">障害の社会モデル</span>」を理解すること（障壁を取り除くのは社会の責務）。</li>
-                    <li style="margin-bottom: 0.5em;">② 差別（不当な差別的取扱い及び合理的配慮の不提供）を行わないよう徹底すること。</li>
-                    <li style="margin-bottom: 0.5em;">③ 多様な他者とコミュニケーションを取る力、困難や痛みを想像し共感する力を培うこと。</li>
-                </ul>
-                <p>※合理的配慮の決定には、子ども自身や保護者との<span class="keyword">建設的対話</span>による相互理解が不可欠です。</p>
-
-
-                <h3>2-2. 日本のインクルーシブ教育の現状</h3>
-                <ul>
-                    <li>特別支援教育では、通常の学校・学級においても特別なニーズのある子どもを支援します。</li>
-                    <li>特に、従来の特殊教育では明記されていなかった<span class="keyword">発達障害</span>が支援対象として明記されました。</li>
-                    <li>文科省の2022年調査結果では、通常の学級に在籍する発達障害やその傾向のある子ども（小中学生）は<span class="keyword">8.8%</span>と推定されています。</li>
-                    <li>「発達障害を含む障害のある幼児児童生徒に対する教育支援体制整備ガイドライン」（2017）などが示されています。</li>
-                    <li>すべての子どもに理解しやすい授業づくり（学びのユニバーサルデザイン：<span class="keyword">UDL</span>など）に取り組む事例も報告されています。</li>
-                </ul>
-
-                <h3>2-3. 日本のインクルーシブ教育の課題</h3>
-                <p>
-                    現状の課題として、以下の点が指摘されています。
-                </p>
-                <ul>
-                    <li>障がいの有無にとらわれず、特別なニーズを持つ子どもの対応をするようにとされていますが、実際には、<span class="keyword">発達障害</span>等の障がいがあるとされる子どもへの対応を中心としての議論が多い傾向にあります。</li>
-                    <li><span class="keyword">チーム支援</span>や<span class="keyword">多職種連携</span>への取り組みがまだ途上である状況が見られます。</li>
-                    <li>多様なニーズのある子どもに対する多様な学びの場を提供するには、既存のカリキュラムや教育制度では限界があるとの指摘もあります。</li>
-                </ul>
-
-                <h3>2-4. インクルーシブ教育自体の課題</h3>
-                <p>
-                    さまざまな国でインクルーシブ教育が行われていますが、具体的な実施方法は多様であり、共通して指摘される課題もあります。
-                </p>
-                <ul>
-                    <li>教員を<span class="keyword">サポートするシステム</span>が不足する場合。</li>
-                    <li>教員・児童生徒・保護者や地域住民等の<span class="keyword">心のバリアフリー</span>が浸透していない場合。</li>
-                </ul>
-                <div class="highlight-box" style="background-color: #fff1f2; border-color: #fecdd3;">
-                    <div class="highlight-title" style="color: #9f1239;"><i data-lucide="alert-triangle"></i>リスク</div>
-                    <p>
-                        十分な配慮や理解がないまま統合されると、特別な教育を必要とする子どもが何らの配慮もなく通常の学級で学んでいる状態（<span class="keyword">ダンピング</span>）に陥ったり、かえって差別や<span class="keyword">いじめ</span>の対象となる危険性があります。
-                    </p>
-                </div>
-
             </div>
 
         </div>
@@ -481,16 +391,11 @@
         <footer>
             <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
         </footer>
-
-        <!-- コントロールバー -->
-        <div class="control-bar">
-            <div class="switch-label"><i data-lucide="eye-off"></i> 暗記モード</div>
-            <label class="switch">
-                <input type="checkbox" id="memorizeToggle">
-                <span class="slider"></span>
-            </label>
-        </div>
     </main>
+
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページ上部へ戻る">
+        <i data-lucide="chevron-up"></i>
+    </button>
 
     <script>
         lucide.createIcons();
@@ -508,28 +413,54 @@
         if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
         if(overlay) overlay.addEventListener('click', toggleSidebar);
 
-        // 暗記モード制御
-        const memorizeToggle = document.getElementById('memorizeToggle');
-        const body = document.body;
-        const keywords = document.querySelectorAll('.keyword');
+        // 虫食い機能
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
 
-        memorizeToggle.addEventListener('change', () => {
-            if (memorizeToggle.checked) {
-                body.classList.add('memorize-mode');
-                // 全てのキーワードのrevealed状態をリセット
-                keywords.forEach(el => el.classList.remove('revealed'));
-            } else {
-                body.classList.remove('memorize-mode');
-            }
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
         });
 
-        // キーワードクリック時の制御
-        keywords.forEach(keyword => {
-            keyword.addEventListener('click', () => {
-                if (body.classList.contains('memorize-mode')) {
-                    keyword.classList.toggle('revealed');
-                }
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if(allRevealed) cloze.classList.add('revealed');
+                else cloze.classList.remove('revealed');
             });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if(allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> すべて隠す';
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> すべて表示';
+            }
+            lucide.createIcons();
+        }
+
+        function checkAllStatus() {
+            const revealedCount = document.querySelectorAll('.cloze.revealed').length;
+            if (revealedCount === clozes.length) {
+                allRevealed = true;
+            } else if (revealedCount === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
+        }
+
+        // Topへ戻るボタン
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollToTopBtn.classList.add('show');
+            else scrollToTopBtn.classList.remove('show');
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     </script>
 </body>
