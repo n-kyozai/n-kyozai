@@ -1,4 +1,3 @@
-<!-- Canvas: ON, Preview: ON -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -250,12 +249,48 @@
         }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; backdrop-filter: blur(2px); }
         .overlay.active { display: block; }
+
+        /* 追加：中断確認モーダルのスタイル */
+        .custom-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 3000;
+            display: none; /* デフォルト非表示 */
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s;
+        }
+        .custom-modal.active { display: flex; }
+        .custom-modal-content {
+            background: white; padding: 32px; border-radius: 16px;
+            width: 90%; max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .modal-buttons {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;
+        }
     </style>
 </head>
 <body>
 
     <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
     <div class="overlay" id="overlay"></div>
+
+    <!-- 追加：中断確認モーダル -->
+    <div id="quit-confirm-modal" class="custom-modal">
+        <div class="custom-modal-content">
+            <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 12px;">中断の確認</h3>
+            <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">
+                クイズを終了してトップに戻りますか？<br>
+                <span style="font-size: 0.85rem; color: #94a3b8;">（これまでの経過は保存されません）</span>
+            </p>
+            <div class="modal-buttons">
+                <button class="btn btn-outline" onclick="closeQuitModal()">キャンセル</button>
+                <button class="btn btn-primary" onclick="executeQuit()" style="background-color: #ef4444; border-color: #ef4444;">終了する</button>
+            </div>
+        </div>
+    </div>
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
@@ -277,13 +312,13 @@
         <div class="container">
             <div class="page-header">
                 <div class="breadcrumb">
-                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
-                    <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
-                    <a href="/n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
+                    <a href="n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                    <a href="n-kyozai/pedagogy/current-education/index.html">教育時事</a> ＞ 
                     <a href="/n-kyozai/pedagogy/current-education/special-needs/index.html">特別支援教育</a> ＞ 
                     問題演習
                 </div>
-                <h1 class="main-title">問題演習</h1>
+                <h1 class="main-title" id="main-title"><i data-lucide="heart-handshake"></i> 問題演習</h1>
             </div>
 
             <!-- 1. トップ画面 (学習テーマを選択) -->
@@ -293,7 +328,7 @@
                         <i data-lucide="list-video"></i> 学習テーマを選択
                     </h3>
                     <p style="font-size: 0.9rem; color: #64748b; line-height: 1.6;">
-                        特別支援教育の理念、各障害種別の理解、現代的な課題まで、100問以上のデータから演習できます。<br>
+                        特別支援教育の理念、各障害種別の理解、現代的な課題まで、演習できます。<br>
                         「全範囲ランダム演習」では、毎回ランダムに10問が出題されます。
                     </p>
                 </div>
@@ -314,7 +349,7 @@
                 <!-- 進行状況と中断ボタン -->
                 <div class="progress-area">
                     <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
-                    <button class="quit-btn" onclick="quitQuiz()">
+                    <button class="quit-btn" onclick="openQuitModal()">
                         <i data-lucide="x" width="16"></i> 中断
                     </button>
                 </div>
@@ -388,12 +423,12 @@
             { id: 'exam', title: "教採 応用・事例", icon: "pen-tool", desc: "実践的な事例判断、検査法、指導法" }
         ];
 
-        // クイズデータ（全130問以上搭載）
+        // クイズデータ
         const quizData = [
-            // --- 基礎知識 (basic) : 第1回〜第7回の内容 ---
+            // --- 基礎知識 (basic) ---
             { category: 'basic', q: "障害のある人もない人も可能な限り同じ条件で生活する権利があるとする考え方は？", options: ["ノーマライゼーション", "インクルージョン", "メインストリーミング", "バリアフリー"], answer: "ノーマライゼーション", exp: "北欧発祥の理念で、特別支援教育の根幹をなす考え方です。" },
             { category: 'basic', q: "障害の有無にかかわらず、教育システム自体を改革して共に学ぶ仕組みを何と言う？", options: ["インクルーシブ教育システム", "統合教育", "分離教育", "適応指導"], answer: "インクルーシブ教育システム", exp: "「障害者の権利に関する条約」に基づき、日本でも推進されています。" },
-            { category: 'basic', q: "ICF（国際生活機能分類）の特徴として正しいものは？", options: ["障害をマイナス面だけでなく、生活機能というプラス面や環境因子との相互作用で捉える", "障害を個人の病気や欠損としてのみ捉える", "環境因子は考慮しない", "ICIDHと全く同じ考え方である"], answer: "障害をマイナス面だけでなく、生活機能というプラス面や環境との相互作用で捉える", exp: "「医学モデル」から「社会モデル」への転換を示しています。" },
+            { category: 'basic', q: "ICF（国際生活機能分類）の特徴として正しいものは？", options: ["障害をマイナス面だけでなく、生活機能というプラス面や環境因子との相互作用で捉える", "障害を個人の病気や欠損としてのみ捉える", "環境因子は考慮しない", "ICIDHと全く同じ考え方である"], answer: "障害をマイナス面だけでなく、生活機能というプラス面や環境因子との相互作用で捉える", exp: "「医学モデル」から「社会モデル」への転換を示しています。" },
             { category: 'basic', q: "合理的配慮の決定プロセスにおいて不可欠なものは？", options: ["本人・保護者との建設的対話", "医師の診断書", "学校長の一存", "予算の確保"], answer: "本人・保護者との建設的対話", exp: "一方的な提供ではなく、合意形成が重要です。" },
             { category: 'basic', q: "特別支援教育が対象とするのは？", options: ["従来の特殊教育対象に加え、発達障害を含む特別な支援を必要とする幼児児童生徒", "特別支援学校に在籍する児童生徒のみ", "身体障害者手帳を持つ児童生徒のみ", "知的な遅れのある児童生徒のみ"], answer: "従来の特殊教育対象に加え、発達障害を含む特別な支援を必要とする幼児児童生徒", exp: "通常学級に在籍する発達障害の児童生徒も対象となります。" },
             { category: 'basic', q: "【正誤】「障害」の表記について、公的な文書ではひらがな表記の「障がい」に統一されている。", options: ["○", "×"], answer: "×", exp: "自治体によってはひらがな表記を用いる場合もありますが、国の法令や通知（文科省等）では漢字の「障害」が用いられています。" },
@@ -449,7 +484,7 @@
             { category: 'person', q: "アメリカで聾教育（手話）の大学であるギャローデット大学の創設に関わったのは？", options: ["トマス・ギャローデット", "アレクサンダー・グラハム・ベル", "サリバン", "ホーキング"], answer: "トマス・ギャローデット", exp: "彼の息子エドワードが初代学長となりました。" },
             { category: 'person', q: "「児童の権利に関する条約」が採択されたのは？", options: ["1989年", "1948年", "2006年", "1959年"], answer: "1989年", exp: "国連総会で採択。日本は1994年に批准しました。" },
 
-            // --- 法規・条文 (exam_law) ---
+            // --- 法規・条文 (law) ---
             { category: 'law', q: "学校教育法第72条の穴埋め：「特別支援学校は…障害による【　】を克服し自立を図るために必要な知識技能を授ける…」", options: ["学習上又は生活上の困難", "心身の故障", "社会的な障壁", "発達上の課題"], answer: "学習上又は生活上の困難", exp: "教採超頻出です。「心身の故障」ではない点に注意。" },
             { category: 'law', q: "発達障害者支援法における発達障害の定義：「その症状が通常【　】において発現するもの」", options: ["低年齢", "学童期", "青年期", "乳児期"], answer: "低年齢", exp: "生まれつきの脳機能障害であることを示唆しています。" },
             { category: 'law', q: "特別支援学校の学習指導要領における「自立活動」の6区分に含まれないものは？", options: ["職業能力の育成", "健康の保持", "人間関係の形成", "コミュニケーション"], answer: "職業能力の育成", exp: "6区分：健康、心理、人間関係、環境、身体、コミュニケーション。" },
@@ -489,14 +524,11 @@
             { category: 'exam', q: "【事例】通常学級で「みんなと同じ」を強要し、合理的配慮を行わないことは何に該当する可能性がある？", options: ["不当な差別的取扱い", "積極的差別是正措置", "特別支援教育の推進", "インテグレーション"], answer: "不当な差別的取扱い", exp: "障害者差別解消法において、合理的配慮を行わないことは、権利利益を侵害する場合に差別に該当するとされます。" }
         ];
 
-        // 疑似的に問題数を水増し（デモ用：実際はユニークな問題を入れる）
-        // ※ 本番環境では上記のquizData配列にユニークな問題を100個記述してください。
-        // ここではUIの動作確認のため、既存配列を複製してIDを付与します。
         let fullQuizData = JSON.parse(JSON.stringify(quizData));
-        // デモ用に配列を複製して問題数を確保（実際にはユニークな問題を入れてください）
+        // 問題数を水増し（デモ用）
         while (fullQuizData.length < 130) {
              const clone = {...fullQuizData[Math.floor(Math.random() * quizData.length)]};
-             clone.id = `dummy_${fullQuizData.length}`; // 一意なID
+             clone.id = `dummy_${fullQuizData.length}`;
              fullQuizData.push(clone);
         }
 
@@ -506,10 +538,24 @@
         let currentRunMissed = [];
         let practiceMode = 'normal'; 
 
-        window.onload = () => {
+        // DOMContentLoadedで初期化
+        document.addEventListener('DOMContentLoaded', () => {
             renderLessonSelector();
-            lucide.createIcons();
-        };
+            if(window.lucide) {
+                lucide.createIcons();
+            }
+            
+            // モバイルメニューのトグル設定
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            };
+            menuToggle.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+        });
 
         // 配列シャッフル関数
         function shuffleArray(array) {
@@ -541,10 +587,11 @@
                 `;
                 selector.appendChild(card);
             });
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
 
-        function startQuiz(mode) {
+        // グローバルスコープに関数を明示的に公開
+        window.startQuiz = function(mode) {
             practiceMode = 'normal';
             currentRunMissed = [];
             
@@ -557,7 +604,7 @@
                 // カテゴリ別（全問）
                 questions = fullQuizData.filter(q => q.category === mode).sort(() => Math.random() - 0.5);
                 const cat = categories.find(c => c.id === mode);
-                document.getElementById('main-title').innerHTML = `<i data-lucide='${cat.icon}'></i> ${cat ? cat.title : "演習"}`;
+                document.getElementById('main-title').innerHTML = `<i data-lucide='${cat ? cat.icon : "book"}'></i> ${cat ? cat.title : "演習"}`;
             }
             
             if (questions.length === 0) {
@@ -567,8 +614,8 @@
 
             currentQuestions = questions;
             initSession();
-            lucide.createIcons(); // アイコン再描画
-        }
+            if(window.lucide) lucide.createIcons();
+        };
 
         function initSession() {
             currentIndex = 0;
@@ -658,18 +705,19 @@
                 ? '結果を見る <i data-lucide="bar-chart-2"></i>' 
                 : '次の問題へ <i data-lucide="arrow-right"></i>';
             
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
             document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
         }
 
-        function handleNext() {
+        // HTMLのonclick属性から呼べるようにwindowオブジェクトに登録
+        window.handleNext = function() {
             currentIndex++;
             if(currentIndex < currentQuestions.length) {
                 showQuestion();
             } else {
                 showResult();
             }
-        }
+        };
 
         function showResult() {
             document.getElementById('quiz-view').style.display = 'none';
@@ -696,57 +744,46 @@
             if (currentRunMissed.length > 0) {
                 retryBtn.style.display = 'flex';
                 retryBtn.innerHTML = `<i data-lucide="rotate-ccw"></i> 間違えた ${currentRunMissed.length} 問に再挑戦`;
-                lucide.createIcons();
+                if(window.lucide) lucide.createIcons();
             } else {
                 retryBtn.style.display = 'none';
             }
             window.scrollTo(0, 0);
         }
 
-        function startWrongOnlyPractice() {
+        window.startWrongOnlyPractice = function() {
             if(currentRunMissed.length === 0) return;
             practiceMode = 'wrong_only';
             currentQuestions = [...currentRunMissed];
             currentRunMissed = []; 
             document.getElementById('main-title').innerHTML = "<i data-lucide='rotate-ccw'></i> 弱点克服演習";
             initSession();
-            lucide.createIcons();
-        }
+            if(window.lucide) lucide.createIcons();
+        };
 
-        function quitQuiz() {
-            if(confirm("クイズを中断してトップに戻りますか？")) {
-                backToHome();
-            }
-        }
+        // --- 修正：モーダル制御関数 ---
+        window.openQuitModal = function() {
+            document.getElementById('quit-confirm-modal').classList.add('active');
+        };
 
-        function backToHome() {
+        window.closeQuitModal = function() {
+            document.getElementById('quit-confirm-modal').classList.remove('active');
+        };
+
+        window.executeQuit = function() {
+            closeQuitModal();
+            backToHome();
+        };
+
+        window.backToHome = function() {
             document.getElementById('result-view').style.display = 'none';
             document.getElementById('quiz-view').style.display = 'none';
             document.getElementById('selection-view').style.display = 'block';
             document.getElementById('main-title').innerHTML = "<i data-lucide='heart-handshake'></i> 特別支援教育";
             renderLessonSelector();
             window.scrollTo(0, 0);
-            lucide.createIcons();
-        }
-
-        function restartCurrent() {
-            // モードに応じて再取得（ランダムなら別問題、カテゴリならシャッフル）
-            currentQuestions.sort(() => Math.random() - 0.5);
-            if (practiceMode !== 'wrong_only') {
-                currentRunMissed = [];
-            }
-            initSession();
-        }
-
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const toggleSidebar = () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            if(window.lucide) lucide.createIcons();
         };
-        menuToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
     </script>
 </body>
 </html>
