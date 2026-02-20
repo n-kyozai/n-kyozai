@@ -251,6 +251,31 @@
             color: var(--accent-color);
         }
 
+        /* --- 未公開リンク用のスタイル --- */
+        .lesson-link.disabled {
+            opacity: 0.7;
+            cursor: default;
+            background-color: #f8fafc;
+            border-style: dashed;
+            border-color: #cbd5e1;
+        }
+        
+        .lesson-link.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        .lesson-link.disabled .lesson-num {
+            background: #e2e8f0;
+            color: #94a3b8;
+        }
+
+        .lesson-link.disabled .lesson-title {
+            color: #94a3b8;
+        }
+
         footer {
             background-color: white;
             border-top: 1px solid #e2e8f0;
@@ -293,6 +318,7 @@
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
 
             <div class="nav-category">専門科目</div>
+            <!-- 現在位置が専門科目の内部であることを示すため、activeクラスを付与 -->
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
         </nav>
     </aside>
@@ -318,6 +344,15 @@
     </main>
 
     <script>
+        // ==========================================
+        // 【ページの公開手順】
+        // ページを作成し、リンクをクリック可能にするには、
+        // 以下の配列 `publishedLessons` にそのページの連番(pe1なら 1)を半角数字で追加してください。
+        // （例：1番、2番、5番を公開する場合 -> const publishedLessons = [1, 2, 5];）
+        // 現在は空 [] のため、全てクリック不可のデフォルト状態になっています。
+        // ==========================================
+        const publishedLessons = [];
+
         // 画像から抽出した目次データ
         const syllabusData = [
             {
@@ -424,15 +459,18 @@
                 chapterData.items.forEach((itemTitle, itemIndex) => {
                     const localNum = String(itemIndex + 1).padStart(3, '0'); // 章ごとの番号(001, 002...)
                     const linkHref = `/n-kyozai/politics/sp-pe/pe${globalCounter}`; // 連番の遷移先パス
+                    const isPublished = publishedLessons.includes(globalCounter); // 公開設定の判定
                     
-                    const linkEl = document.createElement('a');
-                    linkEl.href = linkHref;
-                    linkEl.className = 'lesson-link';
+                    // 公開済なら <a> タグ、未公開なら <div> タグとして生成
+                    const linkEl = document.createElement(isPublished ? 'a' : 'div');
+                    if (isPublished) linkEl.href = linkHref;
+                    
+                    linkEl.className = 'lesson-link' + (isPublished ? '' : ' disabled');
                     
                     linkEl.innerHTML = `
                         <span class="lesson-num">${localNum}</span>
                         <span class="lesson-title">${itemTitle}</span>
-                        <i data-lucide="chevron-right" class="lesson-arrow"></i>
+                        ${isPublished ? '<i data-lucide="chevron-right" class="lesson-arrow"></i>' : '<i data-lucide="lock" class="lesson-arrow" style="width:14px; height:14px; opacity: 0.5;"></i>'}
                     `;
                     
                     contentDiv.appendChild(linkEl);
