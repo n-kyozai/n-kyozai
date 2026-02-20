@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 【編集箇所 1】ページタイトル -->
+    <title>001. 統治形態 - 政治・経済講座</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- デザインルール --- */
+        :root {
+            --primary-color: #334155; /* Slate 700 */
+            --accent-color: #0f766e;  /* Teal 700 (政治・経済用に緑系に設定) */
+            --accent-dark: #115e59;   /* Teal 800 */
+            --accent-light: #f0fdfa;  /* Teal 50 */
+            --bg-color: #f8fafc;      /* Slate 50 */
+            --sidebar-bg: #ffffff;
+            --sidebar-width: 220px;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --card-padding: 32px;
+            
+            /* 穴埋めスタイル */
+            --cloze-bg: #e2e8f0;
+            --cloze-active-bg: #fff1f2;
+            --cloze-active-text: #be123c;
+        }
+
+        /* 全体のフォントサイズ調整 */
+        html { font-size: 92.5%; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 20px; font-size: 1rem; font-weight: 800;
+            color: var(--primary-color); border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center; gap: 10px;
+            background: #fff;
+        }
+        .nav-menu { padding: 12px 0; flex: 1; }
+        
+        .nav-category { 
+            padding: 12px 20px 4px; 
+            font-size: 0.7rem; 
+            color: #94a3b8; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-item {
+            display: flex; align-items: center; padding: 10px 20px;
+            color: #475569; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;
+        }
+        .nav-item:hover { background-color: var(--bg-color); color: var(--text-color); border-left-color: #cbd5e1; }
+        .nav-item i { margin-right: 10px; width: 18px; height: 18px; color: #64748b; }
+        .nav-item:hover i { color: var(--primary-color); }
+        .nav-item.active { background-color: var(--accent-light); color: var(--accent-color); border-left-color: var(--accent-color); }
+        .nav-item.active i { color: var(--accent-color); }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 32px;
+            width: 100%;
+            min-width: 0; 
+            transition: margin-left 0.3s ease;
+        }
+
+        .container { 
+            max-width: 820px; /* 読みやすさを重視した幅 */
+            margin: 0 auto; 
+        }
+
+        /* パンくずリスト */
+        .breadcrumb { font-size: 0.8rem; color: #94a3b8; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .breadcrumb a { color: #64748b; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--accent-color); text-decoration: underline; }
+        .breadcrumb span { font-weight: bold; color: var(--primary-color); cursor: default; }
+        .breadcrumb i { margin: 0 4px; color: #cbd5e1; width: 14px; height: 14px; }
+
+        /* ページタイトル */
+        h1.main-title {
+            font-size: 1.8rem; color: var(--primary-color);
+            font-weight: 800; margin-bottom: 32px;
+            display: flex; align-items: center; gap: 12px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+        h1.main-title i { color: var(--accent-color); width: 32px; height: 32px; }
+
+        /* モバイルトグル */
+        .mobile-toggle-btn {
+            display: none; position: fixed; 
+            top: 10px; left: 10px; z-index: 2000;
+            width: 40px; height: 40px; 
+            background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
+            border: 1px solid #e2e8f0; 
+            cursor: pointer;
+            align-items: center; justify-content: center; 
+            color: #475569;
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; backdrop-filter: blur(2px); }
+        .overlay.active { display: block; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); width: 220px; }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; padding-top: 60px; }
+            .mobile-toggle-btn { display: flex; }
+            :root { --card-padding: 20px; }
+        }
+
+        /* --- コンテンツスタイル --- */
+        
+        /* コンテンツカード */
+        .card {
+            background: #fff; border-radius: 16px; 
+            padding: var(--card-padding);
+            margin-bottom: 32px; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 画像エリアスタイル（縦長画像対応） */
+        .top-image-container {
+            text-align: center; /* 画像を中央揃え */
+            margin-bottom: 32px;
+            background-color: #f1f5f9; /* 画像がない場合の背景色（任意） */
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .top-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 800px; /* PCで縦長になりすぎないよう制限 */
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
+        /* 穴埋め本文 */
+        .text-section p { text-align: justify; margin-bottom: 1.2em; line-height: 1.8; }
+        .text-section p:last-child { margin-bottom: 0; }
+        
+        .cloze {
+            display: inline-block;
+            min-width: 2.5em;
+            padding: 0 4px;
+            margin: 0 2px;
+            background-color: var(--cloze-bg);
+            color: transparent;
+            border-radius: 4px;
+            border-bottom: 2px solid #cbd5e1;
+            cursor: pointer;
+            transition: all 0.15s ease-out;
+            user-select: none;
+            font-weight: 600;
+            vertical-align: baseline;
+        }
+        .cloze:active { transform: scale(0.98); }
+        .cloze.revealed {
+            background-color: var(--cloze-active-bg);
+            color: var(--cloze-active-text);
+            border-bottom-color: var(--cloze-active-text);
+        }
+
+        /* ツールバー */
+        .toolbar {
+            display: flex; justify-content: flex-end; margin-bottom: 12px;
+        }
+        .toggle-btn {
+            background: var(--primary-color); color: white; border: none;
+            padding: 8px 16px; border-radius: 20px; cursor: pointer;
+            font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        
+        /* ルビの微調整 */
+        rt { font-size: 0.6em; }
+
+        /* --- テキスト装飾用クラス（追加） --- */
+        .text-red { color: #dc2626; font-weight: bold; }  /* 赤文字・太字 */
+        .text-blue { color: #2563eb; font-weight: bold; } /* 青文字・太字 */
+        .text-bold { font-weight: bold; }                 /* 太字のみ */
+
+    </style>
+</head>
+<body>
+
+    <!-- モバイルトグルボタン -->
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <!-- 【編集箇所 2】サイドバーのリンクは適宜調整してください -->
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+            
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>政治・経済</a>
+        </nav>
+    </aside>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <div class="container">
+            <!-- パンくずリスト -->
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> 
+                <i data-lucide="chevron-right"></i>
+                <a href="/n-kyozai/politics/index.html">専門科目</a> 
+                <i data-lucide="chevron-right"></i>
+                <a href="/n-kyozai/politics/index.html">政治・経済</a> 
+                <i data-lucide="chevron-right"></i>
+                <!-- 【編集箇所 3】現在の章タイトル -->
+                <span>001 統治形態</span>
+            </div>
+
+            <!-- 【編集箇所 4】メインタイトル -->
+            <h1 class="main-title"><i data-lucide="landmark"></i> 001. 統治形態</h1>
+
+            <!-- 画像セクション -->
+            <section class="top-image-container">
+                <!-- 【編集箇所 5】画像パスを設定してください -->
+                <img src="2026-02-21_00h18_16.png" alt="解説画像" class="top-image">
+            </section>
+
+            <!-- 本文セクション -->
+            <div class="toolbar">
+                <button class="toggle-btn" onclick="toggleAllClozes()">
+                    <i data-lucide="eye" size="16"></i> 解答表示切替
+                </button>
+            </div>
+
+            <section class="card text-section">
+                <!-- 【編集箇所 6】ここに本文を入力してください -->
+                <!--  ここに本文を入力します。重要な語句は<span class="cloze" onclick="reveal(this)">穴埋め</span>にすることができます。-->
+                <!--  赤文字にする場合： <code>&lt;span class="text-red"&gt;赤い文字&lt;/span&gt;</code> と記述します。&rarr; <span class="text-red">赤い文字</span> -->
+                <!--  青文字にする場合： <code>&lt;span class="text-blue"&gt;青い文字&lt;/span&gt;</code> と記述します。&rarr; <span class="text-blue">青い文字</span> -->
+                <!--  単に太字にする場合： <code>&lt;span class="text-bold"&gt;太字&lt;/span&gt;</code>、または <code>&lt;strong&gt;太字&lt;/strong&gt;</code> と記述します。&rarr; <span class="text-bold">太字</span> -->
+                <!--  ルビ（ふりがな）を振る場合は、<ruby>漢<rt>かん</rt>字<rt>じ</rt></ruby>のように記述します。 -->
+                <!--   穴埋めの中にルビを入れることも可能です：<span class="cloze" onclick="reveal(this)"><ruby>答<rt>こた</rt></ruby>え</span> -->
+                <!--  【装飾と穴埋めの組み合わせ例】
+                    穴埋めになっている箇所を最初から強調色にする事は推奨されませんが、
+                    <span class="text-red">「このように文章の一部を赤くして、その後に<span class="cloze" onclick="reveal(this)">穴埋め</span>を続ける」</span>といった記述が可能です。 -->
+              <p></p>
+              <p></p>
+              <p></p>
+              <p></p>
+              <p></p>
+              <p></p>
+              <p></p>
+              <p></p>
+
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // DOM要素の取得
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        // モバイルメニューのトグル
+        const toggleSidebar = () => {
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+        };
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+        }
+
+        // 穴埋め機能
+        window.reveal = function(element) {
+            element.classList.toggle('revealed');
+        }
+
+        window.toggleAllClozes = function() {
+            const clozes = document.querySelectorAll('.cloze');
+            const anyHidden = Array.from(clozes).some(c => !c.classList.contains('revealed'));
+            clozes.forEach(c => anyHidden ? c.classList.add('revealed') : c.classList.remove('revealed'));
+        }
+
+        // 初期化実行
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lucideアイコンの初期化
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                setTimeout(() => {
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }, 1000);
+            }
+        });
+
+    </script>
+</body>
+</html>
