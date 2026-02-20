@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>政治・経済 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー（継承） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        /* --- アコーディオン・目次スタイル --- */
+        .chapter-details {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .chapter-summary {
+            padding: 16px 20px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            background-color: #f8fafc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            list-style: none; /* デフォルトの三角を消す */
+            transition: background-color 0.2s;
+        }
+
+        .chapter-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .chapter-summary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .chapter-summary .icon-wrapper {
+            margin-right: 12px;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .chapter-summary .chevron {
+            margin-left: auto;
+            color: #94a3b8;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] .chapter-summary {
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #ffffff;
+        }
+
+        details[open] .chevron {
+            transform: rotate(180deg);
+        }
+
+        .chapter-content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+            background-color: white;
+        }
+
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.2s;
+            background-color: #ffffff;
+        }
+
+        .lesson-link:hover {
+            border-color: var(--accent-color);
+            background-color: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .lesson-num {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            background: #e0f2fe;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .lesson-title {
+            flex: 1;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .lesson-arrow {
+            width: 16px;
+            height: 16px;
+            color: #cbd5e1;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .lesson-link:hover .lesson-arrow {
+            color: var(--accent-color);
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .chapter-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <!-- パンくずリスト階層設定 -->
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 政治・経済
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">政治・経済 学習シラバス</h1>
+        </div>
+
+        <div class="container">
+            <div id="syllabus-container">
+                <!-- JavaScriptでここに目次データを動的生成します -->
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        // 画像から抽出した目次データ
+        const syllabusData = [
+            {
+                chapter: "第1章 政治分野",
+                items: [
+                    "統治形態", "法の種類", "法令", "社会契約説 - 代表的な啓蒙思想家", "民主政治の基本原理", "法の成り立ち(1)イギリス編", "法の成り立ち(2)アメリカ・フランス・ロシア編", "イギリスの政治体制(議院内閣制)", "アメリカの政治体制(大統領制)", "中国・ドイツ・フランス・その他の政治体制",
+                    "大日本帝国憲法(明治憲法)", "日本国憲法の制定過程", "国民主権と象徴天皇制", "安全保障と自衛隊創設過程", "憲法9条にまつわる訴訟", "自衛隊の海外派遣", "日米安全保障条約", "有事関連", "安全保障関連法(平和安全法制)", "基本的人権と在日外国人の権利",
+                    "平等権(1)法の下の平等", "平等権(2)差別に対する立法と訴訟", "平等権(3)家族生活における両性の平等", "自由権(1)思想及び良心の自由・信教の自由", "自由権(2)表現の自由・学問の自由", "自由権(3)経済の自由", "自由権(4)身体の自由", "社会権", "参政権", "請求権",
+                    "新しい人権(1)環境権", "新しい人権(2)プライバシー権", "新しい人権(3)知る権利・アクセス権など", "国会(1)国会の仕事", "国会(2)国会の種類と国会議員の特権", "国会(3)衆議院の優越", "国会(4)その他の重要事項と国会改革", "選挙(1)選挙制度の特徴", "選挙(2)衆議院議員選挙制度", "選挙(3)参議院議員選挙制度",
+                    "選挙(4)選挙のルールや問題点", "内閣(1)内閣総理大臣と国務大臣", "内閣(2)内閣の仕事", "内閣(3)省庁", "内閣(4)行政の肥大化", "内閣(5)行政改革", "政党政治", "司法(1)裁判所と裁判官", "司法(2)違憲審査と裁判の種類", "司法(3)刑事手続と再審請求",
+                    "司法(4)検察審査会と少年事件", "司法(5)司法制度改革", "司法(6)陪審制・参審制・裁判員制度", "地方自治(1)地方自治とは", "地方自治(2)地方自治の仕組み", "地方自治(3)直接請求権", "地方自治(4)住民投票", "地方自治(5)地方財政", "地方自治(6)地方分権改革", "地方自治(7)地方分権改革と課題", "憲法改正"
+                ]
+            },
+            {
+                chapter: "第2章 経済分野",
+                items: [
+                    "頻出経済用語とお金の役割", "3つの経済主体と景気循環の波", "インフレーションとデフレーション", "企業の種類(1)私企業", "企業の種類(2)公企業・公私合同企業", "「社員」と会社法", "株式会社", "中小企業(1)", "中小企業(2)", "需要曲線・供給曲線",
+                    "市場機構(マーケット・メカニズム)", "完全競争市場・寡占市場・独占市場", "企業結合形態と独占禁止法", "市場の失敗", "公共財", "国民所得", "三面等価の原則", "フローとストック(国富)", "経済成長率", "経済成長率の公式と物価指数",
+                    "金融", "金融機関の役割(1)直接金融", "金融機関の役割(2)間接金融", "金利", "金本位制と管理通貨制", "日本銀行の役割", "日本銀行の金融政策(1)預金(支払)準備率操作", "日本銀行の金融政策(2)公定歩合操作", "日本銀行の金融政策(3)公開市場操作", "バブル経済の発生と崩壊",
+                    "日本版金融ビッグバン", "バブル崩壊後の非伝統的金融政策", "財政の3つの機能", "会計予算", "財政投融資", "租税の原則", "格差社会と所得の捕捉率", "歳入と税の種類", "消費税", "歳出と国債",
+                    "経済思想(1)重商主義・重農主義・資本主義", "経済思想(2)アダム・スミス", "経済思想(3)リカード・F.リスト", "経済思想(4)マルクス", "経済思想(5)ケインズ", "経済思想(6)フリードマン"
+                ]
+            },
+            {
+                chapter: "第3章 国際政治分野",
+                items: [
+                    "国家の三要素と主権のおよぶ範囲", "権力の正当性と国際法", "国際条約(1)世界人権宣言と国際人権規約", "国際条約(2)代表的な人権条約まとめ", "国際連盟の成立と問題点", "国際連合(1)国連憲章", "国際連合(2)国連総会", "国際連合(3)国連安全保障理事会", "国際連合(4)国連のその他の組織", "国際司法機関",
+                    "ざっくり国際政治(1)冷戦のはじまり", "ざっくり国際政治(2)1950年代〜1960年代", "ざっくり国際政治(3)1970年代", "ざっくり国際政治(4)1980年代", "ざっくり国際政治(5)1990年代", "ざっくり国際政治(6)2000年代", "核兵器", "通常兵器と軍縮", "難民", "旧ユーゴスラビア問題",
+                    "パレスチナ問題", "地域紛争(1)ヨーロッパ編", "地域紛争(2)ロシア編", "地域紛争(3)中東編", "地域紛争(4)アラブの春編", "地域紛争(5)アフリカ編", "地域紛争(6)インド・パキスタン・ASEAN編", "地域紛争(7)中国編", "日本の領土"
+                ]
+            },
+            {
+                chapter: "第4章 国際経済分野",
+                items: [
+                    "固定為替相場制と変動為替相場制", "購買力平価説", "為替レートと為替介入", "国際収支(1)経常収支", "国際収支(2)金融収支・資本移転等収支", "国際収支(3)経常収支の推移と金融収支との区別", "ざっくり国際経済史(1)世界恐慌", "ざっくり国際経済史(2)IMFとIBRD", "ざっくり国際経済史(3)GATT", "ざっくり国際経済史(4)ドル危機とスミソニアン協定",
+                    "ざっくり国際経済史(5)変動為替相場制とキングストン合意", "ざっくり国際経済史(6)石油危機とその対応", "ざっくり国際経済史(7)プラザ合意", "ざっくり国際経済史(8)世界金融危機", "ヨーロッパ経済史", "アジアの経済", "アジア通貨危機", "BRICS", "南北問題への対応(1)", "南北問題への対応(2)",
+                    "日本のODA(政府開発援助)", "FTA・EPA・TPP", "経済連携地域", "グローバル・インバランスとトランプ関税"
+                ]
+            },
+            {
+                chapter: "第5章 社会保障分野",
+                items: [
+                    "社会保障の歴史", "社会保険(1)医療保険", "社会保険(2)年金保険", "社会保険(3)雇用保険・労災保険・介護保険", "公的扶助", "公衆衛生・社会福祉", "人口構成", "少子・高齢化対策"
+                ]
+            },
+            {
+                chapter: "第6章 環境分野",
+                items: [
+                    "地球温暖化への対策", "環境に関する国際会議と条約", "日本の公害問題", "環境問題への対策", "資源エネルギー問題", "原子力発電"
+                ]
+            },
+            {
+                chapter: "第7章 労働分野",
+                items: [
+                    "労働運動の歴史", "労働組合", "労働関係調整法", "労働委員会と労働審判委員会", "労働基準法", "雇用形態", "賃金と労働時間", "働き方改革", "女性の雇用環境", "労働者派遣法", "外国人労働者・高齢者雇用"
+                ]
+            },
+            {
+                chapter: "第8章 消費者分野・農業問題",
+                items: [
+                    "消費者行動と悪質商法", "契約", "食品安全問題", "消費者保護行政", "日本の農業"
+                ]
+            },
+            {
+                chapter: "第9章 日本政治史・経済史",
+                items: [
+                    "ざっくり日本政治史・日本経済史(1)1945年〜1948年", "ざっくり日本政治史・日本経済史(2)1948年〜1953年", "ざっくり日本政治史・日本経済史(3)1954年〜1972年", "ざっくり日本政治史・日本経済史(4)高度経済成長", "ざっくり日本政治史・日本経済史(5)1972年〜1980年", "ざっくり日本政治史・日本経済史(6)1980年〜1991年", "ざっくり日本政治史・日本経済史(7)安定成長期", "ざっくり日本政治史・日本経済史(8)バブル経済", "ざっくり日本政治史・日本経済史(9)日米貿易摩擦", "ざっくり日本政治史・日本経済史(10)1992年〜1993年",
+                    "ざっくり日本政治史・日本経済史(11)1993年〜2001年", "ざっくり日本政治史・日本経済史(12)平成不況", "ざっくり日本政治史・日本経済史(13)2001年〜2006年", "ざっくり日本政治史・日本経済史(14)2006年〜2012年", "ざっくり日本政治史・日本経済史(15)2012年〜2020年", "ざっくり日本政治史・日本経済史(16)2020年〜"
+                ]
+            },
+            {
+                chapter: "第10章 公共・倫理分野",
+                items: [
+                    "青年期", "防衛機制", "無意識と欲求", "自然哲学・ソフィスト", "ギリシャ哲学(ソクラテス・プラトン・アリストテレス)", "世界の宗教", "中国思想", "人間中心主義と近代科学", "経験論と合理論", "ドイツ観念論(1)カント",
+                    "ドイツ観念論(2)ヘーゲル", "功利主義・実存主義", "フランクフルト学派・他者尊重", "構造主義・現代のヒューマニズム", "正義論", "日本思想(1)仏教・儒教・国学", "日本思想(2)伝統文化・庶民思想・西洋思想の受容", "日本思想(3)日本の独創的思想", "生命倫理"
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('syllabus-container');
+            let globalCounter = 1; // 連番（pe1, pe2...）用カウンター
+
+            syllabusData.forEach((chapterData, index) => {
+                // アコーディオン要素の作成
+                const details = document.createElement('details');
+                details.className = 'chapter-details';
+                if (index === 0) details.open = true; // 第1章だけ初期状態で開いておく
+
+                // 見出し（章タイトル）の作成
+                const summary = document.createElement('summary');
+                summary.className = 'chapter-summary';
+                summary.innerHTML = `
+                    <div class="icon-wrapper"><i data-lucide="bookmark"></i></div>
+                    ${chapterData.chapter}
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                `;
+                details.appendChild(summary);
+
+                // コンテンツ部分（リンクカードのグリッド）の作成
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'chapter-content';
+
+                chapterData.items.forEach((itemTitle, itemIndex) => {
+                    const localNum = String(itemIndex + 1).padStart(3, '0'); // 章ごとの番号(001, 002...)
+                    const linkHref = `/n-kyozai/politics/sp-pe/pe${globalCounter}`; // 連番の遷移先パス
+                    
+                    const linkEl = document.createElement('a');
+                    linkEl.href = linkHref;
+                    linkEl.className = 'lesson-link';
+                    
+                    linkEl.innerHTML = `
+                        <span class="lesson-num">${localNum}</span>
+                        <span class="lesson-title">${itemTitle}</span>
+                        <i data-lucide="chevron-right" class="lesson-arrow"></i>
+                    `;
+                    
+                    contentDiv.appendChild(linkEl);
+                    globalCounter++; // 連番をカウントアップ
+                });
+
+                details.appendChild(contentDiv);
+                container.appendChild(details);
+            });
+
+            // 生成したDOMに対してアイコンをレンダリング
+            lucide.createIcons();
+        });
+
+        // サイドバー制御（既存の動作）
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
