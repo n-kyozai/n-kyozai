@@ -4,32 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数学 応用問題 - 教員採用試験対策まとめ</title>
+    <title>数学 基礎問題 - 一般教養演習</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- MathJax (数式表示用ライブラリ) -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script type="text/javascript" id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
-
     <style>
-        /* =========================================
-           サイト共通スタイル
-           ========================================= */
         :root {
             --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --math-color: #0ea5e9;
+            --accent-color: #f59e0b; /* 一般教養数学用アクセントカラー（Amber） */
             --bg-color: #f8fafc;
             --text-color: #334155;
             --sidebar-width: 200px;
@@ -37,20 +18,14 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-            border: none !important;
-        }
-
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
         /* --- サイドバー --- */
@@ -63,198 +38,337 @@
             border-right: 1px solid #e2e8f0;
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s ease;
         }
         .sidebar-header {
-            padding: 14px 16px; font-size: 0.95rem; font-weight: bold; color: var(--primary-color);
-            border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
         }
         .nav-menu { padding: 6px 0; }
-        .nav-category {
-            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
-            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
-        }
+        .nav-category { padding: 8px 16px 2px; font-size: 0.65rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
         .nav-item {
-            display: flex; align-items: center; padding: 6px 16px; color: #64748b;
-            text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+            display: flex; align-items: center; padding: 8px 16px;
+            color: #64748b; text-decoration: none; font-size: 0.8rem;
         }
-        .nav-item:hover { background-color: #f1f5f9; color: var(--math-color); }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
         .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
-        .nav-item.active { color: var(--math-color); background-color: #f1f5f9; font-weight: bold; }
 
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #fffbeb;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header { margin-bottom: 20px; }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        
+        .main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* まとめセクション */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .summary-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+        }
+        
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: transform 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+        .info-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 1rem;
+        }
+        .info-title i { color: var(--accent-color); width: 20px; height: 20px; }
+
+        .info-content { font-size: 0.9rem; color: #475569; line-height: 1.8; flex-grow: 1; }
+        .keyword { font-weight: bold; color: #d97706; background: #fef3c7; padding: 2px 4px; border-radius: 2px; }
+
+        /* 暗記マーカー */
+        .cloze {
+            display: inline-block;
+            background-color: #fcd34d;
+            color: transparent;
+            border-bottom: 2px solid #d97706;
+            padding: 0 4px;
+            margin: 0 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            font-weight: bold;
+            min-width: 2em;
+            text-align: center;
+            vertical-align: bottom;
+        }
+        .cloze.revealed { background-color: transparent; color: #b45309; border-bottom-color: #b45309; }
+        .cloze:hover { opacity: 0.8; }
+
+        /* コントロールボタン */
+        .toggle-all-btn {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; gap: 4px;
+            margin-left: auto;
+            margin-bottom: 16px;
+        }
+        .toggle-all-btn:hover { background-color: var(--accent-color); color: white; }
+
+        /* クイズセクション */
+        .quiz-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .quiz-layout-body {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .quiz-layout-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左：問題、右：解説 */
+                gap: 40px;
+                align-items: start;
+            }
+        }
+
+        .question-meta {
+            display: flex; justify-content: space-between; 
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+            grid-column: 1 / -1;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: var(--primary-color);
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            background: #fffbeb;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* 解説・次へボタン */
+        .feedback-area {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 24px;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        .next-btn:active { transform: translateY(2px); }
+
+        /* 結果画面 */
+        .result-screen {
+            text-align: center;
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: #1e293b; }
+
+        /* モバイル対応 */
         .mobile-toggle-btn {
             display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
-            width: 42px; height: 42px; background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid #ccc; border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-color);
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: none; cursor: pointer;
             align-items: center; justify-content: center;
         }
 
-        .overlay {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
-        }
-        .overlay.active { display: block; }
-
-        .main-content {
-            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
-            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
-            border: none !important;
-        }
-        .page-header {
-            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
-        }
-        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
-        .breadcrumb a { color: #94a3b8; text-decoration: none; }
-        .breadcrumb a:hover { text-decoration: underline; }
-
-        .container {
-            width: 100%; max-width: 1000px; margin: 0 auto; padding: 20px; padding-bottom: 140px; flex: 1;
-        }
-        
-        footer {
-            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
-            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
-        }
-
         @media (max-width: 768px) {
-            .sidebar-header { padding-left: 60px; }
-            .mobile-toggle-btn { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .page-header { padding-left: 70px; }
-            .container { padding: 12px; }
+            .main-content { margin-left: 0; padding: 16px; }
+            .mobile-toggle-btn { display: flex; }
+            .container { padding-top: 40px; }
+            .card-grid { grid-template-columns: 1fr; }
         }
 
-        /* =========================================
-           数学応用問題 固有スタイル
-           ========================================= */
-        h1 { font-size: 1.6rem; color: var(--math-color); margin: 0; }
-        h2.section-title {
-            color: #0c4a6e; margin-top: 40px; margin-bottom: 20px; font-size: 1.3rem;
-            border-left: 6px solid var(--math-color); padding-left: 15px;
-            background: linear-gradient(to right, #fff, transparent);
-        }
-
-        .problem-card {
-            background-color: #fff; border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px;
-            margin-bottom: 24px; border: 1px solid #e2e8f0;
-            transition: transform 0.2s;
-        }
-        .problem-card:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
-
-        .problem-card.similar {
-            border-left: 6px solid #8b5cf6;
-            background-color: #fbfbfe;
-        }
-
-        .problem-header {
-            display: flex; align-items: baseline; margin-bottom: 16px;
-        }
-
-        .problem-number {
-            background-color: var(--math-color); color: white;
-            padding: 4px 12px; border-radius: 6px; font-weight: bold;
-            font-size: 0.85rem; margin-right: 12px; white-space: nowrap;
-        }
-        .problem-card.similar .problem-number { background-color: #8b5cf6; }
-
-        .problem-body {
-            display: flex;
-            gap: 24px;
-            align-items: flex-start;
-            justify-content: space-between;
-        }
-        
-        .problem-text {
-            font-size: 1rem;
-            font-weight: 500;
-            flex: 1;
-            white-space: normal; /* 余白解消の重要設定 */
-            text-align: left; 
-            color: var(--text-color);
-        }
-
-        /* 画像エリア */
-        .problem-image-box {
-            width: 220px;
-            flex-shrink: 0;
-            text-align: center;
-            background: #f1f5f9; border-radius: 8px; padding: 10px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .problem-image-box img {
-            max-width: 100%; height: auto;
-            border: 1px solid #cbd5e1; border-radius: 4px;
-        }
-        .no-img-text { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
-
-        /* 解答・解説エリア */
-        .answer-section { margin-top: 20px; border-top: 1px dashed #e2e8f0; padding-top: 16px; }
-        .toggle-btn {
-            background-color: #f1f5f9; color: var(--text-color); border: none;
-            padding: 10px; border-radius: 6px; cursor: pointer;
-            font-size: 0.9rem; display: flex; width: 100%; justify-content: center; font-weight: bold;
-        }
-        .toggle-btn:hover { background-color: #e2e8f0; }
-
-        .answer-content {
-            display: none; 
-            margin-top: 16px; 
-            padding: 20px;
-            background-color: #f0f9ff; 
-            border-radius: 8px;
-            border-left: 4px solid var(--math-color);
-            width: 100%;
-            overflow-wrap: break-word; /* 長文改行対応 */
-            word-break: break-word;
-        }
-        .problem-card.similar .answer-content { background-color: #f5f3ff; border-left-color: #8b5cf6; }
-        .answer-content.show { display: block; animation: fadeIn 0.3s ease; }
-
-        .answer-title { font-weight: bold; color: #0284c7; margin-bottom: 8px; display: block; }
-        .problem-card.similar .answer-title { color: #7c3aed; }
-        .result { font-weight: bold; color: #dc2626; background-color: #fef2f2; padding: 2px 6px; border-radius: 4px; }
-        .step { margin-bottom: 12px; font-size: 0.95rem; }
-
-        /* ページ内ナビボタン */
-        .nav-buttons { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
-        .page-nav-btn {
-            background: #fff; border: 1px solid var(--math-color); color: var(--math-color);
-            padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer;
-        }
-
-        /* モバイルレイアウト */
-        @media (max-width: 768px) {
-            .problem-body { flex-direction: column; gap: 16px; }
-            .problem-image-box { width: 100% !important; height: auto; }
-            .problem-text { font-size: 0.95rem; }
-            .answer-content { padding: 15px; }
-        }
-
-        /* スクロールトップボタン */
-        .scroll-top-btn {
-            position: fixed; bottom: 25px; right: 20px;
-            width: 48px; height: 48px; background: #374151; color: #fff;
-            border-radius: 50%; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-            cursor: pointer; z-index: 900; display: flex; align-items: center; justify-content: center;
-            opacity: 0.9;
-        }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
+        .overlay.active { display: block; }
     </style>
 </head>
 <body>
 
-    <button class="mobile-toggle-btn" id="menuToggle">
-        <i data-lucide="menu"></i>
-    </button>
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
 
-    <div class="overlay" id="sidebar-overlay"></div>
-
-    <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
         <nav class="nav-menu">
@@ -272,433 +386,454 @@
     </aside>
 
     <main class="main-content">
-        <div class="page-header">
-            <div class="breadcrumb">
-                <a href="../../../index.html">ホーム</a> ＞ <a href="../../index.html">一般教養</a> ＞ <a href="../index.html">数学</a> ＞ 応用問題
-            </div>
-            <h1>数学 応用問題</h1>
-        </div>
-
         <div class="container">
-            <div class="nav-buttons">
-                <button class="page-nav-btn" onclick="scrollToId('sec-number')">数と式・方程式</button>
-                <button class="page-nav-btn" onclick="scrollToId('sec-geometry')">図形</button>
-                <button class="page-nav-btn" onclick="scrollToId('sec-prob')">確率・場合の数</button>
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                    <a href="/n-kyozai/general/index.html">一般教養</a> ＞ 
+                    <a href="/n-kyozai/general/math/index.html">数学</a> ＞ 
+                    基礎問題
+                </div>
+                <h1 class="main-title"><i data-lucide="calculator"></i>数学 基礎問題（数的処理）</h1>
             </div>
 
-            <!-- ========================================== -->
-            <!-- 数と式・方程式 -->
-            <!-- ========================================== -->
-            <section id="sec-number">
-                <h2 class="section-title">数と式・方程式</h2>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.1</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">整数$A$を$6$で割ると$3$余り、整数$B$を$6$で割ると$4$余る。$A+B$、$AB$をそれぞれ$6$で割った余りを求めよ。</div>
+            <!-- まとめセクション -->
+            <div id="summary-section">
+                <div class="summary-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="summary-header" style="margin-bottom: 0; border: none; padding: 0;"><i data-lucide="book-open-check"></i>頻出公式・解法ノート</h2>
+                        <button class="toggle-all-btn" id="toggleAllBtn" style="margin: 0;">
+                            <i data-lucide="eye"></i> 穴埋めを全て表示
+                        </button>
                     </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div class="step">$A = 6k + 3, B = 6l + 4$ と置く。<br>$A+B = 6(k+l) + 7 = 6(k+l+1) + 1$ → 余り <span class="result">1</span><br>$AB = (6k+3)(6l+4) = 36kl + 24k + 18l + 12$ → 全て$6$で割り切れる。余り <span class="result">0</span></div>
+                    <hr style="margin: 16px 0; border-top: 2px solid #f1f5f9;">
+                    
+                    <div class="card-grid">
+                        
+                        <!-- 1. 速さ・時間・距離 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="timer"></i>速さ・時間・距離</div>
+                            <div class="info-content">
+                                <p>基本公式：<strong>距離 ＝ 速さ × <span class="cloze">時間</span></strong></p>
+                                <p class="mt-2"><strong>【旅人算】</strong></p>
+                                <p>・反対方向（出会い）：かかる時間 ＝ 2人の距離 ÷ 速さの<span class="cloze">和</span></p>
+                                <p>・同じ方向（追いつき）：かかる時間 ＝ 2人の距離 ÷ 速さの<span class="cloze">差</span></p>
+                                <p class="mt-2"><strong>【流水算】</strong></p>
+                                <p>・川を下る速さ ＝ 静水時の速さ ＋ <span class="cloze">川の速さ</span></p>
+                                <p>・川を上る速さ ＝ 静水時の速さ － <span class="cloze">川の速さ</span></p>
+                            </div>
                         </div>
+
+                        <!-- 2. 割合・濃度 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="percent"></i>割合・濃度算</div>
+                            <div class="info-content">
+                                <p>基本公式：<strong>濃度(%) ＝ <span class="cloze">食塩</span>の重さ ÷ 食塩水の重さ × 100</strong></p>
+                                <p class="mt-2">式を変形して食塩の重さを求めることが解法の基本。</p>
+                                <p><strong>食塩の重さ ＝ 食塩水の重さ × <span class="cloze">濃度(%)</span> ÷ 100</strong></p>
+                                <p class="mt-2">※異なる濃度の食塩水を混ぜる場合、全体の食塩の重さと全体の食塩水の重さを求めてから新しい濃度を計算する（または天秤法を使う）。</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. 仕事算・年齢算 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="briefcase"></i>仕事算・方程式の応用</div>
+                            <div class="info-content">
+                                <p><strong>【仕事算】</strong></p>
+                                <p>全体の仕事量を <span class="cloze">1</span> とおく。</p>
+                                <p>Aがa日、Bがb日で完成させる場合、1日あたりの仕事量は A＝1/a、B＝1/b となる。</p>
+                                <p>2人で協力した時の1日の仕事量 ＝ <span class="cloze">1/a ＋ 1/b</span></p>
+                                <p class="mt-2"><strong>【鶴亀算・年齢算】</strong></p>
+                                <p>わからないものを x、y とおいて連立方程式、あるいは1次方程式を立てて解く。</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. 場合の数・確率 -->
+                        <div class="info-card">
+                            <div class="info-title"><i data-lucide="dices"></i>場合の数・確率</div>
+                            <div class="info-content">
+                                <p><strong>【順列と組合せ】</strong></p>
+                                <p>・順番を区別して並べる（順列）：<sub>n</sub>P<sub>r</sub></p>
+                                <p>・順番を区別せず選ぶ（組合せ）：<sub>n</sub><span class="cloze">C</span><sub>r</sub></p>
+                                <p class="mt-2"><strong>【確率】</strong></p>
+                                <p>確率 ＝ その事象が起こる場合の数 ÷ <span class="cloze">すべて</span>の起こりうる場合の数</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="problem-card similar">
-                    <div class="problem-header"><span class="problem-number">No.1 類題</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">整数$A$を$5$で割ると$2$余り、整数$B$を$5$で割ると$3$余る。$A+B$、$AB$をそれぞれ$5$で割った余りを求めよ。</div>
+                <button class="start-btn" onclick="startQuiz()">
+                    <i data-lucide="pen-tool" style="margin-right: 8px;"></i>確認問題に挑戦する
+                </button>
+            </div>
+
+            <!-- クイズセクション -->
+            <div id="quiz-section" class="quiz-container">
+                <div class="question-card">
+                    <div class="question-meta">
+                        <span>Question <span id="q-number">1</span></span>
+                        <span>全10問</span>
                     </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【類題の解答】</span>
-                            <div>$A+B$：余りの和 $2+3=5$ を5で割ると余りは <span class="result">0</span><br>$AB$：余りの積 $2 \times 3 = 6$ を5で割ると余りは <span class="result">1</span></div>
+
+                    <div class="quiz-layout-body">
+                        <!-- 左側：問題・選択肢 -->
+                        <div class="quiz-left-col">
+                            <div id="question-text" class="question-text">
+                                <!-- 問題文 -->
+                            </div>
+                            
+                            <!-- モバイル用：選択肢の上に「次へ」ボタンエリア -->
+                            <div id="next-area" style="display: none; margin-bottom: 20px;">
+                                <button class="next-btn" onclick="nextQuestion()">
+                                    次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle; margin-left: 4px;"></i>
+                                </button>
+                            </div>
+
+                            <div id="options-area" class="option-container">
+                                <!-- 選択肢 -->
+                            </div>
+                        </div>
+
+                        <!-- 右側：解説 -->
+                        <div class="quiz-right-col">
+                            <div id="feedback-area" class="feedback-area">
+                                <div class="explanation-box">
+                                    <div style="font-weight: bold; color: var(--primary-color); margin-bottom: 8px;">【解説】</div>
+                                    <div id="explanation-content">
+                                        <!-- 解説本文 -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.2</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">$252$の正の約数の個数を求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>$252 = 2^2 \times 3^2 \times 7^1$。約数の個数は $(2+1)(2+1)(1+1) = $ <span class="result">18個</span></div>
-                        </div>
-                    </div>
+            <!-- 結果画面 -->
+            <div id="result-section" class="result-screen">
+                <h2><i data-lucide="award" style="vertical-align: middle; color: var(--accent-color);"></i> 演習結果</h2>
+                <div class="score-display">
+                    <span id="score-num">0</span> / 10 問正解
                 </div>
-
-                <div class="problem-card similar">
-                    <div class="problem-header"><span class="problem-number">No.2 類題</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">$360$の正の約数の個数を求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【類題の解答】</span>
-                            <div>$360 = 2^3 \times 3^2 \times 5^1$ より、$(3+1)(2+1)(1+1) = $ <span class="result">24個</span></div>
-                        </div>
-                    </div>
+                <p id="result-msg" style="margin-bottom: 30px; font-weight: bold; color: #64748b;"></p>
+                
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <button class="start-btn" id="retry-btn" style="margin: 0; background: var(--accent-color);" onclick="startWrongOnlyPractice()">
+                        <i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>間違えた問題を復習
+                    </button>
+                    <button class="start-btn" style="margin: 0; background: #64748b;" onclick="resetToSummary()">
+                        <i data-lucide="book-open" style="vertical-align: middle; margin-right: 8px;"></i>ノートに戻る
+                    </button>
                 </div>
+            </div>
 
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.4</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">(1) 2進数$110011$を10進数で表せ。(2) $73$を2進数で表せ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>(1) $32+16+2+1 = $ <span class="result">51</span><br>(2) $73 = 64+8+1 \rightarrow$ <span class="result">1001001<sub>(2)</sub></span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.5</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">1から200までの整数のうち、(1) 5で割り切れる数、(2) 5でも7でも割り切れる数、(3) 5または7で割り切れる数の個数をそれぞれ求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>(1) $200 \div 5 = $ <span class="result">40個</span><br>(2) $200 \div 35 = 5.7\dots$ → <span class="result">5個</span><br>(3) $40 + 28 - 5 = $ <span class="result">63個</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.6</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">50人の生徒のうち、運動部22人、文化部25人、帰宅部(どちらでもない)10人。両方に所属している者は何人か？</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>所属者は $50 - 10 = 40$人。$22 + 25 - x = 40$ より、$47 - x = 40$。答え： <span class="result">7人</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.7</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">(1) $x = \frac{\sqrt{5} - \sqrt{2}}{\sqrt{2}}, y = \frac{\sqrt{5} + \sqrt{2}}{\sqrt{2}}$ のとき、$x^2 + y^2$ の値。(2) $\sqrt{10}$ の小数部分を $a$ とするとき、$a^2 + 6a$ の値。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div class="step">(1) $x+y=\sqrt{10}, xy=\frac{3}{2}$。$x^2+y^2=(x+y)^2-2xy = 10-3 = $ <span class="result">7</span></div>
-                            <div class="step">(2) $a=\sqrt{10}-3$。$a(a+6) = (\sqrt{10}-3)(\sqrt{10}+3) = 10-9 = $ <span class="result">1</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- No.8, 9, 10 食塩水 -->
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.8</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">$8\%$の食塩水$500\text{g}$に$20\%$の食塩水を混ぜて$10\%$にしたい。$20\%$の食塩水は何$\text{g}$必要か。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>$40 + 0.2x = (500 + x) \times 0.1 \rightarrow 0.1x = 10 \rightarrow x = $ <span class="result">100g</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.9</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">$10\%$と$5\%$の食塩水を混ぜて、$8\%$の食塩水$400\text{g}$を作りたい。それぞれ何$\text{g}$ずつ混ぜればよいか。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>$x + y = 400$ かつ $0.1x + 0.05y = 32$ を解くと、$x=240, y=160$。答え： <span class="result">10%が240g、5%が160g</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.10</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">$7\%$と$4\%$の食塩水を混ぜて、$5\%$の食塩水$150\text{g}$を作りたい。それぞれ何$\text{g}$ずつ混ぜればよいか。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>濃度差の比 $2:1$ より分量は逆比の $1:2$。答え： <span class="result">7%が50g、4%が100g</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.11</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">みかんを配る。一人に3個ずつ配ると5個余り、4個ずつ配ると3個足りなくなる。子どもの人数とみかんの個数を求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>$3x + 5 = 4x - 3 \rightarrow x = 8$。答え： <span class="result">子供8人、みかん29個</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.12</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">1人に3個ずつ分けると9個残り、1人に5個ずつ分けると1人の子どもだけは4個しかもらえなくなる。子どもの人数とりんごの個数を求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>$3x + 9 = 5(x-1) + 4 \rightarrow 2x = 10 \rightarrow x = 5$。答え： <span class="result">子供5人、りんご24個</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.13</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">$|x - 2| < 4$ を満たす整数$x$の個数を求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>$-4 < x - 2 < 4 \rightarrow -2 < x < 6$。整数は $-1, 0, 1, 2, 3, 4, 5$ の <span class="result">7個</span></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ========================================== -->
-            <!-- 図形 -->
-            <!-- ========================================== -->
-            <section id="sec-geometry">
-                <h2 class="section-title">図形</h2>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.14</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">正六角形について、(1) 1つの内角の大きさ、(2) 1つの外角の大きさをそれぞれ求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>(1) 内角：$180(6-2) \div 6 = $ <span class="result">120度</span><br>(2) 外角：$360 \div 6 = $ <span class="result">60度</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.15</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">1辺$10\text{cm}$の正方形の内部に、辺を直径とする半円を4つ書いた花びら型の斜線部分の面積。</div>
-                        <div class="problem-image-box">
-                            <img src="15.png" alt="No.15" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <div class="no-img-text" style="display:none;">(画像: 15.png)</div>
-                        </div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>(半円4つ) - (正方形) $= (25\pi \div 2 \times 4) - 100 = $ <span class="result">50π - 100 (cm<sup>2</sup>)</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.16</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">平行四辺形ABCD。MはADの中点。PはBDとCMの交点。$\triangle \text{PMD}=3\text{cm}^2$のとき、四角形ABCMの面積。</div>
-                        <div class="problem-image-box">
-                            <img src="16.png" alt="No.16" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <div class="no-img-text" style="display:none;">(画像: 16.png)</div>
-                        </div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>面積比より $\triangle \text{PCB}=12, \triangle \text{PCD}=6$。全体 $36 - 9 = $ <span class="result">27 cm<sup>2</sup></span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.17</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">円錐の展開図。母線が7cm、底面の半径が3cmである。この円錐の体積を求めよ。</div>
-                        <div class="problem-image-box">
-                            <img src="17.png" alt="No.17" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <div class="no-img-text" style="display:none;">(画像: 17.png)</div>
-                        </div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div class="step">高さ $h = \sqrt{7^2 - 3^2} = 2\sqrt{10}$。</div>
-                            <div>$V = \frac{1}{3} \pi \times 3^2 \times 2\sqrt{10} = $ <span class="result">6√10π cm<sup>3</sup></span></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ========================================== -->
-            <!-- 確率・場合の数 -->
-            <!-- ========================================== -->
-            <section id="sec-prob">
-                <h2 class="section-title">確率・場合の数</h2>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.18</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">8人から委員長、副委員長、書記を1名ずつ選ぶ方法は何通りか。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>$_8P_3 = 8 \times 7 \times 6 = $ <span class="result">336通り</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.19</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">$0, 1, 2, 3, 4$ から異なる3個を用いて作れる3桁の偶数は何個か。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>一の位が0($12$) ＋ 2または4($9 \times 2$) $=$ <span class="result">30個</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.20</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">男子4人、女子3人の計7人が一列に並ぶとき、(1)男子が両端にくる並び方、(2)女子が隣り合わない並び方は何通りあるか。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>(1) $_4P_2 \times 5! = 12 \times 120 = $ <span class="result">1440通り</span><br>(2) $4! \times _5P_3 = 24 \times 60 = $ <span class="result">1440通り</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.21</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">格子状の道路がある。AからBへ行く最短経路は何通りあるか。(1)全経路 (2)Pを通る経路</div>
-                        <div class="problem-image-box">
-                            <img src="21.png" alt="No.21" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <div class="no-img-text" style="display:none;">(画像: 21.png)</div>
-                        </div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>(1) $_9C_4 = $ <span class="result">126通り</span><br>(2) $6 \times 10 = $ <span class="result">60通り</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.22</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">男子8人、女子7人から5人選ぶとき、(1)選び方の全通り、(2)男子3人、女子2人を選ぶ方法は何通りあるか。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>(1) $_{15}C_5 = $ <span class="result">3003通り</span><br>(2) $_8C_3 \times _7C_2 = 56 \times 21 = $ <span class="result">1176通り</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="problem-card">
-                    <div class="problem-header"><span class="problem-number">No.23</span></div>
-                    <div class="problem-body">
-                        <div class="problem-text">赤玉3個、白玉2個から2個取り出すとき、(1)2個とも赤、(2)赤白1個ずつの確率を求めよ。</div>
-                    </div>
-                    <div class="answer-section">
-                        <button class="toggle-btn" onclick="toggleAnswer(this)">解説を見る</button>
-                        <div class="answer-content">
-                            <span class="answer-title">【解答】</span>
-                            <div>全事象 $_5C_2=10$。 (1) $_3C_2 = 3$ → <span class="result">3/10</span> (2) $_3C_1 \times _2C_1 = 6$ → <span class="result">3/5</span></div>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
         </div>
-
-        <footer><p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p></footer>
     </main>
 
-    <button id="back-to-top" class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-        <i data-lucide="chevron-up"></i>
-    </button>
-
     <script>
-        lucide.createIcons();
+        const questions = [
+            {
+                q: "【濃度算】<br>8%の食塩水200gと、12%の食塩水300gを混ぜ合わせた。できあがった食塩水の濃度は何%か。",
+                options: [
+                    "9.6%",
+                    "10.0%",
+                    "10.4%",
+                    "10.8%"
+                ],
+                answer: 2, 
+                exp: "<strong>正解：10.4%</strong><br><br>それぞれの食塩水に含まれる食塩の重さを求めます。<br>・8%の食塩水200g中の食塩：200 × 0.08 = 16g<br>・12%の食塩水300g中の食塩：300 × 0.12 = 36g<br><br>混ぜ合わせた後の全体量は 200 + 300 = 500g<br>混ぜ合わせた後の食塩の合計は 16 + 36 = 52g<br><br>新しい濃度は、(52 ÷ 500) × 100 = 10.4%"
+            },
+            {
+                q: "【旅人算】<br>周囲1.2kmの池の周りを、Aは分速70m、Bは分速50mで歩く。2人が同じ場所から同時に反対方向に出発した場合、初めて出会うのは何分後か。",
+                options: [
+                    "8分後",
+                    "10分後",
+                    "12分後",
+                    "15分後"
+                ],
+                answer: 1, 
+                exp: "<strong>正解：10分後</strong><br><br>反対方向に進む場合、2人の進む距離の「和」が池の周囲（1.2km＝1200m）になったときに出会います。<br>2人の速さの和は、70 + 50 = 120m/分。<br><br>かかる時間は、距離 ÷ 速さの和 より、<br>1200 ÷ 120 = 10（分後）"
+            },
+            {
+                q: "【仕事算】<br>ある仕事を完成させるのに、A1人では12日、B1人では24日かかる。AとBの2人が協力してこの仕事をすると、何日で完成するか。",
+                options: [
+                    "6日",
+                    "8日",
+                    "9日",
+                    "10日"
+                ],
+                answer: 1, 
+                exp: "<strong>正解：8日</strong><br><br>全体の仕事量を「1」とします。<br>・Aの1日あたりの仕事量：1/12<br>・Bの1日あたりの仕事量：1/24<br><br>2人が協力した場合の1日の仕事量は、<br>1/12 + 1/24 = 2/24 + 1/24 = 3/24 = 1/8<br><br>したがって、完成までにかかる日数は、1 ÷ (1/8) = 8（日）"
+            },
+            {
+                q: "【確率】<br>大小2つのサイコロを同時に投げるとき、出る目の和が「8」になる確率を求めよ。",
+                options: [
+                    "1/6",
+                    "5/36",
+                    "1/9",
+                    "7/36"
+                ],
+                answer: 1, 
+                exp: "<strong>正解：5/36</strong><br><br>すべての起こりうる場合の数は、6 × 6 = 36通り。<br><br>出る目の和が8になる組み合わせは以下の通りです。<br>(大, 小) = (2, 6), (3, 5), (4, 4), (5, 3), (6, 2)<br>全部で5通りあります。<br><br>したがって、確率は 5/36 となります。"
+            },
+            {
+                q: "【方程式の応用（鶴亀算）】<br>1個80円のみかんと1個120円のりんごを合わせて15個買ったところ、代金の合計は1520円であった。りんごは何個買ったか。",
+                options: [
+                    "5個",
+                    "6個",
+                    "7個",
+                    "8個"
+                ],
+                answer: 3, 
+                exp: "<strong>正解：8個</strong><br><br>りんごの個数を x個、みかんの個数を (15 - x)個とします。<br>代金の合計の式を立てると、<br>120x + 80(15 - x) = 1520<br>120x + 1200 - 80x = 1520<br>40x = 320<br>x = 8<br><br>したがって、りんごは8個です。"
+            },
+            {
+                q: "【図形（三平方の定理）】<br>直角三角形において、斜辺の長さが13cm、他の一方の辺の長さが5cmであるとき、残りの辺の長さは何cmか。",
+                options: [
+                    "10cm",
+                    "11cm",
+                    "12cm",
+                    "14cm"
+                ],
+                answer: 2, 
+                exp: "<strong>正解：12cm</strong><br><br>三平方の定理 $a^2 + b^2 = c^2$ （cは斜辺）を利用します。<br>求める辺の長さを x とすると、<br>x<sup>2</sup> + 5<sup>2</sup> = 13<sup>2</sup><br>x<sup>2</sup> + 25 = 169<br>x<sup>2</sup> = 144<br><br>x > 0 より、x = 12（cm）"
+            },
+            {
+                q: "【損益算】<br>ある商品に原価の3割の利益を見込んで定価をつけたが、売れなかったので定価の1割引で売ったところ、340円の利益が出た。この商品の原価はいくらか。",
+                options: [
+                    "1500円",
+                    "2000円",
+                    "2500円",
+                    "3000円"
+                ],
+                answer: 1, 
+                exp: "<strong>正解：2000円</strong><br><br>原価を x円とします。<br>・定価：1.3x<br>・売価（定価の1割引）：1.3x × 0.9 = 1.17x<br><br>利益は「売価 － 原価」なので、<br>1.17x - x = 0.17x<br><br>これが340円なので、<br>0.17x = 340<br>x = 340 ÷ 0.17 = 2000"
+            },
+            {
+                q: "【年齢算】<br>現在、父親は40歳、子供は10歳である。父親の年齢が子供の年齢の3倍になるのは、今から何年後か。",
+                options: [
+                    "3年後",
+                    "4年後",
+                    "5年後",
+                    "6年後"
+                ],
+                answer: 2, 
+                exp: "<strong>正解：5年後</strong><br><br>x年後に3倍になるとします。<br>x年後の父親の年齢：40 + x<br>x年後の子供の年齢：10 + x<br><br>方程式を立てると、<br>40 + x = 3(10 + x)<br>40 + x = 30 + 3x<br>10 = 2x<br>x = 5"
+            },
+            {
+                q: "【平均】<br>A、B、C、D、Eの5人のテストの平均点は72点だった。ここにFが加わると、6人の平均点は74点になった。Fの点数は何点か。",
+                options: [
+                    "78点",
+                    "80点",
+                    "82点",
+                    "84点"
+                ],
+                answer: 3, 
+                exp: "<strong>正解：84点</strong><br><br>「平均 × 人数 ＝ 合計点」を利用します。<br>・5人の合計点：72 × 5 = 360点<br>・6人の合計点：74 × 6 = 444点<br><br>Fの点数は、6人の合計から5人の合計を引いたものなので、<br>444 - 360 = 84（点）"
+            },
+            {
+                q: "【最小公倍数】<br>あるバス停からは、A行きのバスが12分ごと、B行きのバスが15分ごとに発車している。午前8時に両方のバスが同時に発車した場合、次に同時に発車するのは何時何分か。",
+                options: [
+                    "8時45分",
+                    "9時00分",
+                    "9時15分",
+                    "9時30分"
+                ],
+                answer: 1, 
+                exp: "<strong>正解：9時00分</strong><br><br>次に同時に発車するのは、12と15の「最小公倍数」の時間が経過したときです。<br>12 = 2<sup>2</sup> × 3<br>15 = 3 × 5<br>最小公倍数は、2<sup>2</sup> × 3 × 5 = 60<br><br>したがって、60分後（1時間後）に同時に発車します。午前8時の60分後は午前9時00分です。"
+            }
+        ];
 
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswered = false;
+        let missedQuestions = [];
+        let practiceMode = 'normal';
+
+        function startQuiz() {
+            practiceMode = 'normal';
+            missedQuestions = [];
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            document.getElementById('result-section').style.display = 'none';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function startWrongOnlyPractice() {
+            if (missedQuestions.length === 0) return;
+            practiceMode = 'wrong_only';
+            // ミスした問題のリストを現在の出題リストにコピーし、元のミスリストは一旦クリアする
+            const questionsToRetry = [...missedQuestions];
+            missedQuestions = []; 
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion(questionsToRetry);
+        }
+
+        function showQuestion(qList = questions) {
+            isAnswered = false;
+            const q = qList[currentQuestionIndex];
+            
+            document.getElementById('q-number').textContent = currentQuestionIndex + 1;
+            // メタ情報の総問題数を更新
+            document.querySelector('.question-meta span:nth-child(2)').textContent = `全${qList.length}問`;
+
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const optionsContainer = document.getElementById('options-area');
+            optionsContainer.innerHTML = '';
+
+            document.getElementById('next-area').style.display = 'none';
+            document.getElementById('feedback-area').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="font-weight:bold; margin-right:8px; color: #94a3b8;">${index + 1}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn, qList);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn, qList) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = qList[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-btn');
+
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === q.answer) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                options[q.answer].classList.add('correct');
+                // ミスした問題を記録
+                missedQuestions.push(q);
+            }
+
+            document.getElementById('explanation-content').innerHTML = q.exp;
+            document.getElementById('feedback-area').style.display = 'block';
+            
+            const nextArea = document.getElementById('next-area');
+            nextArea.style.display = 'block';
+            
+            const nextBtn = nextArea.querySelector('button');
+            if (currentQuestionIndex === qList.length - 1) {
+                nextBtn.innerHTML = '結果を見る <i data-lucide="bar-chart-2" style="vertical-align: middle;"></i>';
+                // HTML上で定義されたonclickを上書き
+                nextBtn.onclick = () => showResult(qList.length);
+            } else {
+                nextBtn.innerHTML = '次の問題へ <i data-lucide="arrow-right" style="vertical-align: middle;"></i>';
+                nextBtn.onclick = () => {
+                    currentQuestionIndex++;
+                    showQuestion(qList);
+                };
+            }
+            
+            lucide.createIcons();
+        }
+
+        function showResult(totalQuestions) {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('score-num').textContent = score;
+            // 結果画面の分母を更新
+            document.querySelector('.score-display').innerHTML = `<span id="score-num">${score}</span> / ${totalQuestions} 問正解`;
+            
+            let msg = "";
+            if (score === totalQuestions) msg = "完璧です！数的処理の基礎はバッチリです。";
+            else if (score >= totalQuestions * 0.7) msg = "合格圏内です。間違えたパターンの公式を復習しましょう。";
+            else msg = "もう一度ノートを読んで、公式の使い方を整理しましょう。";
+            
+            document.getElementById('result-msg').textContent = msg;
+
+            // 復習ボタンの表示制御
+            const retryBtn = document.getElementById('retry-btn');
+            if (missedQuestions.length > 0) {
+                retryBtn.style.display = 'flex';
+                retryBtn.innerHTML = `<i data-lucide="rotate-ccw" style="vertical-align: middle; margin-right: 8px;"></i>間違えた ${missedQuestions.length} 問を復習`;
+                lucide.createIcons();
+            } else {
+                retryBtn.style.display = 'none';
+            }
+        }
+
+        function resetToSummary() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // サイドバー制御
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
+        const overlay = document.getElementById('overlay');
+
         const toggleSidebar = () => {
-            const isActive = sidebar.classList.contains('active');
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
-            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
-            lucide.createIcons();
-            document.body.style.overflow = isActive ? '' : 'hidden';
         };
+
         menuToggle.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
 
-        function scrollToId(id) {
-            const el = document.getElementById(id);
-            if (el) window.scrollTo({ top: el.offsetTop - 20, behavior: 'smooth' });
+        // 暗記マーカー（虫食い）制御
+        const clozes = document.querySelectorAll('.cloze');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        let allRevealed = false;
+
+        clozes.forEach(cloze => {
+            cloze.addEventListener('click', function() {
+                this.classList.toggle('revealed');
+                checkAllStatus();
+            });
+        });
+
+        toggleAllBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            clozes.forEach(cloze => {
+                if (allRevealed) {
+                    cloze.classList.add('revealed');
+                } else {
+                    cloze.classList.remove('revealed');
+                }
+            });
+            updateToggleButton();
+        });
+
+        function updateToggleButton() {
+            if (allRevealed) {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye-off"></i> 穴埋めを全て隠す';
+                toggleAllBtn.style.backgroundColor = '#475569';
+                toggleAllBtn.style.borderColor = '#475569';
+            } else {
+                toggleAllBtn.innerHTML = '<i data-lucide="eye"></i> 穴埋めを全て表示';
+                toggleAllBtn.style.backgroundColor = 'var(--accent-color)';
+                toggleAllBtn.style.borderColor = 'var(--accent-color)';
+            }
+            lucide.createIcons();
         }
 
-        function toggleAnswer(btn) {
-            const content = btn.nextElementSibling;
-            const isShown = content.classList.contains('show');
-            content.classList.toggle('show');
-            btn.textContent = isShown ? "解説を見る" : "解説を隠す";
+        function checkAllStatus() {
+            const revealedCount = document.querySelectorAll('.cloze.revealed').length;
+            if (revealedCount === clozes.length) {
+                allRevealed = true;
+            } else if (revealedCount === 0) {
+                allRevealed = false;
+            }
+            updateToggleButton();
         }
+
+        lucide.createIcons();
     </script>
 </body>
 </html>
