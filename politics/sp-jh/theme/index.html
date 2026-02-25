@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テーマ史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー（継承） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        /* --- アコーディオン・目次スタイル --- */
+        .chapter-details {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .chapter-summary {
+            padding: 16px 20px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            background-color: #f8fafc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            list-style: none; /* デフォルトの三角を消す */
+            transition: background-color 0.2s;
+        }
+
+        .chapter-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .chapter-summary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .chapter-summary .icon-wrapper {
+            margin-right: 12px;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .chapter-summary .chevron {
+            margin-left: auto;
+            color: #94a3b8;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] .chapter-summary {
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #ffffff;
+        }
+
+        details[open] .chevron {
+            transform: rotate(180deg);
+        }
+
+        .chapter-content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+            background-color: white;
+        }
+
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.2s;
+            background-color: #ffffff;
+        }
+
+        .lesson-link:hover {
+            border-color: var(--accent-color);
+            background-color: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .lesson-num {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            background: #e0f2fe;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .lesson-title {
+            flex: 1;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .lesson-arrow {
+            width: 16px;
+            height: 16px;
+            color: #cbd5e1;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .lesson-link:hover .lesson-arrow {
+            color: var(--accent-color);
+        }
+
+        /* --- 未公開リンク用のスタイル --- */
+        .lesson-link.disabled {
+            opacity: 0.7;
+            cursor: default;
+            background-color: #f8fafc;
+            border-style: dashed;
+            border-color: #cbd5e1;
+        }
+        
+        .lesson-link.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        .lesson-link.disabled .lesson-num {
+            background: #e2e8f0;
+            color: #94a3b8;
+        }
+
+        .lesson-link.disabled .lesson-title {
+            color: #94a3b8;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .chapter-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <!-- 現在位置が専門科目の内部であることを示すため、activeクラスを付与 -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <!-- パンくずリスト階層設定 -->
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ テーマ史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">テーマ史</h1>
+        </div>
+
+        <div class="container">
+            <h2 style="font-size: 1.1rem; color: var(--primary-color); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+                <i data-lucide="layers" style="width: 20px; height: 20px; color: var(--accent-color);"></i>テーマ史 目次
+            </h2>
+
+            <div id="syllabus-container">
+                <!-- JavaScriptでここに目次データを動的生成します -->
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        // ==========================================
+        // 【ページの公開手順】
+        // ページを作成し、リンクをクリック可能にするには、
+        // 以下の配列 `publishedLessons` にそのページの連番(th1なら 1)を半角数字で追加してください。
+        // （例：1番、2番、5番を公開する場合 -> const publishedLessons = [1, 2, 5];）
+        // 現在は空 [] のため、全てクリック不可のデフォルト状態になっています。
+        // ==========================================
+        const publishedLessons = [];
+
+        // 画像から抽出したテーマ史の目次データ
+        const syllabusData = [
+            {
+                chapter: "第1章 交渉史",
+                items: [
+                    "日中関係史", "日朝関係史", "日米関係史", "日露関係史", "日英関係史", "日本の統治領域の変化"
+                ]
+            },
+            {
+                chapter: "第2章 経済史",
+                items: [
+                    "税制・土地制度史", "農業・産業史", "金融・貨幣史", "流通・交通史", "貿易史"
+                ]
+            },
+            {
+                chapter: "第3章 社会史",
+                items: [
+                    "身分制度史", "家族制度史", "女性史", "農民闘争史", "近・現代の社会問題史"
+                ]
+            },
+            {
+                chapter: "第4章 政治史",
+                items: [
+                    "職制史と政権基盤", "法制史", "選挙制度史", "政党・政界再編史"
+                ]
+            },
+            {
+                chapter: "第5章 地方史",
+                items: [
+                    "地方支配・地方制度史", "北海道・沖縄史"
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('syllabus-container');
+            let globalCounter = 1; // 連番（th1, th2...）用カウンター
+
+            syllabusData.forEach((chapterData, index) => {
+                // アコーディオン要素の作成
+                const details = document.createElement('details');
+                details.className = 'chapter-details';
+                if (index === 0) details.open = true; // 第1章だけ初期状態で開いておく
+
+                // 見出し（章タイトル）の作成
+                const summary = document.createElement('summary');
+                summary.className = 'chapter-summary';
+                summary.innerHTML = `
+                    <div class="icon-wrapper"><i data-lucide="bookmark"></i></div>
+                    ${chapterData.chapter}
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                `;
+                details.appendChild(summary);
+
+                // コンテンツ部分（リンクカードのグリッド）の作成
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'chapter-content';
+
+                chapterData.items.forEach((itemTitle, itemIndex) => {
+                    const localNum = String(itemIndex + 1).padStart(3, '0'); // 章ごとの番号(001, 002...)
+                    const linkHref = `/n-kyozai/politics/sp-jh/theme/th${globalCounter}`; // 連番の遷移先パス
+                    const isPublished = publishedLessons.includes(globalCounter); // 公開設定の判定
+                    
+                    // 公開済なら <a> タグ、未公開なら <div> タグとして生成
+                    const linkEl = document.createElement(isPublished ? 'a' : 'div');
+                    if (isPublished) linkEl.href = linkHref;
+                    
+                    linkEl.className = 'lesson-link' + (isPublished ? '' : ' disabled');
+                    
+                    linkEl.innerHTML = `
+                        <span class="lesson-num">${localNum}</span>
+                        <span class="lesson-title">${itemTitle}</span>
+                        ${isPublished ? '<i data-lucide="chevron-right" class="lesson-arrow"></i>' : '<i data-lucide="lock" class="lesson-arrow" style="width:14px; height:14px; opacity: 0.5;"></i>'}
+                    `;
+                    
+                    contentDiv.appendChild(linkEl);
+                    globalCounter++; // 連番をカウントアップ
+                });
+
+                details.appendChild(contentDiv);
+                container.appendChild(details);
+            });
+
+            // 生成したDOMに対してアイコンをレンダリング
+            lucide.createIcons();
+        });
+
+        // サイドバー制御（既存の動作）
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
