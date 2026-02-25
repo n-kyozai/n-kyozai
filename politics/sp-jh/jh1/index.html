@@ -7,20 +7,89 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* --- カラーパレット（ライト／ダーク対応用変数） --- */
         :root {
             --primary-color: #2c3e50;
             --accent-color: #0ea5e9;
             --bg-color: #f8fafc;
+            --surface-color: #ffffff;
             --text-color: #334155;
-            --sidebar-width: 200px;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
             
-            /* Quiz specific colors */
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --timeline-line: #bae6fd;
+            --timeline-date-bg: #f0f9ff;
+            
             --quiz-blue: #3b82f6;
             --quiz-red: #ef4444;
             --quiz-red-bg: #fee2e2;
             --quiz-green: #10b981;
             --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #eff6ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* ダークモード用カラーパレット */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #f1f5f9;
+                --accent-color: #38bdf8;
+                --bg-color: #0f172a;
+                --surface-color: #1e293b;
+                --text-color: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border-color: #334155;
+                
+                --nav-hover-bg: #334155;
+                --nav-active-bg: #0c4a6e;
+                
+                --timeline-line: #0369a1;
+                --timeline-date-bg: #082f49;
+                
+                --quiz-blue: #60a5fa;
+                --quiz-red: #f87171;
+                --quiz-red-bg: #450a0a;
+                --quiz-green: #34d399;
+                --quiz-gray: #475569;
+                --feedback-correct-bg: #064e3b;
+                
+                --fill-bg: #334155;
+                --fill-border: #475569;
+                --fill-revealed-bg: #2e1022;
+                --fill-revealed-text: #fb7185;
+                --fill-revealed-border: #881337;
+
+                --slot-bg: #0f172a;
+                --slot-hover-bg: #1e293b;
+
+                --tf-btn-bg: #0f172a;
+                --tf-btn-hover-bg: #1e293b;
+                --tf-btn-border: #475569;
+                --tf-true-bg: #172554;
+                --tf-false-bg: #450a0a;
+
+                --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            }
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,19 +101,20 @@
             line-height: 1.6;
             display: flex;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         /* --- サイドバー --- */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: white;
+            background-color: var(--surface-color);
             height: 100vh;
             position: fixed;
             left: 0; top: 0;
-            border-right: 1px solid #e2e8f0;
+            border-right: 1px solid var(--border-color);
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, border-color 0.3s;
         }
 
         .sidebar-header {
@@ -52,7 +122,7 @@
             font-size: 0.95rem;
             font-weight: bold;
             color: var(--primary-color);
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -64,23 +134,23 @@
             font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #94a3b8;
+            color: var(--text-muted);
             font-weight: 600;
         }
         .nav-item {
             display: flex;
             align-items: center;
             padding: 6px 16px;
-            color: #64748b;
+            color: var(--text-muted);
             text-decoration: none;
             transition: all 0.2s;
             font-size: 0.8rem;
         }
-        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
         .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
         .nav-item.active {
             color: var(--accent-color);
-            background-color: #e0f2fe;
+            background-color: var(--nav-active-bg);
             font-weight: bold;
             border-right: 3px solid var(--accent-color);
         }
@@ -94,7 +164,7 @@
             z-index: 2000;
             width: 36px;
             height: 36px;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: var(--surface-color);
             border: none;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
@@ -124,17 +194,18 @@
         }
 
         .page-header {
-            background-color: white;
-            border-bottom: 1px solid #e2e8f0;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
             padding: 20px 24px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .breadcrumb {
             font-size: 0.7rem;
-            color: #94a3b8;
+            color: var(--text-muted);
             margin-bottom: 8px;
         }
-        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
         .breadcrumb a:hover { text-decoration: underline; }
 
         .container {
@@ -150,7 +221,7 @@
             color: var(--primary-color);
             margin-bottom: 20px;
             padding-bottom: 8px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -161,9 +232,9 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background-color: #e2e8f0;
-            color: transparent; /* 初期状態は文字を隠す */
-            padding: 2px 8px; /* サイズ縮小 */
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
             margin: 2px 4px;
             border-radius: 4px;
             cursor: pointer;
@@ -171,35 +242,34 @@
             min-height: 24px;
             transition: all 0.2s;
             user-select: none;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--fill-border);
             vertical-align: middle;
             font-weight: bold;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-
-        /* 表示状態 */
         .fill-blank.revealed {
-            background-color: #fff0f6;
-            color: #e11d48; /* テキストを表示 */
-            border-color: #fbcfe8;
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
         }
 
         /* --- 年表スタイル --- */
         .timeline-box {
-            background: white;
+            background: var(--surface-color);
             border-radius: 12px;
             padding: 30px;
             box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             margin-bottom: 40px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .timeline {
             position: relative;
             padding-left: 30px;
             margin-left: 10px;
-            border-left: 3px solid #bae6fd;
+            border-left: 3px solid var(--timeline-line);
         }
 
         .timeline-item {
@@ -216,8 +286,9 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background-color: white;
+            background-color: var(--surface-color);
             border: 4px solid var(--accent-color);
+            transition: background-color 0.3s;
         }
 
         .timeline-date {
@@ -225,7 +296,7 @@
             font-weight: bold;
             color: var(--accent-color);
             margin-bottom: 6px;
-            background: #f0f9ff;
+            background: var(--timeline-date-bg);
             display: inline-block;
             padding: 2px 8px;
             border-radius: 4px;
@@ -239,12 +310,13 @@
 
         /* --- テーマ別まとめスタイル --- */
         .theme-box {
-            background: white;
+            background: var(--surface-color);
             border-radius: 12px;
             padding: 30px;
             box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             margin-bottom: 40px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .theme-list {
@@ -258,7 +330,7 @@
             font-size: 0.95rem;
             line-height: 1.8;
             padding-bottom: 24px;
-            border-bottom: 1px dashed #e2e8f0;
+            border-bottom: 1px dashed var(--border-color);
         }
         .theme-list > li:last-child {
             margin-bottom: 0;
@@ -285,7 +357,7 @@
         .quiz-section {
             margin-top: 50px;
             padding-top: 20px;
-            border-top: 2px solid #e2e8f0;
+            border-top: 2px solid var(--border-color);
         }
 
         .quiz-header {
@@ -350,7 +422,7 @@
             white-space: nowrap;
         }
         .step-node.active .step-label { opacity: 1; }
-        .step-node:last-child .step-label { opacity: 1; color: #9ca3af; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
         .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
 
         .quiz-question-title {
@@ -364,14 +436,15 @@
         }
 
         .quiz-card {
-            background: white;
-            border: 1px solid #e5e7eb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
             font-size: 1.05rem;
             line-height: 2;
             margin-bottom: 24px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         /* ドラッグ&ドロップ用スロット */
@@ -379,7 +452,7 @@
             display: inline-flex;
             min-width: 70px;
             height: 36px;
-            border-bottom: 2px solid #9ca3af;
+            border-bottom: 2px solid var(--text-muted);
             position: relative;
             cursor: pointer;
             margin: 0 6px;
@@ -390,10 +463,10 @@
             font-weight: bold;
             transition: all 0.2s;
             vertical-align: middle;
-            background-color: #f9fafb;
+            background-color: var(--slot-bg);
             border-radius: 4px 4px 0 0;
         }
-        .slot:hover { background-color: #f3f4f6; border-bottom-color: var(--quiz-blue); }
+        .slot:hover { background-color: var(--slot-hover-bg); border-bottom-color: var(--quiz-blue); }
         .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
 
         .slot-num {
@@ -410,25 +483,26 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
-        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: #ecfdf5; }
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
         .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
 
         /* ドラッグ&ドロップ用選択肢 */
         .options-container {
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 20px;
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            background: white;
+            background: var(--surface-color);
             margin-bottom: 24px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .option-btn {
-            background: white;
-            border: 1px solid #d1d5db;
-            color: #4b5563;
+            background: var(--surface-color);
+            border: 1px solid var(--fill-border);
+            color: var(--text-color);
             padding: 8px 18px;
             border-radius: 20px;
             font-size: 0.95rem;
@@ -444,7 +518,7 @@
         .option-btn:disabled {
             opacity: 0.4;
             cursor: default;
-            background-color: #f3f4f6;
+            background-color: var(--slot-bg);
             transform: none;
             box-shadow: none;
         }
@@ -453,7 +527,7 @@
         .tf-item {
             margin-bottom: 24px;
             padding-bottom: 20px;
-            border-bottom: 1px dashed #e2e8f0;
+            border-bottom: 1px dashed var(--border-color);
         }
         .tf-item:last-child {
             margin-bottom: 0;
@@ -466,28 +540,28 @@
         }
         .tf-btns {
             display: flex;
-            gap: 8px; /* 12pxから縮小 */
+            gap: 8px;
         }
         .tf-btn {
             flex: 1;
-            max-width: 100px; /* 120pxから縮小 */
-            padding: 6px 8px; /* 10pxから縮小 */
-            border: 2px solid #e5e7eb;
-            background: white;
+            max-width: 100px;
+            padding: 6px 8px;
+            border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg);
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.85rem; /* サイズ縮小 */
-            color: #6b7280;
+            font-size: 0.85rem;
+            color: var(--text-muted);
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
         }
-        .tf-btn:hover { background: #f9fafb; border-color: #d1d5db; }
-        .tf-btn.selected-true { border-color: var(--quiz-blue); background: #eff6ff; color: var(--quiz-blue); }
-        .tf-btn.selected-false { border-color: var(--quiz-red); background: #fef2f2; color: var(--quiz-red); }
+        .tf-btn:hover { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
         .tf-btn:disabled { cursor: default; opacity: 0.7; }
         
         .tf-feedback {
@@ -499,8 +573,8 @@
             line-height: 1.6;
         }
         .tf-feedback.show { display: block; }
-        .tf-feedback.correct { background: #ecfdf5; border-left: 4px solid var(--quiz-green); }
-        .tf-feedback.incorrect { background: #fef2f2; border-left: 4px solid var(--quiz-red); }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
 
         /* 共通ボタン */
         .check-btn {
@@ -526,27 +600,28 @@
         /* 判定ボックス */
         .feedback-box {
             display: none;
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
+            background: var(--slot-bg);
+            border: 1px solid var(--border-color);
             border-left: 4px solid var(--quiz-blue);
             border-radius: 0 8px 8px 0;
             padding: 24px;
             margin-bottom: 24px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .feedback-box.show { display: block; animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
         
-        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: #ecfdf5;}
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
 
         .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
         .text-red { color: var(--quiz-red); }
         .text-green { color: var(--quiz-green); }
 
-        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: #4b5563; line-height: 1.8; }
-        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: white; border-radius: 4px; border: 1px solid #e5e7eb; margin: 0 4px;}
+        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: var(--text-color); line-height: 1.8; }
+        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: var(--surface-color); border-radius: 4px; border: 1px solid var(--border-color); margin: 0 4px;}
 
-        .explanation-details { border-top: 1px dashed #cbd5e1; padding-top: 16px; margin-bottom: 24px; }
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 16px; margin-bottom: 24px; }
         .explanation-summary {
             font-size: 0.95rem;
             color: var(--quiz-blue);
@@ -562,11 +637,11 @@
         .explanation-content {
             margin-top: 12px;
             font-size: 0.95rem;
-            color: #334155;
-            background: white;
+            color: var(--text-color);
+            background: var(--surface-color);
             padding: 16px;
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             line-height: 1.7;
         }
 
@@ -574,7 +649,7 @@
             display: block;
             width: 100%;
             padding: 14px;
-            background-color: #4b5563;
+            background-color: var(--text-muted);
             color: white;
             border: none;
             border-radius: 8px;
@@ -583,9 +658,9 @@
             cursor: pointer;
             text-align: center;
             text-decoration: none;
-            transition: background-color 0.2s;
+            transition: filter 0.2s;
         }
-        .next-btn:hover { background-color: #374151; }
+        .next-btn:hover { filter: brightness(0.9); }
 
         /* --- スクロールトップボタン --- */
         .scroll-to-top {
@@ -595,10 +670,10 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: #4b5563; /* ダークグレー */
+            background-color: var(--text-muted); /* ダークグレー */
             color: white;
             border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -615,21 +690,44 @@
             transform: translateY(0);
         }
         .scroll-to-top:hover {
-            background-color: #374151;
+            filter: brightness(0.9);
+        }
+
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed;
+            bottom: 95px; /* スクロールトップボタンの上に配置 */
+            right: 35px; /* 中心を合わせる調整 */
+            width: 40px; /* スクロールトップ(50px)より小さいサイズ厳守 */
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover {
+            filter: brightness(0.9);
         }
 
         /* --- 画像拡大（ライトボックス）用スタイル --- */
         .thumbnail-img {
-            max-width: 120px; /* 初期表示は小さく */
+            max-width: 160px; /* サイズを120pxから160pxへ拡大 */
             height: auto;
             border-radius: 6px;
             cursor: zoom-in;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: transform 0.2s;
             margin-top: 12px;
-            margin-bottom: 8px; /* キャプション削除の代わりにマージンを追加 */
+            margin-bottom: 8px;
             display: block;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
         .thumbnail-img:hover {
             transform: scale(1.05);
@@ -667,13 +765,14 @@
         }
 
         footer {
-            background-color: white;
-            border-top: 1px solid #e2e8f0;
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
             padding: 15px;
             text-align: center;
-            color: #94a3b8;
+            color: var(--text-muted);
             font-size: 0.7rem;
             margin-top: auto;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         /* --- レスポンシブ（モバイル）対応 --- */
@@ -692,6 +791,21 @@
                 width: 45px;
                 height: 45px;
             }
+            .toggle-all-blanks-btn {
+                bottom: 80px;
+                right: 24.5px;
+                width: 36px; /* スクロールトップ(45px)より小さいサイズ厳守 */
+                height: 36px;
+            }
+            
+            /* モバイル版のフォントサイズ縮小調整 */
+            .timeline-content { font-size: 0.85rem; }
+            .theme-list > li { font-size: 0.85rem; line-height: 1.6; }
+            .quiz-card { font-size: 0.95rem; }
+            .timeline-date { font-size: 0.8rem; }
+            .section-title { font-size: 1.1rem; }
+            .tf-text { font-size: 0.9rem; }
+            .fill-blank { font-size: 0.85rem; padding: 2px 6px; }
         }
     </style>
 </head>
@@ -846,6 +960,11 @@
         </footer>
     </main>
 
+    <!-- 全穴埋め表示/非表示ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
     <!-- トップへ戻るボタン -->
     <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
         <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
@@ -911,6 +1030,30 @@
         });
         scrollToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) {
+                    el.classList.add('revealed');
+                } else {
+                    el.classList.remove('revealed');
+                }
+            });
+            
+            // アイコンの切り替え
+            if (allRevealed) {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
         });
 
         // 穴埋め(タップでトグル表示)の処理
@@ -1270,13 +1413,13 @@
             updateProgress(); // 完了状態へ
             
             quizContainer.innerHTML = `
-                <div style="text-align:center; padding: 40px 0; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: var(--shadow);">
+                <div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
                     <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
                     <h2 style="color: var(--primary-color); font-size: 1.5rem; margin-bottom: 12px;">学習完了！お疲れ様でした。</h2>
-                    <p style="color: #64748b; margin-bottom: 30px;">すべての問題に解答しました。知識の定着に役立てましょう。</p>
+                    <p style="color: var(--text-muted); margin-bottom: 30px;">すべての問題に解答しました。知識の定着に役立てましょう。</p>
                     
                     <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
-                        <button class="check-btn" style="margin: 0; max-width: 300px; background-color: white; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="retryQuiz()">
+                        <button class="check-btn" style="margin: 0; max-width: 300px; background-color: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="retryQuiz()">
                             <i data-lucide="rotate-ccw" style="width:18px;height:18px;display:inline;vertical-align:middle;margin-right:6px;"></i>クイズを最初からやり直す
                         </button>
                         <a href="/n-kyozai/politics/sp-jh/index.html" class="next-btn" style="max-width: 300px;">
