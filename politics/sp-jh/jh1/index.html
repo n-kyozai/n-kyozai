@@ -587,6 +587,37 @@
         }
         .next-btn:hover { background-color: #374151; }
 
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #4b5563; /* ダークグレー */
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .scroll-to-top:hover {
+            background-color: #374151;
+        }
+
         /* --- 画像拡大（ライトボックス）用スタイル --- */
         .thumbnail-img {
             max-width: 120px; /* 初期表示は小さく */
@@ -655,6 +686,12 @@
             .container { padding: 16px; width: 100%; }
             .tf-btns { flex-direction: column; gap: 8px; }
             .tf-btn { max-width: 100%; }
+            .scroll-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
         }
     </style>
 </head>
@@ -729,7 +766,7 @@
                         <div class="timeline-content">
                             在野の考古学者である<span class="fill-blank">相沢忠洋</span>が群馬県の<span class="fill-blank">岩宿遺跡</span>において、更新世の地層である<span class="fill-blank">関東ローム層</span>の中から<span class="fill-blank">打製石器</span>を発見。それまで否定されていた日本列島の旧石器時代の存在が初めて証明された。
                             <!-- おすすめ画像1：岩宿遺跡・関東ローム層 -->
-                            <img src="IMG_0442.jpg" alt="打製石器と使用法" class="thumbnail-img" onclick="openLightbox(this.src)">
+                            <img src="https://placehold.co/400x300/f1f5f9/64748b?text=Image" alt="関東ローム層と打製石器" class="thumbnail-img" onclick="openLightbox(this.src)">
                             <!-- 💡 資料集おすすめ画像：関東ローム層の土層断面図 または 発見された打製石器 -->
                         </div>
                     </div>
@@ -809,6 +846,11 @@
         </footer>
     </main>
 
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
     <script>
         lucide.createIcons();
 
@@ -856,6 +898,19 @@
         lightboxImg.addEventListener('click', function() {
             lightboxOverlay.classList.remove('active');
             document.body.style.overflow = '';
+        });
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         // 穴埋め(タップでトグル表示)の処理
