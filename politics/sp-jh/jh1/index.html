@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>001 文化の始まり - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            
+            /* Quiz specific colors */
+            --quiz-blue: #3b82f6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e2e8f0;
+            color: transparent; /* 初期状態は文字を隠す */
+            padding: 2px 8px; /* サイズ縮小 */
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid #cbd5e1;
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* 表示状態 */
+        .fill-blank.revealed {
+            background-color: #fff0f6;
+            color: #e11d48; /* テキストを表示 */
+            border-color: #fbcfe8;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* --- 年表スタイル --- */
+        .timeline-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 40px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 10px;
+            border-left: 3px solid #bae6fd;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            border: 4px solid var(--accent-color);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            background: #f0f9ff;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 40px;
+        }
+
+        .theme-list {
+            list-style: none;
+        }
+
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        /* --- クイズUIスタイル --- */
+        .quiz-section {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 4px;
+            background-color: var(--quiz-gray);
+            z-index: 1;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute;
+            top: 50%; left: 0;
+            height: 4px;
+            background-color: var(--quiz-blue);
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.4s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background-color: var(--quiz-gray);
+            z-index: 3;
+            position: relative;
+            transition: background-color 0.4s, transform 0.2s;
+        }
+        .step-node.active {
+            background-color: var(--quiz-blue);
+            transform: scale(1.3);
+        }
+        .step-node.completed {
+            background-color: var(--quiz-blue);
+        }
+        .step-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--quiz-blue);
+            font-weight: bold;
+            opacity: 0;
+            white-space: nowrap;
+        }
+        .step-node.active .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: #9ca3af; }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        .quiz-question-title {
+            color: var(--quiz-blue);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* ドラッグ&ドロップ用スロット */
+        .slot {
+            display: inline-flex;
+            min-width: 70px;
+            height: 36px;
+            border-bottom: 2px solid #9ca3af;
+            position: relative;
+            cursor: pointer;
+            margin: 0 6px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            padding: 0 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            vertical-align: middle;
+            background-color: #f9fafb;
+            border-radius: 4px 4px 0 0;
+        }
+        .slot:hover { background-color: #f3f4f6; border-bottom-color: var(--quiz-blue); }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+
+        .slot-num {
+            position: absolute;
+            top: -12px; right: -10px;
+            background-color: var(--quiz-blue);
+            color: white;
+            font-size: 0.65rem;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: #ecfdf5; }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        /* ドラッグ&ドロップ用選択肢 */
+        .options-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: white;
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            color: var(--quiz-blue);
+            transform: translateY(-1px);
+        }
+        .option-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            background-color: #f3f4f6;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- 正誤問題用UI --- */
+        .tf-item {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .tf-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .tf-text {
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .tf-btns {
+            display: flex;
+            gap: 8px; /* 12pxから縮小 */
+        }
+        .tf-btn {
+            flex: 1;
+            max-width: 100px; /* 120pxから縮小 */
+            padding: 6px 8px; /* 10pxから縮小 */
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem; /* サイズ縮小 */
+            color: #6b7280;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .tf-btn:hover { background: #f9fafb; border-color: #d1d5db; }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: #eff6ff; color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: #fef2f2; color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        .tf-feedback {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+        }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: #ecfdf5; border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: #fef2f2; border-left: 4px solid var(--quiz-red); }
+
+        /* 共通ボタン */
+        .check-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 24px;
+            padding: 14px;
+            background-color: var(--quiz-blue);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        .check-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        /* 判定ボックス */
+        .feedback-box {
+            display: none;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid var(--quiz-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .feedback-box.show { display: block; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: #ecfdf5;}
+
+        .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+
+        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: #4b5563; line-height: 1.8; }
+        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: white; border-radius: 4px; border: 1px solid #e5e7eb; margin: 0 4px;}
+
+        .explanation-details { border-top: 1px dashed #cbd5e1; padding-top: 16px; margin-bottom: 24px; }
+        .explanation-summary {
+            font-size: 0.95rem;
+            color: var(--quiz-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            list-style: none;
+            font-weight: bold;
+        }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: #334155;
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            line-height: 1.7;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #4b5563;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .next-btn:hover { background-color: #374151; }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <!-- activeクラスを削除 -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                ホーム ＞ 専門科目 ＞ 日本史 ＞ 001 文化の始まり
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">001 文化の始まり（旧石器〜縄文時代）</h1>
+        </div>
+
+        <div class="container">
+            <!-- 【1】年表まとめ（限界拡張） -->
+            <div class="section-title"><i data-lucide="clock"></i>年表で見る 日本列島のあけぼの</div>
+            
+            <div class="timeline-box">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">約700万年前〜</div>
+                        <div class="timeline-content">
+                            人類誕生。<span class="fill-blank">猿人</span>（アウストラロピテクスなど）→<span class="fill-blank">原人</span>（北京原人など）→<span class="fill-blank">旧人</span>（ネアンデルタール人など）→<span class="fill-blank">新人</span>（ホモ＝サピエンス）と進化を遂げた。現在の現生人類はすべて新人に属する。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約258万年前〜</div>
+                        <div class="timeline-content">
+                            地質学の時代区分で<span class="fill-blank">更新世</span>（洪積世ともいう）。寒冷な氷期と、比較的温暖な間氷期が繰り返された氷河時代。日本列島は大陸と地続きになる時期があり、北からは<span class="fill-blank">マンモス</span>、南からは<span class="fill-blank">ナウマンゾウ</span>やオオツノジカなどの大型動物が渡来した。使用道具による区分では<span class="fill-blank">旧石器時代</span>に当たる。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約3万8000年前〜</div>
+                        <div class="timeline-content">
+                            日本列島に人類が渡来し定着し始めたと推測される。この時代の化石人骨として、静岡県の<span class="fill-blank">浜北人</span>や、沖縄県の<span class="fill-blank">港川人</span>・山下町第一洞人・白保竿根田原洞穴人などが発見されている（これらはすべて新人）。※かつて旧人とされた明石人骨は、のちの研究で新人と判明した。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約1万1700年前〜</div>
+                        <div class="timeline-content">
+                            最後の氷期が終了して気候が温暖化。地質学では<span class="fill-blank">完新世</span>（沖積世）へ移行。氷床が溶けて海面が上昇し（縄文海進）、現在の日本列島がほぼ形成される。植生も変化し、東日本ではブナやナラなどの<span class="fill-blank">落葉広葉樹林</span>、西日本ではシイやカシなどの<span class="fill-blank">照葉樹林</span>が広がった。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1949年</div>
+                        <div class="timeline-content">
+                            在野の考古学者である<span class="fill-blank">相沢忠洋</span>が群馬県の<span class="fill-blank">岩宿遺跡</span>において、更新世の地層である<span class="fill-blank">関東ローム層</span>の中から<span class="fill-blank">打製石器</span>を発見。それまで否定されていた日本列島の旧石器時代の存在が初めて証明された。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】テーマ別まとめ（限界拡張） -->
+            <div class="section-title"><i data-lucide="layers"></i>テーマ別詳細（道具・生活・信仰）</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>旧石器時代の石器の変遷</h3>
+                        <br>石を打ち砕いて作る<span class="fill-blank">打製石器</span>を使用。初期は楕円形の握斧（ハンドアックス）などが使われ、のちに獲物を解体するための<span class="fill-blank">ナイフ形石器</span>（ブレード）や、槍の先につける<span class="fill-blank">尖頭器</span>（ポイント）が発達した。
+                        <br>末期になると、中国東北部やシベリアから<span class="fill-blank">細石器</span>（マイクロリス）の技法が伝わった。これは小型の石刃を木や骨の柄にはめ込んで使うもので、より高度な狩猟を可能にした。また、伐採用の局部磨製石斧も一部で見られる。
+                    </li>
+                    <li>
+                        <h3>縄文文化の道具の出現</h3>
+                        <br>気候の温暖化に伴い、すばしっこい中・小型獣（ニホンジカやイノシシ）が増加。これらを射止めるために<span class="fill-blank">弓矢</span>が発明された。
+                        <br>また、木の実などの植物性食料を煮たり、貯蔵したりするために<span class="fill-blank">土器</span>（縄文土器）が作られた。縄文土器は低温で焼かれるため<span class="fill-blank">厚手でもろく</span>、表面が黒褐色をしている。時期によって、草創期（無文・隆起線文）、前期、中期（火焔型土器など装飾が過剰）、後期、晩期（亀ヶ岡式土器）と変遷する。
+                        <br>木を伐採・加工するための全面<span class="fill-blank">磨製石器</span>（石斧）や、木の実をすりつぶすための石皿・すり石、動物の骨や角で作られた釣針や銛などの<span class="fill-blank">骨角器</span>も普及した。
+                    </li>
+                    <li>
+                        <h3>生活形態と集落</h3>
+                        <br>旧石器時代は大型動物を追って移動する遊動生活（テント式小屋や洞穴に居住）だったが、縄文時代には食料確保が安定し、地面を掘り下げて屋根をかけた<span class="fill-blank">竪穴住居</span>による定住生活が始まった。
+                        <br>海岸近くには、人々が食べた貝殻や動物の骨、不要になった土器などを捨てた<span class="fill-blank">貝塚</span>が形成された。1877年にアメリカ人のお雇い外国人<span class="fill-blank">モース</span>が東京の<span class="fill-blank">大森貝塚</span>を発掘し、これが「日本近代考古学の出発点」とされる。
+                        <br>集落は広場を中心に複数の住居が囲む環状集落が一般的で、青森県の<span class="fill-blank">三内丸山遺跡</span>（巨大な掘立柱建物跡や栗の栽培跡）のような大規模な定住集落も発見されている。
+                    </li>
+                    <li>
+                        <h3>広域な交易ルート</h3>
+                        <br>特定の地域でしか産出しない石材が遠方の遺跡から発見されており、広範囲な交易があったことがわかる。
+                        <br>矢じりなどに使われたガラス質の石である<span class="fill-blank">黒曜石</span>（長野県和田峠、北海道十勝岳など）、装身具にされた<span class="fill-blank">ヒスイ</span>（硬玉：新潟県姫川流域）、サヌカイト（香川県白峰山、奈良県二上山など）が代表的である。
+                    </li>
+                    <li>
+                        <h3>精神生活・信仰・風習</h3>
+                        <br>あらゆる自然物や自然現象に霊威・精霊が宿ると信じる<span class="fill-blank">アニミズム</span>（精霊崇拝）の精神が生まれた。
+                        <br>豊かな収穫や安産を祈るため、女性や妊婦をかたどった<span class="fill-blank">土偶</span>や、男性のシンボルを模した石棒が作られた。
+                        <br>死者を埋葬する際には、手足を強く折り曲げる<span class="fill-blank">屈葬</span>の風習があった。これは死者の霊の災いを防ぐため、あるいは胎児の姿勢を真似て再生を祈るためとされる。
+                        <br>また、成人の通過儀礼や服喪の印として、健康な歯を意図的に抜く<span class="fill-blank">抜歯</span>の風習も広範囲で見られた。後期〜晩期の東日本では、共同墓地とされるストーンサークル（<span class="fill-blank">環状列石</span>）も作られた（秋田県大湯環状列石など）。
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【3】クイズセクション（動的・一括採点対応） -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <!-- 動的プログレスバー -->
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                        <!-- JSでノードを生成 -->
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // 穴埋め(タップでトグル表示)の処理
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => {
+                el.classList.toggle('revealed');
+            });
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装 (Drag&Drop + True/False)
+        // ==========================================
+        const quizData = [
+            {
+                type: 'dragDrop',
+                parts: [
+                    "(1) 1949年、",
+                    "が群馬県の",
+                    "において、更新世の地層である",
+                    "から",
+                    "を発見し、日本における旧石器時代の存在が証明された。"
+                ],
+                correctAnswers: ["相沢忠洋", "岩宿遺跡", "関東ローム層", "打製石器"],
+                options: ["相沢忠洋", "岩宿遺跡", "関東ローム層", "モース", "打製石器", "磨製石器", "大森貝塚"],
+                explanation: "日本の旧石器時代発見の最重要キーワードです。相沢忠洋、岩宿遺跡、関東ローム層、打製石器の4点セットで確実に暗記しましょう。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "(1) 約1万1700年前に気候が温暖化し、地質学では",
+                    "と呼ばれる時代に入った。<br>(2) すばしっこい小動物を狩るために",
+                    "が発明され、食料を煮るための",
+                    "や、木を伐採するための",
+                    "が使用されるようになった。"
+                ],
+                correctAnswers: ["完新世", "弓矢", "縄文土器", "磨製石器"],
+                options: ["弓矢", "完新世", "更新世", "縄文土器", "磨製石器", "細石器", "打製石器"],
+                explanation: "気候の温暖化（完新世・縄文海進）に伴う自然環境の変化が、縄文文化（弓矢・土器・磨製石器）を生み出しました。旧石器時代の「更新世・打製石器」と対比して覚えましょう。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "(1) 縄文時代には、あらゆる自然物や現象に霊威を認める",
+                    "の信仰が生まれ、女性をかたどった",
+                    "が作られた。<br>(2) 死者は手足を折り曲げる",
+                    "で埋葬された。<br>(3) 青森県の",
+                    "は、縄文時代の巨大な定住集落跡として世界遺産にも登録されている。"
+                ],
+                correctAnswers: ["アニミズム", "土偶", "屈葬", "三内丸山遺跡"],
+                options: ["土偶", "アニミズム", "シャーマニズム", "伸葬", "屈葬", "三内丸山遺跡", "登呂遺跡"],
+                explanation: "縄文人の精神文化としてアニミズム、土偶、石棒、抜歯、屈葬が挙げられます。三内丸山遺跡（青森県）は縄文時代前期〜中期の日本最大級の集落跡です。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "野尻湖遺跡（長野県）では、ナウマンゾウの化石とともに打製石器が発見されている。", 
+                        correct: true, 
+                        explanation: "野尻湖の湖底からナウマンゾウやオオツノジカの化石と、旧石器時代の石器・骨器が発見されており、狩猟が行われていたことがわかります。"
+                    },
+                    { 
+                        text: "黒曜石は新潟県姫川流域で産出し、装身具として日本各地へ交易された。", 
+                        correct: false, 
+                        explanation: "新潟県姫川流域で産出したのは「ヒスイ（硬玉）」です。黒曜石の産地は長野県和田峠や北海道十勝岳などが有名です。"
+                    },
+                    { 
+                        text: "1877年、お雇い外国人のモースは東京の大森貝塚を発見・発掘した。", 
+                        correct: true, 
+                        explanation: "モースによる大森貝塚の発掘は「日本近代考古学の出発点」とされており、頻出事項です。"
+                    },
+                    { 
+                        text: "縄文土器は、高温で焼かれているため薄手で硬く、赤褐色をしているのが特徴である。", 
+                        correct: false, 
+                        explanation: "それは弥生土器の特徴です。縄文土器は「低温で焼かれるため厚手でもろく、黒褐色」が特徴です。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let ddUserAnswers = []; // Drag&Drop用
+        let tfUserAnswers = []; // True/False用配列
+        const quizContainer = document.getElementById('quiz-container');
+
+        // プログレスバーの初期生成
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            // 一度中身をクリアしてフィル用divだけ残す
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                
+                // 完了ラベルの位置調整
+                if (i === totalSteps) {
+                    label.style.top = '-24px';
+                    label.style.right = '-15px';
+                    label.style.left = 'auto';
+                    label.style.transform = 'none';
+                }
+                
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        // プログレスバーの更新
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (currentQIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (i < currentQIndex) {
+                    node.classList.add('completed');
+                    node.classList.remove('active');
+                } else if (i === currentQIndex) {
+                    node.classList.add('active');
+                    node.classList.remove('completed');
+                } else {
+                    node.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        // クイズの描画ルーター
+        function renderQuiz() {
+            if (currentQIndex === 0) buildProgressBar();
+            
+            if (currentQIndex >= quizData.length) {
+                showResultScreen();
+                return;
+            }
+
+            updateProgress();
+            const q = quizData[currentQIndex];
+
+            if (q.type === 'dragDrop') {
+                renderDragDrop(q);
+            } else if (q.type === 'trueFalse') {
+                renderTrueFalse(q);
+            }
+        }
+
+        // 【タイプA】 ドラッグ&ドロップ形式の描画
+        function renderDragDrop(q) {
+            ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に当てはまる語句を選択せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty" data-index="${index}" onclick="removeDDAnswer(${index})">
+                                <span class="slot-num">${index + 1}</span>
+                             </span>`;
+                }
+            });
+            html += `</div>`;
+
+            html += `<div class="options-container" id="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+
+            html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+
+            html += `
+                <div class="feedback-box" id="feedback-box">
+                    <div class="feedback-title" id="fb-title"></div>
+                    <div class="feedback-detail">
+                        あなたの答え：<span id="fb-user" class="text-red"></span><br>
+                        正解：<span id="fb-correct" class="text-green"></span>
+                    </div>
+                    <details class="explanation-details">
+                        <summary class="explanation-summary">
+                            <i data-lucide="help-circle" style="width:16px;height:16px;"></i>解説・ポイント
+                        </summary>
+                        <div class="explanation-content">${q.explanation}</div>
+                    </details>
+                    <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+                </div>
+            `;
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btnElement) {
+            const emptyIndex = ddUserAnswers.indexOf(null);
+            if (emptyIndex !== -1) {
+                ddUserAnswers[emptyIndex] = text;
+                btnElement.disabled = true;
+                updateDDSlots();
+            }
+        };
+
+        window.removeDDAnswer = function(index) {
+            const text = ddUserAnswers[index];
+            if (text) {
+                ddUserAnswers[index] = null;
+                const btns = document.querySelectorAll('.option-btn');
+                btns.forEach(btn => { if (btn.innerText === text) btn.disabled = false; });
+                updateDDSlots();
+            }
+        };
+
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let isAllFilled = true;
+            slots.forEach((slot, index) => {
+                const text = ddUserAnswers[index];
+                if (text) {
+                    slot.innerHTML = `${text}<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.remove('empty');
+                } else {
+                    slot.innerHTML = `<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.add('empty');
+                    isAllFilled = false;
+                }
+            });
+            document.getElementById('check-btn').disabled = !isAllFilled;
+        }
+
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            const slots = document.querySelectorAll('.slot');
+            let isCorrect = true;
+
+            slots.forEach((slot, index) => {
+                slot.onclick = null;
+                if (ddUserAnswers[index] === q.correctAnswers[index]) {
+                    slot.classList.add('correct');
+                } else {
+                    slot.classList.add('incorrect');
+                    isCorrect = false;
+                }
+            });
+
+            document.getElementById('options-container').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'none';
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            
+            document.getElementById('fb-user').innerHTML = ddUserAnswers.map(a => `<span>${a}</span>`).join(' ');
+            document.getElementById('fb-correct').innerHTML = q.correctAnswers.map(a => `<span>${a}</span>`).join(' ');
+
+            if (isCorrect) {
+                fbBox.classList.add('correct-bg');
+                fbTitle.innerText = "正解です！";
+                fbTitle.className = "feedback-title text-green";
+            } else {
+                fbBox.classList.remove('correct-bg');
+                fbTitle.innerText = "不正解です";
+                fbTitle.className = "feedback-title text-red";
+            }
+            
+            fbBox.classList.add('show');
+        };
+
+        // 【タイプB】 正誤問題形式の描画
+        function renderTrueFalse(q) {
+            tfUserAnswers = new Array(q.questions.length).fill(null);
+
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：次の各文の正誤を判定せよ。</div>`;
+            html += `<div class="quiz-card" style="padding: 16px 24px;">`;
+
+            q.questions.forEach((item, idx) => {
+                html += `
+                <div class="tf-item">
+                    <div class="tf-text">(${idx + 1}) ${item.text}</div>
+                    <div class="tf-btns">
+                        <button class="tf-btn" id="tf-btn-${idx}-true" onclick="selectTF(${idx}, true)"><i data-lucide="circle" style="width: 16px; height: 16px;"></i> 正しい</button>
+                        <button class="tf-btn" id="tf-btn-${idx}-false" onclick="selectTF(${idx}, false)"><i data-lucide="x" style="width: 16px; height: 16px;"></i> 誤り</button>
+                    </div>
+                    <div class="tf-feedback" id="tf-feedback-${idx}"></div>
+                </div>`;
+            });
+            html += `</div>`;
+            html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点する</button>`;
+            
+            // 全体のNextボタン（初期非表示）
+            html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectTF = function(qIndex, isTrue) {
+            tfUserAnswers[qIndex] = isTrue;
+            
+            const btnTrue = document.getElementById(`tf-btn-${qIndex}-true`);
+            const btnFalse = document.getElementById(`tf-btn-${qIndex}-false`);
+            
+            btnTrue.classList.toggle('selected-true', isTrue);
+            btnFalse.classList.toggle('selected-false', !isTrue);
+            
+            // 全て選択されたかチェック
+            if (tfUserAnswers.every(ans => ans !== null)) {
+                document.getElementById('check-btn').disabled = false;
+            }
+        };
+
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+
+            // 各問題の判定と解説表示
+            q.questions.forEach((item, idx) => {
+                const isCorrect = tfUserAnswers[idx] === item.correct;
+                const feedbackDiv = document.getElementById(`tf-feedback-${idx}`);
+                
+                // ボタンをロック
+                document.getElementById(`tf-btn-${idx}-true`).disabled = true;
+                document.getElementById(`tf-btn-${idx}-false`).disabled = true;
+
+                feedbackDiv.classList.add('show');
+                if (isCorrect) {
+                    feedbackDiv.classList.add('correct');
+                    feedbackDiv.innerHTML = `<strong class="text-green">正解！</strong><br>${item.explanation}`;
+                } else {
+                    feedbackDiv.classList.add('incorrect');
+                    feedbackDiv.innerHTML = `<strong class="text-red">不正解...</strong> (正解は ${item.correct ? '〇' : '×'})<br>${item.explanation}`;
+                }
+            });
+
+            // 次へボタンを表示
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        // 共通：次の問題へ
+        window.nextQuestion = function() {
+            currentQIndex++;
+            renderQuiz();
+        };
+
+        // 共通：やり直し
+        window.retryQuiz = function() {
+            currentQIndex = 0;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop, behavior: 'smooth' });
+        };
+
+        // 結果画面
+        function showResultScreen() {
+            updateProgress(); // 完了状態へ
+            
+            quizContainer.innerHTML = `
+                <div style="text-align:center; padding: 40px 0; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: var(--shadow);">
+                    <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                    <h2 style="color: var(--primary-color); font-size: 1.5rem; margin-bottom: 12px;">学習完了！お疲れ様でした。</h2>
+                    <p style="color: #64748b; margin-bottom: 30px;">すべての問題に解答しました。知識の定着に役立てましょう。</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                        <button class="check-btn" style="margin: 0; max-width: 300px; background-color: white; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="retryQuiz()">
+                            <i data-lucide="rotate-ccw" style="width:18px;height:18px;display:inline;vertical-align:middle;margin-right:6px;"></i>クイズを最初からやり直す
+                        </button>
+                        <a href="/n-kyozai/politics/sp-jh/index.html" class="next-btn" style="max-width: 300px;">
+                            日本史 目次へ戻る
+                        </a>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // 初期描画
+        renderQuiz();
+    </script>
+</body>
+</html>
