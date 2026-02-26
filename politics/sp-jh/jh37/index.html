@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>037 日清・日露戦争と国際関係 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット（ライト／ダーク対応用変数） --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --timeline-line: #bae6fd;
+            --timeline-date-bg: #f0f9ff;
+            
+            --quiz-blue: #3b82f6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #eff6ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* ダークモード用カラーパレット */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #f1f5f9;
+                --accent-color: #38bdf8;
+                --bg-color: #0f172a;
+                --surface-color: #1e293b;
+                --text-color: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border-color: #334155;
+                
+                --nav-hover-bg: #334155;
+                --nav-active-bg: #0c4a6e;
+                
+                --timeline-line: #0369a1;
+                --timeline-date-bg: #082f49;
+                
+                --quiz-blue: #60a5fa;
+                --quiz-red: #f87171;
+                --quiz-red-bg: #450a0a;
+                --quiz-green: #34d399;
+                --quiz-gray: #475569;
+                --feedback-correct-bg: #064e3b;
+                
+                --fill-bg: #334155;
+                --fill-border: #475569;
+                --fill-revealed-bg: #2e1022;
+                --fill-revealed-text: #fb7185;
+                --fill-revealed-border: #881337;
+
+                --slot-bg: #0f172a;
+                --slot-hover-bg: #1e293b;
+
+                --tf-btn-bg: #0f172a;
+                --tf-btn-hover-bg: #1e293b;
+                --tf-btn-border: #475569;
+                --tf-true-bg: #172554;
+                --tf-false-bg: #450a0a;
+
+                --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, border-color 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* --- 年表スタイル --- */
+        .timeline-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 10px;
+            border-left: 3px solid var(--timeline-line);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 4px solid var(--accent-color);
+            transition: background-color 0.3s;
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            background: var(--timeline-date-bg);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .theme-list {
+            list-style: none;
+        }
+
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        /* --- クイズUIスタイル --- */
+        .quiz-section {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 4px;
+            background-color: var(--quiz-gray);
+            z-index: 1;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute;
+            top: 50%; left: 0;
+            height: 4px;
+            background-color: var(--quiz-blue);
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.4s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background-color: var(--quiz-gray);
+            z-index: 3;
+            position: relative;
+            transition: background-color 0.4s, transform 0.2s;
+        }
+        .step-node.active {
+            background-color: var(--quiz-blue);
+            transform: scale(1.3);
+        }
+        .step-node.completed {
+            background-color: var(--quiz-blue);
+        }
+        .step-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--quiz-blue);
+            font-weight: bold;
+            opacity: 0;
+            white-space: nowrap;
+        }
+        .step-node.active .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        .quiz-question-title {
+            color: var(--quiz-blue);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .slot {
+            display: inline-flex;
+            min-width: 70px;
+            height: 36px;
+            border-bottom: 2px solid var(--text-muted);
+            position: relative;
+            cursor: pointer;
+            margin: 0 6px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            padding: 0 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            vertical-align: middle;
+            background-color: var(--slot-bg);
+            border-radius: 4px 4px 0 0;
+        }
+        .slot:hover { background-color: var(--slot-hover-bg); border-bottom-color: var(--quiz-blue); }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+
+        .slot-num {
+            position: absolute;
+            top: -12px; right: -10px;
+            background-color: var(--quiz-blue);
+            color: white;
+            font-size: 0.65rem;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--surface-color);
+            margin-bottom: 24px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .option-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--fill-border);
+            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            color: var(--quiz-blue);
+            transform: translateY(-1px);
+        }
+        .option-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            background-color: var(--slot-bg);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- 正誤問題用UI --- */
+        .tf-item {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .tf-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .tf-text { margin-bottom: 12px; font-weight: 500; }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 8px;
+            border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .tf-btn:hover { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        .tf-feedback {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+        }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        /* 共通ボタン */
+        .check-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 24px;
+            padding: 14px;
+            background-color: var(--quiz-blue);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        .check-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none;
+            background: var(--slot-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .feedback-box.show { display: block; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+
+        .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+
+        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: var(--text-color); line-height: 1.8; }
+        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: var(--surface-color); border-radius: 4px; border: 1px solid var(--border-color); margin: 0 4px;}
+
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 16px; margin-bottom: 24px; }
+        .explanation-summary {
+            font-size: 0.95rem;
+            color: var(--quiz-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            list-style: none;
+            font-weight: bold;
+        }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background: var(--surface-color);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            line-height: 1.7;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: filter 0.2s;
+        }
+        .next-btn:hover { filter: brightness(0.9); }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-to-top:hover { filter: brightness(0.9); }
+
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed;
+            bottom: 95px;
+            right: 35px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        /* --- 画像拡大（ライトボックス）用スタイル --- */
+        .thumbnail-img {
+            max-width: 160px;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            margin-top: 12px;
+            margin-bottom: 8px;
+            display: block;
+            border: 1px solid var(--border-color);
+            background-color: var(--fill-bg);
+            min-height: 20px;
+        }
+        .thumbnail-img[src=""] {
+            padding: 40px 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: default;
+        }
+        .thumbnail-img[src=""]::after {
+            content: "画像準備中";
+        }
+        .thumbnail-img:hover:not([src=""]) {
+            transform: scale(1.05);
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .lightbox-overlay.active { display: flex; opacity: 1; }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            object-fit: contain;
+        }
+        .lightbox-overlay.active .lightbox-img { transform: scale(1); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-top: auto;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* --- レスポンシブ（モバイル）対応 --- */
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .tf-btns { flex-direction: column; gap: 8px; }
+            .tf-btn { max-width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            .timeline-content { font-size: 0.85rem; }
+            .theme-list > li { font-size: 0.85rem; line-height: 1.6; }
+            .quiz-card { font-size: 0.95rem; }
+            .timeline-date { font-size: 0.8rem; }
+            .section-title { font-size: 1.1rem; }
+            .tf-text { font-size: 0.9rem; }
+            .fill-blank { font-size: 0.85rem; padding: 2px 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン・オーバーレイ -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 037 日清・日露戦争と国際関係
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">037 日清・日露戦争と国際関係</h1>
+        </div>
+
+        <div class="container">
+            <!-- 【1】年表まとめ -->
+            <div class="section-title"><i data-lucide="clock"></i>年表で見る 近代日本の対外戦争と条約改正</div>
+            
+            <div class="timeline-box">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">1886年</div>
+                        <div class="timeline-content">
+                            イギリス船が沈没し日本人乗客が全員水死した<span class="fill-blank">ノルマントン号</span>事件が発生。領事裁判権への不満が高まり、条約改正の世論が沸騰する。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1894年</div>
+                        <div class="timeline-content">
+                            陸奥宗光外相の下、<span class="fill-blank">日英通商航海条約</span>に調印し、<span class="fill-blank">領事裁判権</span>の完全撤廃に成功する。<br>
+                            同年、朝鮮の甲午農民戦争を機に出兵し、<span class="fill-blank">日清戦争</span>が勃発する。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1895年</div>
+                        <div class="timeline-content">
+                            日清戦争に勝利し、<span class="fill-blank">下関条約</span>を結ぶ。遼東半島・台湾などを獲得したが、直後にロシア・フランス・ドイツによる<span class="fill-blank">三国干渉</span>を受け、遼東半島を清に返還する。
+                            <!-- 💡 資料集おすすめ画像：ビゴーの風刺画「魚釣り遊び」など -->
+                            <img src="" alt="ビゴーの風刺画など" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1902年</div>
+                        <div class="timeline-content">
+                            ロシアの満州・朝鮮進出に対抗するため、日本とイギリスが<span class="fill-blank">日英同盟</span>を結ぶ。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1904年〜1905年</div>
+                        <div class="timeline-content">
+                            <span class="fill-blank">日露戦争</span>が勃発。日本海海戦などでの勝利を経て、1905年にアメリカの仲介で<span class="fill-blank">ポーツマス条約</span>を結ぶ。賠償金が得られなかったため、国内で<span class="fill-blank">日比谷焼打事件</span>などの暴動が起きた。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1910年 / 1911年</div>
+                        <div class="timeline-content">
+                            1910年、日本は韓国の全統治権を奪い<span class="fill-blank">韓国併合</span>を行う（<span class="fill-blank">朝鮮総督府</span>を設置）。<br>
+                            1911年、小村寿太郎外相の下で日米通商航海条約を結び、<span class="fill-blank">関税自主権</span>の完全回復を達成する。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】テーマ別詳細 -->
+            <div class="section-title"><i data-lucide="layers"></i>テーマ別詳細</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>条約改正の道のり</h3>
+                        <br><b>【初期の交渉と挫折】</b>
+                        <br>・<span class="fill-blank">井上馨</span>（外務卿・外相）：極端な欧化政策（<span class="fill-blank">鹿鳴館</span>など）で交渉に臨んだが、外国人判事の任用案が激しい批判（三大事件建白運動など）を浴びて辞任。また<span class="fill-blank">ノルマントン号</span>事件で国民の不満が高まった。
+                        <br>・<span class="fill-blank">大隈重信</span>：外国人判事の任用を大審院のみに限定して交渉したが、右翼青年に爆弾を投げられ負傷し辞任。
+                        <br>・<span class="fill-blank">青木周蔵</span>：交渉中、来日したロシア皇太子が警官に斬りつけられる<span class="fill-blank">大津事件</span>（1891年）が起き引責辞任。なお、この事件で大審院長の<span class="fill-blank">児島惟謙</span>は政府の圧力に屈さず司法権の独立を守った。
+                        <br><b>【改正の達成】</b>
+                        <br>・<span class="fill-blank">陸奥宗光</span>：日清戦争直前の1894年、<span class="fill-blank">日英通商航海条約</span>を結び、<span class="fill-blank">領事裁判権</span>（治外法権）の完全撤廃に成功した。
+                        <br>・<span class="fill-blank">小村寿太郎</span>：日露戦争後の1911年、日米通商航海条約を結び、<span class="fill-blank">関税自主権</span>の完全回復を果たした。
+                    </li>
+                    <li>
+                        <h3>日清戦争と三国干渉</h3>
+                        <br><b>【開戦と下関条約】</b>
+                        <br>1894年、朝鮮で起きた<span class="fill-blank">甲午農民戦争</span>を鎮圧する名目で日清両国が出兵し、そのまま<span class="fill-blank">日清戦争</span>が勃発。日本が勝利し、1895年に伊藤博文と陸奥宗光が清の李鴻章と<span class="fill-blank">下関条約</span>を結んだ。
+                        <br>・朝鮮の独立を承認させる。
+                        <br>・<span class="fill-blank">遼東半島</span>、<span class="fill-blank">台湾</span>、澎湖諸島を日本へ割譲。
+                        <br>・賠償金2億両（当時の約3億1000万円）を獲得。
+                        <!-- 💡 資料集おすすめ画像：下関条約交渉の様子を描いた図 -->
+                        <img src="" alt="下関条約交渉の図" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        <br><b>【三国干渉】</b>
+                        <br>条約調印直後、東アジア進出を狙うロシアが、ドイツ・フランスを誘って<span class="fill-blank">遼東半島</span>の清への返還を要求（<span class="fill-blank">三国干渉</span>）。日本はこれに屈して返還し、国民は「<span class="fill-blank">臥薪嘗胆</span>」をスローガンにロシアへの敵愾心を強めた。
+                    </li>
+                    <li>
+                        <h3>日露戦争とポーツマス条約</h3>
+                        <br><b>【日英同盟と開戦】</b>
+                        <br>北清事変（<span class="fill-blank">義和団</span>事件）に乗じてロシアが満州を占領。日本はロシアに対抗するため、1902年にイギリスと<span class="fill-blank">日英同盟</span>を結んだ。1904年、日本はロシアに宣戦布告し<span class="fill-blank">日露戦争</span>が始まった。日本海海戦などでの勝利により優位に立ったが、国力が限界に達していた。
+                        <br><b>【ポーツマス条約】</b>
+                        <br>1905年、アメリカ大統領セオドア＝ローズヴェルトの仲介により、日本の<span class="fill-blank">小村寿太郎</span>とロシアのウィッテとの間で<span class="fill-blank">ポーツマス条約</span>が結ばれた。
+                        <br>・韓国における日本の指導権を承認。
+                        <br>・<span class="fill-blank">旅順・大連</span>の租借権と、長春以南の鉄道（南満州鉄道）を獲得。
+                        <br>・<span class="fill-blank">樺太</span>（サハリン）の北緯50度以南（南半分）を獲得。
+                        <br>※賠償金が得られなかったため、不満を持った民衆が東京で<span class="fill-blank">日比谷焼打事件</span>などの暴動を起こした。
+                    </li>
+                    <li>
+                        <h3>韓国併合と国内の政治</h3>
+                        <br><b>【韓国の植民地化】</b>
+                        <br>日本は第1次〜第3次日韓協約を通じて韓国の外交権や内政権を奪い、<span class="fill-blank">統監府</span>を置いて初代統監に<span class="fill-blank">伊藤博文</span>を任命した。1909年に伊藤がハルビンで安重根に暗殺されると、翌1910年に<span class="fill-blank">韓国併合</span>を断行。漢城を京城と改称して<span class="fill-blank">朝鮮総督府</span>を置き（初代総督：寺内正毅）、土地調査事業などを進めた。
+                        <br><b>【立憲政友会と桂園時代】</b>
+                        <br>国内では、1900年に伊藤博文を総裁とする<span class="fill-blank">立憲政友会</span>が結成された。また同年、労働運動や社会主義運動を取り締まる<span class="fill-blank">治安警察法</span>が制定された。
+                        <br>1901年以降は、陸軍を背景とする<span class="fill-blank">桂太郎</span>と、立憲政友会総裁の<span class="fill-blank">西園寺公望</span>が、交互に政権を担当する<span class="fill-blank">桂園時代</span>が続いた。
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【3】クイズセクション（コンパクト版） -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <!-- 動的プログレスバー -->
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                        <!-- JSでノードを生成 -->
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示/非表示ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+            if (menuToggle) {
+                menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+                lucide.createIcons();
+            }
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.className = 'lightbox-overlay';
+        lightboxOverlay.innerHTML = '<img class="lightbox-img" src="" alt="拡大画像">';
+        document.body.appendChild(lightboxOverlay);
+
+        const lightboxImg = lightboxOverlay.querySelector('img');
+
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        lightboxImg.addEventListener('click', function() {
+            lightboxOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) {
+                    el.classList.add('revealed');
+                } else {
+                    el.classList.remove('revealed');
+                }
+            });
+            
+            if (allRevealed) {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+
+        // 穴埋め(タップでトグル表示)
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => {
+                el.classList.toggle('revealed');
+            });
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装（3問構成）
+        // ==========================================
+        const quizData = [
+            {
+                type: 'dragDrop',
+                parts: [
+                    "条約改正の達成。<br>1894年、外相の「",
+                    "」はイギリスと通商航海条約を結び、長年の課題であった「",
+                    "」の撤廃に成功した。<br>また1911年、外相の「",
+                    "」はアメリカなどと条約を結び、「",
+                    "」の回復を達成した。"
+                ],
+                correctAnswers: ["陸奥宗光", "領事裁判権", "小村寿太郎", "関税自主権"],
+                options: ["陸奥宗光", "井上馨", "領事裁判権", "最恵国待遇", "小村寿太郎", "大隈重信", "関税自主権"],
+                explanation: "条約改正の要となる2人の外相と、それぞれが達成した内容（陸奥＝領事裁判権撤廃、小村＝関税自主権回復）の組み合わせは最頻出です。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "日清・日露戦争の講和条約。<br>日清戦争後の「",
+                    "」では、清から賠償金や「",
+                    "」・台湾などの領土を獲得した。<br>日露戦争後の「",
+                    "」では、ロシアから旅順・大連の租借権や「",
+                    "」の南半分などを獲得したが、賠償金は得られなかった。"
+                ],
+                correctAnswers: ["下関条約", "遼東半島", "ポーツマス条約", "樺太"],
+                options: ["下関条約", "天津条約", "遼東半島", "済州島", "ポーツマス条約", "樺太", "千島列島"],
+                explanation: "2つの戦争の条約名と、それぞれで獲得した主要な領土（下関条約＝遼東半島・台湾、ポーツマス条約＝南樺太など）を整理して覚えましょう。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "井上馨外相は、欧米風の生活や文化を取り入れる極端な欧化政策（鹿鳴館の建設など）を行い、外国人判事の任用を認める条約改正案を提示したが、国内の強い反対にあい失敗した。", 
+                        correct: true, 
+                        explanation: "正しい記述です。この失敗を機に、民権派による三大事件建白運動など反政府運動が再燃しました。"
+                    },
+                    { 
+                        text: "日露戦争の講和条約（ポーツマス条約）によって、日本はロシアから多額の賠償金を獲得したため、国民は熱狂的にこれを歓迎した。", 
+                        correct: false, 
+                        explanation: "誤りです。ポーツマス条約では「賠償金が得られなかった」ため、増税や人的犠牲を強いられていた国民の不満が爆発し、日比谷焼打事件などの暴動が起きました。"
+                    },
+                    { 
+                        text: "日清戦争後の下関条約で日本が獲得した遼東半島について、ロシア・フランス・ドイツの3カ国が清への返還を要求する三国干渉を行い、日本はこれに屈して半島を返還した。", 
+                        correct: true, 
+                        explanation: "正しい記述です。日本は三国（特にロシア）への敵対心を強め、「臥薪嘗胆」をスローガンに軍備拡張と国力増強に邁進することになります。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let ddUserAnswers = [];
+        let tfUserAnswers = [];
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                
+                if (i === totalSteps) {
+                    label.style.top = '-24px';
+                    label.style.right = '-15px';
+                    label.style.left = 'auto';
+                    label.style.transform = 'none';
+                }
+                
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (currentQIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (i < currentQIndex) {
+                    node.classList.add('completed');
+                    node.classList.remove('active');
+                } else if (i === currentQIndex) {
+                    node.classList.add('active');
+                    node.classList.remove('completed');
+                } else {
+                    node.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function renderQuiz() {
+            if (currentQIndex === 0) buildProgressBar();
+            
+            if (currentQIndex >= quizData.length) {
+                showResultScreen();
+                return;
+            }
+
+            updateProgress();
+            const q = quizData[currentQIndex];
+
+            if (q.type === 'dragDrop') {
+                renderDragDrop(q);
+            } else if (q.type === 'trueFalse') {
+                renderTrueFalse(q);
+            }
+        }
+
+        function renderDragDrop(q) {
+            ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に当てはまる語句を選択せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty" data-index="${index}" onclick="removeDDAnswer(${index})">
+                                <span class="slot-num">${index + 1}</span>
+                             </span>`;
+                }
+            });
+            html += `</div>`;
+
+            html += `<div class="options-container" id="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+
+            html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+
+            html += `
+                <div class="feedback-box" id="feedback-box">
+                    <div class="feedback-title" id="fb-title"></div>
+                    <div class="feedback-detail">
+                        あなたの答え：<span id="fb-user" class="text-red"></span><br>
+                        正解：<span id="fb-correct" class="text-green"></span>
+                    </div>
+                    <details class="explanation-details">
+                        <summary class="explanation-summary">
+                            <i data-lucide="help-circle" style="width:16px;height:16px;"></i>解説・ポイント
+                        </summary>
+                        <div class="explanation-content">${q.explanation}</div>
+                    </details>
+                    <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+                </div>
+            `;
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btnElement) {
+            const emptyIndex = ddUserAnswers.indexOf(null);
+            if (emptyIndex !== -1) {
+                ddUserAnswers[emptyIndex] = text;
+                btnElement.disabled = true;
+                updateDDSlots();
+            }
+        };
+
+        window.removeDDAnswer = function(index) {
+            const text = ddUserAnswers[index];
+            if (text) {
+                ddUserAnswers[index] = null;
+                const btns = document.querySelectorAll('.option-btn');
+                btns.forEach(btn => { if (btn.innerText === text) btn.disabled = false; });
+                updateDDSlots();
+            }
+        };
+
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let isAllFilled = true;
+            slots.forEach((slot, index) => {
+                const text = ddUserAnswers[index];
+                if (text) {
+                    slot.innerHTML = `${text}<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.remove('empty');
+                } else {
+                    slot.innerHTML = `<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.add('empty');
+                    isAllFilled = false;
+                }
+            });
+            document.getElementById('check-btn').disabled = !isAllFilled;
+        }
+
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            const slots = document.querySelectorAll('.slot');
+            let isCorrect = true;
+
+            slots.forEach((slot, index) => {
+                slot.onclick = null;
+                if (ddUserAnswers[index] === q.correctAnswers[index]) {
+                    slot.classList.add('correct');
+                } else {
+                    slot.classList.add('incorrect');
+                    isCorrect = false;
+                }
+            });
+
+            document.getElementById('options-container').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'none';
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            
+            document.getElementById('fb-user').innerHTML = ddUserAnswers.map(a => `<span>${a}</span>`).join(' ');
+            document.getElementById('fb-correct').innerHTML = q.correctAnswers.map(a => `<span>${a}</span>`).join(' ');
+
+            if (isCorrect) {
+                fbBox.classList.add('correct-bg');
+                fbTitle.innerText = "正解です！";
+                fbTitle.className = "feedback-title text-green";
+            } else {
+                fbBox.classList.remove('correct-bg');
+                fbTitle.innerText = "不正解です";
+                fbTitle.className = "feedback-title text-red";
+            }
+            
+            fbBox.classList.add('show');
+        };
+
+        function renderTrueFalse(q) {
+            tfUserAnswers = new Array(q.questions.length).fill(null);
+
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：次の各文の正誤を判定せよ。</div>`;
+            html += `<div class="quiz-card" style="padding: 16px 24px;">`;
+
+            q.questions.forEach((item, idx) => {
+                html += `
+                <div class="tf-item">
+                    <div class="tf-text">(${idx + 1}) ${item.text}</div>
+                    <div class="tf-btns">
+                        <button class="tf-btn" id="tf-btn-${idx}-true" onclick="selectTF(${idx}, true)"><i data-lucide="circle" style="width: 16px; height: 16px;"></i> 正しい</button>
+                        <button class="tf-btn" id="tf-btn-${idx}-false" onclick="selectTF(${idx}, false)"><i data-lucide="x" style="width: 16px; height: 16px;"></i> 誤り</button>
+                    </div>
+                    <div class="tf-feedback" id="tf-feedback-${idx}"></div>
+                </div>`;
+            });
+            html += `</div>`;
+            html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点する</button>`;
+            
+            html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectTF = function(qIndex, isTrue) {
+            tfUserAnswers[qIndex] = isTrue;
+            
+            const btnTrue = document.getElementById(`tf-btn-${qIndex}-true`);
+            const btnFalse = document.getElementById(`tf-btn-${qIndex}-false`);
+            
+            btnTrue.classList.toggle('selected-true', isTrue);
+            btnFalse.classList.toggle('selected-false', !isTrue);
+            
+            if (tfUserAnswers.every(ans => ans !== null)) {
+                document.getElementById('check-btn').disabled = false;
+            }
+        };
+
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+
+            q.questions.forEach((item, idx) => {
+                const isCorrect = tfUserAnswers[idx] === item.correct;
+                const feedbackDiv = document.getElementById(`tf-feedback-${idx}`);
+                
+                document.getElementById(`tf-btn-${idx}-true`).disabled = true;
+                document.getElementById(`tf-btn-${idx}-false`).disabled = true;
+
+                feedbackDiv.classList.add('show');
+                if (isCorrect) {
+                    feedbackDiv.classList.add('correct');
+                    feedbackDiv.innerHTML = `<strong class="text-green">正解！</strong><br>${item.explanation}`;
+                } else {
+                    feedbackDiv.classList.add('incorrect');
+                    feedbackDiv.innerHTML = `<strong class="text-red">不正解...</strong> (正解は ${item.correct ? '〇' : '×'})<br>${item.explanation}`;
+                }
+            });
+
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        window.nextQuestion = function() {
+            currentQIndex++;
+            renderQuiz();
+        };
+
+        window.retryQuiz = function() {
+            currentQIndex = 0;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop, behavior: 'smooth' });
+        };
+
+        function showResultScreen() {
+            updateProgress();
+            
+            quizContainer.innerHTML = `
+                <div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                    <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                    <h2 style="color: var(--primary-color); font-size: 1.5rem; margin-bottom: 12px;">学習完了！お疲れ様でした。</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 30px;">すべての問題に解答しました。知識の定着に役立てましょう。</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                        <button class="check-btn" style="margin: 0; max-width: 300px; background-color: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="retryQuiz()">
+                            <i data-lucide="rotate-ccw" style="width:18px;height:18px;display:inline;vertical-align:middle;margin-right:6px;"></i>クイズを最初からやり直す
+                        </button>
+                        <a href="/n-kyozai/politics/sp-jh/index.html" class="next-btn" style="max-width: 300px;">
+                            日本史 目次へ戻る
+                        </a>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // 初期描画
+        renderQuiz();
+    </script>
+</body>
+</html>
