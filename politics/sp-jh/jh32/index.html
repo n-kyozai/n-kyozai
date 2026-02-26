@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>032 化政文化 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット（ライト／ダーク対応用変数） --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --timeline-line: #bae6fd;
+            --timeline-date-bg: #f0f9ff;
+            
+            --quiz-blue: #3b82f6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #eff6ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* ダークモード用カラーパレット */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #f1f5f9;
+                --accent-color: #38bdf8;
+                --bg-color: #0f172a;
+                --surface-color: #1e293b;
+                --text-color: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border-color: #334155;
+                
+                --nav-hover-bg: #334155;
+                --nav-active-bg: #0c4a6e;
+                
+                --timeline-line: #0369a1;
+                --timeline-date-bg: #082f49;
+                
+                --quiz-blue: #60a5fa;
+                --quiz-red: #f87171;
+                --quiz-red-bg: #450a0a;
+                --quiz-green: #34d399;
+                --quiz-gray: #475569;
+                --feedback-correct-bg: #064e3b;
+                
+                --fill-bg: #334155;
+                --fill-border: #475569;
+                --fill-revealed-bg: #2e1022;
+                --fill-revealed-text: #fb7185;
+                --fill-revealed-border: #881337;
+
+                --slot-bg: #0f172a;
+                --slot-hover-bg: #1e293b;
+
+                --tf-btn-bg: #0f172a;
+                --tf-btn-hover-bg: #1e293b;
+                --tf-btn-border: #475569;
+                --tf-true-bg: #172554;
+                --tf-false-bg: #450a0a;
+
+                --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, border-color 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* --- 年表スタイル --- */
+        .timeline-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 10px;
+            border-left: 3px solid var(--timeline-line);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 4px solid var(--accent-color);
+            transition: background-color 0.3s;
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            background: var(--timeline-date-bg);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .theme-list {
+            list-style: none;
+        }
+
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        /* --- クイズUIスタイル --- */
+        .quiz-section {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 4px;
+            background-color: var(--quiz-gray);
+            z-index: 1;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute;
+            top: 50%; left: 0;
+            height: 4px;
+            background-color: var(--quiz-blue);
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.4s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background-color: var(--quiz-gray);
+            z-index: 3;
+            position: relative;
+            transition: background-color 0.4s, transform 0.2s;
+        }
+        .step-node.active {
+            background-color: var(--quiz-blue);
+            transform: scale(1.3);
+        }
+        .step-node.completed {
+            background-color: var(--quiz-blue);
+        }
+        .step-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--quiz-blue);
+            font-weight: bold;
+            opacity: 0;
+            white-space: nowrap;
+        }
+        .step-node.active .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        .quiz-question-title {
+            color: var(--quiz-blue);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .slot {
+            display: inline-flex;
+            min-width: 70px;
+            height: 36px;
+            border-bottom: 2px solid var(--text-muted);
+            position: relative;
+            cursor: pointer;
+            margin: 0 6px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            padding: 0 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            vertical-align: middle;
+            background-color: var(--slot-bg);
+            border-radius: 4px 4px 0 0;
+        }
+        .slot:hover { background-color: var(--slot-hover-bg); border-bottom-color: var(--quiz-blue); }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+
+        .slot-num {
+            position: absolute;
+            top: -12px; right: -10px;
+            background-color: var(--quiz-blue);
+            color: white;
+            font-size: 0.65rem;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--surface-color);
+            margin-bottom: 24px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .option-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--fill-border);
+            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            color: var(--quiz-blue);
+            transform: translateY(-1px);
+        }
+        .option-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            background-color: var(--slot-bg);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- 正誤問題用UI --- */
+        .tf-item {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .tf-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .tf-text { margin-bottom: 12px; font-weight: 500; }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 8px;
+            border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .tf-btn:hover { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        .tf-feedback {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+        }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        /* 共通ボタン */
+        .check-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 24px;
+            padding: 14px;
+            background-color: var(--quiz-blue);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        .check-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none;
+            background: var(--slot-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .feedback-box.show { display: block; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+
+        .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+
+        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: var(--text-color); line-height: 1.8; }
+        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: var(--surface-color); border-radius: 4px; border: 1px solid var(--border-color); margin: 0 4px;}
+
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 16px; margin-bottom: 24px; }
+        .explanation-summary {
+            font-size: 0.95rem;
+            color: var(--quiz-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            list-style: none;
+            font-weight: bold;
+        }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background: var(--surface-color);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            line-height: 1.7;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: filter 0.2s;
+        }
+        .next-btn:hover { filter: brightness(0.9); }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-to-top:hover { filter: brightness(0.9); }
+
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed;
+            bottom: 95px;
+            right: 35px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        /* --- 画像拡大（ライトボックス）用スタイル --- */
+        .thumbnail-img {
+            max-width: 160px;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            margin-top: 12px;
+            margin-bottom: 8px;
+            display: block;
+            border: 1px solid var(--border-color);
+            background-color: var(--fill-bg);
+            min-height: 20px;
+        }
+        .thumbnail-img[src=""] {
+            padding: 40px 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: default;
+        }
+        .thumbnail-img:hover:not([src=""]) {
+            transform: scale(1.05);
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .lightbox-overlay.active { display: flex; opacity: 1; }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            object-fit: contain;
+        }
+        .lightbox-overlay.active .lightbox-img { transform: scale(1); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-top: auto;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* --- レスポンシブ（モバイル）対応 --- */
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .tf-btns { flex-direction: column; gap: 8px; }
+            .tf-btn { max-width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            .timeline-content { font-size: 0.85rem; }
+            .theme-list > li { font-size: 0.85rem; line-height: 1.6; }
+            .quiz-card { font-size: 0.95rem; }
+            .timeline-date { font-size: 0.8rem; }
+            .section-title { font-size: 1.1rem; }
+            .tf-text { font-size: 0.9rem; }
+            .fill-blank { font-size: 0.85rem; padding: 2px 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン・オーバーレイ -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 032 化政文化
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">032 化政文化</h1>
+        </div>
+
+        <div class="container">
+            <!-- 【1】年表まとめ -->
+            <div class="section-title"><i data-lucide="clock"></i>年表で見る 化政文化の文学・芸術</div>
+            
+            <div class="timeline-box">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">1798年</div>
+                        <div class="timeline-content">
+                            国学者の<span class="fill-blank">本居宣長</span>が、約30年の歳月をかけて『<span class="fill-blank">古事記伝</span>』を完成させる。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1814年</div>
+                        <div class="timeline-content">
+                            <span class="fill-blank">滝沢馬琴</span>が、読本である『<span class="fill-blank">南総里見八犬伝</span>』の刊行を開始する。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1821年</div>
+                        <div class="timeline-content">
+                            <span class="fill-blank">伊能忠敬</span>の測量に基づく『<span class="fill-blank">大日本沿海輿地全図</span>』が完成する。
+                            <!-- 画像挿入枠 -->
+                            <img src="" alt="※ここに大日本沿海輿地全図の画像を挿入" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <!-- 💡 資料集おすすめ画像：伊能忠敬の『大日本沿海輿地全図』 -->
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1828年</div>
+                        <div class="timeline-content">
+                            <span class="fill-blank">シーボルト事件</span>が起こり、日本地図を国外へ持ち出そうとしたとして、天文方の<span class="fill-blank">高橋景保</span>らが処罰される。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1831年</div>
+                        <div class="timeline-content">
+                            浮世絵師の<span class="fill-blank">葛飾北斎</span>が、風景画『<span class="fill-blank">富嶽三十六景</span>』を描き始める。
+                            <!-- 画像挿入枠 -->
+                            <img src="" alt="※ここに富嶽三十六景などの画像を挿入" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <!-- 💡 資料集おすすめ画像：葛飾北斎『富嶽三十六景（神奈川沖浪裏など）』 または 歌川広重『東海道五十三次』 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】テーマ別まとめ -->
+            <div class="section-title"><i data-lucide="layers"></i>テーマ別詳細（学問・文学・美術・民衆文化）</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>学問・思想の動き（経世論・国学・洋学）</h3>
+                        <br>化政文化は、文化・文政期を中心に、江戸など三都の繁栄を背景として民衆を基盤とする町人文化が最盛期を迎えた。
+                        <br><b>【経世論と後期水戸学】</b>
+                        <br>・経世論：<span class="fill-blank">海保青陵</span>が重商主義を説き、<span class="fill-blank">本多利明</span>が西洋との貿易や蝦夷地開発を主張し、<span class="fill-blank">佐藤信淵</span>が産業の国営化や貿易推進を説いた。
+                        <br>・後期水戸学：水戸藩主の<span class="fill-blank">徳川斉昭</span>のもと、尊王斥覇の思想から尊王攘夷論へと発展した。<span class="fill-blank">藤田東湖</span>や、『新論』で尊王攘夷を主張した<span class="fill-blank">会沢安（正志斎）</span>らが活躍した。
+                        <br><b>【国学と民衆宗教】</b>
+                        <br>・国学：<span class="fill-blank">平田篤胤</span>が儒仏の影響を排除した復古神道を提唱し、のちの尊王攘夷論に大きな影響を与えた。
+                        <br>・民衆宗教：天理教（<span class="fill-blank">中山みき</span>）などの新宗教が生まれ、女性の活躍もみられた。
+                        <br><b>【科学・洋学・教育】</b>
+                        <br>・洋学：<span class="fill-blank">伊能忠敬</span>が全国を測量して地図を作成し、<span class="fill-blank">志筑忠雄</span>が『暦象新書』で万有引力や地動説を紹介した。幕府は翻訳機関として<span class="fill-blank">蛮書和解御用</span>を設けた。のちに開国論者の<span class="fill-blank">佐久間象山</span>も活躍した。
+                        <br>・教育（私塾）：広瀬淡窓の<span class="fill-blank">咸宜園</span>（豊後）、<span class="fill-blank">緒方洪庵</span>の適塾（大坂）、<span class="fill-blank">吉田松陰</span>の松下村塾（長州）、シーボルトの<span class="fill-blank">鳴滝塾</span>（長崎）などが多くの人材を育成した。
+                    </li>
+                    <li>
+                        <h3>化政期の文学・芸能</h3>
+                        <br>出版・教育の普及や交通の発達により、庶民の生活を題材とした文学が全国的に広まった。
+                        <br><b>【小説】</b>
+                        <br>・滑稽本：庶民の生活を笑いを交えて描いた。<span class="fill-blank">十返舎一九</span>の『<span class="fill-blank">東海道中膝栗毛</span>』や、<span class="fill-blank">式亭三馬</span>の『浮世風呂』などが人気を博した。
+                        <!-- 画像挿入枠 -->
+                        <img src="" alt="※ここに東海道中膝栗毛の挿絵などの画像を挿入" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        <!-- 💡 資料集おすすめ画像：『東海道中膝栗毛』 または 『南総里見八犬伝』の挿絵 -->
+                        <br>・人情本：町人の恋愛を描き、<span class="fill-blank">為永春水</span>が『春色梅児誉美』などを著したが、天保の改革で処罰された。
+                        <br>・読本（よみほん）：伝奇的な小説で、<span class="fill-blank">滝沢馬琴</span>の『<span class="fill-blank">南総里見八犬伝</span>』が有名である。
+                        <br><b>【俳諧・和歌とその他の文学】</b>
+                        <br>・俳諧：<span class="fill-blank">小林一茶</span>が農民の生活に密着した句をよみ『おらが春』を残した。
+                        <br>・和歌：<span class="fill-blank">香川景樹</span>や<span class="fill-blank">良寛</span>らが古今調の平明な歌風を始めた。
+                        <br>・紀行・随筆：<span class="fill-blank">菅江真澄</span>が東北を旅して『遊覧記』を書き、<span class="fill-blank">鈴木牧之</span>が雪国の様子を『北越雪譜』で紹介した。
+                    </li>
+                    <li>
+                        <h3>美術と民衆文化の成熟</h3>
+                        <br><b>【浮世絵と諸流派】</b>
+                        <br>・浮世絵（風景画）：名所絵（風景画）が発達し、<span class="fill-blank">葛飾北斎</span>の『富嶽三十六景』や、<span class="fill-blank">歌川広重</span>の『東海道五十三次』が人気を集めた。また、<span class="fill-blank">歌川国芳</span>らも活躍した。
+                        <br>・従来の絵画：文人画と円山派を融合した四条派の<span class="fill-blank">呉春</span>（松村月渓）や、文人画の<span class="fill-blank">谷文晁</span>、<span class="fill-blank">田能村竹田</span>、<span class="fill-blank">渡辺崋山</span>らが活躍した。
+                        <br><b>【民衆文化・娯楽】</b>
+                        <br>都市や地方を問わず、様々な娯楽が民衆の間に定着した。
+                        <br>・寺社の催し：縁日や、秘仏などを公開する<span class="fill-blank">開帳</span>（出開帳）が行われた。
+                        <br>・庶民の旅行：伊勢神宮への<span class="fill-blank">お蔭参り</span>（抜け参り）や、四国八十八カ所などの<span class="fill-blank">巡礼</span>、湯治などが盛んに行われた。
+                        <br>・行事：五節句や、特定の日に集団で夜を明かす<span class="fill-blank">庚申講</span>などが広く行われた。
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【3】クイズセクション（動的・一括採点対応） -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <!-- 動的プログレスバー -->
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                        <!-- JSでノードを生成 -->
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示/非表示ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+            if (menuToggle) {
+                menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+                lucide.createIcons();
+            }
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.className = 'lightbox-overlay';
+        lightboxOverlay.innerHTML = '<img class="lightbox-img" src="" alt="拡大画像">';
+        document.body.appendChild(lightboxOverlay);
+
+        const lightboxImg = lightboxOverlay.querySelector('img');
+
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        lightboxImg.addEventListener('click', function() {
+            lightboxOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) {
+                    el.classList.add('revealed');
+                } else {
+                    el.classList.remove('revealed');
+                }
+            });
+            
+            if (allRevealed) {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+
+        // 穴埋め(タップでトグル表示)
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => {
+                el.classList.toggle('revealed');
+            });
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装
+        // ==========================================
+        const quizData = [
+            {
+                type: 'dragDrop',
+                parts: [
+                    "化政期の学問と教育。<br>(1) 国学では",
+                    "が復古神道を提唱し、尊王攘夷論に影響を与えた。<br>(2) 洋学では",
+                    "が全国を測量して地図を作成した。また、長崎郊外に",
+                    "を開いたシーボルトは、地図持ち出しにより処罰された。<br>(3) 私塾が盛んになり、広瀬淡窓が",
+                    "を、緒方洪庵が",
+                    "を開いて人材を育成した。"
+                ],
+                correctAnswers: ["平田篤胤", "伊能忠敬", "鳴滝塾", "咸宜園", "適塾"],
+                options: ["伊能忠敬", "鳴滝塾", "松下村塾", "咸宜園", "適塾", "平田篤胤", "本居宣長", "志筑忠雄"],
+                explanation: "国学の発展（平田篤胤）や、洋学（伊能忠敬、シーボルト）のほか、化政期から幕末にかけて人材を輩出した私塾（咸宜園、適塾、松下村塾など）の開塾者を正確に覚えましょう。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "化政期の文学・美術。<br>(1) 庶民の生活を描く滑稽本が流行し、",
+                    "が『東海道中膝栗毛』を著した。<br>(2) 読本では",
+                    "が『南総里見八犬伝』を著した。<br>(3) 浮世絵では風景画が発達し、",
+                    "が『富嶽三十六景』を、",
+                    "が『東海道五十三次』を描いた。"
+                ],
+                correctAnswers: ["十返舎一九", "滝沢馬琴", "葛飾北斎", "歌川広重"],
+                options: ["十返舎一九", "葛飾北斎", "為永春水", "歌川広重", "式亭三馬", "歌川国芳", "滝沢馬琴", "鈴木春信"],
+                explanation: "化政文化を代表する文学作品と作者（十返舎一九＝東海道中膝栗毛、滝沢馬琴＝南総里見八犬伝）および、風景画の巨匠（葛飾北斎、歌川広重）の組み合わせは頻出です。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "後期水戸学は、藩主の徳川斉昭のもとで藤田東湖や会沢安（正志斎）らが活躍し、尊王攘夷論を主張して幕末の政治運動に大きな影響を与えた。", 
+                        correct: true, 
+                        explanation: "正しい記述です。会沢安の『新論』などは、幕末の志士たちのバイブルとして広く読まれました。"
+                    },
+                    { 
+                        text: "経世論を唱えた佐藤信淵は、『経世秘策』などを著して西洋との貿易や蝦夷地の開発を幕府に提言した。", 
+                        correct: false, 
+                        explanation: "誤りです。西洋との貿易や蝦夷地開発を説いたのは「本多利明」です。「佐藤信淵」は『経済要録』などで産業の国営化や貿易推進を説きました。"
+                    },
+                    { 
+                        text: "化政期には、人情本の作家である為永春水が『春色梅児誉美』などを著して人気を集めたが、のちに天保の改革で処罰された。", 
+                        correct: true, 
+                        explanation: "正しい記述です。天保の改革（水野忠邦）による風俗統制の一環として、人情本などは風紀を乱すとして弾圧の対象となりました。"
+                    },
+                    { 
+                        text: "庶民の娯楽として、伊勢神宮への「お蔭参り」や四国八十八カ所の「巡礼」、秘仏などを公開する「開帳」などが盛んに行われた。", 
+                        correct: true, 
+                        explanation: "正しい記述です。交通網の発達や庶民の経済力向上により、信仰を名目とした旅行や娯楽が全国規模で大流行しました。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let ddUserAnswers = [];
+        let tfUserAnswers = [];
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                
+                if (i === totalSteps) {
+                    label.style.top = '-24px';
+                    label.style.right = '-15px';
+                    label.style.left = 'auto';
+                    label.style.transform = 'none';
+                }
+                
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (currentQIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (i < currentQIndex) {
+                    node.classList.add('completed');
+                    node.classList.remove('active');
+                } else if (i === currentQIndex) {
+                    node.classList.add('active');
+                    node.classList.remove('completed');
+                } else {
+                    node.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function renderQuiz() {
+            if (currentQIndex === 0) buildProgressBar();
+            
+            if (currentQIndex >= quizData.length) {
+                showResultScreen();
+                return;
+            }
+
+            updateProgress();
+            const q = quizData[currentQIndex];
+
+            if (q.type === 'dragDrop') {
+                renderDragDrop(q);
+            } else if (q.type === 'trueFalse') {
+                renderTrueFalse(q);
+            }
+        }
+
+        function renderDragDrop(q) {
+            ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に当てはまる語句を選択せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty" data-index="${index}" onclick="removeDDAnswer(${index})">
+                                <span class="slot-num">${index + 1}</span>
+                             </span>`;
+                }
+            });
+            html += `</div>`;
+
+            html += `<div class="options-container" id="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+
+            html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+
+            html += `
+                <div class="feedback-box" id="feedback-box">
+                    <div class="feedback-title" id="fb-title"></div>
+                    <div class="feedback-detail">
+                        あなたの答え：<span id="fb-user" class="text-red"></span><br>
+                        正解：<span id="fb-correct" class="text-green"></span>
+                    </div>
+                    <details class="explanation-details">
+                        <summary class="explanation-summary">
+                            <i data-lucide="help-circle" style="width:16px;height:16px;"></i>解説・ポイント
+                        </summary>
+                        <div class="explanation-content">${q.explanation}</div>
+                    </details>
+                    <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+                </div>
+            `;
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btnElement) {
+            const emptyIndex = ddUserAnswers.indexOf(null);
+            if (emptyIndex !== -1) {
+                ddUserAnswers[emptyIndex] = text;
+                btnElement.disabled = true;
+                updateDDSlots();
+            }
+        };
+
+        window.removeDDAnswer = function(index) {
+            const text = ddUserAnswers[index];
+            if (text) {
+                ddUserAnswers[index] = null;
+                const btns = document.querySelectorAll('.option-btn');
+                btns.forEach(btn => { if (btn.innerText === text) btn.disabled = false; });
+                updateDDSlots();
+            }
+        };
+
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let isAllFilled = true;
+            slots.forEach((slot, index) => {
+                const text = ddUserAnswers[index];
+                if (text) {
+                    slot.innerHTML = `${text}<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.remove('empty');
+                } else {
+                    slot.innerHTML = `<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.add('empty');
+                    isAllFilled = false;
+                }
+            });
+            document.getElementById('check-btn').disabled = !isAllFilled;
+        }
+
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            const slots = document.querySelectorAll('.slot');
+            let isCorrect = true;
+
+            slots.forEach((slot, index) => {
+                slot.onclick = null;
+                if (ddUserAnswers[index] === q.correctAnswers[index]) {
+                    slot.classList.add('correct');
+                } else {
+                    slot.classList.add('incorrect');
+                    isCorrect = false;
+                }
+            });
+
+            document.getElementById('options-container').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'none';
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            
+            document.getElementById('fb-user').innerHTML = ddUserAnswers.map(a => `<span>${a}</span>`).join(' ');
+            document.getElementById('fb-correct').innerHTML = q.correctAnswers.map(a => `<span>${a}</span>`).join(' ');
+
+            if (isCorrect) {
+                fbBox.classList.add('correct-bg');
+                fbTitle.innerText = "正解です！";
+                fbTitle.className = "feedback-title text-green";
+            } else {
+                fbBox.classList.remove('correct-bg');
+                fbTitle.innerText = "不正解です";
+                fbTitle.className = "feedback-title text-red";
+            }
+            
+            fbBox.classList.add('show');
+        };
+
+        function renderTrueFalse(q) {
+            tfUserAnswers = new Array(q.questions.length).fill(null);
+
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：次の各文の正誤を判定せよ。</div>`;
+            html += `<div class="quiz-card" style="padding: 16px 24px;">`;
+
+            q.questions.forEach((item, idx) => {
+                html += `
+                <div class="tf-item">
+                    <div class="tf-text">(${idx + 1}) ${item.text}</div>
+                    <div class="tf-btns">
+                        <button class="tf-btn" id="tf-btn-${idx}-true" onclick="selectTF(${idx}, true)"><i data-lucide="circle" style="width: 16px; height: 16px;"></i> 正しい</button>
+                        <button class="tf-btn" id="tf-btn-${idx}-false" onclick="selectTF(${idx}, false)"><i data-lucide="x" style="width: 16px; height: 16px;"></i> 誤り</button>
+                    </div>
+                    <div class="tf-feedback" id="tf-feedback-${idx}"></div>
+                </div>`;
+            });
+            html += `</div>`;
+            html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点する</button>`;
+            
+            html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectTF = function(qIndex, isTrue) {
+            tfUserAnswers[qIndex] = isTrue;
+            
+            const btnTrue = document.getElementById(`tf-btn-${qIndex}-true`);
+            const btnFalse = document.getElementById(`tf-btn-${qIndex}-false`);
+            
+            btnTrue.classList.toggle('selected-true', isTrue);
+            btnFalse.classList.toggle('selected-false', !isTrue);
+            
+            if (tfUserAnswers.every(ans => ans !== null)) {
+                document.getElementById('check-btn').disabled = false;
+            }
+        };
+
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+
+            q.questions.forEach((item, idx) => {
+                const isCorrect = tfUserAnswers[idx] === item.correct;
+                const feedbackDiv = document.getElementById(`tf-feedback-${idx}`);
+                
+                document.getElementById(`tf-btn-${idx}-true`).disabled = true;
+                document.getElementById(`tf-btn-${idx}-false`).disabled = true;
+
+                feedbackDiv.classList.add('show');
+                if (isCorrect) {
+                    feedbackDiv.classList.add('correct');
+                    feedbackDiv.innerHTML = `<strong class="text-green">正解！</strong><br>${item.explanation}`;
+                } else {
+                    feedbackDiv.classList.add('incorrect');
+                    feedbackDiv.innerHTML = `<strong class="text-red">不正解...</strong> (正解は ${item.correct ? '〇' : '×'})<br>${item.explanation}`;
+                }
+            });
+
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        window.nextQuestion = function() {
+            currentQIndex++;
+            renderQuiz();
+        };
+
+        window.retryQuiz = function() {
+            currentQIndex = 0;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop, behavior: 'smooth' });
+        };
+
+        function showResultScreen() {
+            updateProgress();
+            
+            quizContainer.innerHTML = `
+                <div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                    <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                    <h2 style="color: var(--primary-color); font-size: 1.5rem; margin-bottom: 12px;">学習完了！お疲れ様でした。</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 30px;">すべての問題に解答しました。知識の定着に役立てましょう。</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                        <button class="check-btn" style="margin: 0; max-width: 300px; background-color: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="retryQuiz()">
+                            <i data-lucide="rotate-ccw" style="width:18px;height:18px;display:inline;vertical-align:middle;margin-right:6px;"></i>クイズを最初からやり直す
+                        </button>
+                        <a href="/n-kyozai/politics/sp-jh/index.html" class="next-btn" style="max-width: 300px;">
+                            日本史 目次へ戻る
+                        </a>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // 初期描画
+        renderQuiz();
+    </script>
+</body>
+</html>
