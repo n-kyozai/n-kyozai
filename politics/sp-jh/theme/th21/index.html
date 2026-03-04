@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>021 地方支配・地方制度史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1; /* 枠線・コネクタ用 */
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        ruby { ruby-align: center; }
+        
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイルトグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋めスタイル（ルビ隠蔽対応） --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease;
+        }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt {
+            opacity: 1;
+            visibility: visible;
+            color: var(--text-muted);
+            font-size: 0.6em;
+        }
+
+        /* --- タイムライン（年表） --- */
+        .timeline-list {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+        }
+        .timeline-list::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: #e2e8f0;
+        }
+        .timeline-item { position: relative; margin-bottom: 24px; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* --- 階層ツリー・リスト用のスタイル --- */
+        .org-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .org-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+        }
+        .org-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 12px;
+            height: 2px;
+            background-color: var(--border-color);
+        }
+        .org-list li::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -10px;
+            bottom: 10px;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .org-list li:last-child::after {
+            bottom: auto;
+            height: 20px;
+        }
+        .org-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            background-color: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-color);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        /* --- テーブル --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        .summary-table {
+            width: 100%;
+            min-width: 500px; /* モバイル等で横スクロールさせるための最小幅 */
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 30%;
+            text-align: center;
+        }
+
+        /* --- テーマボックス --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0;
+        }
+        .theme-list h3 {
+            font-size: 1rem; color: var(--primary-color);
+            margin-bottom: 8px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        /* --- ボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transition: all 0.3s; z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 2000; transition: all 0.3s;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 021 地方支配・地方制度史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">021 地方支配・地方制度史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】古代の地方行政 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="map"></i>古代の地方行政（律令制下）</div>
+            <div class="timeline-list">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">国・郡・里制の成立</span></div>
+                    <div class="timeline-content">
+                        <p>大宝律令により、全国は畿内と七道（<strong><span class="fill-blank">五畿七道</span></strong>）に分けられ、地方行政機構が整備されました。</p>
+                        <div style="padding-left: 10px; margin-top: 14px;">
+                            <span class="org-title">地方行政の階層</span>
+                            <ul class="org-list">
+                                <li><strong><span class="fill-blank">国</span></strong>：中央の貴族が<strong><span class="fill-blank">国司</span></strong>として赴任し、地方行政を統括した（任期あり）。</li>
+                                <li><strong><span class="fill-blank">郡</span></strong>：旧国造などの在地首長が<strong><span class="fill-blank">郡司</span></strong>に任命され、実務を担った（終身・世襲）。</li>
+                                <li><strong><span class="fill-blank">里</span></strong>（717年頃に<strong><span class="fill-blank">郷</span></strong>と改称）：50戸で構成され、里長が統括した。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">律令期の特別行政機関</span></div>
+                    <div class="timeline-content">
+                        <p>重要な地域には、国司とは別の特別な機関が置かれました。</p>
+                        <div style="padding-left: 10px; margin-top: 14px;">
+                            <ul class="org-list">
+                                <li><strong><span class="fill-blank">京職</span></strong>（きょうしき）：左京と右京に置かれ、都（京内）の行政・司法・警察を担当。</li>
+                                <li><strong><span class="fill-blank">摂津職</span></strong>（せっつしき）：外交や交通の要衝である難波津（なにわづ）を含む摂津国を管轄。</li>
+                                <li><strong><span class="fill-blank">大宰府</span></strong>（だざいふ）：西海道（九州）諸国の統轄と、外交・防衛を担当。朝廷の出先機関として「<strong><span class="fill-blank"><ruby>遠の朝廷<rt>とおのみかど</rt></ruby></span></strong>」と呼ばれた。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】中世・近世の地方支配 -->
+            <div class="section-title"><i data-lucide="castle"></i>中世・近世の地方支配</div>
+            <div class="timeline-list">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">室町幕府の地方支配</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">鎌倉府</span></strong></p>
+                        <p>室町幕府は京都に置かれたため、東国を統治する最重要機関として鎌倉府が設置されました。<br>
+                        1349年、足利尊氏の四男である<strong><span class="fill-blank">基氏</span></strong>（もとうじ）が初代の<strong><span class="fill-blank">鎌倉公方</span></strong>となって以来、その子孫が世襲しました。しかし、1438年の<strong><span class="fill-blank"><ruby>永享の乱<rt>えいきょうのらん</rt></ruby></span></strong>で足利持氏が滅ぼされると、鎌倉府の実権はその補佐役である<strong><span class="fill-blank">関東管領</span></strong>（上杉氏）へと移っていきました。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">江戸幕府の地方支配</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">京都所司代</span></strong></p>
+                        <p>江戸幕府の地方行政の中心であり、朝廷・公家の監視と西国大名の統制を行いました。豊臣政権下における五奉行の<strong><span class="fill-blank">前田玄以</span></strong>（まえだげんい）の役割を継承したものと言えます。</p>
+                        <p style="margin-top: 10px;">※江戸幕府の直轄地（幕領）はのちに<strong><span class="fill-blank">天領</span></strong>と呼ばれ、勘定奉行の支配のもと、郡代や代官が派遣されました。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】近・現代の地方制度 -->
+            <div class="section-title"><i data-lucide="building"></i>近・現代の地方自治と制度改革</div>
+            <div class="timeline-list">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1878年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">三新法</span>の制定</strong></p>
+                        <p>大久保利通の暗殺後、地方統治を安定させるために制定されました。<br>
+                        ① <strong><span class="fill-blank">郡区町村編制法</span></strong>：大区・小区を廃止し、郡・区・町・村を設置。<br>
+                        ② <strong><span class="fill-blank">府県会規則</span></strong>：各府県に民選の議員からなる府県会（議会）を設置。<br>
+                        ③ <strong><span class="fill-blank">地方税規則</span></strong>：地方税の税目や徴収方法を規定。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1888年・1890年</span><span class="timeline-cabinet">第1次 山県有朋 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>地方自治制の確立</strong></p>
+                        <p>お雇い外国人のドイツ人<strong><span class="fill-blank">モッセ</span></strong>の助言を受け、内務大臣の<strong><span class="fill-blank">山県有朋</span></strong>が中心となって近代的な地方制度を確立しました。<br>
+                        ・1888年：<strong><span class="fill-blank">市制・町村制</span></strong>の公布。<br>
+                        ・1890年：<strong><span class="fill-blank">府県制・郡制</span></strong>の公布。<br>
+                        ※これらは中央集権的であり、府県知事は内務省から派遣される官選でした。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1947年</span><span class="timeline-cabinet">吉田茂 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">地方自治法</span>の公布</strong></p>
+                        <p>日本国憲法の「地方自治の本旨」に基づき制定されました。都道府県知事や市町村長が<strong><span class="fill-blank">公選制</span></strong>（住民による直接選挙）となり、地方分権が大きく推進されました。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>郡評論争（大化の改新の信憑性）</h3>
+                        <br>『日本書紀』には、大化の改新（改新の詔）で「初めて畿内・国司・<strong>郡司</strong>を置いた」と記されています。しかし、7世紀後半の金石文や藤原京から出土した木簡には「<strong><span class="fill-blank">評</span></strong>（こおり）」という文字が使われており、大宝令（701年）以前は「郡」ではなく「評」であったことが判明しました。<br>
+                        これにより、『日本書紀』の編纂者が大宝令以降の制度（郡）に合わせて過去の記述を修飾（改ざん）していたことが明らかになりました。
+                    </li>
+
+                    <li>
+                        <h3>律令官制の四等官制（しとうかんせい）</h3>
+                        <br>律令制下の各役所には、長官・次官・判官・主典の4つの階級が置かれました。役所によって当てる漢字が異なります。
+                        <div class="table-responsive">
+                            <table class="summary-table">
+                                <thead>
+                                    <tr>
+                                        <th>役所</th>
+                                        <th>長官<br>（かみ）</th>
+                                        <th>次官<br>（すけ）</th>
+                                        <th>判官<br>（じょう）</th>
+                                        <th>主典<br>（さかん）</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>国司</th>
+                                        <td><strong><span class="fill-blank">守</span></strong></td>
+                                        <td>介</td>
+                                        <td>掾</td>
+                                        <td>目</td>
+                                    </tr>
+                                    <tr>
+                                        <th>大宰府</th>
+                                        <td><strong><span class="fill-blank"><ruby>帥<rt>そち</rt></ruby></span></strong></td>
+                                        <td>弐</td>
+                                        <td>監</td>
+                                        <td>典</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <h3>五畿七道（ごきしちどう）の詳細</h3>
+                        <br>古代に整備された広域の行政区分であり、また都と地方を結ぶ官道の名称でもありました。
+                        <ul>
+                            <li><strong>五畿</strong>：大和・山城・河内・和泉・摂津（現在の近畿地方）。</li>
+                            <li><strong>七道</strong>：東海道、東山道、北陸道、山陰道、山陽道、南海道、西海道（九州）。</li>
+                        </ul>
+                        <p style="font-size: 0.9em; color: var(--text-muted); margin-top: 8px;">※例えば、東山道には近江、美濃、信濃から東北地方の陸奥、出羽が含まれました。東海道は伊勢から太平洋岸を通って常陸（茨城県）に至る諸国です。</p>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル（ルビの隠蔽対応済み） ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+    </script>
+</body>
+</html>
