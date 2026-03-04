@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>012 身分制度史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+            text-align: center;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（カード型表示） */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table th, .summary-table td {
+                display: block; width: 100%;
+            }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 16px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .summary-table th {
+                border: none; border-bottom: 1px solid var(--border-color);
+                text-align: left; padding: 12px 16px; background-color: #f8fafc;
+            }
+            .summary-table td { border: none; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 012 身分制度史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">012 身分制度史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：古代（律令制下） -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="crown"></i>古代（律令制下）の身分制度</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">皇族と貴族</span></div>
+                    <div class="timeline-content">
+                        <p><strong>【皇親・上級官人】</strong><br>天皇の親族である皇親や、五位以上の貴族（上級官人）は、<span class="fill-blank"><ruby>蔭位<rt>おんい</rt></ruby>の制</span>により子孫に特権を世襲できた。また、位田や季禄などの給与を受け、租・調・庸などの税が免除される<span class="fill-blank">不課</span>であった。</p>
+                        <p><strong>【下級官人】</strong><br>八位以上は不課。それ以下は課役免（庸・調・雑徭が免除）または徭役免（庸・雑徭が免除）の特権があった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">良民と技術者</span></div>
+                    <div class="timeline-content">
+                        <p><strong>【公民】</strong><br>戸籍に登録された一般の良民。口分田を与えられる代わりに、<span class="fill-blank">租・調・庸</span>や雑徭・兵役などの重い負担を負った。</p>
+                        <p><strong>【品部・雑戸】</strong><br>諸官司で労役や手工業などの特殊技能に従事する人々。身分的には良民だが、課役が免除される代わりに実質的には良民と賤民の中間に位置づけられた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">賤民（五色の賤）</span></div>
+                    <div class="timeline-content">
+                        <p>身分階層の最下層に位置し、<span class="fill-blank">五色の賤</span>（ごしきのせん）と呼ばれる5つの階層に分類された。官有の陵戸・官戸・<span class="fill-blank">公奴婢</span>と、私有の家人・<span class="fill-blank">私奴婢</span>が存在し、奴婢は戸を形成できず売買の対象とされた。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：中世（武士と被差別民） -->
+            <div class="section-title"><i data-lucide="swords"></i>中世（武士団の形成と被差別民）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">武士団の構造</span></div>
+                    <div class="timeline-content">
+                        <p>地方武士を統率する中央の軍事貴族（清和源氏や桓武平氏など）を<span class="fill-blank">棟梁</span>と呼んだ。<br>
+                        血縁関係にある武士団は、本家の長である<span class="fill-blank">惣領</span>が、分家である<span class="fill-blank">家子</span>（庶子家）を統括する<span class="fill-blank">惣領制</span>によってまとまっていた。さらにその下には、従者である<span class="fill-blank">郎党</span>（郎等・家人）や、下級兵士・農民である<span class="fill-blank">下人</span>（所従）が従属していた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">中世の被差別民</span></div>
+                    <div class="timeline-content">
+                        <p><strong>【非人】</strong><br>農村共同体から疎外された人々。都市周辺の<span class="fill-blank">非人宿</span>に集住し、物乞いや死牛馬の処理、刑吏、呪術、芸能などのいわゆる「清め」の職能を担った。</p>
+                        <p><strong>【河原者】</strong><br>中世後期、課役が免除される河原に住んだ人々。死牛馬処理や皮革加工、造園などに従事した。とくに作庭に優れた者は<span class="fill-blank">山水河原者</span>（庭者）と呼ばれ、足利義政に仕えた<span class="fill-blank">善阿弥</span>などが活躍した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：近世（士農工商） -->
+            <div class="section-title"><i data-lucide="users"></i>近世（士農工商の身分制度）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">士（武士階級）</span></div>
+                    <div class="timeline-content">
+                        <p>武士階級は、将軍と1万石以上の領地を持つ<span class="fill-blank">大名</span>（親藩・譜代・外様）を頂点とした。<br>
+                        将軍直属の家臣（直参）のうち、将軍にお目見えできる者を<span class="fill-blank">旗本</span>、できない者を<span class="fill-blank">御家人</span>と呼んだ。さらに大名や旗本に仕える家臣（陪臣）がいた。<br>
+                        武士の特権として、<span class="fill-blank">苗字・帯刀</span>の許可や、<span class="fill-blank">切捨御免</span>、家禄の受給などがあった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">農（百姓階級）</span></div>
+                    <div class="timeline-content">
+                        <p>土地を持つ<span class="fill-blank">本百姓</span>（自作農）と、土地を持たない<span class="fill-blank">水呑百姓</span>（小作農）に分かれ、さらに隷属農民として<span class="fill-blank">名子</span>・被官・譜代がいた。<br>
+                        村の行政は、<span class="fill-blank">名主</span>（庄屋・肝煎）、<span class="fill-blank">組頭</span>（年寄）、<span class="fill-blank">百姓代</span>と呼ばれる村方三役（地方三役）が担った。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">工・商（町人階級）</span></div>
+                    <div class="timeline-content">
+                        <p>都市に住む人々は、家や屋敷を持つ<span class="fill-blank">地主・家持</span>と、土地屋敷を借りる<span class="fill-blank">地借</span>・<span class="fill-blank">店借</span>（たながり）に分けられた。町政に参加できるのは地主・家持（狭義の「町人」）のみであり、町役人である町年寄や<span class="fill-blank">町名主</span>が行政を担当した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">近世の被差別民</span></div>
+                    <div class="timeline-content">
+                        <p>皮革処理や行刑などに従事させられた<span class="fill-blank">えた</span>（穢多）と、物乞いや清掃、遊芸などに従事した<span class="fill-blank">ひにん</span>（非人）がおり、居住地や服装などで厳しい差別を受けた。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】年表：近代（四民平等と身分解放） -->
+            <div class="section-title"><i data-lucide="scale"></i>近代（四民平等と身分解放）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">四民平等と新たな身分制</span></div>
+                    <div class="timeline-content">
+                        <p>明治維新により封建的な身分制度が撤廃され、<span class="fill-blank">四民平等</span>が唱えられた。<span class="fill-blank">苗字</span>の公称や、通婚・職業選択・移転の自由が認められた。</p>
+                        <ul>
+                            <li><strong><span class="fill-blank">華族</span></strong>：旧公卿や旧大名。のちの1884年華族令で五爵位（公侯伯子男）を与えられ、貴族院を構成した。</li>
+                            <li><strong><span class="fill-blank">士族</span></strong>：旧幕臣や諸藩の藩士。当初は家禄が支給されたが、のちに廃止され士族の反乱につながった。※旧足軽などの下級武士は「卒族」とされたが、のちに一部は士族、他は平民に編入された。</li>
+                            <li><strong><span class="fill-blank">平民</span></strong>：農・工・商などの一般庶民。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1871年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>身分<span class="fill-blank">解放令</span>（賤称廃止令）</strong></p>
+                        <p>えた・ひにん等の称を廃止し、身分・職業とも平民と同様に扱うとする布告が出された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1872年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">壬申戸籍</span>の編成と差別の残存</strong></p>
+                        <p>近代的な戸籍が編成されたが、被差別部落出身者は戸籍上に「<span class="fill-blank">新平民</span>」などと記載され、その後も就職や結婚などで根強い経済的・社会的差別が残った。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【5】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>律令制下の「五色の賤」</h3>
+                        <br>賤民は5つの階層に分けられ、国が所有するか個人が所有するかによって、口分田の支給額が異なりました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>区分</th>
+                                    <th>名称</th>
+                                    <th>主な役割・特徴</th>
+                                    <th>口分田の支給額</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th rowspan="3">官有</th>
+                                    <td><span class="fill-blank">陵戸</span></td>
+                                    <td>皇室の陵墓を守衛する。</td>
+                                    <td rowspan="3"><span class="fill-blank">良民と同額</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="fill-blank">官戸</span></td>
+                                    <td>諸官司の雑役に使役される。</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="fill-blank">公奴婢</span></td>
+                                    <td>官有の奴隷。戸を形成できず売買された。</td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="2">私有</th>
+                                    <td><span class="fill-blank">家人</span></td>
+                                    <td>貴族や豪族に仕える私有の賤民。</td>
+                                    <td rowspan="2">良民の<span class="fill-blank">3分の1</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="fill-blank">私奴婢</span></td>
+                                    <td>私有の奴隷。戸を形成できず売買された。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    
+                    <li>
+                        <h3>近世の村と町を支えた役人</h3>
+                        <br>幕府や大名に代わって、実際に村や町の行政・徴税を担ったのは、身分内の有力者たちでした。
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th>村方（地方）三役</th>
+                                    <td>
+                                        ・<strong><span class="fill-blank">名主</span>（庄屋・肝煎）</strong>：村の長。年貢納入や行政の最高責任者。<br>
+                                        ・<strong><span class="fill-blank">組頭</span>（年寄）</strong>：名主の補佐役。<br>
+                                        ・<strong><span class="fill-blank">百姓代</span></strong>：村の監査役。一般百姓の代表として名主らを監視。
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>町役人</th>
+                                    <td>
+                                        ・<strong><span class="fill-blank">町年寄</span>（惣年寄）</strong>：町奉行の下で町政全般を統括する有力商人。<br>
+                                        ・<strong><span class="fill-blank">町名主</span></strong>：各町を管理する実務責任者。
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>近代以降の身分解放運動</h3>
+                        <br>1871年の解放令によって制度上の身分差別は撤廃されましたが、実社会における偏見や差別（就職・結婚・住環境など）は解消されませんでした。そのため、1922年には被差別部落の人々自身の手によって<span class="fill-blank">全国水平社</span>が結成され、「人の世に熱あれ、人間に光あれ」とする水平社宣言を発表し、自主的な差別撤廃運動が展開されました。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
