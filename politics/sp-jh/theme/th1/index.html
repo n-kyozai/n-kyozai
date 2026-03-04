@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>001 日中関係史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p {
+            margin-bottom: 8px;
+        }
+        .timeline-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 8px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 001 日中関係史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">001 日中関係史（年表）</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：古代〜中世 -->
+            <div class="section-title"><i data-lucide="clock"></i>日中関係史（古代〜中世）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">B.C. 1世紀頃</span></div>
+                    <div class="timeline-content">倭の小国が定期的に<span class="fill-blank">楽浪郡</span>に朝貢</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">57年</span></div>
+                    <div class="timeline-content">倭の<span class="fill-blank">奴国</span>王が後漢に朝貢、<span class="fill-blank">光武帝</span>より印綬を授かる</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">107年</span></div>
+                    <div class="timeline-content">倭国王<span class="fill-blank"><ruby>帥升<rt>すいしょう</rt></ruby></span>ら、後漢に<span class="fill-blank">生口</span> (奴隷)を献上</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">239年</span></div>
+                    <div class="timeline-content">邪馬台国の女王<span class="fill-blank">卑弥呼</span>が帯方郡を通じて<span class="fill-blank">魏</span>に朝貢</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">266年</span></div>
+                    <div class="timeline-content">倭の女王(<span class="fill-blank"><ruby>壹与<rt>いよ</rt></ruby></span>か)が<span class="fill-blank">西晋</span>に朝貢</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">421年〜502年</span></div>
+                    <div class="timeline-content">倭の<span class="fill-blank">五王</span> (讃・珍・済・興・武) が南朝に朝貢</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">478年</span></div>
+                    <div class="timeline-content">倭王<span class="fill-blank">武</span>が南朝の<span class="fill-blank">宋</span>に上表 → <span class="fill-blank">安東大将軍倭王</span>に補任</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">607年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">遣隋使</span> (<span class="fill-blank">小野妹子</span>)を派遣、対等外交の国書を持参</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">608年</span></div>
+                    <div class="timeline-content">隋より答礼使<span class="fill-blank"><ruby>裴世清<rt>はいせいせい</rt></ruby></span>が来日</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">630年</span></div>
+                    <div class="timeline-content">第1回<span class="fill-blank">遣唐使</span> (<span class="fill-blank"><ruby>犬上御田鍬<rt>いぬかみのみたすき</rt></ruby></span>ら)を派遣</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">663年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">白村江の戦い</span>で倭・百済軍が唐・新羅連合軍に大敗</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">727年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">渤海使</span>が来日 (919年まで34回)。翌年遣渤海使を派遣</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">753年</span></div>
+                    <div class="timeline-content">唐から<span class="fill-blank">鑑真</span>が来日、戒律を伝える</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">894年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">菅原道真</span>の建議により遣唐使を停止</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1019年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">刀伊</span> (女真族) の入寇 ← 大宰権帥<span class="fill-blank">藤原隆家</span>が撃退</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">12世紀後期</span></div>
+                    <div class="timeline-content"><span class="fill-blank">平清盛</span>、日宋貿易の振興はかる → <span class="fill-blank">大輪田泊</span>、音戸の瀬戸整備</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1246年</span></div>
+                    <div class="timeline-content">南宋より<span class="fill-blank">蘭渓道隆</span>来日 → 北条時頼の帰依受け鎌倉に<span class="fill-blank">建長寺</span>開山</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1268年・1274年</span></div>
+                    <div class="timeline-content">モンゴルの国書到来 → 8代執権<span class="fill-blank">北条時宗</span>、朝貢要求を拒否<br>モンゴル襲来 (<span class="fill-blank">文永の役</span>) → 異国警固番役を強化</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1279年・1281年</span></div>
+                    <div class="timeline-content">北条時宗の招きで南宋より<span class="fill-blank">無学祖元</span>来日 → 鎌倉に<span class="fill-blank">円覚寺</span>開山<br>モンゴル再襲来 (<span class="fill-blank">弘安の役</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">14世紀初〜中期</span></div>
+                    <div class="timeline-content"><span class="fill-blank">建長寺船</span>を元に派遣(1325)、<span class="fill-blank">天竜寺船</span>を元に派遣(1342)<br><span class="fill-blank">倭寇</span>(前期)の活動が活発化</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1401年・1404年</span></div>
+                    <div class="timeline-content">足利義満、使節(<span class="fill-blank">祖阿</span>と<span class="fill-blank">肥富</span>)を明に派遣<br><span class="fill-blank">勘合貿易</span>開始 → 一時中断後、<span class="fill-blank">足利義教</span>が再開</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1523年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">寧波の乱</span>: 細川氏・大内氏の遣明使が抗争 → <span class="fill-blank">大内氏</span>が貿易独占</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">16世紀末期</span></div>
+                    <div class="timeline-content">豊臣秀吉の朝鮮出兵 (1592~96<span class="fill-blank">文禄の役</span> 1597~98<span class="fill-blank">慶長の役</span>)。明の援軍が来襲し和議を試みる。</div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：近世〜近現代 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="globe"></i>日中関係史（近世〜近現代）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1654年</span></div>
+                    <div class="timeline-content">明より<span class="fill-blank"><ruby>隠元隆琦<rt>いんげんりゅうき</rt></ruby></span>が来日し、黄檗宗を伝える</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1689年</span></div>
+                    <div class="timeline-content">長崎に<span class="fill-blank">唐人屋敷</span>を設立、清国人の居住限定・貿易管理</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1715年</span></div>
+                    <div class="timeline-content">新井白石、<span class="fill-blank">海舶互市新例</span>で長崎貿易 (対オランダ・清国) を制限</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">18世紀後期</span></div>
+                    <div class="timeline-content">老中<span class="fill-blank">田沼意次</span>が長崎貿易で<span class="fill-blank">俵物</span>輸出の振興をはかる</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1871年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日清修好条規</span>調印 (領事裁判権を相互承認、初の対等条約)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1874年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">台湾出兵</span> ← 琉球漁民殺害事件(1871)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1885年</span></div>
+                    <div class="timeline-content">朝鮮問題をめぐり日清間で<span class="fill-blank">天津条約</span>締結</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1894年</span><span class="timeline-cabinet">伊藤博文②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日清戦争</span> → 翌年 下関条約調印 (伊藤博文・<span class="fill-blank">李鴻章</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1899年〜1901年</span><span class="timeline-cabinet">山県有朋②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">義和団事件</span> → 北清事変(1900) → <span class="fill-blank">北京議定書</span>(1901)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1911年</span><span class="timeline-cabinet">西園寺公望②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">辛亥革命</span> (指導者:<span class="fill-blank">孫文</span>) → 翌年 中華民国成立</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1914年・1915年</span><span class="timeline-cabinet">大隈重信②</span></div>
+                    <div class="timeline-content">第一次世界大戦に参戦 → 袁世凱政権に<span class="fill-blank">二十一カ条の要求</span>(1915)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1917年</span><span class="timeline-cabinet">寺内正毅</span></div>
+                    <div class="timeline-content">軍閥<span class="fill-blank"><ruby>段祺瑞<rt>だんきずい</rt></ruby></span>へ<span class="fill-blank">西原借款</span>を行う(~1918)<br>アメリカとの間に中国に関する<span class="fill-blank">石井・ランシング協定</span>締結</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1919年</span><span class="timeline-cabinet">原敬</span></div>
+                    <div class="timeline-content">中国で<span class="fill-blank">五・四運動</span>起こる。日本の紡績会社が中国に進出(<span class="fill-blank">在華紡</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1922年</span><span class="timeline-cabinet">高橋是清</span></div>
+                    <div class="timeline-content">ワシントン会議で中国に関する<span class="fill-blank">九カ国条約</span>に調印 → 石井・ランシング協定廃棄</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1924年〜</span><span class="timeline-cabinet">加藤高明〜</span></div>
+                    <div class="timeline-content"><span class="fill-blank">幣原喜重郎</span>外相による対中国協調外交 (<span class="fill-blank">幣原外交</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1927年・1928年</span><span class="timeline-cabinet">田中義一</span></div>
+                    <div class="timeline-content">第一次〜第三次<span class="fill-blank">山東出兵</span>、<span class="fill-blank"><ruby>済南<rt>さいなん</rt></ruby>事件</span><br>関東軍が張作霖を爆殺 (<span class="fill-blank">満州某重大事件</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1931年・1932年</span><span class="timeline-cabinet">若槻②〜</span></div>
+                    <div class="timeline-content"><span class="fill-blank">柳条湖事件</span>をきっかけに満州事変始まる。上海事変。<br><span class="fill-blank">満州国</span>建国(執政<span class="fill-blank">溥儀</span>) → 承認(<span class="fill-blank">日満議定書</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1936年</span><span class="timeline-cabinet">広田弘毅</span></div>
+                    <div class="timeline-content"><span class="fill-blank">西安事件</span> → 翌年、国民政府と中国共産党が抗日民族統一戦線を結成 (<span class="fill-blank">第二次国共合作</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1937年・1938年</span><span class="timeline-cabinet">近衛文麿①</span></div>
+                    <div class="timeline-content"><span class="fill-blank">盧溝橋事件</span>により日中戦争始まる。国民政府は重慶に移り抗戦。<br>「国民政府を対手とせず」の<span class="fill-blank">第一次近衛声明</span>、「東亜新秩序」建設の<span class="fill-blank">第二次近衛声明</span></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1940年</span><span class="timeline-cabinet">米内光政</span></div>
+                    <div class="timeline-content"><span class="fill-blank">汪兆銘</span> (精衛)、第三次近衛声明に応じて南京政府を樹立</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1941年・1943年</span><span class="timeline-cabinet">東条英機</span></div>
+                    <div class="timeline-content">太平洋戦争開戦(1941)。東京で<span class="fill-blank">大東亜会議</span>を開催(1943)。米英中、<span class="fill-blank">カイロ宣言</span>発表。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1945年</span><span class="timeline-cabinet">鈴木貫太郎</span></div>
+                    <div class="timeline-content">日本、<span class="fill-blank">ポツダム宣言</span>を受諾し無条件降伏。国共内戦再発。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1949年</span><span class="timeline-cabinet">吉田茂③</span></div>
+                    <div class="timeline-content"><span class="fill-blank">中華人民共和国</span>成立 → 国民政府は<span class="fill-blank">台湾</span>に逃れる。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1951年・1952年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">サンフランシスコ平和条約</span>調印 (中国は不招請)。<br>台湾の国民政府と<span class="fill-blank">日華平和条約</span>に調印(1952)。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1962年</span><span class="timeline-cabinet">池田勇人②</span></div>
+                    <div class="timeline-content">中国と準政府間貿易の覚書に調印 (<span class="fill-blank">LT貿易</span>の開始)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1972年</span><span class="timeline-cabinet">田中角栄①</span></div>
+                    <div class="timeline-content">首相訪中 → <span class="fill-blank">日中共同声明</span>発表、台湾とは断交</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1978年</span><span class="timeline-cabinet">福田赳夫</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日中平和友好条約</span>に調印 (覇権主義反対条項をめぐり難航した)</div>
+                </div>
+            </div>
+
+            <!-- 【3】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>古代の中国史書と日本の記録</h3>
+                        <br><b>【金印と歴史書】</b>
+                        <br>紀元前1世紀頃の日本の様子は『漢書』地理志に記される。57年に光武帝から印綬を授かったことは『後漢書』東夷伝にあり、1784年に志賀島で出土した<span class="fill-blank">「漢委奴国王」の金印</span>がこれとされる。
+                        <br><b>【空白の世紀と倭の五王】</b>
+                        <br>4世紀の日中関係の記録は乏しいが、朝鮮半島の『高句麗好太王碑』からヤマト政権の進出がうかがえる。5世紀に入ると『宋書』倭国伝に倭の五王の記録が登場する。倭王「武」は<span class="fill-blank">雄略天皇</span>とされ、埼玉県<span class="fill-blank">稲荷山古墳</span>出土の鉄剣や熊本県<span class="fill-blank">江田船山古墳</span>出土の鉄刀の銘文（獲加多支鹵大王）とも同一人物とみられている。
+                    </li>
+                    
+                    <li>
+                        <h3>中世の日明貿易の仕組み</h3>
+                        <br><b>【朝貢形式と勘合】</b>
+                        <br>日明貿易は明に対する<span class="fill-blank">朝貢貿易</span>であり、足利義満が明の皇帝の臣下となって「日本国王」に<span class="fill-blank">冊封</span>される形式のもとに行われた。正式な使節であることを証明し、倭寇と区別するために<span class="fill-blank">勘合</span>が用いられ、これを所持する船のみが貿易を許可された。
+                    </li>
+
+                    <li>
+                        <h3>近代の条約と国際宣言</h3>
+                        <br><b>【日清・日露戦争の流れ】</b>
+                        <br>1894年の日清戦争後の下関条約により、日本は台湾・澎湖諸島・遼東半島を得るが、三国干渉で遼東半島を返還。その後、義和団事件（1900年北清事変）の鎮圧に日本も参加し、<span class="fill-blank">北京議定書</span>（1901年）が結ばれた。ロシアの満州駐留に対抗するため日本は日英同盟を結び、日露戦争へ至る。
+                        <br><b>【第二次世界大戦中の対中国方針】</b>
+                        <br>1943年11月の<span class="fill-blank">カイロ宣言</span>で、米英中3国は対日戦争の遂行と、満州・台湾などの中国への返還を決定した。1945年7月の<span class="fill-blank">ポツダム宣言</span>ではカイロ宣言の履行が確認され、日本の領土が限定された。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
