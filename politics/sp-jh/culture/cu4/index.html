@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>004 中世の文化 実践問題 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --quiz-blue: #3b82f6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #eff6ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- クイズUIスタイル --- */
+        .quiz-section {
+            margin-top: 10px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 4px;
+            background-color: var(--quiz-gray);
+            z-index: 1;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute;
+            top: 50%; left: 0;
+            height: 4px;
+            background-color: var(--quiz-blue);
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.4s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background-color: var(--quiz-gray);
+            z-index: 3;
+            position: relative;
+            transition: background-color 0.4s, transform 0.2s;
+            cursor: pointer;
+        }
+        .step-node:not(.final-node):hover {
+            filter: brightness(0.9);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3);
+        }
+        .step-node.final-node {
+            cursor: default;
+        }
+        .step-node.active {
+            background-color: var(--quiz-blue);
+            transform: scale(1.3);
+        }
+        .step-node.completed {
+            background-color: var(--quiz-blue);
+        }
+        .step-node.viewing {
+            background-color: var(--quiz-blue);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.7);
+        }
+        .step-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--quiz-blue);
+            font-weight: bold;
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .step-node.active .step-label,
+        .step-node.viewing .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        .quiz-question-title {
+            color: var(--quiz-blue);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* --- ドラッグ＆ドロップ穴埋めスタイル --- */
+        .slot {
+            display: inline-flex;
+            min-width: 70px;
+            height: 36px;
+            border-bottom: 2px solid var(--text-muted);
+            position: relative;
+            cursor: pointer;
+            margin: 0 6px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            padding: 0 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            vertical-align: middle;
+            background-color: var(--slot-bg);
+            border-radius: 4px 4px 0 0;
+        }
+        .slot:hover:not(.disabled) { background-color: var(--slot-hover-bg); border-bottom-color: var(--quiz-blue); }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+        .slot.disabled { cursor: default; border-bottom-color: var(--fill-border); }
+
+        .slot-num {
+            position: absolute;
+            top: -12px; right: -10px;
+            background-color: var(--quiz-blue);
+            color: white;
+            font-size: 0.65rem;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--surface-color);
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--fill-border);
+            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            color: var(--quiz-blue);
+            transform: translateY(-1px);
+        }
+        .option-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            background-color: var(--slot-bg);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- 四択問題（Multiple Choice）スタイル --- */
+        .mc-btn {
+            text-align: left;
+            padding: 16px;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: var(--surface-color);
+            border: 2px solid var(--fill-border);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .mc-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            background: var(--slot-hover-bg);
+        }
+        .mc-btn.selected {
+            border-color: var(--quiz-blue);
+            background: var(--slot-hover-bg);
+            font-weight: bold;
+        }
+        .mc-btn.correct-ans {
+            border-color: var(--quiz-green) !important;
+            background: var(--feedback-correct-bg) !important;
+            color: var(--quiz-green) !important;
+        }
+        .mc-btn.incorrect-ans {
+            border-color: var(--quiz-red) !important;
+            background: var(--quiz-red-bg) !important;
+            color: var(--quiz-red) !important;
+        }
+        .mc-btn:disabled {
+            cursor: default;
+        }
+
+        /* --- 画像拡大・埋め込みスタイル --- */
+        .thumbnail-img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            background-color: var(--fill-bg);
+            min-height: 40px;
+        }
+        .thumbnail-img[src=""] {
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: default;
+        }
+        .thumbnail-img[src=""]::after {
+            content: "画像準備中";
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+            object-fit: contain;
+        }
+
+        /* --- 正誤問題用UI --- */
+        .tf-item {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .tf-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .tf-text { margin-bottom: 12px; font-weight: 500; }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 8px;
+            border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .tf-btn:hover:not(:disabled) { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.5; }
+        
+        .tf-feedback {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+        }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        /* 共通ボタン */
+        .check-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 24px;
+            padding: 14px;
+            background-color: var(--quiz-blue);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        .check-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none;
+            background: var(--slot-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .feedback-box.show { display: block; }
+        
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+
+        .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+
+        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: var(--text-color); line-height: 1.8; }
+        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: var(--surface-color); border-radius: 4px; border: 1px solid var(--border-color); margin: 0 4px;}
+
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 16px; margin-bottom: 24px; }
+        .explanation-summary {
+            font-size: 0.95rem;
+            color: var(--quiz-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            list-style: none;
+            font-weight: bold;
+        }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background: var(--surface-color);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            line-height: 1.7;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .next-btn:hover { filter: brightness(0.9); }
+
+        .review-mode-msg {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--quiz-red);
+            font-weight: bold;
+            background: var(--quiz-red-bg);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .tf-btns { flex-direction: column; gap: 8px; }
+            .tf-btn { max-width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .mc-btn { flex-direction: column; align-items: flex-start; }
+            .thumbnail-img { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/culture/index.html">文化史</a> ＞ 004 実践問題
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">004 中世の文化 実践問題</h1>
+        </div>
+
+        <div class="container">
+            <div class="quiz-section" id="quiz-section">
+                <!-- 動的プログレスバー -->
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                        <!-- JSでノードを生成 -->
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.className = 'lightbox-overlay';
+        lightboxOverlay.innerHTML = '<img class="lightbox-img" src="" alt="拡大画像">';
+        document.body.appendChild(lightboxOverlay);
+
+        const lightboxImg = lightboxOverlay.querySelector('img');
+
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装（全6問）
+        // ==========================================
+        const quizData = [
+            {
+                type: 'multipleChoice',
+                questionText: "次の画像の建築物について、その名称と特徴の組み合わせとして【正しいもの】を1つ選べ。<br><div style='display:flex;gap:12px;margin-top:8px;'><!-- 💡 オススメ画像：三仏寺投入堂 --><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'></div>",
+                options: [
+                    { text: "中尊寺金色堂：奥州藤原氏が岩手県平泉に建てた阿弥陀堂である。", isCorrect: false },
+                    { text: "三仏寺投入堂：鳥取県の断崖絶壁に建てられた、院政期の懸造の建築である。", isCorrect: true },
+                    { text: "富貴寺大堂：大分県にあり、九州最古の木造建築とされる阿弥陀堂である。", isCorrect: false },
+                    { text: "円覚寺舎利殿：鎌倉時代に宋から伝わった禅宗様（唐様）の建築である。", isCorrect: false }
+                ],
+                explanation: "画像は鳥取県の三仏寺投入堂です。断崖の窪みに建てられた特徴的な外観を持っています。これらは院政期に地方へと波及した浄土教文化の代表例です。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "鎌倉新仏教について。<br>「南無阿弥陀仏」と唱える専修念仏を説いた「",
+                    "」が開いた浄土宗。<br>その弟子で「悪人正機説」を説いた「",
+                    "」が開いた浄土真宗。<br>鉦や太鼓を叩き「踊り念仏」で全国を遊行して布教した「",
+                    "」が開いた時宗。<br>座禅を組むことを重んじた禅宗のうち、幕府の保護を受けた「",
+                    "」が開いた臨済宗。"
+                ],
+                correctAnswers: ["法然", "親鸞", "一遍", "栄西"],
+                options: ["法然", "親鸞", "一遍", "栄西", "道元", "日蓮", "最澄"],
+                explanation: "鎌倉新仏教の開祖と宗派、教えの特徴は確実におさえましょう。道元は曹洞宗、日蓮は日蓮宗（法華宗）を開きました。<br><br><div style='display:flex;gap:12px;flex-wrap:wrap;'><!-- 💡 オススメ画像：法然、親鸞、一遍などの肖像画 --><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'></div>"
+            },
+            {
+                type: 'multipleChoice',
+                questionText: "鎌倉時代の美術や建築に関する次の記述のうち、【間違っているもの】を1つ選べ。",
+                options: [
+                    { text: "東大寺南大門は、重源が宋から伝わった「大仏様（天竺様）」という雄大な様式を用いて再建した。", isCorrect: false },
+                    { text: "運慶や快慶ら慶派の仏師により、東大寺南大門の金剛力士像など、力強く写実的な彫刻が作られた。", isCorrect: false },
+                    { text: "禅宗寺院の建築には、細部まで装飾的で整然とした「禅宗様（唐様）」が用いられ、円覚寺舎利殿などが代表的である。", isCorrect: false },
+                    { text: "個人の顔の特徴を写実的に描く「似絵」が発達し、その代表作として雪舟の『四季山水図巻』がある。", isCorrect: true }
+                ],
+                explanation: "『四季山水図巻』は室町時代の雪舟が描いた「水墨画」の代表作です。鎌倉時代の「似絵」の代表作としては、藤原隆信・信実による『伝源頼朝像』などがあります。<br><br><div style='display:flex;gap:12px;flex-wrap:wrap;'><!-- 💡 オススメ画像：東大寺南大門金剛力士像、伝源頼朝像 --><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'></div>"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "室町時代の建築について。<br>足利義満が建てた「",
+                    "」は、公家文化と武家文化が融合した北山文化を代表する。<br>足利義政が建てた「",
+                    "」は、簡素で深みのある「わび・さび」を基調とする東山文化を代表する。<br>その中にある持仏堂の「",
+                    "」は、床の間や違い棚などを備えた「",
+                    "」の最古の遺構とされる。"
+                ],
+                correctAnswers: ["金閣", "銀閣", "東求堂同仁斎", "書院造"],
+                options: ["金閣", "銀閣", "東求堂同仁斎", "書院造", "寝殿造", "武家造", "大仙院"],
+                explanation: "北山文化の金閣（鹿苑寺）、東山文化の銀閣（慈照寺）と書院造の代表である東求堂同仁斎（とうぐどうどうじんさい）の区別が重要です。<br><br><div style='display:flex;gap:12px;flex-wrap:wrap;'><!-- 💡 オススメ画像：鹿苑寺金閣、慈照寺銀閣、東求堂同仁斎 --><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'></div>"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "室町時代の芸能と絵画・庭園。<br>田楽や猿楽を芸術性の高い「",
+                    "」へと大成させたのは、「",
+                    "」の親子である。<br>また、水を用いず石や砂で自然を表現する「",
+                    "」の庭園が発達した。<br>絵画では、明で学んだ「",
+                    "」が日本独自の「水墨画」を大成させた。"
+                ],
+                correctAnswers: ["能楽", "観阿弥・世阿弥", "枯山水", "雪舟"],
+                options: ["能楽", "歌舞伎", "観阿弥・世阿弥", "狩野正信・元信", "枯山水", "浄土庭園", "雪舟"],
+                explanation: "室町時代に大成した芸能（能・狂言）、庭園（枯山水）、絵画（水墨画・大和絵の土佐派・狩野派）は頻出テーマです。<br><br><div style='display:flex;gap:12px;flex-wrap:wrap;'><!-- 💡 オススメ画像：能面、竜安寺石庭、雪舟の水墨画 --><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'></div>"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "鎌倉時代の軍記物語である『平家物語』は、盲目の琵琶法師によって語り継がれ（平曲）、文字の読めない庶民にも広く浸透した。", 
+                        correct: true, 
+                        explanation: "正しい記述です。源平の争乱や平家の栄衰を描き、諸行無常の思想が基調となっています。"
+                    },
+                    { 
+                        text: "鎌倉時代初期の和歌集『新古今和歌集』は、紀貫之らが編纂したものであり、「たをやめぶり」と呼ばれる優美で繊細な作風が特徴である。", 
+                        correct: false, 
+                        explanation: "誤りです。紀貫之らが編纂し「たをやめぶり」と称されたのは、平安時代の『古今和歌集』です。『新古今和歌集』は後鳥羽上皇の命で藤原定家らが編纂したもので、技巧的で「幽玄」な作風が特徴です。"
+                    },
+                    { 
+                        text: "室町時代には、禅の精神を取り入れた茶の湯（わび茶）を村田珠光が創始し、後に千利休へと受け継がれていった。", 
+                        correct: true, 
+                        explanation: "正しい記述です。東山文化の時期に成立し、簡素さを重んじる精神文化として発展しました。"
+                    },
+                    { 
+                        text: "下の画像は、京都の東山に建てられた中尊寺金色堂である。この建物は、下層が書院造、上層が禅宗様という2層構造になっている。<br><br><!-- 💡 オススメ画像：慈照寺銀閣 --><img src='' alt='' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'>", 
+                        correct: false, 
+                        explanation: "誤りです。画像と説明文は、室町時代の「銀閣（慈照寺）」のものです。「中尊寺金色堂」は院政期に奥州藤原氏が岩手県平泉に建てた阿弥陀堂です。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let maxReachedIndex = 0;
+        let isReviewMode = false;
+        let isProgressBarBuilt = false;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                
+                if (i < totalSteps) {
+                    node.onclick = () => jumpToQuestion(i);
+                } else {
+                    node.classList.add('final-node');
+                }
+                
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                
+                if (i === totalSteps) {
+                    label.style.top = '-24px';
+                    label.style.right = '-15px';
+                    label.style.left = 'auto';
+                    label.style.transform = 'none';
+                }
+                
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (maxReachedIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (node) {
+                    node.classList.remove('active', 'completed', 'viewing');
+                    
+                    if (i < maxReachedIndex) {
+                        node.classList.add('completed');
+                    }
+                    
+                    if (i === currentQIndex) {
+                        if (i === maxReachedIndex) {
+                            node.classList.add('active');
+                        } else {
+                            node.classList.add('viewing');
+                        }
+                    }
+                }
+            }
+        }
+
+        window.jumpToQuestion = function(index) {
+            if (index > quizData.length) return;
+            currentQIndex = index;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.returnToCurrent = function() {
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function renderQuiz() {
+            if (!isProgressBarBuilt) {
+                buildProgressBar();
+                isProgressBarBuilt = true;
+            }
+            
+            updateProgress();
+
+            if (currentQIndex >= quizData.length) {
+                showResultScreen();
+                return;
+            }
+
+            isReviewMode = (currentQIndex !== maxReachedIndex);
+            const q = quizData[currentQIndex];
+
+            if (q.type === 'dragDrop') {
+                renderDragDrop(q);
+            } else if (q.type === 'multipleChoice') {
+                renderMultipleChoice(q);
+            } else if (q.type === 'trueFalse') {
+                renderTrueFalse(q);
+            }
+        }
+
+        /* --- ドラッグ＆ドロップ（穴埋め）問題の描画 --- */
+        function renderDragDrop(q) {
+            ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に当てはまる語句を選択せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    if (isReviewMode) {
+                        html += `<span class="slot empty disabled"><span class="slot-num">${index + 1}</span></span>`;
+                    } else {
+                        html += `<span class="slot empty" data-index="${index}" onclick="removeDDAnswer(${index})">
+                                    <span class="slot-num">${index + 1}</span>
+                                 </span>`;
+                    }
+                }
+            });
+            html += `</div>`;
+
+            html += `<div class="options-container" id="options-container">`;
+            q.options.forEach(opt => {
+                if (isReviewMode) {
+                    html += `<button class="option-btn" disabled>${opt}</button>`;
+                } else {
+                    html += `<button class="option-btn" onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+                }
+            });
+            html += `</div>`;
+
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モードです。解答は現在の問題から順に行ってください。</div>`;
+                html += `<button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation, 'dd');
+            }
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btnElement) {
+            if (isReviewMode) return;
+            const emptyIndex = ddUserAnswers.indexOf(null);
+            if (emptyIndex !== -1) {
+                ddUserAnswers[emptyIndex] = text;
+                btnElement.disabled = true;
+                updateDDSlots();
+            }
+        };
+
+        window.removeDDAnswer = function(index) {
+            if (isReviewMode) return;
+            const text = ddUserAnswers[index];
+            if (text) {
+                ddUserAnswers[index] = null;
+                const btns = document.querySelectorAll('.option-btn');
+                btns.forEach(btn => { if (btn.innerText === text) btn.disabled = false; });
+                updateDDSlots();
+            }
+        };
+
+        function updateDDSlots() {
+            if (isReviewMode) return;
+            const slots = document.querySelectorAll('.slot');
+            let isAllFilled = true;
+            slots.forEach((slot, index) => {
+                const text = ddUserAnswers[index];
+                if (text) {
+                    slot.innerHTML = `${text}<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.remove('empty');
+                } else {
+                    slot.innerHTML = `<span class="slot-num">${index + 1}</span>`;
+                    slot.classList.add('empty');
+                    isAllFilled = false;
+                }
+            });
+            document.getElementById('check-btn').disabled = !isAllFilled;
+        }
+
+        window.checkDDAnswer = function() {
+            if (isReviewMode) return;
+            const q = quizData[currentQIndex];
+            const slots = document.querySelectorAll('.slot');
+            let isCorrect = true;
+
+            slots.forEach((slot, index) => {
+                slot.onclick = null;
+                if (ddUserAnswers[index] === q.correctAnswers[index]) {
+                    slot.classList.add('correct');
+                } else {
+                    slot.classList.add('incorrect');
+                    isCorrect = false;
+                }
+            });
+
+            document.getElementById('options-container').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'none';
+
+            showFeedback(isCorrect, 
+                ddUserAnswers.map(a => `<span>${a}</span>`).join(' '), 
+                q.correctAnswers.map(a => `<span>${a}</span>`).join(' ')
+            );
+        };
+
+        /* --- 四択（Multiple Choice）問題の描画 --- */
+        function renderMultipleChoice(q) {
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：${q.questionText}</div>`;
+            html += `<div class="quiz-card" style="padding: 16px 24px; display: flex; flex-direction: column; gap: 12px; background: transparent; border: none; box-shadow: none;">`;
+            
+            q.options.forEach((opt, idx) => {
+                if (isReviewMode) {
+                    html += `<button class="mc-btn" disabled>
+                                <span style="font-weight:bold; color:var(--quiz-blue); margin-right:8px;">${idx + 1}.</span>
+                                <div style="flex:1;">${opt.text}</div>
+                             </button>`;
+                } else {
+                    html += `<button class="mc-btn" onclick="selectMC(${idx})">
+                                <span style="font-weight:bold; color:var(--quiz-blue); margin-right:8px;">${idx + 1}.</span>
+                                <div style="flex:1;">${opt.text}</div>
+                             </button>`;
+                }
+            });
+            
+            html += `</div>`;
+            
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モードです。解答は現在の問題から順に行ってください。</div>`;
+                html += `<button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkMCAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation, 'mc');
+            }
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+            
+            window.currentMCSelected = null;
+        }
+
+        window.selectMC = function(index) {
+            if (isReviewMode) return;
+            window.currentMCSelected = index;
+            const btns = document.querySelectorAll('.mc-btn');
+            btns.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+            document.getElementById('check-btn').disabled = false;
+        };
+
+        window.checkMCAnswer = function() {
+            if (isReviewMode) return;
+            const q = quizData[currentQIndex];
+            const selectedOpt = q.options[window.currentMCSelected];
+            const isCorrect = selectedOpt.isCorrect;
+            
+            let correctIdx = -1;
+            q.options.forEach((opt, i) => { if(opt.isCorrect) correctIdx = i; });
+            
+            document.getElementById('check-btn').style.display = 'none';
+
+            const btns = document.querySelectorAll('.mc-btn');
+            btns.forEach((btn, i) => {
+                btn.disabled = true; 
+                if (i === correctIdx) {
+                    btn.classList.add('correct-ans');
+                } else if (i === window.currentMCSelected && !isCorrect) {
+                    btn.classList.add('incorrect-ans');
+                }
+            });
+
+            const userText = selectedOpt.text.replace(/<[^>]*>?/gm, '').substring(0, 30) + '...';
+            const correctText = q.options[correctIdx].text.replace(/<[^>]*>?/gm, '').substring(0, 30) + '...';
+
+            showFeedback(isCorrect, 
+                `<span>${window.currentMCSelected + 1}. ${userText}</span>`, 
+                `<span>${correctIdx + 1}. ${correctText}</span>`
+            );
+        };
+
+        /* --- 正誤（True/False）問題の描画 --- */
+        function renderTrueFalse(q) {
+            tfUserAnswers = new Array(q.questions.length).fill(null);
+
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：次の各文の正誤を判定せよ。</div>`;
+            html += `<div class="quiz-card" style="padding: 16px 24px;">`;
+
+            q.questions.forEach((item, idx) => {
+                html += `
+                <div class="tf-item">
+                    <div class="tf-text">(${idx + 1}) ${item.text}</div>
+                    <div class="tf-btns">`;
+                
+                if (isReviewMode) {
+                    html += `<button class="tf-btn" disabled><i data-lucide="circle" style="width: 16px; height: 16px;"></i> 正しい</button>
+                             <button class="tf-btn" disabled><i data-lucide="x" style="width: 16px; height: 16px;"></i> 誤り</button>`;
+                } else {
+                    html += `<button class="tf-btn" id="tf-btn-${idx}-true" onclick="selectTF(${idx}, true)"><i data-lucide="circle" style="width: 16px; height: 16px;"></i> 正しい</button>
+                             <button class="tf-btn" id="tf-btn-${idx}-false" onclick="selectTF(${idx}, false)"><i data-lucide="x" style="width: 16px; height: 16px;"></i> 誤り</button>`;
+                }
+                
+                html += `</div>
+                    <div class="tf-feedback" id="tf-feedback-${idx}"></div>
+                </div>`;
+            });
+            html += `</div>`;
+            
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モードです。解答は現在の問題から順に行ってください。</div>`;
+                html += `<button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点する</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+
+            quizContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.selectTF = function(qIndex, isTrue) {
+            if (isReviewMode) return;
+            tfUserAnswers[qIndex] = isTrue;
+            const btnTrue = document.getElementById(`tf-btn-${qIndex}-true`);
+            const btnFalse = document.getElementById(`tf-btn-${qIndex}-false`);
+            btnTrue.classList.toggle('selected-true', isTrue);
+            btnFalse.classList.toggle('selected-false', !isTrue);
+            
+            if (tfUserAnswers.every(ans => ans !== null)) {
+                document.getElementById('check-btn').disabled = false;
+            }
+        };
+
+        window.checkTFAnswer = function() {
+            if (isReviewMode) return;
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+
+            q.questions.forEach((item, idx) => {
+                const isCorrect = tfUserAnswers[idx] === item.correct;
+                const feedbackDiv = document.getElementById(`tf-feedback-${idx}`);
+                
+                document.getElementById(`tf-btn-${idx}-true`).disabled = true;
+                document.getElementById(`tf-btn-${idx}-false`).disabled = true;
+
+                feedbackDiv.classList.add('show');
+                if (isCorrect) {
+                    feedbackDiv.classList.add('correct');
+                    feedbackDiv.innerHTML = `<strong class="text-green">正解！</strong><br>${item.explanation}`;
+                } else {
+                    feedbackDiv.classList.add('incorrect');
+                    feedbackDiv.innerHTML = `<strong class="text-red">不正解...</strong> (正解は ${item.correct ? '〇' : '×'})<br>${item.explanation}`;
+                }
+            });
+
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        /* --- 共通フィードバック描画用関数 --- */
+        function generateFeedbackHTML(explanation, type) {
+            return `
+                <div class="feedback-box" id="feedback-box">
+                    <div class="feedback-title" id="fb-title"></div>
+                    <div class="feedback-detail">
+                        あなたの答え：<span id="fb-user" class="text-red"></span><br>
+                        正解：<span id="fb-correct" class="text-green"></span>
+                    </div>
+                    <details class="explanation-details">
+                        <summary class="explanation-summary">
+                            <i data-lucide="lightbulb" style="width:16px;height:16px;"></i>解説・ポイント
+                        </summary>
+                        <div class="explanation-content">${explanation}</div>
+                    </details>
+                    <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+                </div>
+            `;
+        }
+
+        function showFeedback(isCorrect, userAnsHTML, correctAnsHTML) {
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            
+            document.getElementById('fb-user').innerHTML = userAnsHTML;
+            document.getElementById('fb-correct').innerHTML = correctAnsHTML;
+
+            if (isCorrect) {
+                fbBox.classList.add('correct-bg');
+                fbTitle.innerText = "正解です！";
+                fbTitle.className = "feedback-title text-green";
+            } else {
+                fbBox.classList.remove('correct-bg');
+                fbTitle.innerText = "不正解です";
+                fbTitle.className = "feedback-title text-red";
+            }
+            fbBox.classList.add('show');
+        }
+
+        window.nextQuestion = function() {
+            if (!isReviewMode && currentQIndex === maxReachedIndex) {
+                maxReachedIndex++;
+            }
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.retryQuiz = function() {
+            currentQIndex = 0;
+            maxReachedIndex = 0;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function showResultScreen() {
+            updateProgress();
+            
+            if (isReviewMode) {
+                quizContainer.innerHTML = `
+                    <div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <div class="review-mode-msg" style="margin: 0 auto 24px; max-width: 400px;">※閲覧モードです。</div>
+                        <button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>
+                    </div>
+                `;
+            } else {
+                quizContainer.innerHTML = `
+                    <div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                        <h2 style="color: var(--primary-color); font-size: 1.5rem; margin-bottom: 12px;">実践問題クリア！</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 30px;">中世の文化の重要事項を確認しました。</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                            <button class="check-btn" style="margin: 0; max-width: 300px; background-color: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="retryQuiz()">
+                                <i data-lucide="rotate-ccw" style="width:18px;height:18px;display:inline;vertical-align:middle;margin-right:6px;"></i>もう一度挑戦する
+                            </button>
+                            <a href="/n-kyozai/politics/sp-jh/culture/index.html" class="next-btn" style="max-width: 300px;">
+                                文化史 目次へ戻る
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // 初期描画
+        renderQuiz();
+    </script>
+</body>
+</html>
