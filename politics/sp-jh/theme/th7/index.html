@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>007 税制・土地制度史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（カード型表示） */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table th, .summary-table td {
+                display: block; width: 100%;
+            }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 16px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .summary-table th {
+                border: none; border-bottom: 1px solid var(--border-color);
+                text-align: left; padding: 12px 16px; background-color: #f8fafc;
+            }
+            .summary-table td { border: none; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 007 税制・土地制度史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">007 税制・土地制度史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：古代〜中世 -->
+            <div class="section-title"><i data-lucide="clock"></i>税制・土地制度史（古代〜中世）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">5〜7世紀頃</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">私地私民</span>制の時代</strong></p>
+                        <p>朝廷の直轄地を<span class="fill-blank">屯倉</span>（<span class="fill-blank">田部</span>が耕作）、豪族の私有地を<span class="fill-blank">田荘</span>（<span class="fill-blank"><ruby>部曲<rt>かきべ</rt></ruby></span>が耕作）と呼んだ。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">646年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">改新の詔</span></strong></p>
+                        <p>大化の改新により、すべての土地と人民を国家のものとする<span class="fill-blank">公地公民</span>の方針が示された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">7世紀末〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">班田収授法</span>の確立</strong></p>
+                        <p>戸籍に基づき、6年ごとに農民に<span class="fill-blank">口分田</span>を支給。良民男子には2段、良民女子にはその3分の2が与えられた。<br>※土地の課税対象とならない<span class="fill-blank">不輸租田</span>（神田・寺田など）も存在した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">722年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">百万町歩開墾計画</span></strong></p>
+                        <p>人口増加による口分田の不足を補うため、大規模な開墾計画を発表したが失敗に終わる。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">723年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">三世一身法</span></strong></p>
+                        <p>新しく灌漑施設を作って開墾した者には三世代（本人・子・孫）、既存の施設を利用した者には本人一代に限り、墾田の私有を認めた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">743年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">墾田永年私財法</span></strong></p>
+                        <p>開墾した土地の永久私有を認め、公地公民制が崩壊し<span class="fill-blank">初期荘園</span>が成立する契機となった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">8〜9世紀</span></div>
+                    <div class="timeline-content">
+                        <p><strong>直営田の設置</strong></p>
+                        <p>各地に皇室財源である<span class="fill-blank">勅旨田</span>が設置され、823年に大宰府に<span class="fill-blank">公営田</span>、879年には畿内に<span class="fill-blank">官田</span>が設けられた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">902年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">延喜の荘園整理令</span></strong></p>
+                        <p>醍醐天皇が出した整理令。記録上、最後の班田実施となった。のちの914年に<span class="fill-blank">三善清行</span>が「<span class="fill-blank">意見封事十二箇条</span>」を提出し、律令制の衰えを指摘した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">10世紀初〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">名体制</span>の成立</strong></p>
+                        <p>国司は有力農民である<span class="fill-blank">田堵</span>（負名）に一定の土地（<span class="fill-blank">名</span>）の耕作を請け負わせ、田積に応じて<span class="fill-blank">官物</span>と<span class="fill-blank">臨時雑役</span>を徴収するようになった。（国司の徴税請負人化）</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1069年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">延久の荘園整理令</span>（後三条天皇）</strong></p>
+                        <p><span class="fill-blank">記録荘園券契所</span>（記録所）を設け、年代の新しい荘園や国務の妨げになる荘園を厳しく審査し停止した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">11〜12世紀</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">寄進地系荘園</span>の増加と荘園公領制</strong></p>
+                        <p>開発領主が有力貴族や寺社に土地を寄進し、税の免除（<span class="fill-blank">不輸の権</span>）や国司の立ち入り拒否（<span class="fill-blank">不入の権</span>）を獲得した。院政期には全国が荘園と国衙領に二分される<span class="fill-blank">荘園公領制</span>が確立した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">13世紀〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong>地頭の荘園侵略</strong></p>
+                        <p>承久の乱以降、地頭が荘園領主の年貢を横領するようになった。解決策として、地頭に一定額の納入を請け負わせる<span class="fill-blank">地頭請</span>や、土地の支配権を半分に分ける<span class="fill-blank">下地中分</span>が行われた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">14〜16世紀</span></div>
+                    <div class="timeline-content">
+                        <p><strong>守護・大名領国制と税制の変化</strong></p>
+                        <p>観応令(1352年)・応安令(1368年)による<span class="fill-blank">半済</span>により、守護が荘園年貢の半分を徴収するようになり、荘園制は崩壊へ向かった。<br>戦国大名は<span class="fill-blank">指出検地</span>を実施し、収穫量を銭に換算する<span class="fill-blank">貫高制</span>を採用した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：近世〜現代 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="globe"></i>税制・土地制度史（近世〜現代）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1582年〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">太閤検地</span></strong></p>
+                        <p>豊臣秀吉が全国の土地を測量。土地の生産力を米の収穫量で表す<span class="fill-blank">石高制</span>を採用し、1つの土地に1人の耕作者を登録する<span class="fill-blank">一地一作人</span>の原則を確立。これにより荘園制は完全に消滅した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1643年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">田畑永代売買の禁令</span></strong></p>
+                        <p>富農への土地集中や、本百姓の没落を防ぎ年貢を確保するために、田畑の売買を禁止した。同時に五穀以外の栽培を禁じる<span class="fill-blank">田畑勝手作の禁令</span>も出された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1649年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">慶安の触書</span></strong></p>
+                        <p>農民の遵法心得や勤労奨励、衣食住の細かな制限などを定めた。（※近年は存在を疑問視する説もある）</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1673年・1713年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">分地制限令</span></strong></p>
+                        <p>細分化による百姓の没落を防ぐため、名主20石・一般百姓10石未満の分割相続を禁止した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1871年・1872年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>地租改正の準備</strong></p>
+                        <p>1871年に<span class="fill-blank">田畑勝手作</span>を許可し、翌1872年には<span class="fill-blank">田畑永代売買</span>を解禁して<span class="fill-blank">地券</span>の交付を開始した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1873年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">地租改正条例</span></strong></p>
+                        <p>税率を<span class="fill-blank">地価の3%</span>とし、豊作・凶作に関わらず<span class="fill-blank">金納</span>させた。納税義務者は<span class="fill-blank">土地所有者</span>（地券所有者）とされた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1876年・1877年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>地租改正反対一揆と税率引き下げ</strong></p>
+                        <p>茨城・三重などで激しい<span class="fill-blank">地租改正反対一揆</span>が起こり、翌1877年、政府は税率を<span class="fill-blank">2.5%</span>に引き下げた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1880年代</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">松方財政</span>の増税</strong></p>
+                        <p>デフレ政策の中、酒税や煙草税などの新設・増徴が行われ、農民の没落と寄生地主制が進んだ。（のち1898年に第2次山県内閣が地租を3.3%へ増徴）</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1946年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>戦後の<span class="fill-blank">農地改革</span></strong></p>
+                        <p>寄生地主制を解体するため、吉田茂内閣による第2次農地改革で、国が地主から小作地を<span class="fill-blank">強制買収</span>し、小作人に売り渡すことで多くの自作農を創設した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1949年・1989年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>現代の税制改革</strong></p>
+                        <p>1949年: <span class="fill-blank">シャウブ勧告</span>に基づき、所得税中心の税制が確立。<br>1989年: 竹下登内閣のもとで<span class="fill-blank">消費税</span>（3%）が導入された。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>1. 律令制下の税負担と兵役</h3>
+                        <br>律令制では、戸籍に基づく人頭税や労役が重く、成人男子（正丁：21〜60歳）に集中していました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>税目</th>
+                                    <th>内容</th>
+                                    <th>納入先・備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">租</span> (土地税)</th>
+                                    <td>口分田1段あたり稲2束2把（収穫の約3%）</td>
+                                    <td><span class="fill-blank">国衙</span>（地方財源）</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">調</span> (物納)</th>
+                                    <td>各地の特産物（絹・糸・綿など）</td>
+                                    <td><span class="fill-blank">中央</span></td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">庸</span> (物納)</th>
+                                    <td>歳役(労役)10日の代わりに布2丈6尺を納める</td>
+                                    <td><span class="fill-blank">中央</span></td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">雑徭</span> (労役)</th>
+                                    <td>年間60日以内の土木工事などの労役</td>
+                                    <td><span class="fill-blank">国衙</span></td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">運脚</span> (労役)</th>
+                                    <td>調と庸を農民自身が都まで運搬する負担</td>
+                                    <td><span class="fill-blank">中央</span>へ</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">出挙</span> (雑税)</th>
+                                    <td>春に稲を強制貸付し、秋に利息(5割)を取る</td>
+                                    <td><span class="fill-blank">国衙</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 8px;">
+                            ※課役逃れ（浮浪・逃亡・偽籍）の増加により、桓武天皇は795年に雑徭を半減させました。
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <h3>2. 寄進地系荘園の構造と中世の税</h3>
+                        <br>開発領主は国司の圧迫を逃れるため、土地を有力者に寄進しました。
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">本所</span>・<span class="fill-blank">本家</span></th>
+                                    <td>最上級の領主（皇族・大寺社・摂関家）。不輸・不入の権を獲得し荘園を保護する。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">領家</span></th>
+                                    <td>本家と開発領主の間に入る貴族や寺社。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">荘官</span></th>
+                                    <td>現地を管理する者（預所、下司、公文など）。開発領主が任命されることが多い。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br><b>【荘園制下・室町時代の税制】</b>
+                        <ul>
+                            <li><span class="fill-blank">年貢</span>：律令制の「租」にあたる負担。</li>
+                            <li><span class="fill-blank">公事</span>：律令制の「調・庸・雑徭」にあたる特産物などの負担。</li>
+                            <li><span class="fill-blank">夫役</span>：土木工事などの労役。</li>
+                            <li><span class="fill-blank">段銭</span>・<span class="fill-blank">棟別銭</span>：室町時代に田地一段別や家屋一棟別に課された臨時の税。</li>
+                            <li><span class="fill-blank">土倉役</span>・<span class="fill-blank">酒屋役</span>：室町幕府が金融・酒造業者に課した営業税。</li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <h3>3. 江戸時代の税制と戦後の農地改革</h3>
+                        <br><b>【江戸幕府の税制】</b>
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">本途物成</span></th>
+                                    <td>田畑・屋敷地に対する本年貢（米納）。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">小物成</span></th>
+                                    <td>山川・海の利用や、農業以外の副業にかかる雑税。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">伝馬役</span>・助郷役</th>
+                                    <td>街道輸送のために人馬を提供する労役負担。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">村請制</span></th>
+                                    <td>名主を中心に、村全体の責任で年貢を納入する制度。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br><b>【戦後の農地改革】</b><br>
+                        第一次（幣原内閣）がGHQの批判を受けたため、より徹底した第二次（吉田内閣）が実施され、地主の土地が強制買収されました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>比較項目</th>
+                                    <th>第一次改革（1946.2）</th>
+                                    <th>第二次改革（1946.10）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>在村地主の保有限度</th>
+                                    <td>5町歩</td>
+                                    <td><span class="fill-blank">1町歩</span>（北海道は4町歩）</td>
+                                </tr>
+                                <tr>
+                                    <th>譲渡方式</th>
+                                    <td>地主と小作人の直接交渉</td>
+                                    <td>国が<span class="fill-blank">強制買収</span>し、小作人に売り渡す</td>
+                                </tr>
+                                <tr>
+                                    <th>農地委員会の構成</th>
+                                    <td>地主5：自作5：小作5</td>
+                                    <td>地主3：自作2：<span class="fill-blank">小作5</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
