@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>013 家族制度史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+            text-align: center;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（横割りカード型表示） */
+            .summary-table, .summary-table tbody {
+                display: block; width: 100%;
+            }
+            .summary-table thead { display: none; }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 12px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .summary-table th {
+                border: none; border-right: 1px solid var(--border-color);
+                text-align: center; padding: 12px 8px; background-color: #f8fafc;
+                width: 35%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .summary-table td { border: none; padding: 12px; width: 65%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 013 家族制度史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">013 家族制度史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：古代〜中世 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="heart-handshake"></i>古代〜中世の婚姻・家族制度</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">平安時代 前期まで</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>妻問婚<rt>つまどいこん</rt></ruby></span></strong></p>
+                        <p>夫婦が同居せず、夫が妻の家に通う婚姻形態。この時代の婚姻は女性側の親族の意向が強く反映された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">平安時代 後期〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>婿入婚<rt>むこいりこん</rt></ruby></span></strong></p>
+                        <p>夫が妻の家に移り住む婚姻形態（妻方居住婚、招婿婚ともいう）。公家社会で一般化し、やがて庶民にも広まった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">鎌倉時代</span></div>
+                    <div class="timeline-content">
+                        <p><strong>武家社会の<span class="fill-blank">惣領制</span>と相続</strong></p>
+                        <p>一族の長である<span class="fill-blank">惣領</span>を中心に一族が結合する体制。親の財産を子に分ける<span class="fill-blank">分割相続</span>が行われ、女子の相続権も『御成敗式目』で認められていた。<br>しかし、次第に女子の相続権は本人一代限りの「<span class="fill-blank"><ruby>一期分<rt>いちごぶん</rt></ruby></span>」に制限されるようになった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">平安時代 後期〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">婿入婚</span>（むこいりこん）</strong></p>
+                        <p>夫が妻の家に移り住む婚姻形態（妻方居住婚、招婿婚ともいう）。公家社会で一般化し、やがて庶民にも広まった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">鎌倉時代</span></div>
+                    <div class="timeline-content">
+                        <p><strong>武家社会の<span class="fill-blank">惣領制</span>と相続</strong></p>
+                        <p>一族の長である<span class="fill-blank">惣領</span>を中心に一族が結合する体制。親の財産を子に分ける<span class="fill-blank">分割相続</span>が行われ、女子の相続権も『御成敗式目』で認められていた。<br>しかし、次第に女子の相続権は本人一代限りの「<span class="fill-blank">一期分</span>（いちごぶん）」に制限されるようになった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">室町時代以降（中世後期）</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">嫡子単独相続</span>と<span class="fill-blank">嫁入婚</span>の一般化</strong></p>
+                        <p>分割相続による所領の細分化や一族の弱体化を防ぐため、長男（嫡子）がすべてを相続する<span class="fill-blank">単独相続</span>が一般化した。<br>また、妻が夫の家に入る<span class="fill-blank">嫁入婚</span>（夫方居住婚）が武家社会に始まり一般化し、「家」の意識が強まった。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：近世 -->
+            <div class="section-title"><i data-lucide="users"></i>近世の家制度と女性の地位</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">江戸時代</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">家父長制</span>の確立</strong></p>
+                        <p>家長（父親）の権限が非常に強く、子に対する「勘当」などの権限を持った。家督は長男が継ぐ<span class="fill-blank">長子単独相続</span>が定着した。</p>
+                        
+                        <p style="margin-top: 16px;"><strong>男尊女卑の思想</strong></p>
+                        <p>儒教道徳の影響を受け、女性の地位は低く置かれた。<br>
+                        ・<strong><span class="fill-blank">三従の教</span></strong>：「家にあっては父に、嫁しては夫に、夫死してのちは子に従え」という教え。<span class="fill-blank">貝原益軒</span>の『<span class="fill-blank"><ruby>和俗童子訓<rt>わぞくどうじくん</rt></ruby></span>』や『<span class="fill-blank">女大学</span>』などで説かれた。</p>
+
+                        <p style="margin-top: 16px;"><strong>近世の離縁（離婚）制度</strong></p>
+                        <p>・夫からの離縁：妻を離別できる7つの理由（無子・嫉妬・多言など）である「<span class="fill-blank"><ruby>七去<rt>しちきょ</rt></ruby></span>」や、離縁状である「<span class="fill-blank"><ruby>三行半<rt>みくだりはん</rt></ruby></span>」を用いれば一方的に離縁できた。<br>
+                        ・妻からの離縁：原則として認められなかったが、駆け込めば離縁が成立する<span class="fill-blank">縁切寺</span>（駆込寺）が存在した。鎌倉の<span class="fill-blank">東慶寺</span>や上野の<span class="fill-blank">満徳寺</span>が有名である。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：近代〜現代 -->
+            <div class="section-title"><i data-lucide="scale"></i>近代〜現代の家族制度と民法</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1880年・1882年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>刑法の公布・施行</strong></p>
+                        <p><span class="fill-blank"><ruby>姦通罪<rt>かんつうざい</rt></ruby></span>が設けられ、妻の不倫のみが罰せられるという不平等な内容であった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1890年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">民法典論争</span>と旧民法の延期</strong></p>
+                        <p>フランス人のお雇い外国人<span class="fill-blank">ボアソナード</span>が起草したフランス法系の「旧民法」が公布された。しかし、個人主義的な内容が日本の国情（家族制度）に合わないとして激しい批判が起きた。特に<span class="fill-blank"><ruby>穂積八束<rt>ほづみやつか</rt></ruby></span>は「<span class="fill-blank">民法出デ、忠孝亡ブ</span>」という論文を発表し、結果として施行は延期された。</p>
+                        
+                        <p style="margin-top: 16px;"><strong><span class="fill-blank">教育勅語</span>の発布</strong></p>
+                        <p>天皇の言葉として教育の基本理念が示された。<span class="fill-blank"><ruby>元田永孚<rt>もとだながざね</rt></ruby></span>が起草し、<span class="fill-blank"><ruby>井上毅<rt>いのうえこわし</rt></ruby></span>が加筆した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1896年・1898年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">明治民法</span>（新民法）の施行</strong></p>
+                        <p>論争を経て修正された新民法が施行され、封建的な「<span class="fill-blank">家</span>」制度が法的に確立した。<br>
+                        家族の婚姻の同意権や居所指定権など、不服申し立てを認めない絶対的な「<span class="fill-blank">戸主権</span>」が定められ、家の財産や戸主権は長男が単独で受け継ぐ「<span class="fill-blank">家督相続</span>」とされた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1947年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>戦後の民法改正（新民法の成立）</strong></p>
+                        <p>日本国憲法の「個人の尊重」と「両性の本質的平等」の理念に基づき民法が改正された。<br>
+                        これにより「<span class="fill-blank">家制度</span>」や「<span class="fill-blank">戸主権</span>」は廃止され、家督相続から<span class="fill-blank">均分相続</span>へと移行した。また、刑法も改正され、姦通罪は廃止された。<br>
+                        （※なお、教育勅語は1948年に国会で排除・失効決議がなされた）</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>婚姻形態の変遷まとめ</h3>
+                        <br>日本の婚姻の形は、時代とともに「妻の家」から「夫の家」へと重心が移っていきました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>時期・特徴</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank"><ruby>妻問婚<rt>つまどいこん</rt></ruby></span></th>
+                                    <td>平安前期まで。同居せず、夫が妻の家に通う。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank"><ruby>婿入婚<rt>むこいりこん</rt></ruby></span></th>
+                                    <td>平安後期から。夫が妻の家に移り住む（妻方居住婚・招婿婚）。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank"><ruby>嫁入婚<rt>よめいりこん</rt></ruby></span></th>
+                                    <td>中世（室町）以降に一般化。妻が夫の家に入る（夫方居住婚）。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    
+                    <li>
+                        <h3>教育勅語（1890年）の理念</h3>
+                        <br>敗戦までの日本の教育の基本理念とされました。
+                        <br>前半では「父母ニ孝ニ、兄弟ニ友ニ、夫婦相和シ、朋友相信シ･･･」と<span class="fill-blank">儒教的徳目</span>を列挙しています。
+                        <br>そして後半では「一旦緩急アレハ義勇公ニ奉シ以テ天壌無窮ノ皇運ヲ扶翼スヘシ（もし国家の危機が起これば、身を捧げて天皇を助けよ）」と述べ、国家有事の際の<span class="fill-blank">滅私奉公</span>（忠君愛国）を説いています。
+                    </li>
+
+                    <li>
+                        <h3>明治民法における「家」制度</h3>
+                        <br>明治時代に法制化された「家」制度では、戸主（主に父親や長男）に絶大な権力（<span class="fill-blank">戸主権</span>）が与えられました。家族は戸主の同意なしには結婚や引越しができず、逆らえば家から追い出される（離籍）可能性もありました。この制度は、国家の頂点に天皇（家長）を置き、国民をその家族とする「家族国家観」と結びついていました。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
