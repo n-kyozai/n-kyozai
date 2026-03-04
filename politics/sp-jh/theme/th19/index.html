@@ -39,6 +39,7 @@
             line-height: 1.6;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* ルビのスタイル調整 */
@@ -126,6 +127,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            width: calc(100% - var(--sidebar-width));
         }
 
         .page-header {
@@ -178,14 +180,23 @@
             font-weight: bold;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank rt {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease;
+        }
         .fill-blank.revealed {
             background-color: var(--fill-revealed-bg);
             color: var(--fill-revealed-text);
             border-color: var(--fill-revealed-border);
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
         }
-        .fill-blank.revealed rt { color: var(--text-muted); }
+        .fill-blank.revealed rt {
+            opacity: 1;
+            visibility: visible;
+            color: var(--text-muted);
+            font-size: 0.6em;
+        }
 
         /* --- タイムライン（年表）スタイル --- */
         .timeline-container {
@@ -250,11 +261,31 @@
         .timeline-content p { margin-bottom: 8px; }
         .timeline-content p:last-child { margin-bottom: 0; }
 
-        /* --- テーブルスタイル（モバイルカード対応） --- */
+        /* --- テーブル（モバイルスクロール対応） --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        .scroll-hint {
+            display: none;
+            text-align: right;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(-4px); }
+            100% { opacity: 0.6; transform: translateX(0); }
+        }
         .summary-table {
             width: 100%;
+            min-width: 600px; /* 横スクロールを誘発する最小幅 */
             border-collapse: collapse;
-            margin-top: 12px; margin-bottom: 12px;
             font-size: 0.9rem;
             background-color: var(--surface-color);
         }
@@ -267,7 +298,7 @@
             background-color: #f1f5f9;
             color: var(--primary-color);
             font-weight: bold;
-            width: 30%;
+            width: 20%;
             text-align: center;
         }
         .summary-table td ul {
@@ -337,7 +368,7 @@
             .mobile-toggle-btn { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; }
+            .main-content { margin-left: 0; width: 100vw; }
             .page-header { padding-left: 60px; }
             .container { padding: 16px; width: 100%; }
             .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
@@ -345,30 +376,8 @@
             .timeline-container { padding-left: 20px; }
             .timeline-container::before { left: 4px; }
             .timeline-item::before { left: -21px; width: 10px; height: 10px; }
-            
-            /* モバイル用テーブル（横割りカード型表示） */
-            .summary-table, .summary-table tbody {
-                display: block; width: 100%;
-            }
-            .summary-table thead { display: none; }
-            .summary-table { border: none; background-color: transparent; }
-            .summary-table tr {
-                margin-bottom: 12px; border: 1px solid var(--border-color);
-                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
-                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-                display: flex;
-                flex-direction: row;
-                align-items: stretch;
-            }
-            .summary-table th {
-                border: none; border-right: 1px solid var(--border-color);
-                text-align: center; padding: 12px 8px; background-color: #f8fafc;
-                width: 35%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .summary-table td { border: none; padding: 12px; width: 65%; }
+            .theme-box { padding: 16px; }
+            .scroll-hint { display: block; }
         }
     </style>
 </head>
@@ -499,54 +508,57 @@
                     <li>
                         <h3>衆議院議員選挙法の変遷まとめ</h3>
                         <br>選挙権の拡大と、その時の内閣・選挙区制の変遷は頻出です。
-                        <table class="summary-table">
-                            <thead>
-                                <tr>
-                                    <th>公布年（内閣）</th>
-                                    <th>年齢・性別</th>
-                                    <th>納税資格（直接国税）</th>
-                                    <th>人口比</th>
-                                    <th>選挙区制</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>1889年<br>（<span class="fill-blank">黒田清隆</span>）</th>
-                                    <td>満25歳以上 男子</td>
-                                    <td><strong><span class="fill-blank">15円</span></strong>以上</td>
-                                    <td>1.1%</td>
-                                    <td><span class="fill-blank">小選挙区</span></td>
-                                </tr>
-                                <tr>
-                                    <th>1900年<br>（<span class="fill-blank">山県有朋②</span>）</th>
-                                    <td>満25歳以上 男子</td>
-                                    <td><strong><span class="fill-blank">10円</span></strong>以上</td>
-                                    <td>2.2%</td>
-                                    <td><span class="fill-blank">大選挙区</span></td>
-                                </tr>
-                                <tr>
-                                    <th>1919年<br>（<span class="fill-blank">原敬</span>）</th>
-                                    <td>満25歳以上 男子</td>
-                                    <td><strong><span class="fill-blank">3円</span></strong>以上</td>
-                                    <td>5.5%</td>
-                                    <td><span class="fill-blank">小選挙区</span></td>
-                                </tr>
-                                <tr>
-                                    <th>1925年<br>（<span class="fill-blank">加藤高明</span>）</th>
-                                    <td>満25歳以上 男子</td>
-                                    <td><strong><span class="fill-blank">撤廃</span></strong><br>（普通選挙法）</td>
-                                    <td>20.0%</td>
-                                    <td><span class="fill-blank">中選挙区</span></td>
-                                </tr>
-                                <tr>
-                                    <th>1945年<br>（<span class="fill-blank">幣原喜重郎</span>）</th>
-                                    <td>満<strong><span class="fill-blank">20歳</span></strong>以上 <strong>男女</strong></td>
-                                    <td>撤廃</td>
-                                    <td>約50%</td>
-                                    <td><span class="fill-blank">大選挙区</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="summary-table">
+                                <thead>
+                                    <tr>
+                                        <th>公布年（内閣）</th>
+                                        <th>年齢・性別</th>
+                                        <th>納税資格（直接国税）</th>
+                                        <th>人口比</th>
+                                        <th>選挙区制</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>1889年<br>（<span class="fill-blank">黒田清隆</span>）</th>
+                                        <td>満25歳以上 男子</td>
+                                        <td><strong><span class="fill-blank">15円</span></strong>以上</td>
+                                        <td>1.1%</td>
+                                        <td><span class="fill-blank">小選挙区</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>1900年<br>（<span class="fill-blank">山県有朋②</span>）</th>
+                                        <td>満25歳以上 男子</td>
+                                        <td><strong><span class="fill-blank">10円</span></strong>以上</td>
+                                        <td>2.2%</td>
+                                        <td><span class="fill-blank">大選挙区</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>1919年<br>（<span class="fill-blank">原敬</span>）</th>
+                                        <td>満25歳以上 男子</td>
+                                        <td><strong><span class="fill-blank">3円</span></strong>以上</td>
+                                        <td>5.5%</td>
+                                        <td><span class="fill-blank">小選挙区</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>1925年<br>（<span class="fill-blank">加藤高明</span>）</th>
+                                        <td>満25歳以上 男子</td>
+                                        <td><strong><span class="fill-blank">撤廃</span></strong><br>（普通選挙法）</td>
+                                        <td>20.0%</td>
+                                        <td><span class="fill-blank">中選挙区</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>1945年<br>（<span class="fill-blank">幣原喜重郎</span>）</th>
+                                        <td>満<strong><span class="fill-blank">20歳</span></strong>以上 <strong>男女</strong></td>
+                                        <td>撤廃</td>
+                                        <td>約50%</td>
+                                        <td><span class="fill-blank">大選挙区</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="scroll-hint"><i data-lucide="move-horizontal" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>表は横にスクロールできます</div>
                         <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 8px;">※被選挙権は、1889年当初は「満30歳以上の男子、直接国税15円以上」でしたが、1900年に納税資格が撤廃されました。</p>
                     </li>
                     
