@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>018 法制史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 30%;
+            text-align: center;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（横割りカード型表示） */
+            .summary-table, .summary-table tbody {
+                display: block; width: 100%;
+            }
+            .summary-table thead { display: none; }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 12px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .summary-table th {
+                border: none; border-right: 1px solid var(--border-color);
+                text-align: center; padding: 12px 8px; background-color: #f8fafc;
+                width: 35%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .summary-table td { border: none; padding: 12px; width: 65%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 018 法制史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">018 法制史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】古代の法制 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="scroll"></i>古代の法制（律令・格式の制定）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">668年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>近江令<rt>おうみりょう</rt></ruby></span></strong></p>
+                        <p>天智天皇の朝廷で中臣鎌足らが編纂したとされる。内容は不詳であり、その存在自体を否定する説もある。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">689年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>飛鳥浄御原令<rt>あすかきよみはらりょう</rt></ruby></span></strong></p>
+                        <p>天武天皇が編纂を命じ、持統天皇の時代に施行された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">701年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>大宝律令<rt>たいほうりつりょう</rt></ruby></span></strong></p>
+                        <p>文武天皇の命により、刑部親王（おさかべしんのう）や<span class="fill-blank">藤原不比等</span>らが編纂。律は刑法、令は行政法・民法にあたり、これによって日本の律令制が本格的に成立した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">718年・757年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>養老律令<rt>ようろうりつりょう</rt></ruby></span></strong></p>
+                        <p>718年に藤原不比等が編纂し、のちの757年に<span class="fill-blank">藤原仲麻呂</span>の主導で施行された。大宝律令の修正版である。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】中世・近世の法制 -->
+            <div class="section-title"><i data-lucide="swords"></i>中世・近世の法制（武家法と基本法典）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1232年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">御成敗式目</span>（貞永式目）</strong></p>
+                        <p>鎌倉幕府第3代執権の<span class="fill-blank">北条泰時</span>が制定した日本最初の武家法（51カ条）。源頼朝以来の先例（右大将家の例）や、武家社会の道理を基準として裁判の公平を期した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1336年〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">建武以来追加</span></strong></p>
+                        <p>室町幕府を開いた<span class="fill-blank">足利尊氏</span>が発布した建武式目（17カ条の政治方針）以降に、幕府が出した単行法令の総称。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">戦国時代</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">分国法</span>（家法）</strong></p>
+                        <p>戦国大名が領国支配のために制定した基本法。<span class="fill-blank">喧嘩両成敗</span>などの厳しい規定を設けた。<br>
+                        （例：今川氏の『今川仮名目録』、武田氏の『甲州法度之次第』、伊達氏の『塵芥集』など）</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1615年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">武家諸法度</span>（元和令）と<span class="fill-blank">禁中並公家諸法度</span></strong></p>
+                        <p>江戸幕府第2代将軍・徳川秀忠の時に発布。武家諸法度は僧の<span class="fill-blank">金地院崇伝</span>（以心崇伝）が起草し、大名統制の基本方針となった。同時に朝廷・公家を統制する法度も制定された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1742年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">公事方御定書</span></strong></p>
+                        <p>第8代将軍・<span class="fill-blank">徳川吉宗</span>の命により編纂された。上下2巻からなり、下巻の「御定書百箇条」は裁判の基準や刑罰を定めた基本法典となった。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】近代の法制 -->
+            <div class="section-title"><i data-lucide="landmark"></i>近代の法制（大日本帝国憲法と諸法典）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1880年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>刑法・治罪法の公布</strong></p>
+                        <p>フランス人のお雇い外国人である<span class="fill-blank">ボアソナード</span>らが起草し、近代的な法体系の整備が始まった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1889年</span><span class="timeline-cabinet">黒田清隆内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">大日本帝国憲法</span>の発布</strong></p>
+                        <p>伊藤博文らが君権の強い<span class="fill-blank">プロイセン</span>憲法を模範として起草し、<span class="fill-blank">枢密院</span>の審議を経て、天皇が国民に与える「<span class="fill-blank">欽定憲法</span>」として発布された（翌年施行）。<br>同時に、皇室関係の法律である<span class="fill-blank">皇室典範</span>も制定された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1890年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">民法典論争</span></strong></p>
+                        <p>ボアソナードが起草した旧民法に対し、「個人主義的であり日本の家族制度に合わない」として激しい論争が起きた。法学者の<span class="fill-blank"><ruby>穂積八束<rt>ほづみやつか</rt></ruby></span>は「<span class="fill-blank">民法出デ、忠孝亡ブ</span>」と主張し、結果的に旧民法の施行は延期された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1898年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">明治民法</span>（新民法）の施行</strong></p>
+                        <p>論争を経て修正された新民法が施行され、戸主の権限（戸主権）が強い家父長制的な「<span class="fill-blank">家</span>」制度が法的に確立した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>三大格式と注釈書（古代）</h3>
+                        <br>律令制を補足・修正する「格」と、施行細則である「式」をまとめたものを格式（きゃくしき）と呼びます。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>名称（成立年・天皇）</th>
+                                    <th>編纂者・特徴</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">弘仁格式</span>（820年・嵯峨）</th>
+                                    <td><span class="fill-blank">藤原冬嗣</span>らが編纂。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">貞観格式</span>（869年・清和）</th>
+                                    <td><span class="fill-blank">藤原良相</span>（よしみ）・藤原氏宗らが編纂。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">延喜格式</span>（907年・醍醐）</th>
+                                    <td><span class="fill-blank">藤原時平</span>・藤原忠平らが編纂。<span class="fill-blank">延喜式</span>はほぼ完全な形で現存している。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br><b>【律令の注釈書・法令集】</b><br>
+                        ・<strong><span class="fill-blank"><ruby>令義解<rt>りょうのぎげ</rt></ruby></span></strong>（833年）：清原夏野らが編集した養老令の<strong>官撰</strong>（公的）注釈書。<br>
+                        ・<strong><span class="fill-blank"><ruby>令集解<rt>りょうのしゅうげ</rt></ruby></span></strong>（9世紀後期）：<span class="fill-blank"><ruby>惟宗直本<rt>これむねのなおもと</rt></ruby></span>が編集した養老令の<strong>私撰</strong>（私的）注釈書。<br>
+                        ・<strong><span class="fill-blank"><ruby>類聚三代格<rt>るいじゅうさんだいきゃく</rt></ruby></span></strong>（11世紀）：上記の三大格式の「格」だけを分類・編集した法令集。
+                    </li>
+                    
+                    <li>
+                        <h3>自由民権運動期の私擬憲法（憲法草案）</h3>
+                        <br>国会開設の運動が高まる中、民間でも様々な理想の国家像を託した憲法草案（私擬憲法）が作成されました。
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th>『<span class="fill-blank">東洋大日本国国憲按</span>』</th>
+                                    <td>立志社の<span class="fill-blank">植木枝盛</span>が起草。国民の抵抗権や革命権を認めるなど、非常に民主的・急進的な内容であった。</td>
+                                </tr>
+                                <tr>
+                                    <th>『<span class="fill-blank">私擬憲法案</span>』</th>
+                                    <td>福沢諭吉らが結成した<span class="fill-blank">交詢社</span>（こうじゅんしゃ）が作成。イギリス流の議院内閣制を構想した。</td>
+                                </tr>
+                                <tr>
+                                    <th>『五日市憲法草案』</th>
+                                    <td>現在の東京都あきる野市（五日市）で、千葉卓三郎らが起草。基本的人権の尊重を重視した。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 8px;">※このほか、政府（元老院）が起草した『日本国憲按』などもありましたが、伊藤博文らの反対で退けられました。</p>
+                    </li>
+
+                    <li>
+                        <h3>大日本帝国憲法をめぐる戦前の政治問題</h3>
+                        <br>大日本帝国憲法は「不磨の大典」として改正論議はほぼありませんでしたが、その解釈や運用をめぐってしばしば政争が発生しました。
+                        <ul>
+                            <li><strong><span class="fill-blank">枢密院</span>との対立（1927年）</strong>：若槻内閣が台湾銀行を救済するための緊急勅令案を出したが、憲法の条項に合致しないとして枢密院に否決され、内閣総辞職に追い込まれた。</li>
+                            <li><strong>不戦条約問題（1928年）</strong>：田中義一内閣が調印したパリ不戦条約の「<span class="fill-blank">人民ノ名ニ於テ</span>」という文言が、天皇主権を犯していると批判され混乱が生じた。</li>
+                            <li><strong>統帥権干犯問題（1930年）</strong>：浜口雄幸内閣がロンドン海軍軍縮条約に調印した行為が、天皇の軍の統帥大権（統帥権）を犯すものであると軍部や右翼から非難された。</li>
+                            <li><strong><span class="fill-blank">天皇機関説</span>問題（1935年）</strong>：岡田内閣の時代、長年憲法解釈の主流であった<span class="fill-blank">美濃部達吉</span>の天皇機関説が右翼や軍部から攻撃され、政府は「国体明徴声明」を出してこれを排撃した。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
