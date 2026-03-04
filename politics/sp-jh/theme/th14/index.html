@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>014 女性史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+            text-align: center;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（横割りカード型表示） */
+            .summary-table, .summary-table tbody {
+                display: block; width: 100%;
+            }
+            .summary-table thead { display: none; }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 12px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .summary-table th {
+                border: none; border-right: 1px solid var(--border-color);
+                text-align: center; padding: 12px 8px; background-color: #f8fafc;
+                width: 35%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .summary-table td { border: none; padding: 12px; width: 65%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 014 女性史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">014 女性史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：古代〜近世 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="crown"></i>古代〜近世の女性天皇</div>
+            <p style="margin-bottom: 16px; color: var(--text-color);">日本の歴史上、8人10代の女性天皇が存在し、そのうち6人8代が6世紀末から8世紀（飛鳥〜奈良時代）に集中しています。<br>※現行の皇室典範では、皇位継承は「皇統に属する男系の男子」に限定されています。</p>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">飛鳥〜奈良時代</span></div>
+                    <div class="timeline-content">
+                        <p>・<strong><span class="fill-blank"><ruby>推古<rt>すいこ</rt></ruby>天皇</span></strong>（在位 592〜628年）<br>
+                           ・<strong><span class="fill-blank"><ruby>皇極<rt>こうぎょく</rt></ruby>天皇</span></strong>（在位 642〜645年）<br>
+                           ・<strong><span class="fill-blank"><ruby>斉明<rt>さいめい</rt></ruby>天皇</span></strong>（在位 655〜661年）※皇極の<span class="fill-blank"><ruby>重祚<rt>ちょうそ</rt></ruby></span><br>
+                           ・<strong><span class="fill-blank"><ruby>持統<rt>じとう</rt></ruby>天皇</span></strong>（称制 686年〜、在位 690〜697年）<br>
+                           ・<strong><span class="fill-blank"><ruby>元明<rt>げんめい</rt></ruby>天皇</span></strong>（在位 707〜715年）<br>
+                           ・<strong><span class="fill-blank"><ruby>元正<rt>げんしょう</rt></ruby>天皇</span></strong>（在位 715〜724年）<br>
+                           ・<strong><span class="fill-blank"><ruby>孝謙<rt>こうけん</rt></ruby>天皇</span></strong>（在位 749〜758年）<br>
+                           ・<strong><span class="fill-blank"><ruby>称徳<rt>しょうとく</rt></ruby>天皇</span></strong>（在位 764〜770年）※孝謙の<span class="fill-blank"><ruby>重祚<rt>ちょうそ</rt></ruby></span></p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">江戸時代</span></div>
+                    <div class="timeline-content">
+                        <p>・<strong><span class="fill-blank"><ruby>明正<rt>めいしょう</rt></ruby>天皇</span></strong>（在位 1629〜1643年）※徳川秀忠の外孫<br>
+                           ・<strong><span class="fill-blank"><ruby>後桜町<rt>ごさくらまち</rt></ruby>天皇</span></strong>（在位 1762〜1770年）</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：近・現代の出来事 -->
+            <div class="section-title"><i data-lucide="calendar"></i>近・現代の女性をめぐる出来事</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1871年</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank"><ruby>津田梅子<rt>つだうめこ</rt></ruby></span>・山川捨松らが岩倉遣外使節に同行し渡米（最初の女子留学生）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1875年</span></div>
+                    <div class="timeline-content">
+                        <p>女子教員養成のため東京に<span class="fill-blank">女子師範学校</span>設立（のち各府県に拡大）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1886年</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank"><ruby>矢島楫子<rt>やじまかじこ</rt></ruby></span>らが<span class="fill-blank"><ruby>矯風会<rt>きょうふうかい</rt></ruby></span>を設立。廃娼運動などに取り組む。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1899年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">高等女学校令</span></strong>：女子中等教育の制度化（4年制）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1901年</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank"><ruby>奥村五百子<rt>おくむらいおこ</rt></ruby></span>らが愛国婦人会設立（兵士の留守家族や遺族を援助）。<br>
+                        この頃、女子英学塾（津田梅子）・日本女子大学校（成瀬仁蔵）が設立される。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1903年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">専門学校令</span></strong>：高等教育機関の制度化（3〜4年制）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1911年</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank"><ruby>平塚らいてう<rt>ひらつからいてう</rt></ruby></span>らが女性解放のための文学団体として<span class="fill-blank">青鞜社</span>を設立。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1920年</span></div>
+                    <div class="timeline-content">
+                        <p>平塚らいてう・<span class="fill-blank"><ruby>市川房枝<rt>いちかわふさえ</rt></ruby></span>らが<span class="fill-blank">新婦人協会</span>を設立。<br>
+                        → 治安警察法第5条の「女子の政治結社・政治集会禁止」条項の一部撤廃に成功（1922年）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1921年</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank"><ruby>山川菊栄<rt>やまかわきくえ</rt></ruby></span>・<span class="fill-blank"><ruby>伊藤野枝<rt>いとうのえ</rt></ruby></span>らが女性の社会主義団体である<span class="fill-blank"><ruby>赤瀾会<rt>せきらんかい</rt></ruby></span>を設立。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1924年</span></div>
+                    <div class="timeline-content">
+                        <p>市川ら<span class="fill-blank">婦人参政権獲得期成同盟会</span>設立（翌年、婦選獲得同盟に改称）。<br>
+                        ※大正期には教師・タイピスト・電話交換手などの<strong><span class="fill-blank">職業婦人</span></strong>が登場。<br>
+                        ※昭和初期には最新の流行に乗った女性である<strong><span class="fill-blank">モダンガール</span></strong>（モガ）が登場。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1945年・1946年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>女性参政権の実現</strong><br>
+                        1945年に衆議院議員選挙法が改正され、女性参政権が実現。1946年の戦後初の総選挙で<span class="fill-blank">39名</span>の女性候補者が当選した。<br>
+                        また、同年に公布された日本国憲法により男女平等が謳われ、翌年の刑法・民法改正につながった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1947年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">教育基本法</span></strong>制定（教育の機会均等・義務教育9年・男女共学など）。<br>
+                        <strong><span class="fill-blank">学校教育法</span></strong>制定（六・三・三・四制。翌年、新制女子大学が発足）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1979年</span></div>
+                    <div class="timeline-content">
+                        <p>国連が<span class="fill-blank">女子差別撤廃条約</span>を採択（日本は1985年に批准）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1985年・1997年</span></div>
+                    <div class="timeline-content">
+                        <p>1985年に<strong><span class="fill-blank">男女雇用機会均等法</span></strong>公布（雇用・配置・昇進などの男女平等）。<br>
+                        1997年に同法が改正され、男女平等の徹底とセクハラ防止が規定された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1999年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">男女共同参画社会基本法</span></strong>成立（男女が対等な社会の構成員となることを目指す）。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>各分野で活躍した近・現代の女性たち</h3>
+                        <br>明治時代以降、様々な分野で自立し、社会に影響を与えた女性たちが登場しました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>分野</th>
+                                    <th>人物名と主な功績</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>自由民権運動</th>
+                                    <td>
+                                        ・<strong><span class="fill-blank"><ruby>岸田俊子<rt>きしだとしこ</rt></ruby></span></strong>（中島俊子）：夫・中島信行とともに自由民権運動に参加。<br>
+                                        ・<strong><span class="fill-blank"><ruby>景山英子<rt>かげやまひでこ</rt></ruby></span></strong>（福田英子）：自由民権運動に加わり、大阪事件で入獄。社会主義運動にも参加。自叙伝に『<span class="fill-blank"><ruby>妾の半生涯<rt>わらわのはんしょうがい</rt></ruby></span>』。
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>教育</th>
+                                    <td>
+                                        ・<strong><span class="fill-blank"><ruby>津田梅子<rt>つだうめこ</rt></ruby></span></strong>：1900年に女子英学塾（現津田塾大学）を設立。<br>
+                                        ・<strong><span class="fill-blank">羽仁もと子</span></strong>：自由学園を設立して自由教育を行う。
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>文学・芸術</th>
+                                    <td>
+                                        ・<strong><span class="fill-blank"><ruby>樋口一葉<rt>ひぐちいちよう</rt></ruby></span></strong>：作家。代表作『たけくらべ』『にごりえ』。<br>
+                                        ・<strong><span class="fill-blank"><ruby>与謝野晶子<rt>よさのあきこ</rt></ruby></span></strong>：歌人。夫・鉄幹と雑誌『明星』を主宰。歌集『みだれ髪』。日露反戦詩「君死にたまふこと勿れ」。<br>
+                                        ・<strong><span class="fill-blank"><ruby>宮本百合子<rt>みやもとゆりこ</rt></ruby></span></strong>（中条百合子）：プロレタリア作家。代表作『伸子』。<br>
+                                        ・<strong><span class="fill-blank"><ruby>松井須磨子<rt>まついすまこ</rt></ruby></span></strong>：女優。『人形の家』のノラ役。島村抱月と芸術座を結成。<br>
+                                        ・<strong><span class="fill-blank"><ruby>三浦環<rt>みうらたまき</rt></ruby></span></strong>（柴田環）：ソプラノ歌手。オペラ『蝶々夫人』で世界的名声。
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>女性解放<br>社会主義運動</th>
+                                    <td>
+                                        ・<strong><span class="fill-blank"><ruby>管野スガ<rt>かんのすが</rt></ruby></span></strong>：社会主義運動に参加。大逆事件で幸徳秋水とともに死刑。<br>
+                                        ・<strong><span class="fill-blank"><ruby>平塚らいてう<rt>ひらつからいてう</rt></ruby></span></strong>：青鞜社・新婦人協会を設立。女性参政権獲得を推進。<br>
+                                        ・<strong><span class="fill-blank"><ruby>市川房枝<rt>いちかわふさえ</rt></ruby></span></strong>：新婦人協会、婦人参政権獲得期成同盟会を結成。<br>
+                                        ・<strong><span class="fill-blank">奥むめお</span></strong>：社会事業や女性運動で活躍。戦後は主婦連会長・参議院議員。<br>
+                                        ・<strong><span class="fill-blank"><ruby>山川菊栄<rt>やまかわきくえ</rt></ruby></span></strong>：赤瀾会を結成。戦後、初の労働省婦人少年局長。<br>
+                                        ・<strong><span class="fill-blank"><ruby>伊藤野枝<rt>いとうのえ</rt></ruby></span></strong>：青鞜社に参加。夫の大杉栄とともに関東大震災時に憲兵隊により殺害される（甘粕事件）。
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
