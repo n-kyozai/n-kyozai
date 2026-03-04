@@ -10,12 +10,12 @@
         /* --- カラーパレット --- */
         :root {
             --primary-color: #2c3e50;
-            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --accent-color: #0ea5e9;
             --bg-color: #f8fafc;
             --surface-color: #ffffff;
             --text-color: #334155;
             --text-muted: #64748b;
-            --border-color: #cbd5e1; /* 枠線・コネクタ用 */
+            --border-color: #cbd5e1;
             
             --nav-hover-bg: #f1f5f9;
             --nav-active-bg: #e0f2fe;
@@ -28,6 +28,11 @@
             
             --sidebar-width: 200px;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+            /* 政党カラー */
+            --color-jiyu: #ef4444; /* 自由党系：赤 */
+            --color-kaishin: #3b82f6; /* 改進・民政党系：青 */
+            --color-shakai: #10b981; /* 社会党系：緑 */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,6 +44,7 @@
             line-height: 1.6;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         ruby { ruby-align: center; }
@@ -124,6 +130,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            width: calc(100% - var(--sidebar-width));
         }
 
         .page-header {
@@ -176,7 +183,6 @@
             font-weight: bold;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        /* テープに隠れている時はルビも完全に隠す */
         .fill-blank rt {
             opacity: 0;
             visibility: hidden;
@@ -188,7 +194,6 @@
             border-color: var(--fill-revealed-border);
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
         }
-        /* 表示された時にルビも表示する */
         .fill-blank.revealed rt {
             opacity: 1;
             visibility: visible;
@@ -196,22 +201,113 @@
             font-size: 0.6em;
         }
 
-        /* --- 政党変遷フローチャート（CSS図形描写） --- */
+        /* ====================================================
+           政党変遷フローチャート（縮小表示＆拡大パン機能付き）
+           ==================================================== */
         .flow-chart-wrapper {
             background: white;
-            padding: 30px 20px;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 40px;
-            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            margin-bottom: 32px;
+            position: relative;
             box-shadow: var(--shadow);
+            width: 100%;
         }
+        
+        /* 通常時のスクロールエリア（はみ出しを隠す） */
+        .flow-tree-scroll-area {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* スケール（縮小）用のコンテナ */
+        .flow-tree-scale-container {
+            transform-origin: top left;
+            /* JSで scale() と margin-left を動的に適用します */
+        }
+
+        /* ツリー本体（固定幅） */
         .flow-tree {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 700px; /* スクロール担保 */
+            width: 720px; /* 固定幅 */
+            padding: 40px 20px;
+            background: white;
         }
+
+        /* 拡大ボタン */
+        .expand-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .expand-btn:hover { background: #f8fafc; color: var(--accent-color); }
+        .close-fullscreen-btn { display: none; }
+
+        /* 拡大（フルスクリーン）時のスタイル */
+        .flow-chart-wrapper.is-fullscreen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 3000;
+            background: rgba(0,0,0,0.85);
+            margin: 0;
+            border-radius: 0;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .flow-chart-wrapper.is-fullscreen .flow-tree-scroll-area {
+            overflow: auto; /* スクロール可能にする */
+            background: var(--bg-color);
+            border-radius: 12px;
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: grab;
+        }
+        .flow-chart-wrapper.is-fullscreen .flow-tree-scroll-area:active {
+            cursor: grabbing;
+        }
+        .flow-chart-wrapper.is-fullscreen .flow-tree-scale-container {
+            transform: none !important; /* 縮小解除 */
+            margin: 0 auto !important; /* 中央寄せ */
+        }
+        .flow-chart-wrapper.is-fullscreen .expand-btn { display: none; }
+        .flow-chart-wrapper.is-fullscreen .close-fullscreen-btn {
+            display: flex;
+            position: absolute;
+            top: 20px; right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            width: 44px; height: 44px;
+            align-items: center; justify-content: center;
+            cursor: pointer;
+            z-index: 3010;
+        }
+        .flow-chart-wrapper.is-fullscreen .close-fullscreen-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        /* ツリー内部のパーツデザイン */
         .flow-row {
             display: flex;
             justify-content: center;
@@ -227,11 +323,11 @@
             padding: 12px 16px;
             border-radius: 8px;
             border: 2px solid #ccc;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: bold;
             text-align: center;
             background: #fff;
-            width: 200px;
+            width: 220px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             position: relative;
             z-index: 2;
@@ -240,18 +336,17 @@
             display: block;
             font-weight: normal;
             color: var(--text-muted);
-            font-size: 0.75rem;
-            margin-top: 4px;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            line-height: 1.4;
         }
-        /* 政党カラーテーマ */
-        .p-node.jiyu { border-color: #ef4444; color: #b91c1c; } /* 自由・政友会系（赤） */
-        .p-node.kaishin { border-color: #3b82f6; color: #1d4ed8; } /* 改進・民政党系（青） */
-        .p-node.shakai { border-color: #10b981; color: #047857; } /* 社会・無産政党系（緑） */
-        .p-node.gov { border-color: #f59e0b; color: #b45309; background-color: #fffbeb; } /* 翼賛会（黄） */
-        .p-node.jimin { border-color: #6366f1; color: #4338ca; background-color: #eef2ff; } /* 自民党（紫） */
-        .p-node.mix { border-color: #8b5cf6; color: #4c1d95; } /* 合流・連立 */
+        .p-node.jiyu { border-color: var(--color-jiyu); color: #b91c1c; } 
+        .p-node.kaishin { border-color: var(--color-kaishin); color: #1d4ed8; } 
+        .p-node.shakai { border-color: var(--color-shakai); color: #047857; } 
+        .p-node.gov { border-color: #f59e0b; color: #b45309; background-color: #fffbeb; }
+        .p-node.jimin { border-color: #6366f1; color: #4338ca; background-color: #eef2ff; }
+        .p-node.mix { border-color: #8b5cf6; color: #4c1d95; }
 
-        /* 縦線コネクタ */
         .vline {
             width: 2px;
             height: 24px;
@@ -261,8 +356,7 @@
         .vline.arrow::after {
             content: '';
             position: absolute;
-            bottom: -2px;
-            left: -5px;
+            bottom: -2px; left: -5px;
             border-width: 6px 6px 0;
             border-style: solid;
             border-color: var(--border-color) transparent transparent transparent;
@@ -270,58 +364,29 @@
         .vline.long { height: 48px; }
         .vline.xl { height: 72px; }
 
-        /* 合流コネクタ (2つのノードを1つに) */
-        .merge-path {
-            display: flex;
-            width: 260px; /* node-wrapperの幅に合わせる */
-            height: 24px;
-        }
-        .merge-left {
-            flex: 1;
-            border-top: 2px solid var(--border-color);
-            border-right: 2px solid var(--border-color);
-            border-top-left-radius: 10px;
-        }
-        .merge-right {
-            flex: 1;
-            border-top: 2px solid var(--border-color);
-            border-top-right-radius: 10px;
-        }
+        .merge-path { display: flex; width: 260px; height: 24px; }
+        .merge-left { flex: 1; border-top: 2px solid var(--border-color); border-right: 2px solid var(--border-color); border-top-left-radius: 10px; }
+        .merge-right { flex: 1; border-top: 2px solid var(--border-color); border-top-right-radius: 10px; }
 
-        /* 分裂コネクタ (1つのノードを2つに) */
-        .split-path {
-            display: flex;
-            width: 260px;
-            height: 24px;
-        }
-        .split-left {
-            flex: 1;
-            border-bottom: 2px solid var(--border-color);
-            border-right: 2px solid var(--border-color);
-            border-bottom-left-radius: 10px;
-        }
-        .split-right {
-            flex: 1;
-            border-bottom: 2px solid var(--border-color);
-            border-bottom-right-radius: 10px;
-        }
+        .split-path { display: flex; width: 260px; height: 24px; }
+        .split-left { flex: 1; border-bottom: 2px solid var(--border-color); border-right: 2px solid var(--border-color); border-bottom-left-radius: 10px; }
+        .split-right { flex: 1; border-bottom: 2px solid var(--border-color); border-bottom-right-radius: 10px; }
 
-        /* 時代区切りの点線 */
         .era-divider {
             width: 100%;
             border-top: 2px dashed #cbd5e1;
-            margin: 10px 0;
+            margin: 20px 0 10px 0;
             position: relative;
             text-align: center;
         }
         .era-divider span {
             background: white;
-            padding: 0 10px;
+            padding: 0 12px;
             color: #94a3b8;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
             position: relative;
-            top: -10px;
+            top: -12px;
         }
 
         /* --- タイムライン（年表） --- */
@@ -377,11 +442,18 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        /* --- テーブル --- */
+        /* --- テーブル（モバイルスクロール対応） --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
         .summary-table {
             width: 100%;
+            min-width: 500px;
             border-collapse: collapse;
-            margin-top: 12px;
             font-size: 0.9rem;
             background-color: var(--surface-color);
         }
@@ -454,12 +526,10 @@
             .mobile-toggle-btn { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; }
+            .main-content { margin-left: 0; width: 100vw; }
             .page-header { padding-left: 60px; }
-            
-            .summary-table tr { display: flex; flex-direction: column; }
-            .summary-table th { width: 100%; border-bottom: none; text-align: left;}
-            .summary-table td { width: 100%; }
+            .container { padding: 16px; width: 100%; }
+            .theme-box { padding: 16px; }
         }
     </style>
 </head>
@@ -497,132 +567,144 @@
 
             <!-- 【1】視覚的フロー：主要政党の移り変わり -->
             <div class="section-title"><i data-lucide="git-branch"></i>主要政党の変遷フローチャート（明治〜現代）</div>
-            <div class="flow-chart-wrapper">
-                <div class="flow-tree">
-                    
-                    <!-- 自由民権期 -->
-                    <div class="era-divider"><span>明治：自由民権期 (1881〜)</span></div>
-                    <div class="flow-row">
-                        <div class="flow-node-wrapper">
-                            <div class="p-node jiyu">自由党 (1881)<br><small>板垣退助</small></div>
-                            <div class="vline arrow"></div>
-                            <div class="p-node jiyu">自由党 (再興)</div>
-                            <div class="vline"></div>
-                        </div>
-                        <div class="flow-node-wrapper">
-                            <div class="p-node kaishin">立憲改進党 (1882)<br><small>大隈重信</small></div>
-                            <div class="vline arrow"></div>
-                            <div class="p-node kaishin">進歩党 (1896)</div>
-                            <div class="vline"></div>
-                        </div>
-                    </div>
+            
+            <div class="flow-chart-wrapper" id="flowChartWrapper">
+                <button class="expand-btn" id="expandBtn" aria-label="拡大表示">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px; margin-right: 6px;"></i>拡大して見る
+                </button>
+                <button class="close-fullscreen-btn" id="closeFullscreenBtn" aria-label="閉じる">
+                    <i data-lucide="x"></i>
+                </button>
 
-                    <!-- 憲政党（合流） -->
-                    <div class="flow-row">
-                        <div class="merge-path">
-                            <div class="merge-left"></div>
-                            <div class="merge-right"></div>
-                        </div>
-                    </div>
-                    <div class="flow-row">
-                        <div class="flow-node-wrapper" style="width: 100%;">
-                            <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
-                            <div class="p-node mix" style="width: 250px;">憲政党 (1898)<br><small>日本初の政党内閣（隈板内閣）</small></div>
-                            <div class="vline"></div>
-                        </div>
-                    </div>
+                <div class="flow-tree-scroll-area" id="flowTreeScrollArea">
+                    <div class="flow-tree-scale-container" id="flowTreeScaleContainer">
+                        <div class="flow-tree" id="mainFlowTree">
+                            
+                            <!-- 自由民権期 -->
+                            <div class="era-divider"><span>明治：自由民権期 (1881〜)</span></div>
+                            <div class="flow-row">
+                                <div class="flow-node-wrapper">
+                                    <div class="p-node jiyu"><span class="fill-blank">自由党</span> (1881)<br><small>板垣退助</small></div>
+                                    <div class="vline arrow"></div>
+                                    <div class="p-node jiyu">自由党 (再興)</div>
+                                    <div class="vline"></div>
+                                </div>
+                                <div class="flow-node-wrapper">
+                                    <div class="p-node kaishin"><span class="fill-blank">立憲改進党</span> (1882)<br><small>大隈重信</small></div>
+                                    <div class="vline arrow"></div>
+                                    <div class="p-node kaishin">進歩党 (1896)</div>
+                                    <div class="vline"></div>
+                                </div>
+                            </div>
 
-                    <!-- 分裂（政友会と民政党へ） -->
-                    <div class="flow-row">
-                        <div class="split-path">
-                            <div class="split-left"></div>
-                            <div class="split-right"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="era-divider"><span>大正・昭和戦前：二大政党時代 (1900〜1930年代)</span></div>
-                    <div class="flow-row">
-                        <div class="flow-node-wrapper">
-                            <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
-                            <div class="p-node jiyu">立憲政友会 (1900)<br><small>伊藤博文・原敬</small></div>
-                            <div class="vline xl"></div>
-                        </div>
-                        <div class="flow-node-wrapper">
-                            <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
-                            <div class="p-node kaishin">憲政本党</div>
-                            <div class="vline arrow"></div>
-                            <div class="p-node kaishin">立憲国民党 → 憲政会</div>
-                            <div class="vline arrow"></div>
-                            <div class="p-node kaishin">立憲民政党 (1927)<br><small>浜口雄幸・若槻礼次郎</small></div>
-                            <div class="vline"></div>
-                        </div>
-                    </div>
+                            <!-- 憲政党（合流） -->
+                            <div class="flow-row">
+                                <div class="merge-path">
+                                    <div class="merge-left"></div>
+                                    <div class="merge-right"></div>
+                                </div>
+                            </div>
+                            <div class="flow-row">
+                                <div class="flow-node-wrapper" style="width: 100%;">
+                                    <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
+                                    <div class="p-node mix" style="width: 250px;"><span class="fill-blank">憲政党</span> (1898)<br><small>日本初の政党内閣（<span class="fill-blank">隈板内閣</span>）</small></div>
+                                    <div class="vline"></div>
+                                </div>
+                            </div>
 
-                    <!-- 大政翼賛会（合流） -->
-                    <div class="flow-row">
-                        <div class="merge-path">
-                            <div class="merge-left"></div>
-                            <div class="merge-right"></div>
-                        </div>
-                    </div>
-                    <div class="era-divider"><span>第二次世界大戦期 (1940〜)</span></div>
-                    <div class="flow-row">
-                        <div class="flow-node-wrapper" style="width: 100%;">
-                            <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
-                            <div class="p-node gov" style="width: 250px;">大政翼賛会 (1940)<br><small>近衛文麿（全政党が解散し合流）</small></div>
-                            <div class="vline"></div>
-                        </div>
-                    </div>
+                            <!-- 分裂（政友会と民政党へ） -->
+                            <div class="flow-row">
+                                <div class="split-path">
+                                    <div class="split-left"></div>
+                                    <div class="split-right"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="era-divider"><span>大正・昭和戦前：二大政党時代 (1900〜1930年代)</span></div>
+                            <div class="flow-row">
+                                <div class="flow-node-wrapper">
+                                    <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
+                                    <div class="p-node jiyu"><span class="fill-blank">立憲政友会</span> (1900)<br><small>伊藤博文・原敬</small></div>
+                                    <div class="vline xl"></div>
+                                </div>
+                                <div class="flow-node-wrapper">
+                                    <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
+                                    <div class="p-node kaishin">憲政本党</div>
+                                    <div class="vline arrow"></div>
+                                    <div class="p-node kaishin">立憲国民党 → 憲政会</div>
+                                    <div class="vline arrow"></div>
+                                    <div class="p-node kaishin"><span class="fill-blank">立憲民政党</span> (1927)<br><small>浜口雄幸・若槻礼次郎</small></div>
+                                    <div class="vline"></div>
+                                </div>
+                            </div>
 
-                    <!-- 戦後の再編 -->
-                    <div class="era-divider"><span>戦後初期 (1945〜)</span></div>
-                    <div class="flow-row">
-                        <div class="flow-node-wrapper">
-                            <div class="p-node jiyu">日本自由党<br><small>吉田茂</small></div>
-                            <div class="vline"></div>
-                        </div>
-                        <div class="flow-node-wrapper">
-                            <div class="p-node kaishin">日本進歩党<br><small>（のちの日本民主党）</small></div>
-                            <div class="vline"></div>
-                        </div>
-                        <div class="flow-node-wrapper">
-                            <div class="p-node shakai">日本社会党<br><small>片山哲（1947年連立内閣）</small></div>
-                            <div class="vline"></div>
-                        </div>
-                    </div>
+                            <!-- 大政翼賛会（合流） -->
+                            <div class="flow-row">
+                                <div class="merge-path">
+                                    <div class="merge-left"></div>
+                                    <div class="merge-right"></div>
+                                </div>
+                            </div>
+                            <div class="era-divider"><span>第二次世界大戦期 (1940〜)</span></div>
+                            <div class="flow-row">
+                                <div class="flow-node-wrapper" style="width: 100%;">
+                                    <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
+                                    <div class="p-node gov" style="width: 250px;"><span class="fill-blank">大政翼賛会</span> (1940)<br><small>近衛文麿（全政党が解散し合流）</small></div>
+                                    <div class="vline"></div>
+                                </div>
+                            </div>
 
-                    <!-- 1955年体制 -->
-                    <div class="flow-row">
-                        <div class="merge-path" style="width: 260px; margin-left: -260px;">
-                            <div class="merge-left"></div>
-                            <div class="merge-right"></div>
-                        </div>
-                    </div>
-                    <div class="era-divider"><span>1955年体制（55年体制）</span></div>
-                    <div class="flow-row">
-                        <div class="flow-node-wrapper">
-                            <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
-                            <div class="p-node jimin" style="width: 220px;">自由民主党 (1955)<br><small>「保守合同」で結成。長期政権へ。</small></div>
-                            <div class="vline long"></div>
-                        </div>
-                        <div class="flow-node-wrapper">
-                            <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
-                            <div class="p-node shakai" style="width: 220px;">日本社会党 (1955)<br><small>左右分裂から「社会党再統一」へ</small></div>
-                            <div class="vline long"></div>
-                        </div>
-                    </div>
+                            <!-- 戦後の再編 -->
+                            <div class="era-divider"><span>戦後初期 (1945〜)</span></div>
+                            <div class="flow-row">
+                                <div class="flow-node-wrapper">
+                                    <div class="p-node jiyu">日本自由党<br><small>吉田茂</small></div>
+                                    <div class="vline"></div>
+                                </div>
+                                <div class="flow-node-wrapper">
+                                    <div class="p-node kaishin">日本進歩党<br><small>（のちの日本民主党）</small></div>
+                                    <div class="vline"></div>
+                                </div>
+                                <div class="flow-node-wrapper">
+                                    <div class="p-node shakai">日本社会党<br><small><span class="fill-blank">片山哲</span>（1947年連立内閣）</small></div>
+                                    <div class="vline"></div>
+                                </div>
+                            </div>
 
-                    <!-- 1993年 体制崩壊 -->
-                    <div class="era-divider"><span>55年体制の崩壊 (1993〜)</span></div>
-                    <div class="flow-row">
-                        <div class="flow-node-wrapper">
-                            <div class="p-node jimin" style="width: 220px;">自由民主党<br><small>（分裂により下野）</small></div>
-                        </div>
-                        <div class="flow-node-wrapper">
-                            <div class="p-node mix" style="width: 240px;">非自民・非共産 連立政権<br><small>細川護熙（新生・日本新・さきがけ等）</small></div>
+                            <!-- 1955年体制 -->
+                            <div class="flow-row">
+                                <div class="merge-path" style="width: 260px; margin-left: -260px;">
+                                    <div class="merge-left"></div>
+                                    <div class="merge-right"></div>
+                                </div>
+                            </div>
+                            <div class="era-divider"><span>1955年体制（55年体制）</span></div>
+                            <div class="flow-row">
+                                <div class="flow-node-wrapper">
+                                    <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
+                                    <div class="p-node jimin" style="width: 220px;"><span class="fill-blank">自由民主党</span> (1955)<br><small>「<span class="fill-blank">保守合同</span>」で結成。長期政権へ。</small></div>
+                                    <div class="vline long"></div>
+                                </div>
+                                <div class="flow-node-wrapper">
+                                    <div class="vline arrow" style="height: 16px; margin-top: -2px;"></div>
+                                    <div class="p-node shakai" style="width: 220px;">日本社会党 (1955)<br><small>左右分裂から「社会党再統一」へ</small></div>
+                                    <div class="vline long"></div>
+                                </div>
+                            </div>
+
+                            <!-- 1993年 体制崩壊 -->
+                            <div class="era-divider"><span>55年体制の崩壊 (1993〜)</span></div>
+                            <div class="flow-row">
+                                <div class="flow-node-wrapper">
+                                    <div class="p-node jimin" style="width: 220px;">自由民主党<br><small>（分裂により下野）</small></div>
+                                </div>
+                                <div class="flow-node-wrapper">
+                                    <div class="p-node mix" style="width: 250px;">非自民・非共産 連立政権<br><small><span class="fill-blank">細川護熙</span>（新生・日本新・さきがけ等）</small></div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -714,22 +796,29 @@
                     <li>
                         <h3>1955年体制（55年体制）の構造</h3>
                         <br>1955年から1993年まで続いた、保守の<strong><span class="fill-blank">自由民主党</span></strong>と、革新の<strong><span class="fill-blank">日本社会党</span></strong>の二大政党を軸とする政治体制です。
-                        <table class="summary-table">
-                            <tbody>
-                                <tr>
-                                    <th>特徴</th>
-                                    <td>議席比率がほぼ「1.5：1」で推移し、自民党が政権を独占し続ける「一強多弱」の体制でした。</td>
-                                </tr>
-                                <tr>
-                                    <th>対立の争点</th>
-                                    <td>憲法改正（自民：改憲 vs 社会：護憲）や、日米安全保障条約（安保）の是非、自衛隊の存廃などをめぐって激しく対立しました。</td>
-                                </tr>
-                                <tr>
-                                    <th>多党化への変質</th>
-                                    <td>1960年代（安保闘争後）には、社会党から右派が離脱し<strong><span class="fill-blank">民主社会党</span></strong>（民社党）を結成。さらに<strong>公明党</strong>や共産党が躍進し、野党の多党化が進みました。</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="summary-table">
+                                <tbody>
+                                    <tr>
+                                        <th>特徴</th>
+                                        <td>議席比率がほぼ「1.5：1」で推移し、自民党が政権を独占し続ける「一強多弱」の体制でした。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>対立の争点</th>
+                                        <td>憲法改正（自民：改憲 vs 社会：護憲）や、日米安全保障条約（安保）の是非、自衛隊の存廃などをめぐって激しく対立しました。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>多党化への変質</th>
+                                        <td>1960年代（安保闘争後）には、社会党から右派が離脱し<strong><span class="fill-blank">民主社会党</span></strong>（民社党）を結成。さらに<strong>公明党</strong>や共産党が躍進し、野党の多党化が進みました。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <h3>「政党内閣」と「超然主義」</h3>
+                        <br>明治初期の藩閥政府は、政党の動向に左右されず政府が独自に方針を決める「<strong><span class="fill-blank">超然主義</span></strong>（ちょうぜんしゅぎ）」をとっていました。これに対し、民権運動や初期議会を経て、内閣の構成員を衆議院の多数党で組織する「政党内閣」が求められるようになりました。1924年から1932年の犬養毅首相暗殺（五・一五事件）まで、政党の党首が首相になる「<strong><span class="fill-blank">憲政の常道</span></strong>」が続きました。
                     </li>
 
                     <li>
@@ -793,7 +882,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
         
-        // --- 全穴埋め表示/非表示トグル（ルビの隠蔽対応済み） ---
+        // --- 全穴埋め表示/非表示トグル（ルビ隠蔽対応） ---
         const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
         const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
         let allRevealed = false;
@@ -808,6 +897,119 @@
         });
         document.querySelectorAll('.fill-blank').forEach(el => {
             el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // ====================================================
+        // 政党変遷フローチャート 縮小/拡大（パン）制御
+        // ====================================================
+        const chartWrapper = document.getElementById('flowChartWrapper');
+        const expandBtn = document.getElementById('expandBtn');
+        const closeFullscreenBtn = document.getElementById('closeFullscreenBtn');
+        const scrollArea = document.getElementById('flowTreeScrollArea');
+        const scaleContainer = document.getElementById('flowTreeScaleContainer');
+        const mainTree = document.getElementById('mainFlowTree');
+
+        // 幅に合わせて縮小する（通常時）
+        function adjustFlowChartScale() {
+            if (chartWrapper.classList.contains('is-fullscreen')) {
+                scaleContainer.style.transform = 'none';
+                scaleContainer.style.marginLeft = '0';
+                scrollArea.style.height = '100%';
+                return;
+            }
+
+            const treeWidth = 720; // ツリーの固定幅
+            const wrapperWidth = chartWrapper.clientWidth;
+
+            if (wrapperWidth < treeWidth) {
+                // はみ出す場合は縮小
+                const scale = wrapperWidth / treeWidth;
+                scaleContainer.style.transform = `scale(${scale})`;
+                scaleContainer.style.marginLeft = '0';
+                scrollArea.style.height = `${mainTree.offsetHeight * scale}px`;
+            } else {
+                // 余裕がある場合は中央寄せ
+                scaleContainer.style.transform = 'none';
+                scaleContainer.style.marginLeft = `${(wrapperWidth - treeWidth) / 2}px`;
+                scrollArea.style.height = `${mainTree.offsetHeight}px`;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', adjustFlowChartScale);
+        window.addEventListener('resize', adjustFlowChartScale);
+
+        // 拡大（フルスクリーン）を開く
+        expandBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            chartWrapper.classList.add('is-fullscreen');
+            document.body.style.overflow = 'hidden';
+            adjustFlowChartScale();
+        });
+
+        // フルスクリーンを閉じる関数
+        function closeFullscreen() {
+            chartWrapper.classList.remove('is-fullscreen');
+            document.body.style.overflow = '';
+            adjustFlowChartScale();
+            // スクロール位置をリセット
+            scrollArea.scrollTop = 0;
+            scrollArea.scrollLeft = 0;
+        }
+
+        // ×ボタンで閉じる
+        closeFullscreenBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeFullscreen();
+        });
+
+        // 黒い外枠背景をクリックで閉じる
+        chartWrapper.addEventListener('click', (e) => {
+            if (chartWrapper.classList.contains('is-fullscreen') && e.target === chartWrapper) {
+                closeFullscreen();
+            }
+        });
+
+        // --- PCでのマウスドラッグスクロール（パン） ---
+        let isDown = false;
+        let startX;
+        let startY;
+        let scrollLeft;
+        let scrollTop;
+
+        scrollArea.addEventListener('mousedown', (e) => {
+            if (!chartWrapper.classList.contains('is-fullscreen')) return;
+            // 穴埋め要素をクリックした場合はドラッグを開始しない
+            if (e.target.closest('.fill-blank') || e.target.closest('button')) return;
+            
+            isDown = true;
+            scrollArea.style.cursor = 'grabbing';
+            startX = e.pageX - scrollArea.offsetLeft;
+            startY = e.pageY - scrollArea.offsetTop;
+            scrollLeft = scrollArea.scrollLeft;
+            scrollTop = scrollArea.scrollTop;
+        });
+
+        scrollArea.addEventListener('mouseleave', () => {
+            if(!isDown) return;
+            isDown = false;
+            scrollArea.style.cursor = 'grab';
+        });
+
+        scrollArea.addEventListener('mouseup', () => {
+            if(!isDown) return;
+            isDown = false;
+            scrollArea.style.cursor = 'grab';
+        });
+
+        scrollArea.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollArea.offsetLeft;
+            const y = e.pageY - scrollArea.offsetTop;
+            const walkX = (x - startX) * 2; // 移動量
+            const walkY = (y - startY) * 2;
+            scrollArea.scrollLeft = scrollLeft - walkX;
+            scrollArea.scrollTop = scrollTop - walkY;
         });
     </script>
 </body>
