@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>009 金融・貨幣史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（カード型表示） */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table th, .summary-table td {
+                display: block; width: 100%;
+            }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 16px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .summary-table th {
+                border: none; border-bottom: 1px solid var(--border-color);
+                text-align: left; padding: 12px 16px; background-color: #f8fafc;
+            }
+            .summary-table td { border: none; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 009 金融・貨幣史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">009 金融・貨幣史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：古代〜近世 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="coins"></i>貨幣史（古代〜江戸時代）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">白鳳時代</span></div>
+                    <div class="timeline-content">
+                        <p>奈良県明日香村の飛鳥池遺跡から<span class="fill-blank">富本銭</span>が出土した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">奈良時代</span></div>
+                    <div class="timeline-content">
+                        <p>武蔵国から銅が献上され、708年に<span class="fill-blank"><ruby>和同開珎<rt>わどうかいちん</rt></ruby></span>（銀銭・銅銭）を発行。流通を促すため、711年に<span class="fill-blank">蓄銭叙位令</span>を発布した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">平安時代</span></div>
+                    <div class="timeline-content">
+                        <p>958年（村上天皇の時）に、<span class="fill-blank">皇朝十二銭</span>の最後となる<span class="fill-blank"><ruby>乾元大宝<rt>けんげんたいほう</rt></ruby></span>が発行され、以後途絶えた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">鎌倉時代</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank">宋・元銭</span>が大量に輸入され貨幣経済が進展。年貢の<span class="fill-blank">銭納</span>化が進み、高利貸業者である<span class="fill-blank">借上</span>や、送金手形の<span class="fill-blank">為替</span>が登場した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">室町時代</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank">明銭</span>（永楽通宝・洪武通宝など）が輸入された。金融業者として<span class="fill-blank">土倉</span>や<span class="fill-blank">酒屋</span>が発達。粗悪な私鋳銭が流通したため、悪銭を嫌う「撰銭」が問題となり、幕府や大名が<span class="fill-blank"><ruby>撰銭令<rt>えりぜにれい</rt></ruby></span>を発布した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">織豊〜江戸時代</span></div>
+                    <div class="timeline-content">
+                        <p><strong>【三貨の流通と金融】</strong><br>秀吉は後藤徳乗に命じ<span class="fill-blank">天正大判</span>を鋳造。江戸幕府は<span class="fill-blank">三貨</span>（金貨・銀貨・銭貨）を発行した。「江戸の<span class="fill-blank">金</span>遣い、大坂の<span class="fill-blank">銀</span>遣い」と言われ、交換のために<span class="fill-blank">両替商</span>が発達した。</p>
+                        <p><strong>【藩札】</strong><br>1661年、<span class="fill-blank">越前藩</span>が最初に藩内のみで流通する<span class="fill-blank">藩札</span>を発行した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：近代の金融・経済 -->
+            <div class="section-title"><i data-lucide="landmark"></i>近代の金融・経済史（幕末・明治〜戦前）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1868年・1869年</span></div>
+                    <div class="timeline-content">
+                        <p>明治新政府は財源不足から、<span class="fill-blank">太政官札</span>（金札）や<span class="fill-blank">民部省札</span>といった不換紙幣を発行した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1871年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">新貨条例</span></strong></p>
+                        <p><span class="fill-blank">伊藤博文</span>の建議により制定。十進法の<span class="fill-blank">円・銭・厘</span>を採用した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1872年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">国立銀行条例</span></strong></p>
+                        <p><span class="fill-blank">渋沢栄一</span>らの尽力で制定。民間資本による<span class="fill-blank"><ruby>兌換<rt>だかん</rt></ruby></span>銀行券の発行を目指した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1880年代</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">松方財政</span>と中央銀行</strong></p>
+                        <p>大蔵卿・松方正義による紙幣整理（デフレ政策）が行われ、1882年に中央銀行である<span class="fill-blank">日本銀行</span>が設立された。1885年に日本銀行券が発行され、銀本位制が確立した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1897年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">貨幣法</span>（金本位制の確立）</strong></p>
+                        <p><span class="fill-blank">日清戦争</span>で得た賠償金を準備金として制定され、<span class="fill-blank">金本位制</span>が確立した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1927年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">金融恐慌</span></strong></p>
+                        <p>片岡直温蔵相の失言から全国で取り付け騒ぎが発生。若槻内閣は総辞職し、田中義一内閣が<span class="fill-blank">支払猶予令</span>（モラトリアム）と日銀の非常貸出で収束させた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1930年・1931年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">金解禁</span>と<span class="fill-blank">金輸出再禁止</span></strong></p>
+                        <p>1930年、浜口内閣（井上準之助蔵相）が旧平価で金解禁を行うが、世界恐慌と重なり正貨が大量流出した。<br>翌1931年、犬養内閣（高橋是清蔵相）が金輸出を再禁止し、金本位制から<span class="fill-blank">管理通貨制度</span>へ移行した（低為替政策による輸出増進）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1938年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">国家総動員法</span></strong></p>
+                        <p>戦時体制下において、労働力や物資の統制運用を議会の審議を経ずに勅令で実施可能となり、統制経済が本格化した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：戦後〜現代 -->
+            <div class="section-title"><i data-lucide="trending-up"></i>戦後の日本経済と国際通貨制度</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1944年・1945年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">ブレトン・ウッズ会議</span></strong></p>
+                        <p><span class="fill-blank">IMF</span>（国際通貨基金）と<span class="fill-blank">IBRD</span>（世界銀行）の設立が討議され、米ドルを基軸とする<span class="fill-blank">固定相場制</span>が確立した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1946年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">金融緊急措置令</span></strong></p>
+                        <p>戦後の激しいインフレを抑えるため、預金封鎖と新円切り換えを実施した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1949年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">ドッジ・ライン</span></strong></p>
+                        <p>GHQの経済安定九原則に基づき実施。1ドル＝<span class="fill-blank">360円</span>の単一為替レートが設定された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1950年</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank">朝鮮戦争</span>の勃発により、米軍からの特別需要（<span class="fill-blank">特需景気</span>）が生まれ、日本経済復興の足がかりとなった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1955年〜1973年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">高度経済成長期</span></strong></p>
+                        <p>神武景気、岩戸景気、オリンピック景気、いざなぎ景気と好景気が続いた。1960年には池田勇人内閣が「<span class="fill-blank">国民所得倍増計画</span>」を決定し、1968年にはGNPが世界第2位となった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1971年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">ニクソン・ショック</span></strong></p>
+                        <p>米大統領が金とドルの交換停止を宣言。スミソニアン協定で1ドル＝308円に切り上げられた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1973年</span></div>
+                    <div class="timeline-content">
+                        <p>国際通貨体制が<span class="fill-blank">変動為替相場制</span>へ移行。また、<span class="fill-blank">石油危機</span>（オイルショック）による狂乱物価が発生し、翌年は戦後初のマイナス成長となった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1985年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">プラザ合意</span></strong></p>
+                        <p>G5（5カ国蔵相会議）でドル高是正のため、円高・ドル安を容認する合意がなされた。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>江戸時代の貨幣制度と小判の改鋳</h3>
+                        <br>金貨・銭貨は額面で取引される「<span class="fill-blank">計数貨幣</span>」、銀貨は重さを量って取引される「<span class="fill-blank">秤量貨幣</span>」でした。（※のちに田沼時代に計数貨幣の南鐐二朱銀が発行されます）<br>
+                        幕府は財政難を補うため、たびたび小判の質や量（改鋳）を変更しました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>小判の名称</th>
+                                    <th>特徴・背景</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>慶長小判</th>
+                                    <td>家康の時代に鋳造された、のちの小判の基準となる良質な小判。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">元禄小判</span></th>
+                                    <td>5代綱吉の時、勘定吟味役の<span class="fill-blank">荻原重秀</span>の献策で品位を落として改鋳。幕府は差益を得たが、<span class="fill-blank">物価騰貴</span>を招いた。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">正徳小判</span></th>
+                                    <td><span class="fill-blank">新井白石</span>の建議により、慶長小判と同質に戻して貨幣の信用回復をはかった。</td>
+                                </tr>
+                                <tr>
+                                    <th>万延小判</th>
+                                    <td>幕末の開港後、外国との金銀比価の違いによる多量の<span class="fill-blank">金流出</span>を防ぐため、大幅に小型化した（物価騰貴の原因に）。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>明治〜戦前の主な景気と恐慌</h3>
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th>1880年代</th>
+                                    <td><span class="fill-blank">松方デフレ</span>：紙幣整理のための増税と歳出削減による深刻な不況。</td>
+                                </tr>
+                                <tr>
+                                    <th>1880年代後半</th>
+                                    <td><span class="fill-blank">企業勃興期</span>：鉄道・紡績などの会社設立ブーム。</td>
+                                </tr>
+                                <tr>
+                                    <th>1900〜1907年</th>
+                                    <td><span class="fill-blank">初の資本主義恐慌</span>（1900年）と明治40年の恐慌（日露戦争後の反動）。これらを経て財閥による企業集中が進む。</td>
+                                </tr>
+                                <tr>
+                                    <th>1915〜1918年</th>
+                                    <td><span class="fill-blank">大戦景気</span>：第一次大戦による需要増大。日本は債務国から債権国になり、「<span class="fill-blank">成金</span>」が登場。</td>
+                                </tr>
+                                <tr>
+                                    <th>1920年代</th>
+                                    <td><span class="fill-blank">戦後恐慌</span>（1920）、<span class="fill-blank">震災恐慌</span>（1923・関東大震災）、<span class="fill-blank">金融恐慌</span>（1927）と慢性的な不況が続く。</td>
+                                </tr>
+                                <tr>
+                                    <th>1929年以降</th>
+                                    <td><span class="fill-blank">世界恐慌</span>の波及により日本も<span class="fill-blank">昭和恐慌</span>に陥る。農村では娘の身売りや欠食児童が発生。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>財閥の形成と戦後改革</h3>
+                        <br><b>【財閥の分類】</b>
+                        <ul>
+                            <li><b>三大財閥</b>：<span class="fill-blank">三井</span>（江戸からの両替商）、<span class="fill-blank">三菱</span>（岩崎弥太郎）、<span class="fill-blank">住友</span>（江戸からの銅商・両替商）。これに<span class="fill-blank">安田</span>を加えると四大財閥。</li>
+                            <li><b>新興財閥</b>：満州事変後、軍部と提携して急成長したコンツェルン。<span class="fill-blank">日産</span>（鮎川義介）、<span class="fill-blank">日窒</span>（野口遵）、<span class="fill-blank">理研</span>（大河内正敏）など。</li>
+                        </ul>
+                        <br><b>【特殊銀行の役割】</b>
+                        <br>国策として特定の目的のために設立された銀行。海外貿易金融を目的とした<span class="fill-blank">横浜正金銀行</span>や、農工業振興のための<span class="fill-blank">日本勧業銀行</span>などがありました。（戦後、普通銀行等に転換）
+                        <br><br><b>【財閥解体】</b>
+                        <br>第二次大戦後、GHQの指令により<span class="fill-blank">持株会社整理委員会</span>が発足し、1947年に<span class="fill-blank">独占禁止法</span>や<span class="fill-blank">過度経済力集中排除法</span>が公布され財閥解体が進められましたが、アメリカの占領政策の転換（冷戦激化に伴う日本の経済復興優先）により不徹底に終わりました。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
