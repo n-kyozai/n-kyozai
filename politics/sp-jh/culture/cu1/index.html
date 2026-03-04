@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>001 原始・古代の文化 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --timeline-line: #bae6fd;
+            --timeline-date-bg: #f0f9ff;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* --- 年表スタイル --- */
+        .timeline-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 10px;
+            border-left: 3px solid var(--timeline-line);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 4px solid var(--accent-color);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            background: var(--timeline-date-bg);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .theme-list {
+            list-style: none;
+        }
+
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- 画像ギャラリー --- */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-to-top:hover { filter: brightness(0.9); }
+
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed;
+            bottom: 95px;
+            right: 35px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        /* --- 画像拡大（ライトボックス）用スタイル --- */
+        .thumbnail-img {
+            max-width: 160px;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            display: block;
+            border: 1px solid var(--border-color);
+            background-color: var(--fill-bg);
+            min-height: 40px;
+        }
+        .thumbnail-img[src=""] {
+            padding: 40px 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: default;
+        }
+        .thumbnail-img[src=""]::after {
+            content: "画像準備中";
+        }
+        .thumbnail-img:hover:not([src=""]) {
+            transform: scale(1.05);
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .lightbox-overlay.active { display: flex; opacity: 1; }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            object-fit: contain;
+        }
+        .lightbox-overlay.active .lightbox-img { transform: scale(1); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        /* --- レスポンシブ（モバイル）対応 --- */
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            .timeline-content { font-size: 0.85rem; }
+            .theme-list > li { font-size: 0.85rem; line-height: 1.6; }
+            .timeline-date { font-size: 0.8rem; }
+            .section-title { font-size: 1.1rem; }
+            .fill-blank { font-size: 0.85rem; padding: 2px 6px; }
+            .thumbnail-img { max-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン・オーバーレイ -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/culture/index.html">文化史</a> ＞ 001 原始・古代の文化
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">001 原始・古代の文化 重要ポイント</h1>
+        </div>
+
+        <div class="container">
+            <!-- 【1】年表まとめ -->
+            <div class="section-title"><i data-lucide="clock"></i>年表で見る 原始・古代の文化の変遷</div>
+            
+            <div class="timeline-box">
+                <div class="timeline">
+                    <!-- 旧石器時代 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">旧石器時代</div>
+                        <div class="timeline-content">
+                            土器を用いず、<span class="fill-blank">打製石器</span>を使用した狩猟・採集社会。更新世の氷河期であり、ナウマン象などを追って移動生活を送った。群馬県の<span class="fill-blank">岩宿遺跡</span>（相沢忠洋が発見）などが代表的。
+                            <div class="image-gallery">
+                                <img src="" alt="打製石器" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 縄文時代 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">縄文時代</div>
+                        <div class="timeline-content">
+                            温暖化により海面が上昇。<span class="fill-blank">磨製石器</span>と<span class="fill-blank">縄文土器</span>（厚手・黒褐色）が使われ、竪穴住居による定住生活が始まった。<span class="fill-blank">アニミズム</span>（精霊崇拝）や土偶・抜歯などの呪術的風習が見られる。
+                            <div class="image-gallery">
+                                <img src="" alt="縄文土器と土偶" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 弥生時代 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">弥生時代</div>
+                        <div class="timeline-content">
+                            大陸から<span class="fill-blank">水稲農耕</span>と金属器（青銅器・鉄器）が同時に伝来。<span class="fill-blank">弥生土器</span>（薄手・赤褐色）が作られ、石包丁で稲首刈りを行った。祭祀には<span class="fill-blank">銅鐸</span>や銅剣などの青銅器が用いられた。
+                            <div class="image-gallery">
+                                <img src="" alt="弥生土器と銅鐸" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 古墳時代 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">古墳時代</div>
+                        <div class="timeline-content">
+                            大王や豪族の権力の象徴として<span class="fill-blank">前方後円墳</span>などの巨大な古墳が築造された。墳丘には<span class="fill-blank">埴輪</span>が並べられ、副葬品は前期の呪術的（<span class="fill-blank">三角縁神獣鏡</span>など）なものから後期の武具・馬具（実用的）へと変化した。
+                            <div class="image-gallery">
+                                <img src="" alt="大仙陵古墳と埴輪" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 飛鳥・白鳳文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">飛鳥・白鳳文化 (7世紀頃)</div>
+                        <div class="timeline-content">
+                            【飛鳥】日本最初の仏教文化。<span class="fill-blank">法隆寺</span>や飛鳥寺が建立され、北魏・百済様式の仏像が作られた。<br>
+                            【白鳳】大化の改新後の初唐文化の影響。<span class="fill-blank">薬師寺</span>の建立や高松塚古墳壁画などに特徴がある。
+                            <div class="image-gallery">
+                                <img src="" alt="法隆寺と薬師寺" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 天平文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">天平文化 (8世紀頃)</div>
+                        <div class="timeline-content">
+                            聖武天皇の時代。遣唐使による盛唐文化の影響を受け、国際色豊か。鎮護国家思想に基づき<span class="fill-blank">東大寺</span>や国分寺が建立され、『古事記』『日本書紀』『万葉集』などが編纂された。
+                            <div class="image-gallery">
+                                <img src="" alt="東大寺と正倉院" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 弘仁・貞観文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">弘仁・貞観文化 (9世紀頃)</div>
+                        <div class="timeline-content">
+                            平安時代初期。空海（<span class="fill-blank">真言宗</span>）や最澄（<span class="fill-blank">天台宗</span>）がもたらした<span class="fill-blank">密教</span>の流行により、神秘的で山岳仏教的な文化が栄えた。曼荼羅や一木造の仏像が作られた。
+                            <div class="image-gallery">
+                                <img src="" alt="室生寺と曼荼羅" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 国風文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">国風文化 (10〜11世紀頃)</div>
+                        <div class="timeline-content">
+                            遣唐使の廃止（894年）以降、日本の風土に合った文化が発達。<span class="fill-blank">かな文字</span>の発明により『源氏物語』などが書かれ、末法思想を背景に<span class="fill-blank">浄土教</span>（阿弥陀信仰）が流行した。
+                            <div class="image-gallery">
+                                <img src="" alt="平等院鳳凰堂と源氏物語絵巻" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 院政期 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">院政期の文化 (11世紀後半〜)</div>
+                        <div class="timeline-content">
+                            地方武士や庶民の台頭により文化の裾野が広がる。『源氏物語絵巻』や『鳥獣戯画』などの<span class="fill-blank">絵巻物</span>が流行し、浄土教建築が地方（中尊寺金色堂など）に波及した。
+                            <div class="image-gallery">
+                                <img src="" alt="鳥獣戯画と中尊寺金色堂" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】テーマ別詳細 -->
+            <div class="section-title"><i data-lucide="palette"></i>分野別・テーマ別詳細</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>旧石器・縄文・弥生時代の生活と道具</h3>
+                        <br><b>【旧石器時代】</b>
+                        <br>日本列島が大陸と陸続きであった更新世（氷河期）、人々はナウマン象やオオツノジカを追い、テント式住居や洞穴を利用して移動生活を送った。土器はまだなく（先土器時代）、石を打ち欠いて作った<span class="fill-blank">打製石器</span>（ナイフ形石器・<span class="fill-blank">尖頭器</span>・細石器など）を使用した。1946年に相沢忠洋が群馬県の<span class="fill-blank">岩宿遺跡</span>で打製石器を発見したことで、日本にも旧石器時代が存在したことが証明された。
+                        <div class="image-gallery">
+                            <img src="" alt="打製石器（ナイフ形石器など）" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="岩宿遺跡の地層" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+
+                        <br><b>【縄文時代】</b>
+                        <br>温暖化により現在の日本列島が形成されると、海進により豊かな自然が生まれた。<span class="fill-blank">磨製石器</span>や、網目模様が特徴の厚手で黒褐色の<span class="fill-blank">縄文土器</span>が作られ、<span class="fill-blank">竪穴住居</span>での定住生活が始まった。動物の骨や角を利用した骨角器（釣り針など）も使われた。生活のゴミ捨て場である<span class="fill-blank">貝塚</span>（モースが発見した大森貝塚など）が形成された。
+                        <br>信仰面では、あらゆる自然物に霊魂が宿るとする<span class="fill-blank">アニミズム</span>（精霊崇拝）が信じられ、女性をかたどった<span class="fill-blank">土偶</span>や、石棒による生殖・豊作祈願、<span class="fill-blank">抜歯</span>の風習や、死者の霊を恐れて手足を折り曲げて埋葬する<span class="fill-blank">屈葬</span>が行われた。
+                        <div class="image-gallery">
+                            <img src="" alt="火焔型土器などの縄文土器" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="遮光器土偶など" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="大森貝塚" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+
+                        <br><b>【弥生時代】</b>
+                        <br>紀元前4世紀頃、大陸から<span class="fill-blank">水稲農耕</span>と金属器（青銅器と鉄器がほぼ同時）が伝来した。土器は、高温で焼かれた薄手で赤褐色の<span class="fill-blank">弥生土器</span>へと変化した。収穫には石包丁（稲首刈り）が用いられ、収穫物はネズミや湿気を防ぐ<span class="fill-blank">高床倉庫</span>に保管された。
+                        <br>農耕の発展により貧富の差や身分差が生まれ、争いに備えて濠を巡らせた<span class="fill-blank">環濠集落</span>（佐賀県の吉野ヶ里遺跡など）や、山頂に築かれた高地性集落が形成された。埋葬は、甕棺や箱式石棺などに手足を伸ばして葬る<span class="fill-blank">伸展葬</span>が一般的となった。
+                        <br>金属器のうち、鉄器は武器や農具などの実用品として、青銅器は<span class="fill-blank">銅鐸</span>・銅剣・銅矛・銅戈などの祭祀（お祭り）の道具として用いられた。
+                        <div class="image-gallery">
+                            <img src="" alt="弥生土器" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="石包丁" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="銅鐸" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>古墳時代の文化と信仰</h3>
+                        <br><b>【古墳の変遷と副葬品】</b>
+                        <br>3世紀後半から、大王（天皇）や豪族の権力の象徴として巨大な墓（古墳）が築かれた。
+                        <br>・<b>前期（3〜4世紀）</b>：<span class="fill-blank">前方後円墳</span>が中心。副葬品は、鏡（<span class="fill-blank">三角縁神獣鏡</span>）や玉類、腕輪などの「呪術的・宗教的」なものが多く、被葬者が司祭者的性格を持っていたことを示す。
+                        <br>・<b>中期（5世紀）</b>：平野部に巨大な前方後円墳（大阪の<span class="fill-blank">大仙陵古墳</span>や誉田御廟山古墳）が築造された。副葬品は、鉄製の武器（刀・剣）や武具（甲冑）、馬具などの「実用的・軍事的」なものへと変化した。
+                        <br>・<b>後期（6世紀〜）</b>：有力な農民層にまで古墳造りが広まり、小型の円墳や方墳が密集する<span class="fill-blank">群集墳</span>が急増した。内部の埋葬施設も、追葬（後から別の遺体を埋葬すること）が可能な<span class="fill-blank">横穴式石室</span>が普及した。また、石室内に壁画を描いた装飾古墳も九州などで見られる。
+                        <br>墳丘の表面には土の流出を防ぐ葺石が敷かれ、周囲には円筒埴輪や、人物・動物・家をかたどった<span class="fill-blank">形象埴輪</span>が並べられた。
+                        <div class="image-gallery">
+                            <img src="" alt="大仙陵古墳（空撮）" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="人物埴輪・馬形埴輪" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="装飾古墳壁画" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+
+                        <br><b>【古代の信仰と渡来人の活躍】</b>
+                        <br>農耕社会を背景に、春に豊作を祈る<span class="fill-blank">祈年祭</span>（としごいのまつり）や、秋の収穫を感謝する<span class="fill-blank">新嘗祭</span>（にいなめのまつり）などの祭祀が行われた。また、鹿の骨などを焼いて吉凶を占う<span class="fill-blank">太占</span>（ふとまに）の法や、熱湯に手を入れて真偽を判定する<span class="fill-blank">盟神探湯</span>（くかたち）といった呪術的風習も存在した。
+                        <br>5世紀以降、朝鮮半島からの渡来人（帰化人）によって、<span class="fill-blank">漢字</span>や儒教、須恵器（硬く灰色）の製法、機織りなどの高度な技術が伝えられた。また、6世紀半ばには百済を通じて<span class="fill-blank">仏教</span>が公伝した。
+                    </li>
+
+                    <li>
+                        <h3>飛鳥文化と白鳳文化（7世紀）</h3>
+                        <br><b>【飛鳥文化（推古天皇期）】</b>
+                        <br>聖徳太子や蘇我氏が活躍した7世紀前半の、日本最初の仏教文化。朝鮮半島の百済や高句麗の影響を強く受けた。
+                        <br>・<b>建築</b>：蘇我馬子が発願した日本最初の本格的寺院である<span class="fill-blank">飛鳥寺</span>（法興寺）や、聖徳太子が建立した<span class="fill-blank">法隆寺</span>（世界最古の木造建築。柱の中央が膨らむエンタシスの様式や雲形肘木が特徴）など。
+                        <br>・<b>仏像彫刻</b>：中国の北魏様式（顔が面長でアルカイック・スマイル、衣のひだが左右対称。鞍作鳥が作った<span class="fill-blank">飛鳥寺釈迦如来像</span>や法隆寺金堂釈迦三尊像）と、百済様式（柔和な表情。法隆寺<span class="fill-blank">百済観音像</span>、広隆寺<span class="fill-blank">半跏思惟像</span>など）が見られる。
+                        <br>・<b>工芸</b>：玉虫厨子（法隆寺）、天寿国繡帳（中宮寺）。
+                        <div class="image-gallery">
+                            <img src="" alt="法隆寺金堂" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="飛鳥大仏（飛鳥寺釈迦如来像）" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+
+                        <br><b>【白鳳文化（大化の改新〜平城京遷都）】</b>
+                        <br>天武・持統天皇の時代を中心とする7世紀後半の文化。初唐文化の影響を受け、天皇を中心とする国家仏教の色彩が強い。
+                        <br>・<b>建築・彫刻</b>：天武天皇が発願した<span class="fill-blank">薬師寺</span>（東塔は各階に裳階がつき「凍れる音楽」と称される）。仏像は、若々しくふくよかで自然な丸みを持つのが特徴で、薬師寺金堂薬師三尊像や、興福寺<span class="fill-blank">仏頭</span>などが代表的。
+                        <br>・<b>絵画</b>：<span class="fill-blank">高松塚古墳壁画</span>（奈良県）や法隆寺金堂壁画など。これらはインドのアジャンター石窟寺院の壁画との類似が指摘されている。
+                        <br>・<b>和歌</b>：万葉集の初期・第二期を飾り、額田王や<span class="fill-blank">柿本人麻呂</span>らが力強く情感豊かな歌を詠んだ。
+                        <div class="image-gallery">
+                            <img src="" alt="薬師寺東塔" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="高松塚古墳壁画（女子群像）" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>天平文化（8世紀）</h3>
+                        <br>聖武天皇の時代を中心とする8世紀（奈良時代）の文化。遣唐使がもたらした盛唐文化の影響を受け、ペルシャやインドなどの国際色（シルクロードの終着点）豊かな貴族・仏教文化。
+                        <br><b>【鎮護国家の仏教と建築】</b>
+                        <br>仏教の力で国家の平穏を祈る<span class="fill-blank">鎮護国家</span>思想に基づき、聖武天皇は各国に<span class="fill-blank">国分寺</span>・国分尼寺を、都に総国分寺として<span class="fill-blank">東大寺</span>を建立した。
+                        <br>代表的な建築には、東大寺の法華堂（三月堂）や、聖武天皇の遺愛品などを校倉造で収蔵した<span class="fill-blank">正倉院</span>、そして唐から苦難の末に来日した<span class="fill-blank">鑑真</span>が建立した<span class="fill-blank">唐招提寺</span>（金堂）がある。
+                        <br><b>【彫刻と絵画】</b>
+                        <br>彫刻では、粘土を固めた<span class="fill-blank">塑像</span>（東大寺法華堂の<span class="fill-blank">日光・月光菩薩像</span>や執金剛神像）と、漆と麻布を重ねて作る<span class="fill-blank">乾漆像</span>（興福寺の<span class="fill-blank">阿修羅像</span>や唐招提寺の鑑真和上像）という新しい技法が流行した。
+                        <br>絵画では、正倉院の鳥毛立女屏風や薬師寺の<span class="fill-blank">吉祥天像</span>が有名。
+                        <div class="image-gallery">
+                            <img src="" alt="東大寺正倉院" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="興福寺阿修羅像" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="正倉院鳥毛立女屏風" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                        <br><b>【歴史書と文学】</b>
+                        <br>国家の起源を明らかにし天皇の支配を正当化するため、神話や伝承を記した『<span class="fill-blank">古事記</span>』（稗田阿礼が誦習し、太安万侶が筆録）と、漢文の編年体で書かれた正史『<span class="fill-blank">日本書紀</span>』（舎人親王らが編纂。六国史の最初）が作られた。また、地方の特産物や伝承を記録した『<span class="fill-blank">風土記</span>』も編纂された。
+                        <br>和歌では、大伴家持らが編纂に関わったとされる現存最古の和歌集『<span class="fill-blank">万葉集</span>』が成立。天皇や貴族だけでなく、防人の歌や東歌など庶民の歌も収録され、「ますらをぶり」と呼ばれる素朴で力強い作風が特徴。
+                        <br><b>【教育】</b>
+                        <br>律令制度の下で官吏を養成するため、中央に大学（貴族の子弟）、地方に国学（郡司の子弟）が置かれた。また、石上宅嗣の芸亭など、貴族による私設図書館も作られた。
+                    </li>
+
+                    <li>
+                        <h3>弘仁・貞観文化（9世紀）</h3>
+                        <br>平安時代初期（嵯峨天皇や清和天皇の時代）の文化。晩唐文化の影響を強く受けつつ、新しい仏教である密教が流行し、神秘的で山岳仏教的な色彩が強い。
+                        <br><b>【密教の流行】</b>
+                        <br>唐に渡った2人の僧が新しい仏教（平安二宗）をもたらした。
+                        <br>・<span class="fill-blank">最澄</span>：<span class="fill-blank">天台宗</span>を開き、比叡山に<span class="fill-blank">延暦寺</span>を建立。
+                        <br>・<span class="fill-blank">空海</span>（弘法大師）：<span class="fill-blank">真言宗</span>を開き、高野山に<span class="fill-blank">金剛峯寺</span>を建立。また嵯峨天皇から京都の教王護国寺（東寺）を賜り、庶民教育のための綜芸種智院も創設した。
+                        <br>密教は加持祈祷によって現世利益（災いを払い福を招く）をもたらすとされ、皇室や貴族の厚い信仰を集めた。
+                        <br><b>【建築と美術】</b>
+                        <br>寺院が山間部に建てられたため、地形に合わせた自由な伽藍配置となり、屋根はヒノキの皮で葺く<span class="fill-blank">檜皮葺</span>（ひわだぶき）が特徴的である（<span class="fill-blank">室生寺</span>五重塔・金堂など）。
+                        <br>彫刻は、一本の木から彫り出す<span class="fill-blank">一木造</span>が主流となり、衣のひだを波のように深く彫る<span class="fill-blank">翻波式</span>（ほんぱしき）の衣文と、神秘的で重厚な表情が特徴である（観心寺如意輪観音像など）。
+                        <br>絵画では、密教の世界観を視覚的に表した<span class="fill-blank">曼荼羅</span>（神護寺の両界曼荼羅など）が多く描かれた。
+                        <br><b>【書道】</b>
+                        <br>唐の力強い書風（王羲之のスタイル）が流行し、その名手であった嵯峨天皇・<span class="fill-blank">空海</span>・橘逸勢の3人は「<span class="fill-blank">三筆</span>」と称された。
+                        <div class="image-gallery">
+                            <img src="" alt="室生寺五重塔" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="両界曼荼羅" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="空海の書（風信帖）" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>国風文化（10〜11世紀）</h3>
+                        <br>平安時代の中期〜後期、藤原氏による摂関政治が全盛の時代の文化。894年の<span class="fill-blank">遣唐使</span>の廃止を契機に、中国の影響から離れ、日本の風土や貴族の生活感情（優美・繊細）に合った和風の文化が大きく花開いた。
+                        <br><b>【かな文字の誕生と文学の黄金時代】</b>
+                        <br>漢字を変形・省略した<span class="fill-blank">かな文字</span>（ひらがな・カタカナ）が発明され、日本人の感情を自由に表現できるようになった。
+                        <br>・<b>和歌</b>：紀貫之らが編纂した最初の勅撰和歌集である『<span class="fill-blank">古今和歌集</span>』（「たをやめぶり」と呼ばれる優美な作風）。
+                        <br>・<b>物語・随筆・日記</b>：紫式部による長編小説『<span class="fill-blank">源氏物語</span>』、清少納言の随筆『<span class="fill-blank">枕草子</span>』、紀貫之によるかな日記『<span class="fill-blank">土佐日記</span>』、藤原道長の日記『御堂関白記』（漢字表記）など、宮廷の女性たちを中心に優れた文学作品が次々と生み出された。
+                        <br><b>【浄土教の流行】</b>
+                        <br>1052年に世の中が乱れる末法の世に入るとされた「<span class="fill-blank">末法思想</span>」を背景に、阿弥陀仏にすがり極楽浄土への往生を願う<span class="fill-blank">浄土教</span>（阿弥陀信仰）が貴族から庶民にまで広く流行した。空也（市聖）が念仏を広め、<span class="fill-blank">源信</span>（恵心僧都）が『<span class="fill-blank">往生要集</span>』を著して地獄と極楽の姿を説いた。
+                        <br><b>【建築と美術の和様化】</b>
+                        <br>貴族の邸宅は、白木造りの開放的な<span class="fill-blank">寝殿造</span>となった。浄土教の流行により、極楽浄土を表現した阿弥陀堂が多数建立され、藤原頼通による宇治の<span class="fill-blank">平等院鳳凰堂</span>（1053年）や、藤原道長の法成寺（現存せず）がその代表である。
+                        <br>彫刻では、仏師の<span class="fill-blank">定朝</span>（じょうちょう）が、複数の木材を組み合わせて造る<span class="fill-blank">寄木造</span>（よせぎづくり）の手法を完成させ、穏やかで優美な「和様」の仏像（平等院鳳凰堂の阿弥陀如来像など）を大量生産した。
+                        <br>絵画では、日本の風景や物語を描く<span class="fill-blank">大和絵</span>が発達した。
+                        <br>書道では、小野道風・藤原佐理・藤原行成の「<span class="fill-blank">三跡</span>（さんせき）」が、優美な和様書道を大成させた。
+                        <div class="image-gallery">
+                            <img src="" alt="平等院鳳凰堂" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="大和絵（源氏物語絵巻など）" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="阿弥陀如来坐像" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>院政期の文化と地方への波及（11世紀後半〜）</h3>
+                        <br>平安時代末期、白河上皇らが院政を開始した時代の文化。貴族中心の文化から、新たに台頭した地方の武士や庶民の活力が反映された、自由で躍動感のある文化が芽生え始めた（鎌倉文化の萌芽）。
+                        <br><b>【絵巻物と説話・軍記物語】</b>
+                        <br>絵画と詞書（説明文）を交互に連ねて物語を展開する<span class="fill-blank">絵巻物</span>が大流行した。
+                        <br>・『<span class="fill-blank">源氏物語絵巻</span>』：吹抜屋台や引目鉤鼻の技法による優美な宮廷生活。
+                        <br>・『<span class="fill-blank">伴大納言絵詞</span>』：応天門の変を描き、庶民の表情や動きを生き生きと描写。
+                        <br>・『<span class="fill-blank">信貴山縁起絵巻</span>』：僧・命蓮の奇跡を描いた躍動的な作品。
+                        <br>・『<span class="fill-blank">鳥獣戯画</span>』：カエルやウサギなどを擬人化し、当時の社会を風刺（詞書はない）。
+                        <br>文学では、インド・中国・日本の説話を集めた『<span class="fill-blank">今昔物語集</span>』や、武士の活躍を描いた最初の軍記物語（『将門記』『陸奥話記』）が成立した。また、後白河法皇は流行歌である今様（いまよう）を集めて『<span class="fill-blank">梁塵秘抄</span>』を編纂した。
+                        <div class="image-gallery">
+                            <img src="" alt="鳥獣戯画" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="伴大納言絵詞" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                        <br><b>【地方への文化の波及】</b>
+                        <br>京都の浄土教文化や阿弥陀堂建築が地方の豪族にも広まった。岩手県平泉の奥州藤原氏が建てた<span class="fill-blank">中尊寺金色堂</span>、福島県の<span class="fill-blank">白水阿弥陀堂</span>、大分県の富貴寺大堂、鳥取県の三仏寺投入堂などが、その代表例である。
+                        <div class="image-gallery">
+                            <img src="" alt="中尊寺金色堂" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示/非表示ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+            if (menuToggle) {
+                menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+                lucide.createIcons();
+            }
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.className = 'lightbox-overlay';
+        lightboxOverlay.innerHTML = '<img class="lightbox-img" src="" alt="拡大画像">';
+        document.body.appendChild(lightboxOverlay);
+
+        const lightboxImg = lightboxOverlay.querySelector('img');
+
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        lightboxImg.addEventListener('click', function() {
+            lightboxOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) {
+                    el.classList.add('revealed');
+                } else {
+                    el.classList.remove('revealed');
+                }
+            });
+            
+            if (allRevealed) {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+
+        // 穴埋め(タップでトグル表示)
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => {
+                el.classList.toggle('revealed');
+            });
+        });
+    </script>
+</body>
+</html>
