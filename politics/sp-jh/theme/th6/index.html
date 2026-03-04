@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>006 日本の統治領域の変化 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- 画像拡大・埋め込みスタイル --- */
+        .map-image-container {
+            margin: 16px 0;
+            text-align: center;
+        }
+        .map-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: zoom-in;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+        }
+        .map-caption {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .lightbox-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-img {
+            max-width: 95%; max-height: 90vh;
+            border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out; object-fit: contain; background: white;
+        }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（カード型表示） */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table th, .summary-table td {
+                display: block; width: 100%;
+            }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 16px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .summary-table th {
+                border: none; border-bottom: 1px solid var(--border-color);
+                text-align: left; padding: 12px 16px; background-color: #f8fafc;
+            }
+            .summary-table td { border: none; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 006 日本の統治領域の変化
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">006 日本の統治領域の変化</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：幕末〜第一次世界大戦 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="globe"></i>幕末〜第一次世界大戦の領土拡大</div>
+            
+            <div class="map-image-container">
+                <img src="./2026-03-04_17h51_32.jpg" alt="1854〜1895年までの日本の領土" class="map-img" onclick="openLightbox(this.src)">
+                <div class="map-caption">【図1】1854〜1895年までの日本の領土</div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1854年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">日露和親条約</span></strong></p>
+                        <p>千島列島は「<span class="fill-blank">択捉島</span>」以南を日本領、「<span class="fill-blank">得撫島</span>」以北をロシア領とした。<br>樺太は国境を定めず「<span class="fill-blank">両国人雑居の地</span>」とした。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1861年・1875年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">小笠原諸島</span>の領有宣言</strong></p>
+                        <p>江戸幕府が1861年に、明治政府が1875年に領有を宣言（翌年通告）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1871年〜1879年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">琉球処分</span></strong></p>
+                        <p>1871年に鹿児島県へ編入 → 1872年に<span class="fill-blank">琉球藩</span>を設置 → 1879年に<span class="fill-blank">沖縄県</span>を設置し、完全な日本領とした。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1875年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">樺太・千島交換条約</span></strong></p>
+                        <p>樺太全島を<span class="fill-blank">ロシア領</span>とし、代わりに千島全島（占守島まで）を<span class="fill-blank">日本領</span>とした。</p>
+                    </div>
+                </div>
+
+                <div class="map-image-container" style="margin-top: 32px;">
+                    <img src="./2026-03-04_17h51_52.jpg" alt="1895〜1920年までの日本の領土" class="map-img" onclick="openLightbox(this.src)">
+                    <div class="map-caption">【図2】1895〜1920年までの日本の領土</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1895年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">下関条約</span>（日清戦争）</strong></p>
+                        <p><span class="fill-blank">遼東半島</span>・<span class="fill-blank">台湾</span>・<span class="fill-blank">澎湖諸島</span>を獲得し、台湾総督府を設置した。<br>※ただし、露・独・仏による<span class="fill-blank">三国干渉</span>により、遼東半島は清国に返還した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1905年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">ポーツマス条約</span>（日露戦争）</strong></p>
+                        <p>旅順・大連（<span class="fill-blank">関東州</span>）の租借権と、北緯50度以南の<span class="fill-blank">南樺太</span>を獲得。<br>関東州には関東都督府（のちに関東軍と関東庁）を設置した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1910年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">韓国併合条約</span></strong></p>
+                        <p>韓国を併合して「朝鮮」と改称し、<span class="fill-blank">朝鮮総督府</span>を設置した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1919年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">ヴェルサイユ条約</span>（第一次世界大戦）</strong></p>
+                        <p>赤道以北の旧ドイツ領<span class="fill-blank">南洋諸島</span>の委任統治権を獲得し、南洋庁を設置した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：満州事変〜太平洋戦争 -->
+            <div class="section-title"><i data-lucide="swords"></i>満州事変〜太平洋戦争（最大の支配領域へ）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1931年〜1933年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">満州事変</span></strong></p>
+                        <p>満州の主要地域を占領し、<span class="fill-blank">満州国</span>を建国。日本軍（関東軍）が駐屯し、日本の<span class="fill-blank">傀儡国家</span>として支配した。のちに執政であった<span class="fill-blank">溥儀</span>を皇帝とする帝政へ移行した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1937年〜1945年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">日中戦争</span></strong></p>
+                        <p>上海、南京などの主要都市を占領。1940年には<span class="fill-blank"><ruby>汪兆銘<rt>おうちょうめい</rt></ruby></span>を首班とする親日の新国民政府を南京に樹立した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1941年〜1945年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">太平洋戦争</span></strong></p>
+                        <p>開戦半年で、英領マレー半島・シンガポール・香港・ビルマ、蘭領東インド、米領フィリピンなどを制圧し軍政下に置いた。しかし、1942年6月の<span class="fill-blank">ミッドウェー海戦</span>での敗北を機に後退が始まった。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：第二次世界大戦後 -->
+            <div class="section-title"><i data-lucide="map-pin"></i>第二次世界大戦後（主権回復と領土返還）</div>
+            
+            <div class="map-image-container">
+                <img src="./2026-03-04_17h52_11.jpg" alt="主権回復後の日本の領土" class="map-img" onclick="openLightbox(this.src)">
+                <div class="map-caption">【図3】主権回復後の日本の領土と返還地域</div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1951年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">サンフランシスコ平和条約</span></strong></p>
+                        <p>朝鮮の独立承認。<br><span class="fill-blank">台湾</span>・澎湖諸島・<span class="fill-blank">千島列島</span>・<span class="fill-blank">南樺太</span>のすべての権利を放棄した。<br>また、奄美・沖縄・小笠原諸島の<span class="fill-blank">アメリカによる信託統治</span>を承認した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1953年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">奄美諸島</span>返還協定</strong></p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1968年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">小笠原諸島</span>返還協定</strong></p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1971年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">沖縄</span>返還協定</strong></p>
+                        <p>佐藤栄作首相とニクソン大統領との間で調印され、翌年（1972年）に本土復帰を果たした。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="alert-triangle"></i>現在も続く領土問題</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>北方領土問題（ロシアとの対立）</h3>
+                        <br>ヤルタ協定に基づくソ連の千島列島占領に対し、日本は「<span class="fill-blank">択捉島</span>以南の北方四島は固有の領土である」と主張しています。
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th>北方四島</th>
+                                    <td><span class="fill-blank">国後島</span>、<span class="fill-blank">択捉島</span>、<span class="fill-blank">歯舞群島</span>、<span class="fill-blank">色丹島</span></td>
+                                </tr>
+                                <tr>
+                                    <th>日ソ共同宣言<br>(1956)</th>
+                                    <td>ソ連は、平和条約締結後に「<span class="fill-blank">歯舞・色丹</span>」の2島を引き渡すことを約束したが、国後・択捉の返還には応じていない。</td>
+                                </tr>
+                                <tr>
+                                    <th>近年の動向</th>
+                                    <td>1997年の橋本・エリツィン会談などで解決に向けた合意はされたが、未だ平和条約締結と領土問題の解決には至っていない。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>竹島問題（韓国との対立）</h3>
+                        <br>島根県の隠岐諸島北西に位置する<span class="fill-blank">竹島</span>（韓国名：独島）の領有権をめぐり、韓国と対立しています。日本は歴史的にも国際法上も固有の領土であると主張していますが、現在は韓国が不法占拠を続けています。
+                    </li>
+
+                    <li>
+                        <h3>尖閣諸島問題（中国・台湾との対立）</h3>
+                        <br>沖縄県の八重山諸島北方に位置する<span class="fill-blank">尖閣諸島</span>の領有権をめぐり、中国および台湾と対立しています。日本は有効に支配しており「解決すべき領有権の問題は存在しない」という立場ですが、周辺海域での緊張が続いています。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- ライトボックス用オーバーレイ -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <img class="lightbox-img" id="lightboxImg" src="" alt="拡大画像">
+    </div>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImg = document.getElementById('lightboxImg');
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+    </script>
+</body>
+</html>
