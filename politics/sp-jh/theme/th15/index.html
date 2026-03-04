@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>015 農民闘争史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+            text-align: center;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（横割りカード型表示） */
+            .summary-table, .summary-table tbody {
+                display: block; width: 100%;
+            }
+            .summary-table thead { display: none; }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 12px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .summary-table th {
+                border: none; border-right: 1px solid var(--border-color);
+                text-align: center; padding: 12px 8px; background-color: #f8fafc;
+                width: 35%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .summary-table td { border: none; padding: 12px; width: 65%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 015 農民闘争史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">015 農民闘争史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：古代〜中世 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="sword"></i>古代〜中世の農民闘争と一揆</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">古代の抵抗</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>浮浪<rt>ふろう</rt></ruby></span>・<span class="fill-blank"><ruby>逃亡<rt>とうぼう</rt></ruby></span></strong></p>
+                        <p>重い税や労役から逃れるため、本籍地から他国へ流浪した。<br>浮浪は所在地が明確で調・庸を負担したが、逃亡は所在地不明で、その多くは荘園などに流入した。</p>
+                        <p style="margin-top: 8px;"><strong><span class="fill-blank"><ruby>偽籍<rt>ぎせき</rt></ruby></span></strong></p>
+                        <p>成人男子（正丁）の負担が重いため、戸籍上において男子を女子と偽って申告し、課役を逃れようとした。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">中世の抵抗（一揆の萌芽）</span></div>
+                    <div class="timeline-content">
+                        <p>農民の抵抗は、領主への嘆願である<span class="fill-blank"><ruby>愁訴<rt>しゅうそ</rt></ruby></span>から始まり、集団による強圧的な訴えである<span class="fill-blank"><ruby>強訴<rt>ごうそ</rt></ruby></span>、さらには集団で耕作を放棄して退去する<span class="fill-blank"><ruby>逃散<rt>ちょうさん</rt></ruby></span>へと発展し、やがて武力行使を伴う<strong><span class="fill-blank">一揆</span></strong>へとつながっていった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1428年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">正長の土一揆</span></strong>（徳政一揆）</p>
+                        <p>近江の馬借の蜂起を発端に、<span class="fill-blank">惣</span>を基盤とした土民が年貢減免や徳政令発布を要求して蜂起した。翌年には<span class="fill-blank">播磨の土一揆</span>も起こった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1441年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">嘉吉の土一揆</span></strong></p>
+                        <p>将軍足利義教の暗殺（嘉吉の乱）を契機に蜂起。これにより室町幕府が初めて<span class="fill-blank">徳政令</span>を発布した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1485年〜1493年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">山城の国一揆</span></strong></p>
+                        <p>国人（在地領主）や地侍、惣の土民らが連合し、守護大名（畠山氏）の軍勢を国外に退去させ、約8年間にわたり自治を行った。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1488年〜1580年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">加賀の一向一揆</span></strong></p>
+                        <p>浄土真宗（一向宗）の門徒である国人・農民らが守護の富樫政親を滅ぼし、約1世紀にわたり自治支配を行った。のちに織田信長の部将である柴田勝家らによって平定された。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：近世 -->
+            <div class="section-title"><i data-lucide="users"></i>近世の百姓一揆の変遷</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">江戸時代 前期（17世紀）</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">代表越訴型一揆</span></strong></p>
+                        <p>村役人が農民の代表となり、領主や幕府に直訴する形態。<span class="fill-blank"><ruby>越訴<rt>おっそ</rt></ruby></span>（正規の手続きを経ない違法な訴訟）の罪で代表者は死罪となることが多く、のちに義民として祀られる例も見られた。<br>
+                        【代表例】下総佐倉藩の<span class="fill-blank">佐倉惣五郎</span>（木内宗吾）、上野沼田藩の<span class="fill-blank"><ruby>磔茂左衛門<rt>はりつけもざえもん</rt></ruby></span>など。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">江戸時代 後期（17世紀末〜）</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">惣百姓一揆</span></strong></p>
+                        <p>村役人を中心としつつ、全村民が大規模に蜂起する形態。首謀者を隠蔽するために、放射状に署名する<span class="fill-blank"><ruby>傘連判状<rt>からかされんぱんじょう</rt></ruby></span>などが用いられた。<br>
+                        【代表例】陸奥磐城平藩の<span class="fill-blank">元文一揆</span>（1739年）、美濃郡上藩の<span class="fill-blank"><ruby>郡上宝暦騒動<rt>ぐじょうほうれきそうどう</rt></ruby></span>（1754〜58年）など。</p>
+                        
+                        <p style="margin-top: 16px;"><strong><span class="fill-blank">村方騒動</span></strong></p>
+                        <p>村の内部で、貧農や小百姓が村政への参加や、不正を行う村役人の更迭を要求して起こした騒動。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">江戸時代 末期（18世紀後半〜）</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">打ちこわし</span></strong></p>
+                        <p>天明の飢饉などを背景に、都市の町人や農民が、米商人や金融業者などの富商を襲って家屋や家財を破壊する暴動。<br>
+                        【代表例】<span class="fill-blank">天明の打ちこわし</span>（1787年）。</p>
+                        
+                        <p style="margin-top: 16px;"><strong><span class="fill-blank">国訴</span></strong></p>
+                        <p>在郷商人などを中心に、国や郡といった広域単位で連携し、領主や大商人の流通独占（特権）に反対して行った合法的な訴訟。<br>
+                        【代表例】摂津・河内での菜種・綿作をめぐる国訴（1823年）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">幕末〜明治初期</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">世直し一揆</span></strong></p>
+                        <p>社会の根本的な変革や年貢減免などを要求し、貧農層が地主や特権商人を激しく攻撃した。<br>
+                        【代表例】武州一揆（1866年）、陸奥信夫・伊達郡の<span class="fill-blank"><ruby>信達騒動<rt>しんだつそうどう</rt></ruby></span>など。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：近・現代 -->
+            <div class="section-title"><i data-lucide="scale"></i>近・現代の農民闘争と部落解放運動</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1873年・1874年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">血税一揆</span></strong></p>
+                        <p>政府が出した徴兵告諭の中の「血税」という言葉を誤解し、徴兵令の実施に反対して起こった一揆。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1876年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">地租改正反対一揆</span></strong></p>
+                        <p>地租の負担増に苦しむ農民が蜂起。茨城大一揆（真壁騒動）や三重大一揆（伊勢暴動）など。これにより政府は翌年、地租率を3%から2.5%に引き下げざるを得なかった。</p>
+                        <p style="margin-top: 8px;">※この時期には他にも、小学校の設立費用負担に反対する「<span class="fill-blank">学制反対一揆</span>」や、解放令に反対する農民が被差別部落を襲撃した「解放令反対一揆」なども起きた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1922年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">日本農民組合</span>の結成</strong></p>
+                        <p><span class="fill-blank">杉山元治郎</span>や<span class="fill-blank">賀川豊彦</span>らによって結成された日本初の全国的な農民組織。小作人が小作料減免などを求める<span class="fill-blank">小作争議</span>を指導した。</p>
+                        
+                        <p style="margin-top: 16px;"><strong><span class="fill-blank">全国水平社</span>の結成</strong></p>
+                        <p>被差別部落の人々の自主的な解放を目指して設立。<span class="fill-blank"><ruby>西光万吉<rt>さいこうまんきち</rt></ruby></span>が「水平社宣言」を、阪本清一郎らが綱領を起草した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1922年〜1926年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">木崎村争議</span></strong></p>
+                        <p>新潟県で起こった大規模な小作料減免闘争。地主側が提訴し、小作人側は不納同盟を結成して対抗した。最終的に地主が勝訴したが、実質的に小作料は引き下げられた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1924年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">小作調停法</span>の公布</strong></p>
+                        <p>頻発する小作争議を鎮静化するため、裁判所や調停委員会による調停制度を定めた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">第二次世界大戦後</span></div>
+                    <div class="timeline-content">
+                        <p>・1946年：<strong><span class="fill-blank">部落解放全国委員会</span></strong>の結成（戦後の再出発）。<br>
+                        ・1955年：全国委員会が発展し、<strong><span class="fill-blank">部落解放同盟</span></strong>が結成される。<br>
+                        ・1961年：同和対策審議会の設置。<br>
+                        ・1969年：同和地区（被差別部落）の生活環境改善を目的とした<strong><span class="fill-blank">同和対策事業特別措置法</span></strong>が公布された。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>中世の多様な一揆</h3>
+                        <br>農民だけでなく、武士や町衆、宗教勢力もそれぞれの目的で一揆を結びました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>一揆の種類</th>
+                                    <th>主体となる階層</th>
+                                    <th>主な目的・特徴</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">土一揆</span><br>（徳政一揆）</th>
+                                    <td><span class="fill-blank">惣</span>の土民、馬借など</td>
+                                    <td>年貢の減免や、借金帳消しを求める<span class="fill-blank">徳政令</span>の発布を要求して蜂起。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">国人一揆</span></th>
+                                    <td><span class="fill-blank">国人</span>（在地領主）</td>
+                                    <td>守護の圧力に対抗し、自らの領主権を確立するために国人同士が連合。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">国一揆</span><br>（惣国一揆）</th>
+                                    <td>国人、地侍、惣の土民</td>
+                                    <td>広域で連合し、守護大名の支配を排除して自治を行う。（例：<span class="fill-blank">山城の国一揆</span>）</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">一向一揆</span></th>
+                                    <td><span class="fill-blank">浄土真宗</span>（一向宗）の門徒</td>
+                                    <td>信仰を紐帯として守護や戦国大名と激しく抗争。（例：<span class="fill-blank">加賀の一向一揆</span>、<span class="fill-blank">石山戦争</span>）</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">法華一揆</span></th>
+                                    <td><span class="fill-blank">法華宗</span>の町衆</td>
+                                    <td>京都の町政を掌握したが、のちに延暦寺などの攻撃で壊滅した（天文法華の乱）。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    
+                    <li>
+                        <h3>近世の百姓一揆の形態推移</h3>
+                        <br>江戸時代を通じて、一揆の形態は小規模なものから大規模で過激なものへと変化していきました。
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th>前期（17世紀）</th>
+                                    <td><strong><span class="fill-blank">代表越訴型一揆</span></strong>：村役人が命がけで単独あるいは少人数で直訴する。</td>
+                                </tr>
+                                <tr>
+                                    <th>後期（18世紀）</th>
+                                    <td><strong><span class="fill-blank">惣百姓一揆</span></strong>：全村民が参加し、強訴や逃散を行う。指導者を隠す<span class="fill-blank"><ruby>傘連判状<rt>からかされんぱんじょう</rt></ruby></span>を使用。</td>
+                                </tr>
+                                <tr>
+                                    <th>末期（幕末期）</th>
+                                    <td><strong><span class="fill-blank">世直し一揆</span></strong>：貧農層が中心となり、不満の矛先が領主だけでなく、富裕な地主や特権商人にも向けられ、打ちこわしを伴うなど過激化した。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>その他の著名な一揆・騒動（江戸後期〜幕末）</h3>
+                        <br>
+                        ・<strong>防長大一揆（1831年）</strong>：長州藩で行われた藩の専売制強化に対する反対一揆。<br>
+                        ・<strong>三方領知替反対一揆（1840年）</strong>：出羽国庄内藩の農民が、藩主酒井氏の越後への転封（領地替え）に反対し、江戸の幕府へ直訴して転封を阻止した珍しい成功例。<br>
+                        ・<strong><span class="fill-blank"><ruby>三上山騒動<rt>みかみやまそうどう</rt></ruby></span>（1842年）</strong>：近江国で起きた、幕府の検地（天保の検地）に反対する大規模な一揆。検地は中止された。<br>
+                        ・<strong><span class="fill-blank"><ruby>三閉伊一揆<rt>さんへいいっき</rt></ruby></span>（1847年・1853年）</strong>：陸奥国南部藩で、藩の専売制や重税に反対し、農民が仙台藩領へ集団逃散した。<br>
+                        ・<strong><span class="fill-blank"><ruby>渋染一揆<rt>しぶぞめいっき</rt></ruby></span>（1856年）</strong>：備前国岡山藩が被差別民に対して「渋染め・藍染めの無地の着物しか着てはならない」などの厳しい差別令を出したことに対し、被差別民たちが強訴して撤回させた事件。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
