@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>027 演習５（地方史） - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット・基本設定 --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: inherit; }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- クイズ用スタイル --- */
+        .quiz-container {
+            background: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        .quiz-header {
+            background-color: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quiz-title-text {
+            font-weight: bold;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        .quiz-score {
+            font-weight: bold;
+            color: var(--text-muted);
+            background: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+        .quiz-progress-bar {
+            height: 6px;
+            background-color: var(--border-color);
+            width: 100%;
+        }
+        .quiz-progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            transition: width 0.4s ease-out;
+        }
+        .quiz-body {
+            padding: 16px 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .quiz-question-type {
+            display: inline-block;
+            font-size: 0.7rem;
+            color: white;
+            background-color: var(--primary-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+        .quiz-question {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .quiz-image-box {
+            margin-bottom: 16px;
+            text-align: center;
+            background: var(--bg-color);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .quiz-option-btn {
+            text-align: left;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background-color: var(--surface-color);
+            font-size: 0.9rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .quiz-option-btn:hover:not(:disabled) {
+            background-color: var(--nav-hover-bg);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .option-label {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+        .option-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+        .option-icon {
+            flex-shrink: 0;
+            margin-left: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .quiz-option-btn.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+        }
+        .quiz-option-btn.correct .option-label {
+            background-color: #bbf7d0;
+            color: #166534;
+        }
+        .quiz-option-btn.wrong {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        .quiz-option-btn.wrong .option-label {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+        .quiz-option-btn:disabled {
+            cursor: default;
+        }
+        .quiz-option-btn.disabled-fade {
+            opacity: 0.5;
+        }
+        .quiz-explanation {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+            border-left: 4px solid transparent;
+            line-height: 1.5;
+            font-size: 0.85rem;
+        }
+        .quiz-explanation.show {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .quiz-explanation.correct-exp {
+            background-color: #f0fdf4;
+            border-color: #22c55e;
+            color: #166534;
+        }
+        .quiz-explanation.wrong-exp {
+            background-color: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        .exp-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1rem;
+        }
+        .quiz-next-btn {
+            align-self: flex-end;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .quiz-next-btn.show {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .quiz-next-btn:hover {
+            background-color: #1e293b;
+            transform: translateY(-2px);
+        }
+        
+        /* 結果画面 */
+        .quiz-center-content {
+            text-align: center;
+            margin: auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .quiz-icon-large {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 16px;
+        }
+        .quiz-main-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            font-weight: bold;
+        }
+        .result-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--accent-color);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3);
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background-color: #0284c7;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-color);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; width: 100%; max-width: 100%; overflow-x: hidden; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 12px; width: 100%; }
+            .quiz-body { padding: 16px 12px; }
+            .quiz-question { font-size: 1rem; margin-bottom: 12px; }
+            .quiz-option-btn { padding: 8px 12px; font-size: 0.85rem; }
+            .option-label { width: 24px; height: 24px; font-size: 0.8rem; margin-right: 8px; }
+            .quiz-explanation { font-size: 0.8rem; padding: 10px 12px; }
+            .result-score { font-size: 3rem; }
+            .quiz-main-title { font-size: 1.3rem; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 027 演習５
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">027 演習５（地方史）</h1>
+        </div>
+
+        <div class="container" id="quiz-app-container">
+            <!-- JSによってここにクイズ画面が描画されます -->
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- 問題データ（全20問・形式混合） ---
+        const quizData = [
+            {
+                type: "穴埋め",
+                question: "大宝律令（701年）により、全国は畿内と七道からなる【　　　】に分けられ、地方行政機構が整備された。",
+                options: ["国・郡・里", "五畿七道", "大区・小区", "廃藩置県"],
+                correct: 1,
+                explanation: "律令制下では、全国を五畿（畿内）と七道（東海道・東山道・北陸道・山陰道・山陽道・南海道・西海道）に区分しました。"
+            },
+            {
+                type: "四肢択一",
+                question: "律令制下の地方行政において、中央の貴族が赴任して地方行政を統括した「国」の長官を何と呼んだか。",
+                options: ["国造", "郡司", "国司", "里長"],
+                correct: 2,
+                explanation: "国司は中央から派遣された官人（任期あり）で、地方行政の最高責任者でした。一方、郡司は旧国造などの在地首長が世襲で任じられました。"
+            },
+            {
+                type: "正誤問題",
+                question: "『日本書紀』の「改新の詔」には「初めて国司・郡司を置いた」とあるが、藤原京から出土した木簡などにより、大宝令以前は「郡」ではなく「評（こおり）」であったことが判明している。",
+                options: ["正しい", "誤り"],
+                correct: 0,
+                explanation: "正しい記述です。これを「郡評論争」といい、7世紀後半の金石文や木簡にはすべて「評」の文字が使われており、『日本書紀』の編纂者が大宝令以降の制度に合わせて書き換えたことが分かっています。"
+            },
+            {
+                type: "四肢択一",
+                question: "律令期の特別行政機関のうち、外交や防衛、西海道（九州）諸国の統轄を担当し、「遠の朝廷（とおのみかど）」と呼ばれたのはどこか。",
+                options: ["京職", "摂津職", "大宰府", "鎮守府"],
+                correct: 2,
+                explanation: "大宰府は九州の軍事・外交・行政を統括する重要な出先機関であり、「遠の朝廷」と呼ばれました。長官は帥（そち）です。"
+            },
+            {
+                type: "四肢択一",
+                question: "室町時代、東国を統治するために設置された最重要の地方行政機関はどれか。",
+                options: ["六波羅探題", "奥州総奉行", "鎌倉府", "京都所司代"],
+                correct: 2,
+                explanation: "室町幕府は京都に置かれたため、東国を支配する機関として鎌倉府を設け、足利尊氏の四男である基氏を初代鎌倉公方としました。"
+            },
+            {
+                type: "穴埋め",
+                question: "江戸幕府の地方行政の中心であり、朝廷や公家の監視と西国大名の統制を行った役職は【　　　】である。",
+                options: ["大坂城代", "京都所司代", "遠国奉行", "六波羅探題"],
+                correct: 1,
+                explanation: "京都所司代は、豊臣政権期の五奉行・前田玄以の役割を継承し、江戸幕府の西国支配の要として機能しました。"
+            },
+            {
+                type: "四肢択一",
+                question: "1878年（明治11年）、大久保利通暗殺後に地方統治を安定させるために制定された「三新法」に含まれないものはどれか。",
+                options: ["郡区町村編制法", "府県会規則", "地方税規則", "市制・町村制"],
+                correct: 3,
+                explanation: "市制・町村制は、のちの1888年に山県有朋らがドイツ人モッセの助言を受けて制定した地方自治制の法律です。三新法は他の3つを指します。"
+            },
+            {
+                type: "正誤問題",
+                question: "1947年に制定された「地方自治法」により、都道府県知事や市町村長は住民による直接選挙（公選制）で選ばれるようになった。",
+                options: ["正しい", "誤り"],
+                correct: 0,
+                explanation: "正しい記述です。戦前の官選（内務省からの派遣）から、日本国憲法の「地方自治の本旨」に基づき、住民の直接選挙による公選制へと改められました。"
+            },
+            {
+                type: "四肢択一",
+                question: "北海道の古代文化のうち、本土の弥生文化の時期に該当するが農耕を行わず、漁労や狩猟・採集を基盤とした文化を何というか。",
+                options: ["オホーツク文化", "擦文文化", "続縄文文化", "アイヌ文化"],
+                correct: 2,
+                explanation: "北海道では稲作（弥生文化）が定着せず、縄文文化の生活様式を引き継ぐ「続縄文文化」が展開しました。"
+            },
+            {
+                type: "穴埋め",
+                question: "1457年、和人の不当な交易に抗議して蜂起したアイヌの首長は【　　　】である。",
+                options: ["シャクシャイン", "コシャマイン", "アテルイ", "ツキノエ"],
+                correct: 1,
+                explanation: "コシャマインの蜂起は、客将の武田信広（のちの松前氏の祖）によって鎮圧されました。シャクシャインの蜂起は後の1669年です。"
+            },
+            {
+                type: "四肢択一",
+                question: "江戸時代初期、松前藩が上級家臣に対し、特定の漁場（商場）でのアイヌとの交易権を知行として与えた制度を何というか。",
+                options: ["商場知行制", "場所請負制", "知行国制", "村請制"],
+                correct: 0,
+                explanation: "松前藩は米がとれないため、土地ではなく「アイヌとの交易権（商場）」を家臣に与える商場知行制（あきないばちぎょうせい）をとりました。"
+            },
+            {
+                type: "四肢択一",
+                question: "18世紀後期から19世紀初期にかけて、ロシアの南下などに危機感を抱いた幕府の対応として誤っているものはどれか。",
+                options: ["近藤重蔵らが択捉島に「大日本恵登呂府」の標柱を建てた。", "間宮林蔵を探検させ、樺太が島であることを確認した。", "松前藩を陸奥国へ転封し、蝦夷地を幕府の直轄地とした。", "開拓使を設置し、屯田兵制度を導入した。"],
+                correct: 3,
+                explanation: "開拓使の設置（1869年）や屯田兵制度（1874年）は、明治維新後の近代政府（明治政府）による北海道開拓の施策です。"
+            },
+            {
+                type: "穴埋め",
+                question: "明治政府がアイヌの人々から土地や独自の生業を奪い、日本への同化を強制するために1899年に公布した法律は「北海道【　　　】保護法」である。",
+                options: ["旧土人", "先住民", "アイヌ", "屯田兵"],
+                correct: 0,
+                explanation: "北海道旧土人保護法は、アイヌに農業を強制し同化を進めましたが、実質的には貧困と差別を生む結果となり、1997年のアイヌ文化振興法制定まで続きました。"
+            },
+            {
+                type: "四肢択一",
+                question: "12世紀頃から沖縄（琉球）の各地に出現した豪族を何と呼ぶか。",
+                options: ["按司（あじ）", "祝女（のろ）", "地頭", "国人"],
+                correct: 0,
+                explanation: "按司（あじ）と呼ばれる豪族が各地にグスク（城・砦）を築いて勢力を争う「グスク時代」を迎えました。"
+            },
+            {
+                type: "正誤問題",
+                question: "1429年、中山王の尚巴志が北山・中山・南山の3王朝を統一し、琉球王国を建国した。",
+                options: ["正しい", "誤り"],
+                correct: 0,
+                explanation: "正しい記述です。首里を都とし、那覇を外港として中継貿易（万国の津梁）で大いに繁栄しました。"
+            },
+            {
+                type: "四肢択一",
+                question: "1609年、琉球に侵攻して服属させ、以後の日本と中国（明・清）への「両属体制」のきっかけを作った大名家はどこか。",
+                options: ["宗氏", "毛利氏", "島津氏（薩摩藩）", "大友氏"],
+                correct: 2,
+                explanation: "薩摩藩（島津家久）が琉球に出兵し尚寧王を捕らえ、実質的な支配下に置きました。"
+            },
+            {
+                type: "画像問題",
+                question: "1609年以降の琉球王国は、江戸幕府に対して将軍の代替わりごとに使節を派遣しました。この使節を何というか。",
+                imageUrl: "",
+                options: ["朝鮮通信使", "遣唐使", "慶賀使", "冊封使"],
+                correct: 2,
+                explanation: "将軍の代替わりごとに「慶賀使（けいがし）」を、琉球王の代替わりごとに「謝恩使（しゃおんし）」を江戸へ派遣しました。なお、中国から琉球へ来る使節が「冊封使」です。"
+            },
+            {
+                type: "穴埋め",
+                question: "1879年、明治政府が軍隊を派遣して琉球藩を廃止し、沖縄県を設置した一連の強権的な措置を【　　　】という。",
+                options: ["台湾出兵", "琉球処分", "廃藩置県", "版籍奉還"],
+                correct: 1,
+                explanation: "1872年の琉球藩設置から1879年の沖縄県設置に至る、日本への帰属を強制したプロセスを「琉球処分」と呼びます。"
+            },
+            {
+                type: "四肢択一",
+                question: "沖縄県の近代化において、明治政府が清国の反発や県民の抵抗を抑えるために、人頭税などの古い制度をそのまま残した政策を何というか。",
+                options: ["旧慣温存策", "同化政策", "皇民化教育", "地方自治制"],
+                correct: 0,
+                explanation: "「旧慣温存策」により、沖縄県は他県に比べて近代的な制度（地租改正や選挙制度など）の導入が大幅に遅れました。"
+            },
+            {
+                type: "四肢択一",
+                question: "1969年、日米共同声明を発表し、「1972年、核抜き・本土なみ」の沖縄返還に合意した日本の首相は誰か。",
+                options: ["吉田茂", "岸信介", "佐藤栄作", "田中角栄"],
+                correct: 2,
+                explanation: "佐藤栄作首相とニクソン大統領の会談により合意され、1972年に沖縄の祖国復帰が実現しました（ただし広大な米軍基地は維持されました）。"
+            }
+        ];
+
+        // --- エンドレス復習モード用 状態管理変数 ---
+        let totalQuestions = quizData.length;
+        let activeQueue = []; // 現在出題する問題のインデックス配列
+        let nextQueue = [];   // 間違えて次回（復習）に回すインデックス配列
+        let queueIndex = 0;   // activeQueue内の現在の位置
+        
+        let attempts = [];    // 各問題の挑戦回数（0なら初見）
+        let firstPassScore = 0; // 1回目で正解した数
+        let isAnswered = false;
+
+        const appDiv = document.getElementById('quiz-app-container');
+
+        // クイズ初期化（ロード時に直接開始）
+        function startQuiz() {
+            activeQueue = quizData.map((_, i) => i);
+            nextQueue = [];
+            queueIndex = 0;
+            firstPassScore = 0;
+            attempts = new Array(totalQuestions).fill(0);
+            renderQuestionScreen();
+        }
+
+        // 1. 問題画面の描画
+        function renderQuestionScreen() {
+            isAnswered = false;
+            const qIndex = activeQueue[queueIndex];
+            const q = quizData[qIndex];
+            const isReview = attempts[qIndex] > 0; // 2回目以降なら復習モード
+
+            // 進行度の計算 (残り何問正解すれば完全クリアか)
+            const remaining = (activeQueue.length - queueIndex) + nextQueue.length;
+            const progress = ((totalQuestions - remaining) / totalQuestions) * 100;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, index) => {
+                optionsHtml += `
+                    <button onclick="checkAnswer(${index})" id="opt-${index}" class="quiz-option-btn">
+                        <span class="option-label">${index + 1}</span>
+                        <span class="option-text">${opt}</span>
+                        <span class="option-icon" id="opt-icon-${index}"></span>
+                    </button>
+                `;
+            });
+
+            let imageHtml = '';
+            if (q.imageUrl) {
+                imageHtml = `
+                    <div class="quiz-image-box">
+                        <i data-lucide="image" style="width: 24px; height: 24px; margin-bottom: 4px;"></i>
+                        <span style="font-weight: bold;">${q.imageUrl}</span>
+                    </div>
+                `;
+            }
+
+            // ヘッダーテキストの出し分け（初見か復習か）
+            const headerText = isReview 
+                ? `<span class="text-red-500 mr-2 flex items-center gap-1"><i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>復習モード</span>` 
+                : `問題 ${queueIndex + 1} / ${totalQuestions}`;
+            const subHeaderText = isReview ? `<span class="text-slate-400 text-sm font-normal">（残り ${remaining} 問）</span>` : ``;
+
+            appDiv.innerHTML = `
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <div class="quiz-title-text">
+                            ${!isReview ? `<i data-lucide="file-question" style="width: 18px; height: 18px;"></i>` : ''}
+                            ${headerText} ${subHeaderText}
+                        </div>
+                        <div class="quiz-score">
+                            初回スコア: ${firstPassScore}
+                        </div>
+                    </div>
+                    <div class="quiz-progress-bar">
+                        <div class="quiz-progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="quiz-body">
+                        <div><span class="quiz-question-type">${q.type}</span></div>
+                        <h3 class="quiz-question">${q.question}</h3>
+                        ${imageHtml}
+                        <div class="quiz-options">
+                            ${optionsHtml}
+                        </div>
+                        <div id="explanation-box" class="quiz-explanation">
+                            <!-- 解説がここに表示されます -->
+                        </div>
+                        <button onclick="nextQuestion()" id="next-btn" class="quiz-next-btn">
+                            次の問題へ <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 2. 答え合わせ
+        function checkAnswer(selectedIndex) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const qIndex = activeQueue[queueIndex];
+            const q = quizData[qIndex];
+            const isCorrect = selectedIndex === q.correct;
+
+            // 初回正解時のみスコア加算
+            if (attempts[qIndex] === 0 && isCorrect) {
+                firstPassScore++;
+            }
+            
+            // 挑戦回数を増やす
+            attempts[qIndex]++;
+
+            // 間違えた場合は、復習キューに追加
+            if (!isCorrect) {
+                nextQueue.push(qIndex);
+            }
+
+            // 選択肢のUI更新
+            for (let i = 0; i < q.options.length; i++) {
+                const btn = document.getElementById(`opt-${i}`);
+                const icon = document.getElementById(`opt-icon-${i}`);
+                btn.disabled = true;
+                
+                if (i === q.correct) {
+                    btn.classList.add('correct');
+                    icon.innerHTML = '<i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>';
+                } else if (i === selectedIndex && !isCorrect) {
+                    btn.classList.add('wrong');
+                    icon.innerHTML = '<i data-lucide="x-circle" style="width: 20px; height: 20px;"></i>';
+                } else {
+                    btn.classList.add('disabled-fade');
+                }
+            }
+
+            // スコアの更新
+            document.querySelector('.quiz-score').innerText = `初回スコア: ${firstPassScore}`;
+
+            // 解説ボックスの表示
+            const expBox = document.getElementById('explanation-box');
+            expBox.classList.add('show');
+            if (isCorrect) {
+                expBox.classList.add('correct-exp');
+                expBox.innerHTML = `
+                    <div class="exp-title"><i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i> 正解！</div>
+                    <p>${q.explanation}</p>
+                `;
+            } else {
+                expBox.classList.add('wrong-exp');
+                expBox.innerHTML = `
+                    <div class="exp-title"><i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i> 不正解...</div>
+                    <p style="margin-bottom: 8px;"><strong>正解は「${q.options[q.correct]}」です。</strong></p>
+                    <p>${q.explanation}</p>
+                `;
+            }
+
+            // ボタンの文言調整（キューの最後で、かつ復習問題がない場合は「結果を見る」）
+            const nextBtn = document.getElementById('next-btn');
+            if (queueIndex >= activeQueue.length - 1 && nextQueue.length === 0) {
+                nextBtn.innerHTML = `結果を見る <i data-lucide="award" style="width: 18px; height: 18px;"></i>`;
+            }
+            nextBtn.classList.add('show');
+            lucide.createIcons();
+        }
+
+        // 次の問題へ遷移（エンドレス復習ロジック）
+        function nextQuestion() {
+            queueIndex++;
+            
+            // 現在のキューを最後まで解き終わったか？
+            if (queueIndex >= activeQueue.length) {
+                if (nextQueue.length > 0) {
+                    // 間違えた問題がある場合、それを新しいキューとして復習ループ開始
+                    activeQueue = [...nextQueue];
+                    nextQueue = [];
+                    queueIndex = 0;
+                    renderQuestionScreen();
+                } else {
+                    // 間違えた問題がゼロになれば完全クリア！結果画面へ
+                    renderResultScreen();
+                }
+            } else {
+                // まだ現在のキューが残っている場合は次へ
+                renderQuestionScreen();
+            }
+        }
+
+        // 3. 結果画面（全問正解完了時）
+        function renderResultScreen() {
+            const percentage = Math.round((firstPassScore / totalQuestions) * 100);
+            let message = '間違えた問題もすべてクリアしました！確実に実力がついています。';
+            
+            appDiv.innerHTML = `
+                <div class="quiz-container">
+                    <div class="quiz-progress-bar">
+                        <div class="quiz-progress-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="quiz-center-content">
+                        <div class="quiz-icon-large" style="background-color: #fef08a; color: #a16207;">
+                            <i data-lucide="award" style="width: 50px; height: 50px;"></i>
+                        </div>
+                        <h2 class="quiz-main-title">全問クリア達成！</h2>
+                        
+                        <div class="result-score">${firstPassScore} <span style="font-size: 2rem; color: var(--text-muted);">/ ${totalQuestions}</span></div>
+                        <div style="font-size: 1.2rem; color: var(--text-muted); font-weight: bold; margin-bottom: 32px;">初回正答率: ${percentage}%</div>
+                        
+                        <div style="background: var(--bg-color); padding: 24px; border-radius: 12px; margin-bottom: 40px; max-width: 500px; width: 100%; border: 1px solid var(--border-color);">
+                            <p style="font-size: 1.1rem; font-weight: bold; color: var(--text-color);">${message}</p>
+                        </div>
+                        
+                        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 400px;">
+                            <button onclick="startQuiz()" class="btn-primary" style="width: 100%; justify-content: center;">
+                                <i data-lucide="rotate-ccw" style="width: 20px; height: 20px;"></i> はじめから挑戦する
+                            </button>
+                            <a href="/n-kyozai/index.html" class="btn-secondary" style="width: 100%; justify-content: center;">
+                                <i data-lucide="home" style="width: 20px; height: 20px;"></i> ホームへ戻る
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ロードと同時に開始
+        startQuiz();
+    </script>
+</body>
+</html>
