@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>016 近・現代の社会問題史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+            text-align: center;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（横割りカード型表示） */
+            .summary-table, .summary-table tbody {
+                display: block; width: 100%;
+            }
+            .summary-table thead { display: none; }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 12px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .summary-table th {
+                border: none; border-right: 1px solid var(--border-color);
+                text-align: center; padding: 12px 8px; background-color: #f8fafc;
+                width: 35%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .summary-table td { border: none; padding: 12px; width: 65%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 016 近・現代の社会問題史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">016 近・現代の社会問題史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：近代の労働問題と労働運動 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="users"></i>近代の労働問題と労働運動</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1886年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">雨宮製糸</span>スト</strong></p>
+                        <p>山梨県甲府の雨宮製糸工場の女工たちによる、日本最初のストライキ。一定の待遇改善を獲得した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1888年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>高島炭鉱問題</strong></p>
+                        <p>長崎県の三菱経営の炭鉱で、鉱夫虐待が社会問題化。雑誌『<span class="fill-blank">日本人</span>』が非人道的な納屋制度を告発した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1890年頃〜</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">足尾鉱毒事件</span></strong></p>
+                        <p><span class="fill-blank">古河市兵衛</span>が経営する栃木県足尾銅山の鉱毒が、渡良瀬川流域を汚染し社会問題化した。<br>1900年には被害住民の陳情運動が弾圧され（川俣事件）、1901年には元衆議院議員の<span class="fill-blank">田中正造</span>が天皇に直訴を行った。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1897年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank"><ruby>労働組合期成会<rt>ろうどうくみあいきせいかい</rt></ruby></span>の結成</strong></p>
+                        <p>高野房太郎・<span class="fill-blank">片山潜</span>らが結成し、労働組合の結成を促した（鉄工組合などの結成につながった）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1911年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">工場法</span>の公布</strong></p>
+                        <p>児童雇用の禁止や、女子・年少者の深夜業禁止などを定めた。しかし、資本家の反対で施行は5年後とされ、15人未満の工場は適用外となるなど不徹底な内容であった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1912年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">友愛会</span>の結成</strong></p>
+                        <p><span class="fill-blank">鈴木文治</span>が結成した労働者団体。当初は労資協調主義をとっていた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1920年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>第1回<span class="fill-blank">メーデー</span></strong></p>
+                        <p>5月1日に開催。1936年以降は弾圧で中絶する。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1921年・1925年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">日本労働総同盟</span>の結成</strong></p>
+                        <p>1921年、友愛会が発展して改称。階級闘争主義へと転換した。さらに1925年には、除名された左派が日本労働組合評議会を結成した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1940年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">大日本産業報国会</span>の結成</strong></p>
+                        <p>新体制運動により、既存の労働組合は解散させられ、労資一体の産業報国会に組み込まれた。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：戦前の社会主義運動と思想・言論弾圧 -->
+            <div class="section-title"><i data-lucide="alert-circle"></i>戦前の社会主義運動と思想・言論弾圧</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1898年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">社会主義研究会</span>の結成</strong></p>
+                        <p><span class="fill-blank">安部磯雄</span>・<span class="fill-blank">片山潜</span>らが結成（後に社会主義協会に発展）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1901年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">社会民主党</span>の結成</strong></p>
+                        <p>安部・片山・幸徳秋水らが結成した日本最初の社会主義政党。しかし結成の2日後に禁止された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1903年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">平民社</span>の結成</strong></p>
+                        <p><span class="fill-blank">幸徳秋水</span>・<span class="fill-blank">堺利彦</span>らが結成し、『平民新聞』で日露戦争への反戦論を展開した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1906年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">日本社会党</span>の結成</strong></p>
+                        <p>日本最初の合法的社会主義政党。しかし翌年に穏健派と急進派に分裂し、結社禁止となった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1910年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">大逆事件</span></strong></p>
+                        <p>明治天皇暗殺計画の容疑で、幸徳秋水や管野スガら12名が死刑となった。以後、社会主義運動は「冬の時代」を迎える。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1920年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">森戸事件</span></strong></p>
+                        <p>東大助教授の森戸辰男が、クロポトキンの無政府主義を研究したことで危険思想とされ、休職・起訴された事件。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1922年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">日本共産党</span>の結成</strong></p>
+                        <p>コミンテルンの日本支部として、堺利彦や山川均らが非合法に結成した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1925年</span><span class="timeline-cabinet">加藤高明内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">治安維持法</span>の制定</strong></p>
+                        <p>国体の変革や私有財産制度の否認を目的とした結社を禁止した。（普通選挙法と同時に制定）</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1928年</span><span class="timeline-cabinet">田中義一内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">三・一五事件</span>と弾圧強化</strong></p>
+                        <p>共産党員の全国的検挙が行われた。さらに治安維持法が改悪されて最高刑が<span class="fill-blank">死刑</span>となり、思想・政治犯を取り締まる<span class="fill-blank">特別高等警察</span>（特高）が全国に設置された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1933年</span><span class="timeline-cabinet">斎藤実内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">滝川事件</span></strong></p>
+                        <p>京大教授の滝川幸辰の『刑法読本』が自由主義的であるとして休職処分となり、抗議した法学部教員が多数辞職した事件。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1935年</span><span class="timeline-cabinet">岡田啓介内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">天皇機関説問題</span></strong></p>
+                        <p><span class="fill-blank">美濃部達吉</span>の天皇機関説が貴族院などで非難され、政府は国体明徴声明を出して学説を排撃。美濃部は議員辞職に追い込まれた。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1937年〜1938年</span><span class="timeline-cabinet">近衛文麿①内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">矢内原事件</span>と人民戦線事件</strong></p>
+                        <p>反戦思想を非難された東大教授の<span class="fill-blank">矢内原忠雄</span>が退職に追い込まれた。また、反ファッショ人民戦線運動の容疑で大内兵衛や美濃部亮吉らが検挙された（人民戦線事件）。翌年には同じく東大教授の<span class="fill-blank">河合栄治郎</span>の著書が発禁・起訴された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1941年</span><span class="timeline-cabinet">近衛文麿②内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">予防拘禁制度</span>の導入</strong></p>
+                        <p>治安維持法を再改正し、刑期満了後も政治犯・思想犯を引き続き拘禁できる制度を導入した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：戦後の労働運動 -->
+            <div class="section-title"><i data-lucide="trending-up"></i>戦後の労働運動の流れ</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1945年〜1947年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>労働三法の制定</strong></p>
+                        <p>GHQの指令のもと、労働者の権利を保障する法律が整備された。<br>
+                        ・1945年：<strong><span class="fill-blank">労働組合法</span></strong>（団結権・団体交渉権・争議権の保障）<br>
+                        ・1946年：<strong><span class="fill-blank">労働関係調整法</span></strong>（労働委員会の設置による争議の予防・解決）<br>
+                        ・1947年：<strong><span class="fill-blank">労働基準法</span></strong>（労働条件の最低基準を規定）</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1947年</span><span class="timeline-cabinet">吉田茂①内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">二・一ゼネスト</span>計画</strong></p>
+                        <p>官公庁の労働組合を中心とした全国的なゼネストが計画されたが、GHQのマッカーサーの中止命令により直前に挫折した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1949年</span><span class="timeline-cabinet">吉田茂③内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>国鉄をめぐる三大ミステリー事件</strong></p>
+                        <p>国鉄の人員整理案に労組が激しく反対する中、<strong><span class="fill-blank">下山事件</span></strong>、三鷹事件、松川事件が相次いで発生した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1950年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">レッド・パージ</span>と<span class="fill-blank">総評</span>の結成</strong></p>
+                        <p>GHQの指令で共産党員や同調者が公職や企業から追放された。一方で、反共の民主化を目指す労働組合の全国組織として、日本労働組合総評議会（総評）が結成された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1952年</span></div>
+                    <div class="timeline-content">
+                        <p><strong><span class="fill-blank">破壊活動防止法</span>（破防法）の公布</strong></p>
+                        <p>メーデーの日にデモ隊と警察が衝突した「血のメーデー事件」などを背景に、暴力主義的破壊活動を取り締まる法律が制定された（「逆コース」の一環）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1955年</span><span class="timeline-cabinet">鳩山一郎①内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>初の<span class="fill-blank">春闘</span>（春季闘争）</strong></p>
+                        <p>総評の指導により、毎年春に各産業の労組が共同で賃上げを要求する戦術が開始され、定着した。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1989年</span><span class="timeline-cabinet">海部俊樹①内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>労働組合の大再編</strong></p>
+                        <p>総評などが解散し、労資協調路線の<strong><span class="fill-blank">連合</span></strong>（日本労働組合総連合会）が結成された。一方、共産党系は全労連を、社会党左派系は全労協を結成した。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>社会問題を扱った主なルポ・書籍</h3>
+                        <br>近代化の裏で過酷な労働を強いられた人々の実態を伝える重要な記録です。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>書名</th>
+                                    <th>著者</th>
+                                    <th>内容・特徴</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>『<span class="fill-blank">日本之下層社会</span>』<br>(1899年)</th>
+                                    <td><span class="fill-blank">横山源之助</span></td>
+                                    <td>都市の貧民や労働者、製糸女工や小作人の生活の実態を調査したルポルタージュ。</td>
+                                </tr>
+                                <tr>
+                                    <th>『<span class="fill-blank">職工事情</span>』<br>(1903年)</th>
+                                    <td><span class="fill-blank">農商務省</span></td>
+                                    <td>製糸・紡績業などの労働条件を記録。<span class="fill-blank">工場法</span>立案の基礎資料となった。</td>
+                                </tr>
+                                <tr>
+                                    <th>『<span class="fill-blank">女工哀史</span>』<br>(1925年)</th>
+                                    <td><span class="fill-blank">細井和喜蔵</span></td>
+                                    <td>紡績工場での実体験に基づき、女工の立場から過酷な労働条件を生々しく描いた。</td>
+                                </tr>
+                                <tr>
+                                    <th>『あゝ野麦峠』<br>(1968年)</th>
+                                    <td>山本茂実</td>
+                                    <td>飛騨の野麦峠を越えて長野県の製糸工場へ働きに出た老女たちからの聞き書き。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>四大公害訴訟と環境対策</h3>
+                        <br>高度経済成長の影で深刻な健康被害が発生しました。1960年代後半に提訴され、1970年代前半にすべて原告勝訴となりました。
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">水俣病</span></th>
+                                    <td>熊本県水俣湾で発生。チッソ工場からの<span class="fill-blank">有機水銀</span>（メチル水銀）による魚介類汚染。</td>
+                                </tr>
+                                <tr>
+                                    <th>新潟水俣病</th>
+                                    <td>新潟県阿賀野川流域で発生。昭和電工工場からのメチル水銀が原因（第二水俣病）。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">イタイイタイ病</span></th>
+                                    <td>富山県神通川流域で発生。三井金属神岡鉱業所からの<span class="fill-blank">カドミウム</span>による土壌汚染。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">四日市ぜんそく</span></th>
+                                    <td>三重県で発生。石油化学コンビナートからの<span class="fill-blank">硫黄酸化物</span>による大気汚染。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br><b>【政府の対策】</b>
+                        <br>公害の深刻化を受け、1967年に<strong><span class="fill-blank">公害対策基本法</span></strong>が公布され（1993年に環境基本法に発展）、1971年には公害・自然保護行政を管掌する<strong><span class="fill-blank">環境庁</span></strong>（現在の環境省）が設置されました。
+                    </li>
+                    
+                    <li>
+                        <h3>日本資本主義論争（昭和初期）</h3>
+                        <br>1920年代後半から30年代にかけて、日本の資本主義の性格と革命の方法をめぐって、マルクス主義者の間で激しい論争が起こりました。
+                        <ul>
+                            <li><strong><span class="fill-blank">講座派</span></strong>：『日本資本主義発達史講座』にかかわった<span class="fill-blank">野呂栄太郎</span>や羽仁五郎らのグループ。日本を半封建的とみなし、まずブルジョワ民主主義革命が必要だと主張しました。</li>
+                            <li><strong><span class="fill-blank">労農派</span></strong>：雑誌『労農』によった<span class="fill-blank">山川均</span>らのグループ。日本はすでに資本主義が発達しているため、直接社会主義革命を目指すべきだと主張しました。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
