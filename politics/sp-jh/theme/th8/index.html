@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>008 農業・産業史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- 画像拡大・埋め込みスタイル --- */
+        .map-image-container {
+            margin: 16px 0;
+            text-align: center;
+        }
+        .map-img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            cursor: zoom-in;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            object-fit: contain;
+        }
+        .map-caption {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .lightbox-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-img {
+            max-width: 95%; max-height: 90vh;
+            border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out; object-fit: contain; background: white;
+        }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（カード型表示） */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table th, .summary-table td {
+                display: block; width: 100%;
+            }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 16px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .summary-table th {
+                border: none; border-bottom: 1px solid var(--border-color);
+                text-align: left; padding: 12px 16px; background-color: #f8fafc;
+            }
+            .summary-table td { border: none; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 008 農業・産業史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">008 農業・産業史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：農業技術の発達 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="tractor"></i>農業技術の発達（縄文〜江戸）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">縄文時代</span></div>
+                    <div class="timeline-content">
+                        <p>青森県<span class="fill-blank">三内丸山遺跡</span>でクリ・アワなどを栽培。縄文晩期には福岡県<span class="fill-blank">板付遺跡</span>や佐賀県<span class="fill-blank">菜畑遺跡</span>などで<span class="fill-blank">水田址</span>が出土し、水稲耕作が始まっていた。稲作は北上し青森県<span class="fill-blank">垂柳遺跡</span>でも水田址が出土している。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">弥生時代</span></div>
+                    <div class="timeline-content">
+                        <p><strong>【前期】</strong> 水はけの悪い<span class="fill-blank">湿田</span>を利用し、籾を直接まく<span class="fill-blank">直播</span>が行われた。収穫には<span class="fill-blank">石包丁</span>を用いて穂首刈りをした。</p>
+                        <p><strong>【後期】</strong> 畦（あぜ）で区画した<span class="fill-blank">乾田</span>が開発され、<span class="fill-blank">田植え</span>が普及。収穫には<span class="fill-blank">鉄鎌</span>を用いて根刈りをするようになった。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">鎌倉時代</span></div>
+                    <div class="timeline-content">
+                        <p>畿内・瀬戸内地方で麦を裏作とする<span class="fill-blank">二毛作</span>が広まる。<span class="fill-blank">牛馬耕</span>が普及し、肥料として<span class="fill-blank">刈敷</span>や<span class="fill-blank">草木灰</span>、動物の糞尿である<span class="fill-blank">厩肥</span>が利用された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">室町時代</span></div>
+                    <div class="timeline-content">
+                        <p>二毛作が全国に普及し、一部で米・麦・そばを作る<span class="fill-blank">三毛作</span>も開始された。<span class="fill-blank">灌漑用水車</span>や人間の糞尿である<span class="fill-blank">下肥</span>が利用されるようになる。<br>稲の品種改良も進み（<span class="fill-blank">早稲</span>・<span class="fill-blank">中稲</span>・<span class="fill-blank">晩稲</span>）、災害に強く多収穫な<span class="fill-blank">大唐米</span>（赤米）も栽培された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">江戸時代</span></div>
+                    <div class="timeline-content">
+                        <p><strong>【新田開発】</strong> 代官見立新田や、有力商人が資金を出す<span class="fill-blank">町人請負新田</span>（鴻池新田・紫雲寺潟新田など）が盛んに行われた。</p>
+                        <p><strong>【農学の発展】</strong> <span class="fill-blank">宮崎安貞</span>の『<span class="fill-blank">農業全書</span>』や、<span class="fill-blank">大蔵永常</span>の『農具便利論』『広益国産考』などの農書が普及した。</p>
+                        <p><strong>【商品作物と肥料】</strong> 麻・木綿・茶・桑などの<span class="fill-blank">四木三草</span>をはじめとする商品作物の栽培が本格化。それに伴い、お金で買う肥料である<span class="fill-blank">金肥</span>（<span class="fill-blank">油粕</span>・<span class="fill-blank">干鰯</span>・<span class="fill-blank">〆粕</span>）が普及した。</p>
+
+                        <details style="margin-top: 16px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;">
+                            <summary style="cursor: pointer; font-weight: bold; color: var(--accent-color); display: flex; align-items: center; gap: 6px; outline: none; list-style: none;">
+                                <i data-lucide="image" style="width: 18px; height: 18px;"></i>図を表示する（江戸時代の主な農具）
+                            </summary>
+                            <div class="map-image-container" style="margin-top: 16px;">
+                                <img src="2026-03-04_18h11_06.png" alt="江戸時代の主な農具" class="map-img" onclick="openLightbox(this.src)">
+                                <div class="map-caption">【図】江戸時代に普及した主な農具</div>
+                            </div>
+                        </details>
+
+                        <p style="margin-top: 12px;"><strong>【農具の進歩】</strong></p>
+                        <ul>
+                            <li><span class="fill-blank">備中鍬</span>：深く耕すことが可能な鍬。</li>
+                            <li><span class="fill-blank">千歯扱</span>：効率的な脱穀具（別名：後家倒し）。</li>
+                            <li><span class="fill-blank">穀竿</span>（唐竿）：叩いて脱穀する道具。</li>
+                            <li><span class="fill-blank">千石簁</span>：網目を利用した穀類の選別器具。</li>
+                            <li><span class="fill-blank">唐箕</span>：手回しで風を起こして穀類を選別する器具。</li>
+                            <li><span class="fill-blank">踏車</span>：足踏み式の揚水機（中国伝来の竜骨車に代わり普及）。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：近代の産業発展 -->
+            <div class="section-title"><i data-lucide="factory"></i>近代の産業発展（紡績業・製糸業）</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1882年</span></div>
+                    <div class="timeline-content">
+                        <p><span class="fill-blank">渋沢栄一</span>らによって、蒸気機関を動力とする<span class="fill-blank">大阪紡績会社</span>が設立された（翌年開業）。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1890年</span></div>
+                    <div class="timeline-content">
+                        <p>国内の綿糸の<span class="fill-blank">生産量</span>が、輸入量を上回った。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1894年</span></div>
+                    <div class="timeline-content">
+                        <p>製糸業において、<span class="fill-blank">器械製糸</span>の生産量が、伝統的な<span class="fill-blank">座繰製糸</span>の生産量を上回った。<br>紡績業では、綿糸輸出関税免除法が公布された。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1896年・1897年</span></div>
+                    <div class="timeline-content">
+                        <p>1896年に綿花輸入関税免除法が公布され、翌1897年には綿糸の<span class="fill-blank">輸出量</span>が輸入量を上回った。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1909年</span></div>
+                    <div class="timeline-content">
+                        <p>日本の<span class="fill-blank">生糸</span>輸出量が中国を超えて<span class="fill-blank">世界第1位</span>となった。また、綿布の輸出額も輸入額を上回った。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>中世の主な都市</h3>
+                        <br>商業や交通の発達に伴い、各地に様々な性格を持った都市が発展しました。
+                        <table class="summary-table">
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">城下町</span></th>
+                                    <td>戦国大名の居城を中心に形成。（例：春日山、一乗谷、小田原、府中、山口など）</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">港町</span></th>
+                                    <td>海や河川の交通の要衝。（例：十三湊、敦賀、小浜、兵庫、坊津、大津など）</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">門前町</span></th>
+                                    <td>有力な寺社の前に形成。（例：長野/善光寺、宇治・山田/伊勢神宮など）</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">寺内町</span></th>
+                                    <td>浄土真宗（一向宗）の寺院を中心に、濠などで防御を固めた町。（例：吉崎、石山、富田林など）</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">自治都市</span></th>
+                                    <td>豪商たち（会合衆や年行司）によって自治運営された都市。（例：堺、博多、平野）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>官営事業の払下げ（明治時代）</h3>
+                        <br>明治政府は殖産興業政策の転換により、赤字となっていた官営工場や鉱山を、政府と密接な関係を持つ<span class="fill-blank">政商</span>へ安価で払い下げました。これがのちの財閥形成の基礎となります。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>払下げ対象の事業</th>
+                                    <th>払下げ先（政商）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>高島炭鉱（長崎）、佐渡金山、兵庫造船所など</td>
+                                    <td><span class="fill-blank">三菱</span>（岩崎弥太郎など）</td>
+                                </tr>
+                                <tr>
+                                    <td>三池炭鉱（福岡）、富岡製糸場など</td>
+                                    <td><span class="fill-blank">三井</span>（三井家）</td>
+                                </tr>
+                                <tr>
+                                    <td>院内銀山、足尾銅山など</td>
+                                    <td><span class="fill-blank">古河</span>（古河市兵衛）</td>
+                                </tr>
+                                <tr>
+                                    <td>深川セメント製造所</td>
+                                    <td><span class="fill-blank">浅野</span>（浅野総一郎）</td>
+                                </tr>
+                                <tr>
+                                    <td>兵庫造船所</td>
+                                    <td><span class="fill-blank">川崎</span>（川崎正蔵）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- ライトボックス用オーバーレイ -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <img class="lightbox-img" id="lightboxImg" src="" alt="拡大画像">
+    </div>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImg = document.getElementById('lightboxImg');
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
