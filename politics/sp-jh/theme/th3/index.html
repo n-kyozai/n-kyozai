@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>003 日米関係史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p {
+            margin-bottom: 8px;
+        }
+        .timeline-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- テーブルスタイル --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            vertical-align: top;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 30%;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 8px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（カード型表示） */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table th, .summary-table td {
+                display: block;
+                width: 100%;
+            }
+            .summary-table {
+                border: none;
+                background-color: transparent;
+            }
+            .summary-table tr {
+                margin-bottom: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                overflow: hidden;
+                background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .summary-table th {
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                text-align: left;
+                padding: 12px 16px;
+            }
+            .summary-table td {
+                border: none;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 003 日米関係史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">003 日米関係史（年表）</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：幕末〜明治期 -->
+            <div class="section-title"><i data-lucide="clock"></i>日米関係史（幕末〜明治期）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1837年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">モリソン号事件</span>（異国船打払令(1825)に基づく）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1846年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ビッドル</span>、浦賀に来航して通商要求 → 幕府は拒否</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1853年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ペリー</span>、浦賀に来航</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1854年</span></div>
+                    <div class="timeline-content">ペリー再来航 → <span class="fill-blank">日米和親条約</span>締結（片務的最恵国待遇）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1856年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ハリス</span>、初代駐日総領事として下田に着任</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1858年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日米修好通商条約</span>締結（米に<span class="fill-blank">領事裁判権</span>・日の<span class="fill-blank">関税自主権</span>欠如）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1860年</span></div>
+                    <div class="timeline-content">通商条約批准書交換の遣米使節派遣（<span class="fill-blank">咸臨丸</span>が随伴）<br>駐日米公使館の通訳<span class="fill-blank">ヒュースケン</span>、攘夷派に暗殺される</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1864年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">四国艦隊下関砲撃事件</span>（英・仏・米・蘭）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1866年</span></div>
+                    <div class="timeline-content">英・仏・米・蘭との間で<span class="fill-blank">改税約書</span>調印 → 日本の輸入関税引下げ</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1871年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">岩倉遣外使節団</span>が出発、米欧諸国を訪問 (~1873)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1876年</span></div>
+                    <div class="timeline-content">開拓使の招きで<span class="fill-blank">クラーク</span>が札幌農学校に着任</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1878年</span></div>
+                    <div class="timeline-content">外務卿<span class="fill-blank">寺島宗則</span>の関税自主権回復交渉に米が同意 → 英・独の反対で不成立。<br><span class="fill-blank">フェノロサ</span>、東大に招かれて来日 → 日本美術の復興に尽力。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1894年</span><span class="timeline-cabinet">伊藤博文②</span></div>
+                    <div class="timeline-content">英に続き<span class="fill-blank">日米通商航海条約</span>に調印 → <span class="fill-blank">領事裁判権</span>撤廃</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1898年</span><span class="timeline-cabinet">大隈重信①</span></div>
+                    <div class="timeline-content">米、ハワイとグアム・フィリピンを領有。太平洋進出本格化。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1899年</span><span class="timeline-cabinet">山県有朋②</span></div>
+                    <div class="timeline-content">国務長官ジョン=ヘイが中国に関して「<span class="fill-blank">門戸開放宣言</span>」を発表（門戸開放・機会均等・領土保全の3原則）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1905年</span><span class="timeline-cabinet">桂太郎①</span></div>
+                    <div class="timeline-content">米大統領<span class="fill-blank">T=ローズヴェルト</span>、ポーツマス講和会議を仲介。<br>米鉄道王<span class="fill-blank">ハリマン</span>の満鉄共同経営案を日本が拒否。<br><span class="fill-blank">桂・タフト協定</span>（日: 韓国指導権、米: フィリピン統治）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1906年</span><span class="timeline-cabinet">西園寺公望①</span></div>
+                    <div class="timeline-content">カリフォルニアなどで<span class="fill-blank">日本人移民排斥問題</span>起こる</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1911年</span><span class="timeline-cabinet">桂太郎②</span></div>
+                    <div class="timeline-content">改正日米通商航海条約に調印 → <span class="fill-blank">関税自主権</span>を回復</div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：大正〜戦中 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="globe"></i>日米関係史（大正〜戦中）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1914年</span><span class="timeline-cabinet">大隈重信②</span></div>
+                    <div class="timeline-content">第一次世界大戦勃発 (~1918、米は1917年に参戦)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1917年</span><span class="timeline-cabinet">寺内正毅</span></div>
+                    <div class="timeline-content">中国に関する<span class="fill-blank">石井・ランシング協定</span>締結</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1918年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ウィルソン</span>大統領が「<span class="fill-blank">14ヵ条の平和原則</span>」発表</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1920年</span><span class="timeline-cabinet">原敬</span></div>
+                    <div class="timeline-content"><span class="fill-blank">国際連盟</span>設立。米は上院の反対で加盟せず。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1921年・1922年</span><span class="timeline-cabinet">原敬 / 高橋是清</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ワシントン会議</span>開催。四カ国条約(1921)・九カ国条約・<span class="fill-blank">ワシントン海軍軍縮条約</span>(1922) 締結。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1923年</span><span class="timeline-cabinet">加藤友三郎</span></div>
+                    <div class="timeline-content"><span class="fill-blank">九カ国条約</span>により石井・ランシング協定廃棄</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1924年</span><span class="timeline-cabinet">清浦奎吾</span></div>
+                    <div class="timeline-content">米、<span class="fill-blank">排日移民法</span>を制定</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1927年</span><span class="timeline-cabinet">田中義一</span></div>
+                    <div class="timeline-content">米大統領クーリッジの提案で<span class="fill-blank">ジュネーヴ軍縮会議</span> → 不成功</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1928年</span></div>
+                    <div class="timeline-content">米仏の提案で、パリで15ヵ国が<span class="fill-blank">不戦条約</span>締結</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1929年</span><span class="timeline-cabinet">浜口雄幸</span></div>
+                    <div class="timeline-content"><span class="fill-blank">世界恐慌</span>: 米から全資本主義世界に波及</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1930年</span></div>
+                    <div class="timeline-content">補助艦制限に関する<span class="fill-blank">ロンドン海軍軍縮条約</span>に調印 (英・米・日)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1931年</span><span class="timeline-cabinet">若槻礼次郎②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">満州事変</span> (~1933) → 米は日本の一連の行動を不承認</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1936年</span><span class="timeline-cabinet">岡田 / 広田</span></div>
+                    <div class="timeline-content">ロンドン・ワシントン両海軍軍縮条約失効</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1937年</span><span class="timeline-cabinet">近衛文麿①</span></div>
+                    <div class="timeline-content">日中戦争勃発</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1939年</span><span class="timeline-cabinet">平沼騏一郎</span></div>
+                    <div class="timeline-content">第二次世界大戦始まる。米、<span class="fill-blank">日米通商航海条約</span>廃棄を通告 (翌年失効)。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1940年</span><span class="timeline-cabinet">近衛文麿②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日独伊三国軍事同盟</span>締結 → 米、<span class="fill-blank">屑鉄・鉄鋼</span>の対日禁輸</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1941年</span><span class="timeline-cabinet">近衛③ / 東条</span></div>
+                    <div class="timeline-content">日米交渉 (<span class="fill-blank">野村吉三郎</span>駐米大使と<span class="fill-blank">ハル</span>国務長官)。<br>日本、<span class="fill-blank">南部仏印進駐</span> → 米、在米日本人資産凍結、<span class="fill-blank">石油</span>の対日禁輸。<br>米、<span class="fill-blank">ハルノート</span>で最終提案。<br>日本、ハワイの<span class="fill-blank">真珠湾</span>を攻撃 (12.8) → <span class="fill-blank">太平洋戦争</span></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1942年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ミッドウェー海戦</span>で日本敗北 → 米に戦局の主導権</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1943年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">カイロ宣言</span>発表（米: F=ローズヴェルト、英: チャーチル、中: 蒋介石）<br>内容: 日本の植民地・占領地の剥奪、対日戦争遂行の確認。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1945年</span><span class="timeline-cabinet">小磯 / 鈴木貫</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ヤルタ会談</span>（米・英・ソ）→ 対独戦後処理。秘密協定でソ連の対日参戦。<br><span class="fill-blank">ポツダム会談</span>（米: トルーマン、英: アトリー、ソ: スターリン）<br>→ 日本の無条件降伏要求、占領、武装解除、領土限定などを宣言。日本は受諾(8.14)。</div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：戦後〜現代 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="globe"></i>日米関係史（戦後〜現代）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1945年</span><span class="timeline-cabinet">東久邇 / 幣原</span></div>
+                    <div class="timeline-content"><span class="fill-blank">GHQ</span>（最高司令官<span class="fill-blank">マッカーサー</span>）による占領政策始まる。<br>五大改革指令・神道指令・農地改革・財閥解体・公職追放等の指令。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1946年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">極東国際軍事裁判</span>開廷 (~1948)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1948年</span><span class="timeline-cabinet">吉田茂②</span></div>
+                    <div class="timeline-content">GHQ、<span class="fill-blank">経済安定九原則</span>を指示</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1949年</span><span class="timeline-cabinet">吉田茂③</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ドッジライン</span>の実施、<span class="fill-blank">シャウプ</span>税制改革勧告。<br>マッカーサー「日本は反共の防壁」と言明。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1950年</span></div>
+                    <div class="timeline-content">GHQ、<span class="fill-blank">レッド・パージ</span>を指令。<br><span class="fill-blank">朝鮮戦争</span>勃発。マッカーサー、<span class="fill-blank">警察予備隊</span>創設を指示。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1951年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">サンフランシスコ平和条約</span>調印（日本と連合国48ヵ国）。<br><span class="fill-blank">日米安全保障条約</span>調印（翌年発効）。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1952年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日米行政協定</span>調印・発効</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1953年</span><span class="timeline-cabinet">吉田茂⑤</span></div>
+                    <div class="timeline-content"><span class="fill-blank">奄美諸島</span>返還</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1954年</span></div>
+                    <div class="timeline-content">米のビキニ環礁水爆実験で<span class="fill-blank">第五福竜丸</span>が被爆。<br><span class="fill-blank">MSA協定</span>（日米相互防衛援助協定） → 防衛庁・自衛隊発足。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1957年</span><span class="timeline-cabinet">岸信介①</span></div>
+                    <div class="timeline-content">岸信介首相・アイゼンハワー米大統領「<span class="fill-blank">日米新時代</span>」を強調</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1960年</span><span class="timeline-cabinet">岸信介②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日米相互協力及び安全保障条約</span>（新安保条約）・<span class="fill-blank">日米地位協定</span>調印 ← <span class="fill-blank">安保闘争</span></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1968年</span><span class="timeline-cabinet">佐藤栄作②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">小笠原諸島</span>返還</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1969年・1970年</span><span class="timeline-cabinet">佐藤栄作③</span></div>
+                    <div class="timeline-content">佐藤・ニクソン会談で<span class="fill-blank">沖縄返還</span>に合意(1969)。<br>日米安保条約自動延長入り（70年安保闘争）。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1971年</span></div>
+                    <div class="timeline-content">沖縄返還協定調印(翌年返還)。<br>ニクソン大統領、訪中計画と金・ドル交換停止発表（<span class="fill-blank">ニクソン・ショック</span>）。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1975年・1976年</span><span class="timeline-cabinet">三木武夫</span></div>
+                    <div class="timeline-content">仏で第1回先進国首脳会議（<span class="fill-blank">サミット</span>）。米上院公聴会で<span class="fill-blank">ロッキード事件</span>発覚。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1978年・1980年代</span><span class="timeline-cabinet">福田赳夫</span></div>
+                    <div class="timeline-content">「日米防衛協力のための指針（<span class="fill-blank">ガイドライン</span>）」を決定。<br>日米貿易摩擦問題化 → 対米<span class="fill-blank">自動車</span>輸出規制(1981)。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1983年・1986年</span><span class="timeline-cabinet">中曽根康弘</span></div>
+                    <div class="timeline-content">中曽根首相訪米、「日米運命共同体」「<span class="fill-blank">不沈空母</span>」発言(1983)。<br><span class="fill-blank">日米半導体協定</span>で日本が輸出自主規制(1986)。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1988年・1989年</span><span class="timeline-cabinet">竹下 / 海部</span></div>
+                    <div class="timeline-content">日米交渉で<span class="fill-blank">牛肉・オレンジ</span>の輸入自由化決定。<br><span class="fill-blank">日米構造協議</span>始まる(1989)。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1991年</span><span class="timeline-cabinet">海部俊樹②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">湾岸戦争</span> → 日、戦争支援90億ドル支出</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1996年</span><span class="timeline-cabinet">橋本龍太郎①</span></div>
+                    <div class="timeline-content">橋本龍太郎首相とクリントン大統領「<span class="fill-blank">日米安保共同宣言</span>」。<br>沖縄・<span class="fill-blank">普天間基地</span>の7年以内の返還決定。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1997年</span><span class="timeline-cabinet">橋本龍太郎②</span></div>
+                    <div class="timeline-content">「<span class="fill-blank">新ガイドライン</span>」決定 → 新ガイドライン関連法成立(1999)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">2001年</span><span class="timeline-cabinet">小泉純一郎①</span></div>
+                    <div class="timeline-content">米同時多発テロ事件 → <span class="fill-blank">テロ対策特別措置法</span>を制定し自衛隊を後方支援に派遣</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">2003年</span></div>
+                    <div class="timeline-content">イラク戦争始まる → <span class="fill-blank">イラク復興支援特別措置法</span>を制定し人道支援活動開始</div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>アメリカはなぜ日本を開国させたかったのか？</h3>
+                        <br><b>【産業革命の進展】</b>
+                        <br>飛躍的な発展を遂げたアメリカの紡績業は<span class="fill-blank">中国市場</span>への進出を目指し、そのための太平洋横断航路の開設が企てられました。その航路上に日本が位置していたのです。
+                        <br><b>【捕鯨業の発展】</b>
+                        <br>当時、アメリカは世界最大の捕鯨国であり、目的は灯油などに使う<span class="fill-blank">鯨油</span>をとることにありました。漁場が太平洋へ移り日本近海での操業が急増したため、補給・避難のための<span class="fill-blank">港の提供</span>を日本に期待しました。
+                    </li>
+                    
+                    <li>
+                        <h3>ワシントン体制と東アジアの諸条約</h3>
+                        <br><b>【桂・タフト協定 (1905年)】</b>
+                        <br>アメリカは日本の<span class="fill-blank">韓国指導権</span>を承認し、日本はアメリカの<span class="fill-blank">フィリピン統治権</span>を承認した覚書です。
+                        <br><b>【石井・ランシング協定 (1917年)】</b>
+                        <br>アメリカは日本の中国に対する「特殊権益」を、日本はアメリカが主張する中国の「門戸開放・領土保全」を認めましたが、ワシントン会議の<span class="fill-blank">九カ国条約</span>(1922年)締結に伴い廃棄されました。
+                    </li>
+
+                    <li>
+                        <h3>日米安全保障条約の変遷</h3>
+                        <table class="summary-table">
+                            <tr>
+                                <th>日米安全保障条約<br>（1951年/吉田茂）</th>
+                                <td>平和条約発効後の米軍駐留。極東有事と外国の対日攻撃の際の米軍出動（日本の再軍備を期待）。有効期限が明示されず。</td>
+                            </tr>
+                            <tr>
+                                <th>日米行政協定<br>（1952年）</th>
+                                <td>安保条約の細目協定。米軍への施設の無償提供、米軍人・家族の刑事裁判上の特権、防衛分担金の負担。</td>
+                            </tr>
+                            <tr>
+                                <th>新安全保障条約<br>（1960年/岸信介）</th>
+                                <td>米軍の日本防衛義務の明確化。軍事行動に関する<span class="fill-blank">事前協議制度</span>（発議権は米国側）。日本領土内の共同防衛義務（「安保巻き込まれ論」）。条約有効期間は10年間。</td>
+                            </tr>
+                            <tr>
+                                <th>日米地位協定<br>（1960年）</th>
+                                <td>日米行政協定の継承と部分改正。米軍の基地外での権利の制限、防衛分担金の廃止。</td>
+                            </tr>
+                            <tr>
+                                <th>ガイドライン<br>（1978年/福田赳夫）</th>
+                                <td>正式名: 日米防衛協力のための指針。有事の際の日米共同作戦行動。</td>
+                            </tr>
+                            <tr>
+                                <th>新ガイドライン<br>（1997年/橋本龍太郎）</th>
+                                <td>日本の「<span class="fill-blank">周辺有事</span>」での相互協力計画。1999年に周辺事態安全確保法などが成立。</td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
