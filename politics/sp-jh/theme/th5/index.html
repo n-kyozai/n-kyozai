@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>005 日英関係史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p {
+            margin-bottom: 8px;
+        }
+        .timeline-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- テーブルスタイル --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 25%;
+            text-align: center;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 8px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（カード型表示） */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table th, .summary-table td {
+                display: block;
+                width: 100%;
+            }
+            .summary-table {
+                border: none;
+                background-color: transparent;
+            }
+            .summary-table tr {
+                margin-bottom: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                overflow: hidden;
+                background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .summary-table th {
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                text-align: left;
+                padding: 12px 16px;
+                background-color: #f8fafc;
+            }
+            .summary-table td {
+                border: none;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 005 日英関係史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">005 日英関係史（年表）</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：江戸〜幕末期 -->
+            <div class="section-title"><i data-lucide="clock"></i>日英関係史（江戸〜幕末期）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1600年</span><span class="timeline-cabinet">慶長5年</span></div>
+                    <div class="timeline-content">オランダ船<span class="fill-blank">リーフデ号</span>が漂着 → 英人<span class="fill-blank">ウィリアム・アダムズ</span> (<span class="fill-blank">三浦按針</span>)が徳川家康の外交顧問に。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1613年</span><span class="timeline-cabinet">慶長18年</span></div>
+                    <div class="timeline-content">イギリスが<span class="fill-blank">平戸</span>に商館を開設 (1623年閉鎖)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1808年</span><span class="timeline-cabinet">文化5年</span></div>
+                    <div class="timeline-content">英軍艦が長崎湾内に侵入、薪水・食料を強奪 (<span class="fill-blank">フェートン号事件</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1824年</span><span class="timeline-cabinet">文政7年</span></div>
+                    <div class="timeline-content">イギリス捕鯨船が常陸大津浜や薩摩宝島で暴行事件</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1825年</span><span class="timeline-cabinet">文政8年</span></div>
+                    <div class="timeline-content">幕府、<span class="fill-blank">異国船打払令</span> (<span class="fill-blank">無二念打払令</span>) を出す</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1854年</span><span class="timeline-cabinet">安政元年</span></div>
+                    <div class="timeline-content">長崎で<span class="fill-blank">日英和親条約</span>に調印</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1858年</span><span class="timeline-cabinet">安政5年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">日英修好通商条約</span>調印。<br>初代駐日総領事 (のち公使) <span class="fill-blank">オールコック</span>来日。<br>※貿易開始後、英は国別貿易取扱高の8割以上を占めるようになる(1865年)。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1861年</span><span class="timeline-cabinet">文久元年</span></div>
+                    <div class="timeline-content">攘夷派が英仮公使館の東禅寺を襲撃 (<span class="fill-blank">東禅寺事件</span>)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1862年</span><span class="timeline-cabinet">文久2年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">生麦事件</span> (薩摩藩士がイギリス人を殺傷) → 翌年の<span class="fill-blank">薩英戦争</span>へ</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1863年</span><span class="timeline-cabinet">文久3年</span></div>
+                    <div class="timeline-content">英公使館焼打ち事件 (長州の<span class="fill-blank">高杉晋作</span>ら)。<br><span class="fill-blank">長州藩外国船砲撃事件</span>。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1864年</span><span class="timeline-cabinet">元治元年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">四国艦隊下関砲撃事件</span> (英・仏・米・蘭が長州を攻撃)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1865年</span><span class="timeline-cabinet">慶応元年</span></div>
+                    <div class="timeline-content">駐日公使<span class="fill-blank">パークス</span>来日、薩長などの討幕勢力を支援</div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：明治〜大正期 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="globe"></i>日英関係史（明治〜大正期）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1886年</span><span class="timeline-cabinet">伊藤博文①</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ノルマントン号事件</span> (英船長が日本人乗客を見殺しにした事件) <br>→ 領事裁判による軽い判決で、国民は法権回復(条約改正)の必要性を痛感した。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1894年</span><span class="timeline-cabinet">伊藤博文②</span></div>
+                    <div class="timeline-content">ロンドンで駐英公使<span class="fill-blank">青木周蔵</span>が<span class="fill-blank">日英通商航海条約</span>に調印。<br>→ <span class="fill-blank">領事裁判権</span>の廃止、関税自主権の一部回復など。（当時の外相は<span class="fill-blank">陸奥宗光</span>）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1902年</span><span class="timeline-cabinet">桂太郎①</span></div>
+                    <div class="timeline-content">ロシアの南下を警戒し、<span class="fill-blank">日英同盟協約</span>締結。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1905年</span></div>
+                    <div class="timeline-content"><span class="fill-blank">第二次日英同盟</span>締結 → 日本の韓国保護国化を承認し、適用範囲をインドにまで拡大。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1911年</span><span class="timeline-cabinet">桂太郎②</span></div>
+                    <div class="timeline-content"><span class="fill-blank">第三次日英同盟</span>締結 → ドイツの進出に対応し、アメリカを適用外とした。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1914年</span><span class="timeline-cabinet">大隈重信②</span></div>
+                    <div class="timeline-content">第一次世界大戦勃発 → 日本、<span class="fill-blank">日英同盟</span>を理由に参戦（対独宣戦布告）。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1921年</span><span class="timeline-cabinet">高橋是清</span></div>
+                    <div class="timeline-content">ワシントン会議にて<span class="fill-blank">四カ国条約</span>調印 → これに伴い日英同盟は廃棄された(1923年)。</div>
+                </div>
+            </div>
+
+            <!-- 【3】年表：昭和（戦前〜戦中） -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="globe"></i>日英関係史（昭和：戦前〜戦中）</div>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1925年</span><span class="timeline-cabinet">加藤高明①</span></div>
+                    <div class="timeline-content">上海の反日・反英デモに英警察が発砲 (<span class="fill-blank">五・三〇事件</span>) <br>→ 中国で反帝国主義運動が活発化。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1930年</span><span class="timeline-cabinet">浜口雄幸</span></div>
+                    <div class="timeline-content"><span class="fill-blank">ロンドン海軍軍縮条約</span>締結（補助艦の制限）。<br>野党などが海軍軍令部の反対を押し切った調印を非難（<span class="fill-blank">統帥権干犯問題</span>）。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1932年</span><span class="timeline-cabinet">犬養毅 / 斎藤実</span></div>
+                    <div class="timeline-content">国際連盟が満州事変調査のためイギリスの<span class="fill-blank">リットン</span>を団長とする調査団を派遣。<br>世界恐慌を受け、イギリスが<span class="fill-blank">ブロック経済圏</span>（スターリング・ブロック）を構築。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1941年</span><span class="timeline-cabinet">東条英機</span></div>
+                    <div class="timeline-content">日本包囲網（<span class="fill-blank">ABCD包囲陣</span>）の形成。12月、英米に宣戦布告し太平洋戦争開戦。</div>
+                </div>
+            </div>
+
+            <!-- 【4】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>江戸幕府の異国船対策の変遷</h3>
+                        <br>対外的な危機感の高まりや国際情勢の変化により、幕府の対応は二転三転しました。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>年・法令名</th>
+                                    <th>内容と背景</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>1806年<br>文化の撫恤令<br>（薪水給与令）</th>
+                                    <td>ロシア船の来航などを受け、穏便に薪水（食料・水など）を与えて帰らせる方針をとった。</td>
+                                </tr>
+                                <tr>
+                                    <th>1825年<br><span class="fill-blank">異国船打払令</span><br>（無二念打払令）</th>
+                                    <td>イギリス捕鯨船の暴行事件などが頻発したため、問答無用で外国船を打ち払う強硬な方針に変更。</td>
+                                </tr>
+                                <tr>
+                                    <th>1842年<br><span class="fill-blank">天保の薪水給与令</span></th>
+                                    <td>清が<span class="fill-blank">アヘン戦争</span>でイギリスに敗れたことを知り、外国との紛争を避けるため再び柔軟路線（漂着船への給与）へ転換。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    
+                    <li>
+                        <h3>不平等条約改正への歩み</h3>
+                        <br>幕末に結んだ不平等条約（領事裁判権を認め、関税自主権がない）の改正は、明治政府の悲願でした。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>外相名</th>
+                                    <th>主な出来事と結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><span class="fill-blank">井上馨</span></th>
+                                    <td><span class="fill-blank">鹿鳴館</span>での欧化政策。外国人判事の任用案が反対に遭い、<span class="fill-blank">ノルマントン号事件</span>の国民的怒りもあって辞任。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">大隈重信</span></th>
+                                    <td>外国人判事を大審院のみに限定する案で交渉。ロンドン・タイムズ紙の報道で批判を浴び、爆弾テロで負傷し辞任。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">陸奥宗光</span></th>
+                                    <td>日清戦争直前の1894年、<span class="fill-blank">日英通商航海条約</span>に調印。<span class="fill-blank">領事裁判権</span>の完全撤廃に成功。</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fill-blank">小村寿太郎</span></th>
+                                    <td>1911年、日米通商航海条約などで<span class="fill-blank">関税自主権</span>の完全回復に成功し、条約改正が完了。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+
+                    <li>
+                        <h3>幕末の密航と留学生</h3>
+                        <br><b>【長州五傑（長州ファイブ）】</b>
+                        <br>1863(文久3)年、長州藩の<span class="fill-blank">伊藤博文</span>や<span class="fill-blank">井上馨</span>らがイギリスへ密航留学しました。攘夷を掲げる藩にあって命がけの渡航でしたが、彼らは西洋の技術や国力に圧倒され、開国・近代化へと思想を転換させました。
+                        <br><b>【薩摩藩の留学生】</b>
+                        <br>1865(慶応元)年、薩摩藩の<span class="fill-blank">五代友厚</span>らもイギリスへ密航しました。幕府が海外への渡航を正式に認めたのは、その翌年の1866年のことです。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
