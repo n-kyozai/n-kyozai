@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>005 近世の文化 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --timeline-line: #bae6fd;
+            --timeline-date-bg: #f0f9ff;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* --- 年表スタイル --- */
+        .timeline-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 10px;
+            border-left: 3px solid var(--timeline-line);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 4px solid var(--accent-color);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            background: var(--timeline-date-bg);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .theme-list {
+            list-style: none;
+        }
+
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- 画像ギャラリー --- */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-to-top:hover { filter: brightness(0.9); }
+
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed;
+            bottom: 95px;
+            right: 35px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        /* --- 画像拡大（ライトボックス）用スタイル --- */
+        .thumbnail-img {
+            max-width: 160px;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            display: inline-block;
+            border: 1px solid var(--border-color);
+            background-color: var(--fill-bg);
+            min-height: 40px;
+            vertical-align: top;
+        }
+        .thumbnail-img[src=""] {
+            padding: 40px 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: default;
+        }
+        .thumbnail-img[src=""]::after {
+            content: "画像準備中";
+        }
+        .thumbnail-img:hover:not([src=""]) {
+            transform: scale(1.05);
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .lightbox-overlay.active { display: flex; opacity: 1; }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            object-fit: contain;
+        }
+        .lightbox-overlay.active .lightbox-img { transform: scale(1); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        /* --- レスポンシブ（モバイル）対応 --- */
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            .timeline-content { font-size: 0.85rem; }
+            .theme-list > li { font-size: 0.85rem; line-height: 1.6; }
+            .timeline-date { font-size: 0.8rem; }
+            .section-title { font-size: 1.1rem; }
+            .fill-blank { font-size: 0.85rem; padding: 2px 6px; }
+            .thumbnail-img { max-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- モバイル用トグルボタン・オーバーレイ -->
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/culture/index.html">文化史</a> ＞ 005 近世の文化
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">005 近世の文化 重要ポイント</h1>
+        </div>
+
+        <div class="container">
+            <!-- 【1】年表まとめ -->
+            <div class="section-title"><i data-lucide="clock"></i>年表で見る 近世の文化の変遷</div>
+            
+            <div class="timeline-box">
+                <div class="timeline">
+                    <!-- 桃山文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">桃山文化 (16世紀後半〜17世紀初頭)</div>
+                        <div class="timeline-content">
+                            大名や豪商を担い手とする、豪壮・華麗な文化。城郭建築（<span class="fill-blank">姫路城</span>など）や<span class="fill-blank">茶の湯</span>（千利休）、狩野派による<span class="fill-blank">濃絵</span>（だみえ）の障壁画が発達。また、ヨーロッパの影響を受けた<span class="fill-blank">南蛮文化</span>も栄えた。
+                            <div class="image-gallery">
+                                <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 寛永期の文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">寛永期の文化 (17世紀前半)</div>
+                        <div class="timeline-content">
+                            江戸幕府の基礎が固まる時期の文化。将軍の権威を示す<span class="fill-blank">日光東照宮</span>などの霊廟建築や、公家文化の伝統を引く<span class="fill-blank">数寄屋造</span>（桂離宮など）が作られた。
+                            <div class="image-gallery">
+                                <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 元禄文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">元禄文化 (17世紀後半〜18世紀初頭)</div>
+                        <div class="timeline-content">
+                            第5代将軍・綱吉の時代。<span class="fill-blank">上方</span>（京都・大坂）の町人を中心とする文化。<span class="fill-blank">井原西鶴</span>（浮世草子）、<span class="fill-blank">松尾芭蕉</span>（俳諧）、<span class="fill-blank">近松門左衛門</span>（人形浄瑠璃）が活躍した。
+                            <div class="image-gallery">
+                                <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 化政文化 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">化政文化 (18世紀後半〜19世紀前半)</div>
+                        <div class="timeline-content">
+                            第11代将軍・家斉の時代。<span class="fill-blank">江戸</span>を中心とし、皮肉や風刺を好む町人文化。十返舎一九の滑稽本や、多色刷りの版画である<span class="fill-blank">錦絵</span>（浮世絵）、蘭学・国学などの学問が発達した。
+                            <div class="image-gallery">
+                                <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】テーマ別詳細 -->
+            <div class="section-title"><i data-lucide="palette"></i>分野別・テーマ別詳細</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>桃山文化の建築・美術と南蛮文化</h3>
+                        <br><b>【豪壮な城郭と簡素な茶室】</b>
+                        <br>大名や豪商の経済力を背景とした、豪壮で華麗な文化。戦時の防衛拠点であった城郭は、領国経営の拠点（平城・平山城）へと変化し、権威を示す重層の<span class="fill-blank">天守閣</span>が築かれた。代表例として、白鷺城とも呼ばれる<span class="fill-blank">姫路城</span>や松本城、豊臣秀吉が建てた伏見城・聚楽第（遺構として西本願寺<span class="fill-blank">飛雲閣</span>や都久夫須麻神社本殿）などがある。
+                        <br>一方で、これと対極の簡素さを重んじる<span class="fill-blank">茶の湯</span>の文化も栄え、<span class="fill-blank">千利休</span>が草庵茶室（京都の<span class="fill-blank">妙喜庵待庵</span>など）を完成させた。
+                        <div class="image-gallery">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+
+                        <br><b>【濃絵と南蛮文化】</b>
+                        <br>城のふすまや屏風には、金箔の背景に極彩色で描かれた<span class="fill-blank">濃絵</span>（だみえ）と呼ばれる障壁画が描かれた。<span class="fill-blank">狩野永徳</span>の『<span class="fill-blank">唐獅子図屏風</span>』や『洛中洛外図屏風』、水墨画も得意とした<span class="fill-blank">長谷川等伯</span>の『松林図屏風』などが代表的である。
+                        <br>ヨーロッパ（ポルトガル・スペイン）からの宣教師や商人により<span class="fill-blank">南蛮文化</span>がもたらされ、西洋画の技法で描かれた<span class="fill-blank">南蛮屏風</span>や、活版印刷機によるキリシタン版の出版などが行われた。
+                        <div class="image-gallery">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>寛永期の文化</h3>
+                        <br>17世紀前半、江戸幕府の基礎が固まる時期の文化。権威主義的な側面と、伝統的な公家文化が並存した。
+                        <br><b>【建築と美術】</b>
+                        <br>建築では、徳川家康を祀るために権現造で建てられた<span class="fill-blank">日光東照宮</span>のような華麗な霊廟建築と、書院造に茶室の技法（数寄屋）を取り入れた洗練された<span class="fill-blank">数寄屋造</span>（京都の<span class="fill-blank">桂離宮</span>や修学院離宮など）が作られた。
+                        <br>絵画では、幕府の御用絵師となった狩野探幽が余白を活かした瀟洒な画風を確立。また、京都の町衆である<span class="fill-blank">俵屋宗達</span>は、装飾的な構図の『<span class="fill-blank">風神雷神図屏風</span>』を描き、後の「琳派」の祖となった。工芸では本阿弥光悦が蒔絵や陶芸で活躍し、肥前（佐賀県）では酒井田柿右衛門が赤絵（有田焼）を創始した。
+                        <div class="image-gallery">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>元禄文化</h3>
+                        <br>17世紀後半〜18世紀初頭の第5代将軍・綱吉の時代の文化。<span class="fill-blank">上方</span>（京都・大坂）の裕福な町人を担い手とする、現実肯定的で享楽的な文化である。
+                        <br><b>【元禄の三大文人】</b>
+                        <br>・<span class="fill-blank">井原西鶴</span>：町人の金銭欲や恋愛を描く<span class="fill-blank">浮世草子</span>を創始（『日本永代蔵』『世間胸算用』など）。
+                        <br>・<span class="fill-blank">松尾芭蕉</span>：滑稽さを重んじた俳諧を、芸術性の高い「蕉風」へと高めた（紀行文『<span class="fill-blank">奥の細道</span>』）。
+                        <br>・<span class="fill-blank">近松門左衛門</span>：義理と人情の板挟みになる町人の悲劇を描く世話物（『<span class="fill-blank">曽根崎心中</span>』など）や、歴史を題材にした時代物（『国性爺合戦』）などの<span class="fill-blank">人形浄瑠璃</span>や歌舞伎の脚本を書いた。
+                        <div class="image-gallery">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+
+                        <br><b>【美術と学問】</b>
+                        <br>絵画では、俵屋宗達の画風を受け継いだ<span class="fill-blank">尾形光琳</span>が『<span class="fill-blank">燕子花図屏風</span>』や『紅白梅図屏風』などの装飾画を描き「琳派」を大成させた。また、<span class="fill-blank">菱川師宣</span>が『<span class="fill-blank">見返り美人図</span>』を描き、浮世絵の版画化を始めた。
+                        <br>学問では、幕府が奨励した儒学（<span class="fill-blank">朱子学</span>）が栄え、新井白石の『読史余論』や、和算（日本の数学）を大成した<span class="fill-blank">関孝和</span>、日本独自の暦である貞享暦を作成した<span class="fill-blank">渋川春海</span>らが活躍した。
+                        <div class="image-gallery">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>化政文化</h3>
+                        <br>18世紀後半〜19世紀前半の第11代将軍・家斉の時代の文化。文化の中心が上方から<span class="fill-blank">江戸</span>へと移り、町人階層を中心とする皮肉や風刺を好む文化が栄え、地方へも広く波及した。
+                        <br><b>【文学の多様化】</b>
+                        <br>・<b>滑稽本</b>：十返舎一九の『<span class="fill-blank">東海道中膝栗毛</span>』や、式亭三馬の『浮世風呂』など。
+                        <br>・<b>読本</b>（よみほん）：歴史や伝説に基づく長編小説。<span class="fill-blank">曲亭馬琴</span>（滝沢馬琴）の『<span class="fill-blank">南総里見八犬伝</span>』など。
+                        <br>・<b>俳諧・川柳</b>：<span class="fill-blank">与謝蕪村</span>が絵画的な俳諧を、<span class="fill-blank">小林一茶</span>が農民生活の感情を詠んだ。また、社会風刺や皮肉を込めた川柳・狂歌が流行した。
+                        
+                        <br><b>【錦絵の完成と多様な絵画】</b>
+                        <br>多色刷りの木版画である浮世絵（<span class="fill-blank">錦絵</span>）が鈴木春信により完成された。
+                        <br>・<b>美人画</b>：<span class="fill-blank">喜多川歌麿</span>（大首絵の手法による『<span class="fill-blank">ポッピンを吹く女</span>』など）。
+                        <br>・<b>役者絵</b>：<span class="fill-blank">東洲斎写楽</span>（『市川鰕蔵』など）。
+                        <br>・<b>風景画</b>：<span class="fill-blank">葛飾北斎</span>（『<span class="fill-blank">富嶽三十六景</span>』の『神奈川沖浪裏』など）や、<span class="fill-blank">歌川広重</span>（『東海道五十三次』）。
+                        <br>浮世絵以外の絵画では、池大雅と与謝蕪村が文人画（南画）を大成し、<span class="fill-blank">渡辺崋山</span>らが引き継いだ。また、円山応挙が写生画を始め、司馬江漢が銅版画で西洋の遠近法を取り入れた。
+                        <div class="image-gallery">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>近世の学問と教育</h3>
+                        <br><b>【国学と蘭学】</b>
+                        <br>化政期を中心に、日本の古典を研究し日本古来の精神を明らかにする<span class="fill-blank">国学</span>が発達し、<span class="fill-blank">本居宣長</span>が『<span class="fill-blank">古事記伝</span>』を著して大成させた（後に平田篤胤へと続く）。
+                        <br>また、オランダ語を通じて西洋の学問を学ぶ<span class="fill-blank">蘭学</span>も盛んになり、<span class="fill-blank">杉田玄白</span>・前野良沢らが西洋の解剖書を翻訳して『<span class="fill-blank">解体新書</span>』を出版した。<span class="fill-blank">伊能忠敬</span>は全国を測量し『<span class="fill-blank">大日本沿海輿地全図</span>』を作成した。
+                        <br><b>【教育機関の広がり】</b>
+                        <br>・<b>藩校</b>（藩学）：各藩が武士の子弟を教育するために設立。
+                        <br>・<b>郷学</b>：武士や裕福な庶民を対象とした教育機関。
+                        <br>・<b>私塾</b>：学者が自宅などで教育を行う。緒方洪庵の<span class="fill-blank">適塾</span>（大坂）、吉田松陰の<span class="fill-blank">松下村塾</span>（長州）、シーボルトの<span class="fill-blank">鳴滝塾</span>（長崎）などが有名。
+                        <br>・<b><span class="fill-blank">寺子屋</span></b>：庶民の子供たちに「読み・書き・そろばん」などの実用的な知識を教える教育機関で、全国に普及し識字率の向上に貢献した。
+                        <div class="image-gallery">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="" alt="" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示/非表示ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+            if (menuToggle) {
+                menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+                lucide.createIcons();
+            }
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.className = 'lightbox-overlay';
+        lightboxOverlay.innerHTML = '<img class="lightbox-img" src="" alt="拡大画像">';
+        document.body.appendChild(lightboxOverlay);
+
+        const lightboxImg = lightboxOverlay.querySelector('img');
+
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) {
+                    el.classList.add('revealed');
+                } else {
+                    el.classList.remove('revealed');
+                }
+            });
+            
+            if (allRevealed) {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                toggleAllBlanksIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+
+        // 穴埋め(タップでトグル表示)
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => {
+                el.classList.toggle('revealed');
+            });
+        });
+    </script>
+</body>
+</html>
