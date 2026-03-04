@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>019 選挙制度史 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px;
+            z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: var(--surface-color);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px; margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px; min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- タイムライン（年表）スタイル --- */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 40px;
+            margin-top: 16px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 0 3px var(--bg-color);
+            z-index: 1;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+        }
+        .timeline-cabinet {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 1px solid #bae6fd;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+
+        /* --- テーブルスタイル（モバイルカード対応） --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; margin-bottom: 12px;
+            font-size: 0.9rem;
+            background-color: var(--surface-color);
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 30%;
+            text-align: center;
+        }
+        .summary-table td ul {
+            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* --- テーマ別まとめ（補足用）スタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px; padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px; margin-bottom: 24px;
+            font-size: 0.95rem; line-height: 1.8;
+            padding-bottom: 24px; border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆'; color: var(--accent-color);
+            position: absolute; left: 0; top: 2px; font-size: 1rem;
+        }
+        .theme-list h3 {
+            font-size: 1.05rem; color: var(--primary-color);
+            margin-bottom: 12px; display: inline-block;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;
+        }
+
+        /* --- ボタン群 --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white;
+            border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color); border-top: 1px solid var(--border-color);
+            padding: 15px; text-align: center; color: var(--text-muted);
+            font-size: 0.7rem; margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .timeline-container { padding-left: 20px; }
+            .timeline-container::before { left: 4px; }
+            .timeline-item::before { left: -21px; width: 10px; height: 10px; }
+            
+            /* モバイル用テーブル（横割りカード型表示） */
+            .summary-table, .summary-table tbody {
+                display: block; width: 100%;
+            }
+            .summary-table thead { display: none; }
+            .summary-table { border: none; background-color: transparent; }
+            .summary-table tr {
+                margin-bottom: 12px; border: 1px solid var(--border-color);
+                border-radius: 8px; overflow: hidden; background-color: var(--surface-color);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .summary-table th {
+                border: none; border-right: 1px solid var(--border-color);
+                text-align: center; padding: 12px 8px; background-color: #f8fafc;
+                width: 35%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .summary-table td { border: none; padding: 12px; width: 65%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 
+                <a href="/n-kyozai/politics/sp-jh/theme/index.html">テーマ史</a> ＞ 019 選挙制度史
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">019 選挙制度史</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- 【1】年表：明治〜大正の選挙制度の変遷 -->
+            <div class="section-title"><i class="lucide-globe" data-lucide="archive"></i>明治〜大正の選挙制度の変遷</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1889年公布</span><span class="timeline-cabinet">黒田清隆 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>最初の衆議院議員選挙法</strong></p>
+                        <p>大日本帝国憲法と同時に公布されました。<br>
+                        【選挙資格】直接国税<strong><span class="fill-blank">15円</span></strong>以上を納める満<strong><span class="fill-blank">25歳</span></strong>以上の男子。<br>
+                        【有権者比率】全人口の約<strong><span class="fill-blank">1.1%</span></strong>（約45万人）。<br>
+                        【制度】<strong><span class="fill-blank">小選挙区</span></strong>制で、投票方式は<strong><span class="fill-blank">記名捺印</span></strong>でした。</p>
+                        <p style="margin-top: 8px;">※翌1890年に第1回総選挙が実施され、民党が過半数を占めました。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1892年</span><span class="timeline-cabinet">第1次 松方正義 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>第2回総選挙と選挙干渉</strong></p>
+                        <p>民党の優位を崩すため、内務大臣の<strong><span class="fill-blank"><ruby>品川弥二郎<rt>しながわやじろう</rt></ruby></span></strong>らが警察を動員して激しい選挙干渉を行いました（多数の死傷者が発生）。しかし、結果的に民党が過半数を維持しました。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1900年改正</span><span class="timeline-cabinet">第2次 山県有朋 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>第1回改正</strong></p>
+                        <p>【選挙資格】直接国税<strong><span class="fill-blank">10円</span></strong>以上の満25歳以上の男子に引き下げられました。<br>
+                        【有権者比率】全人口の約<strong><span class="fill-blank">2.2%</span></strong>に増加。<br>
+                        【制度】<strong><span class="fill-blank">大選挙区</span></strong>制となり、投票方式が<strong><span class="fill-blank">無記名秘密投票</span></strong>に改められました。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1919年改正</span><span class="timeline-cabinet">原敬 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>第2回改正（本格的政党内閣の下で）</strong></p>
+                        <p>【選挙資格】直接国税<strong><span class="fill-blank">3円</span></strong>以上の満25歳以上の男子へ大幅に引き下げられました。<br>
+                        【有権者比率】全人口の約<strong><span class="fill-blank">5.5%</span></strong>に増加。<br>
+                        【制度】与党（立憲政友会）に有利とされる<strong><span class="fill-blank">小選挙区</span></strong>制が再び導入されました。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1925年改正</span><span class="timeline-cabinet">加藤高明 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>第3回改正（<span class="fill-blank">普通選挙法</span>の成立）</strong></p>
+                        <p>護憲三派内閣のもとで成立しました。<br>
+                        【選挙資格】<strong><span class="fill-blank">納税資格</span></strong>が撤廃され、満25歳以上のすべての男子に選挙権が与えられました。<br>
+                        【有権者比率】全人口の約<strong><span class="fill-blank">20%</span></strong>に急増。<br>
+                        【制度】<strong><span class="fill-blank">中選挙区</span></strong>制が採用されました。<br>
+                        ※一方で、社会運動の激化を恐れ、同時に<strong><span class="fill-blank">治安維持法</span></strong>も制定されました。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】年表：戦後〜現代の選挙制度と政治改革 -->
+            <div class="section-title"><i data-lucide="scale"></i>戦後〜現代の選挙制度と政治改革</div>
+            
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1945年改正</span><span class="timeline-cabinet">幣原喜重郎 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>第4回改正（<span class="fill-blank">女性参政権</span>の実現）</strong></p>
+                        <p>GHQの指令（五大改革指令）のもとで成立しました。<br>
+                        【選挙資格】満<strong><span class="fill-blank">20歳</span></strong>以上の<strong>男女</strong>。<br>
+                        これにより有権者数は全人口の約<strong><span class="fill-blank">50%</span></strong>（約3600万人）となり、完全な普通選挙が実現しました。<br>
+                        【制度】<strong><span class="fill-blank">大選挙区</span></strong>制が採用され、翌年の総選挙で<strong><span class="fill-blank">39名</span></strong>の女性議員が誕生しました。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1950年</span></div>
+                    <div class="timeline-content">
+                        <p><strong>公職選挙法の制定</strong></p>
+                        <p>これまでの衆議院議員選挙法などを統合し、選挙に関する基本法として制定されました。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-header"><span class="timeline-year">1994年</span><span class="timeline-cabinet">細川護熙 内閣</span></div>
+                    <div class="timeline-content">
+                        <p><strong>衆議院の選挙制度改革</strong></p>
+                        <p>長らく続いた中選挙区制が廃止され、政権交代を促す目的で<strong><span class="fill-blank">小選挙区比例代表並立制</span></strong>が導入されました。（8党派連立内閣による政治改革）</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【3】重要事項と補足解説 -->
+            <div class="section-title"><i data-lucide="book-open"></i>重要事項と補足解説</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>衆議院議員選挙法の変遷まとめ</h3>
+                        <br>選挙権の拡大と、その時の内閣・選挙区制の変遷は頻出です。
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>公布年（内閣）</th>
+                                    <th>年齢・性別</th>
+                                    <th>納税資格（直接国税）</th>
+                                    <th>人口比</th>
+                                    <th>選挙区制</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>1889年<br>（<span class="fill-blank">黒田清隆</span>）</th>
+                                    <td>満25歳以上 男子</td>
+                                    <td><strong><span class="fill-blank">15円</span></strong>以上</td>
+                                    <td>1.1%</td>
+                                    <td><span class="fill-blank">小選挙区</span></td>
+                                </tr>
+                                <tr>
+                                    <th>1900年<br>（<span class="fill-blank">山県有朋②</span>）</th>
+                                    <td>満25歳以上 男子</td>
+                                    <td><strong><span class="fill-blank">10円</span></strong>以上</td>
+                                    <td>2.2%</td>
+                                    <td><span class="fill-blank">大選挙区</span></td>
+                                </tr>
+                                <tr>
+                                    <th>1919年<br>（<span class="fill-blank">原敬</span>）</th>
+                                    <td>満25歳以上 男子</td>
+                                    <td><strong><span class="fill-blank">3円</span></strong>以上</td>
+                                    <td>5.5%</td>
+                                    <td><span class="fill-blank">小選挙区</span></td>
+                                </tr>
+                                <tr>
+                                    <th>1925年<br>（<span class="fill-blank">加藤高明</span>）</th>
+                                    <td>満25歳以上 男子</td>
+                                    <td><strong><span class="fill-blank">撤廃</span></strong><br>（普通選挙法）</td>
+                                    <td>20.0%</td>
+                                    <td><span class="fill-blank">中選挙区</span></td>
+                                </tr>
+                                <tr>
+                                    <th>1945年<br>（<span class="fill-blank">幣原喜重郎</span>）</th>
+                                    <td>満<strong><span class="fill-blank">20歳</span></strong>以上 <strong>男女</strong></td>
+                                    <td>撤廃</td>
+                                    <td>約50%</td>
+                                    <td><span class="fill-blank">大選挙区</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 8px;">※被選挙権は、1889年当初は「満30歳以上の男子、直接国税15円以上」でしたが、1900年に納税資格が撤廃されました。</p>
+                    </li>
+                    
+                    <li>
+                        <h3>普通選挙運動の歩み</h3>
+                        <br>財産による制限選挙への不満から、普選を求める運動が展開されました。
+                        <ul>
+                            <li><strong>1897年</strong>：<span class="fill-blank">労働組合期成会</span>（高野房太郎ら）などが普通選挙を要求。</li>
+                            <li><strong>1899年</strong>：中村太八郎らが<span class="fill-blank">普通選挙期成同盟会</span>を結成。</li>
+                            <li><strong>1900年</strong>：同会が衆議院に普選請願書を提出したが否決される。治安警察法の制定で運動は一時停滞。</li>
+                            <li><strong>大正時代（1910年代後半〜）</strong>：大正デモクラシーの高揚、第一次世界大戦後の民主主義思想の普及や米騒動などを背景に、学生・労働者・ジャーナリストらによって普選運動が再び活発化した。</li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <h3>元老と政党政治</h3>
+                        <br>明治から昭和初期にかけての政治は、憲法に規定のない「<strong><span class="fill-blank">元老</span></strong>」（伊藤博文や山県有朋など、維新の元勲層）が後継首相を推薦するなど強い影響力を持ちました。しかし、1918年に政党（立憲政友会）の総裁である<span class="fill-blank">原敬</span>が首相に就任すると、本格的な政党内閣時代への道が開かれ、1924年の護憲三派内閣（加藤高明内閣）以降は「憲政の常道」として政党内閣が続きました。
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+    </script>
+</body>
+</html>
