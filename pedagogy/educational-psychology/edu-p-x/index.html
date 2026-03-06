@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学習の基本用語、動機づけ - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー (Violet) */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #ede9fe;
+            
+            --quiz-blue: #8b5cf6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #f5f3ff;
+            --fill-revealed-text: #7c3aed;
+            --fill-revealed-border: #ddd6fe;
+            
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #f5f3ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7; 
+            font-size: 16px; 
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 100vw;
+            overflow-x: hidden;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            white-space: nowrap; 
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: clamp(16px, 4vw, 30px);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: clamp(16px, 3vw, 24px);
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.15rem; 
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- コンテンツ変動（レスポンシブ）設定 --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.7rem, 1.6vw + 0.3rem, 0.85rem); 
+            word-break: break-word; 
+            overflow-wrap: anywhere;
+            table-layout: fixed; 
+            margin-bottom: 16px;
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: clamp(4px, 1vw, 10px) clamp(4px, 1vw, 10px); 
+            vertical-align: top;
+        }
+        .summary-table th {
+            background-color: var(--slot-bg);
+            color: var(--primary-color);
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .summary-table tr:nth-child(even) { background-color: #fafafa; }
+        .summary-table td ul, .summary-table td ol { padding-left: 16px; margin-top: 4px; margin-bottom: 4px;}
+        .table-note { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; display: block; line-height: 1.4;}
+        
+        /* テーブルの列幅比率指定 */
+        .table-2col th:nth-child(1), .table-2col td:nth-child(1) { width: 25%; }
+        .table-2col th:nth-child(2), .table-2col td:nth-child(2) { width: 75%; }
+
+        .table-2x2 th:nth-child(1), .table-2x2 td:nth-child(1) { width: 20%; background-color: #f1f5f9;}
+        .table-2x2 th:nth-child(2), .table-2x2 td:nth-child(2) { width: 40%; }
+        .table-2x2 th:nth-child(3), .table-2x2 td:nth-child(3) { width: 40%; }
+
+        /* --- 横スクロール用コンテナ（はみ出し防止） --- */
+        .scrollable-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .scrollable-container::-webkit-scrollbar { height: 6px; }
+        .scrollable-container::-webkit-scrollbar-track { background: var(--surface-color); border-radius: 4px; }
+        .scrollable-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        /* 図解風のCSS */
+        .diagram-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: clamp(10px, 2vw, 16px);
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* メタ認知の図解 */
+        .meta-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            font-size: clamp(0.7rem, 1.6vw + 0.3rem, 0.85rem);
+        }
+        .meta-box {
+            background: #fff;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        .meta-inner-flex {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+        }
+        .meta-child-box {
+            flex: 1;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        /* 自己決定理論の図解 */
+        .deci-flow {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+            font-size: clamp(0.7rem, 1.5vw + 0.3rem, 0.85rem);
+            min-width: 600px; /* 横スクロールを許容する最小幅 */
+        }
+        .deci-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .deci-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .shift-box {
+            background: #fff;
+            border: 1px dashed var(--text-muted);
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* 達成目標理論の図解 */
+        .goal-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: clamp(0.75rem, 1.6vw + 0.3rem, 0.85rem);
+        }
+        .goal-row {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+        }
+        .goal-left {
+            flex: 1;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+        }
+        .goal-right {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .goal-right-item {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- クイズUIスタイル（文字サイズ縮小調整済み） --- */
+        .quiz-section { margin-top: 10px; }
+        .quiz-header { display: flex; justify-content: center; margin-bottom: 30px; }
+
+        .progress-bar {
+            display: flex; align-items: center; width: 100%; max-width: 600px;
+            justify-content: space-between; position: relative;
+        }
+        .progress-bar::before {
+            content: ''; position: absolute; top: 50%; left: 0; right: 0;
+            height: 4px; background-color: var(--quiz-gray); z-index: 1;
+            transform: translateY(-50%); border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute; top: 50%; left: 0; height: 4px;
+            background-color: var(--quiz-blue); z-index: 2;
+            transform: translateY(-50%); transition: width 0.4s ease-in-out; border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px; border-radius: 50%; background-color: var(--quiz-gray);
+            z-index: 3; position: relative; transition: background-color 0.4s, transform 0.2s; cursor: pointer;
+        }
+        .step-node.active { background-color: var(--quiz-blue); transform: scale(1.3); }
+        .step-node.completed { background-color: var(--quiz-blue); }
+        .step-label {
+            position: absolute; top: -24px; left: 50%; transform: translateX(-50%);
+            font-size: 0.75rem; color: var(--quiz-blue); font-weight: bold; opacity: 0;
+            white-space: nowrap; transition: opacity 0.2s;
+        }
+        .step-node.active .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        /* クイズ本文のフォントサイズを縮小 */
+        .quiz-question-title { 
+            color: var(--quiz-blue); font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+            font-size: clamp(0.9rem, 2vw + 0.3rem, 1rem); /* 縮小 */
+        }
+        .quiz-card {
+            background: var(--surface-color); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 20px; line-height: 1.8;
+            margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); /* 縮小 */
+        }
+
+        .slot {
+            display: inline-flex; min-width: 60px; height: 30px; border-bottom: 2px solid var(--text-muted);
+            position: relative; cursor: pointer; margin: 0 4px; align-items: center; justify-content: center;
+            color: var(--text-color); padding: 0 8px; font-weight: bold; transition: all 0.2s;
+            vertical-align: middle; background-color: var(--slot-bg); border-radius: 4px 4px 0 0;
+            font-size: 0.9em;
+        }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+        .slot-num {
+            position: absolute; top: -8px; right: -8px; background-color: var(--quiz-blue);
+            color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 16px;
+            display: flex; flex-wrap: wrap; gap: 10px; background: var(--surface-color); margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: var(--surface-color); border: 1px solid var(--fill-border); color: var(--text-color);
+            padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.9rem); /* 縮小 */
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--quiz-blue); color: var(--quiz-blue); }
+        .option-btn:disabled { opacity: 0.4; cursor: default; background-color: var(--slot-bg); }
+
+        .mc-btn {
+            text-align: left; padding: 12px 16px; width: 100%; height: auto; border-radius: 8px;
+            background: var(--surface-color); border: 2px solid var(--fill-border);
+            color: var(--text-color); cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 12px; line-height: 1.5;
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); /* 縮小 */
+        }
+        .mc-btn.selected { border-color: var(--quiz-blue); background: var(--slot-hover-bg); font-weight: bold; }
+        .mc-btn.correct-ans { border-color: var(--quiz-green) !important; background: var(--feedback-correct-bg) !important; color: var(--quiz-green) !important; }
+        .mc-btn.incorrect-ans { border-color: var(--quiz-red) !important; background: var(--quiz-red-bg) !important; color: var(--quiz-red) !important; }
+
+        .tf-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px dashed var(--border-color); }
+        .tf-text { margin-bottom: 10px; font-weight: 500; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); /* 縮小 */ }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1; max-width: 100px; padding: 6px; border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg); border-radius: 6px; cursor: pointer; font-weight: bold;
+            color: var(--text-muted); transition: all 0.2s; display: flex; justify-content: center;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem); /* 縮小 */
+        }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        
+        .tf-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; display: none; line-height: 1.6; font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem); }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        .check-btn {
+            display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 12px;
+            background-color: var(--quiz-blue); color: white; text-align: center; border-radius: 8px;
+            border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem); /* 縮小 */
+        }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none; background: var(--slot-bg); border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue); border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 24px;
+        }
+        .feedback-box.show { display: block; }
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+        .feedback-title { font-weight: bold; margin-bottom: 10px; font-size: clamp(1rem, 2vw + 0.3rem, 1.1rem); }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+        .feedback-detail { margin-bottom: 16px; color: var(--text-color); line-height: 1.8; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 20px; }
+        .explanation-summary { color: var(--quiz-blue); cursor: pointer; display: flex; align-items: center; gap: 6px; outline: none; list-style: none; font-weight: bold; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content { margin-top: 10px; color: var(--text-color); background: var(--surface-color); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); line-height: 1.7; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+
+        .next-btn {
+            display: block; width: 100%; padding: 12px; background-color: var(--text-muted); color: white;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0;
+            visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px; width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+
+        footer { background-color: var(--surface-color); border-top: 1px solid var(--border-color); padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.7rem; margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            /* スマホ時テーブル調整 */
+            .table-2x2 th:nth-child(1), .table-2x2 td:nth-child(1) { width: 30%; }
+            .table-2x2 th:nth-child(2), .table-2x2 td:nth-child(2) { width: 35%; }
+            .table-2x2 th:nth-child(3), .table-2x2 td:nth-child(3) { width: 35%; }
+            
+            .meta-inner-flex { flex-direction: column; }
+            .goal-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="../index.html">教育心理</a> ＞ 学習の基本用語、動機づけ
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">学習の基本用語、動機づけ</h1>
+        </div>
+
+        <div class="container">
+            <!-- 【1】テーマ別詳細 -->
+            <div class="section-title"><i data-lucide="bookmark"></i>要点整理</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>1. 学習に関する基本用語</h3>
+                        
+                        <div style="width: 100%;">
+                            <table class="summary-table table-2col">
+                                <tr>
+                                    <th>用語</th>
+                                    <th>内容</th>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">レディネス</span></strong><br><span style="font-size:0.8em;color:var(--text-muted);">(学習準備性)</span></td>
+                                    <td>学習を効果的に行うために必要な心身の発達や準備状態のこと。ある課題を学習するには、そのための基礎（知識・技能・心身の成熟）ができている必要がある。ゲゼルが重視した概念。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">プラトー</span></strong>現象<br><span style="font-size:0.8em;color:var(--text-muted);">(高原現象)</span></td>
+                                    <td>学習の途中で一時的に成績の進歩が「横ばい（高原状）」になる、一時的な停滞期のこと。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">レミニセンス</span></strong></td>
+                                    <td>学習直後よりも、一定時間が経過した後の方が成績が良くなる現象。脳内で情報が整理・定着するために起こるとされる。</td>
+                                </tr>
+                                <tr>
+                                    <td>学習の<strong><span class="fill-blank">転移</span></strong></td>
+                                    <td>
+                                        以前の学習経験が、その後の学習に影響を与えること。<br>
+                                        促進的に働くなら「正の転移」（例：数学が物理に役立つ）<br>
+                                        妨害的に働くなら「負の転移」（例：古い習慣が新しい習得の邪魔をする）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>メタ認知</td>
+                                    <td>認知についての認知。自分が認知（思考・学習・記憶など）している状態を、高い次元から客観的に把握・評価し、制御すること。<strong>フラベル</strong>が提唱。近年の「自己調整学習」の中核となる概念。</td>
+                                </tr>
+                            </table>
+                            <p class="table-note">※プラトーの関連で、成績の一時的な低下を意味する「スランプ」を出題する自治体がごく稀にあるが、心理学の用語として広く使われているものではない。</p>
+                        </div>
+
+                        <!-- メタ認知の図式 CSS再現 -->
+                        <div class="diagram-box">
+                            <p style="font-weight:bold; color:var(--primary-color); margin-bottom:12px;">メタ認知の要素</p>
+                            <div class="meta-flow">
+                                <div class="meta-box" style="border-style:dashed;">
+                                    <div style="font-weight:bold; margin-bottom:8px;">メタ認知的活動</div>
+                                    <div class="meta-inner-flex">
+                                        <div class="meta-child-box">
+                                            <span style="color:var(--quiz-red); font-size:0.85em; font-weight:bold;">現在地の確認</span><br>
+                                            <strong>メタ認知モニタリング</strong><br>
+                                            <span style="font-size:0.85em; color:var(--text-muted);">「今のペースで間に合う？」<br>「自分は内容理解できてる？」</span>
+                                        </div>
+                                        <div style="display:flex; align-items:center; justify-content:center;">↔</div>
+                                        <div class="meta-child-box">
+                                            <span style="color:var(--quiz-red); font-size:0.85em; font-weight:bold;">進むべき方向を決める</span><br>
+                                            <strong>メタ認知的制御</strong><br>
+                                            <span style="font-size:0.85em; color:var(--text-muted);">「状況把握のために図をかこう」<br>「基礎項目に戻ろう」</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:20px;">
+                                    <div>↑↓</div>
+                                    <div>↑↓</div>
+                                </div>
+                                <div class="meta-box" style="width: auto; min-width: 200px;">
+                                    <strong>メタ認知的知識</strong><br>
+                                    <span style="color:var(--quiz-red); font-size:0.85em; font-weight:bold;">よい確認方法は？ よい進み方は？</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <h3>2. 動機づけ・やる気</h3>
+                        <p style="font-weight:bold; color:var(--primary-color); margin-top:16px;">・自己決定理論</p>
+                        <p><strong><span class="fill-blank">デシ</span></strong>とライアンによる。「動機づけ」をグラデーションで捉える考え方。</p>
+                        
+                        <div class="scrollable-container">
+                            <div class="deci-flow">
+                                <div class="deci-col">
+                                    <div style="margin-bottom:4px; font-size:0.9em;">低(やらされ感)</div>
+                                    <div style="color:var(--text-muted); font-size:0.8em;">[外発的動機づけ]</div>
+                                    <div style="color:var(--quiz-red); font-weight:bold; margin-top:8px;">賞罰</div>
+                                    <div class="deci-box"><strong>外的調整</strong></div>
+                                </div>
+                                <div class="deci-col" style="justify-content:center; flex:0.2;">←</div>
+                                <div class="deci-col">
+                                    <div style="margin-bottom:4px; font-size:0.9em;">←　自律性　→</div>
+                                    <div style="color:transparent; font-size:0.8em;">.</div>
+                                    <div style="color:var(--quiz-red); font-weight:bold; margin-top:8px;">恥・義務</div>
+                                    <div class="deci-box"><strong><span class="fill-blank">取り入れ的</span>調整</strong></div>
+                                </div>
+                                <div class="deci-col">
+                                    <div style="margin-bottom:4px; font-size:0.9em; color:transparent;">.</div>
+                                    <div style="color:transparent; font-size:0.8em;">.</div>
+                                    <div style="color:var(--quiz-red); font-weight:bold; margin-top:8px;">必要性の理解</div>
+                                    <div class="deci-box"><strong><span class="fill-blank">同一化的</span>調整</strong></div>
+                                </div>
+                                <div class="deci-col">
+                                    <div style="margin-bottom:4px; font-size:0.9em; color:transparent;">.</div>
+                                    <div style="color:transparent; font-size:0.8em;">.</div>
+                                    <div style="color:var(--quiz-red); font-weight:bold; margin-top:8px;">価値観と一致</div>
+                                    <div class="deci-box"><strong><span class="fill-blank">統合的</span>調整</strong></div>
+                                </div>
+                                <div class="deci-col" style="justify-content:center; flex:0.2;">→</div>
+                                <div class="deci-col">
+                                    <div style="margin-bottom:4px; font-size:0.9em;">高(納得・自発)</div>
+                                    <div style="color:var(--text-muted); font-size:0.8em;">[内発的動機づけ]</div>
+                                    <div style="color:var(--quiz-red); font-weight:bold; margin-top:8px;">興味・関心</div>
+                                    <div class="deci-box"><strong>内的調整</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:16px;">
+                            <div style="flex:1; min-width:260px; background:#fff; border:1px solid var(--border-color); padding:12px; border-radius:6px; display:flex; align-items:center; gap:10px;">
+                                <div style="font-weight:bold; color:var(--text-muted);">←左へシフト</div>
+                                <div>
+                                    <strong><span class="fill-blank">アンダーマイニング</span>効果</strong><br>
+                                    <span style="font-size:0.85em; color:var(--text-muted);">「楽しいから」→「報酬のため」に質が低下</span>
+                                </div>
+                            </div>
+                            <div style="flex:1; min-width:260px; background:#fff; border:1px solid var(--border-color); padding:12px; border-radius:6px; display:flex; align-items:center; gap:10px; justify-content:flex-end;">
+                                <div style="text-align:right;">
+                                    <strong><span class="fill-blank">機能的自律</span></strong> <span style="font-size:0.8em;color:var(--text-muted);">…オルポートによる</span><br>
+                                    <span style="font-size:0.85em; color:var(--text-muted);">「褒められたい」→「それ自体が楽しい」へ昇華</span>
+                                </div>
+                                <div style="font-weight:bold; color:var(--text-muted);">右へシフト→</div>
+                            </div>
+                        </div>
+                        <p class="table-note">※オルポートの「機能的自律」は人格理論の中で提唱されたものであり、学習心理学とはやや分野が異なる点に注意。</p>
+                    </li>
+
+                    <li>
+                        <h3>3. 重要用語と原因帰属理論</h3>
+                        
+                        <div style="width: 100%;">
+                            <table class="summary-table table-2col">
+                                <tr>
+                                    <th>用語</th>
+                                    <th>内容</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>自己<span class="fill-blank">効力</span>感</strong><br><span style="font-size:0.8em;color:var(--text-muted);">(Self-efficacy)</span></td>
+                                    <td><strong>バンデューラ</strong>による。「自分ならできる」という自信や有能感のこと。結果への期待ではなく「行動を遂行できるか」の確信を指す。</td>
+                                </tr>
+                                <tr>
+                                    <td>達成動機づけ<br><span style="font-size:0.8em;color:var(--text-muted);">(Achievement Motivation)</span></td>
+                                    <td>社会的に評価されることを、優れた水準でやり遂げようとする動機づけ。成功確率pが0.5(50%)程度の課題において、最も動機づけが高まるとされる。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>学習性無力感</strong><br><span style="font-size:0.8em;color:var(--text-muted);">(Learned Helplessness)</span></td>
+                                    <td><strong><span class="fill-blank">セリグマン</span></strong>による。イヌに長時間回避不能な罰（電気ショック等）を与え続けると、「何をしても無駄だ」と学習し、対処可能な状況になっても諦めてしまう実験から。</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- 原因帰属理論 -->
+                        <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:stretch; margin-top:24px;">
+                            <div style="flex:1; min-width:300px;">
+                                <p style="font-weight:bold; color:var(--primary-color);">原因帰属理論 <span style="font-size:0.8em;font-weight:normal;color:var(--text-muted);">…<strong><span class="fill-blank">ワイナー</span></strong>による</span></p>
+                                <p style="font-size:0.85em; color:var(--text-muted); margin-bottom:8px;">「結果の原因」をどう考えるかについて、「安定/不安定」と「内的/外的」の2軸の組合せで分類した。</p>
+                                <table class="summary-table table-2x2" style="text-align:center;">
+                                    <tr>
+                                        <th></th>
+                                        <th>内的</th>
+                                        <th>外的</th>
+                                    </tr>
+                                    <tr>
+                                        <th>安定(固定的)</th>
+                                        <td><span style="color:var(--quiz-red); font-weight:bold;">能力</span></td>
+                                        <td>課題の困難度</td>
+                                    </tr>
+                                    <tr>
+                                        <th>不安定(変動的)</th>
+                                        <td><span style="color:var(--quiz-red); font-weight:bold;">努力</span></td>
+                                        <td>運</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="flex:1; min-width:300px; display:flex; flex-direction:column; justify-content:center; gap:10px;">
+                                <div style="background:#fef2f2; border:1px solid #fca5a5; padding:12px; border-radius:6px; font-size:0.85em;">
+                                    <span style="color:var(--quiz-red); font-weight:bold;">「能力」</span>への帰属は学習性無力感が生じやすい<br>
+                                    <span style="color:var(--text-muted);">(by エイブラムソン)</span>
+                                </div>
+                                <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px; border-radius:6px; font-size:0.85em;">
+                                    <span style="color:var(--quiz-red); font-weight:bold;">「努力」</span>への帰属は学習性無力感を克服できる<br>
+                                    <span style="color:var(--text-muted);">(by ドゥエック)</span>
+                                </div>
+                                <div style="background:#fff; border:1px dashed var(--border-color); padding:10px; border-radius:6px; font-size:0.8em; color:var(--text-muted);">
+                                    失敗原因の説明(説明スタイル)で、他の状況でも起こりうるとする「全体性」を強調すると、学習性無力感が深刻化する (by ピーターソン)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 達成目標理論 -->
+                        <p style="font-weight:bold; color:var(--primary-color); margin-top:24px;">・達成目標理論</p>
+                        <div class="diagram-box">
+                            <div class="goal-flow">
+                                <div class="goal-row">
+                                    <div class="goal-left">
+                                        熟達目標(学習目標)<br>
+                                        <span style="font-size:0.8em; font-weight:normal; color:var(--text-muted);">(mastery goal)</span>
+                                    </div>
+                                    <div class="goal-right">
+                                        <div class="goal-right-item">
+                                            <strong>熟達＆接近目標</strong>
+                                            <span style="color:var(--quiz-red); font-size:0.9em;">学習内容をよく理解したい</span>
+                                        </div>
+                                        <div class="goal-right-item">
+                                            <strong>熟達＆回避目標</strong>
+                                            <span style="color:var(--quiz-red); font-size:0.9em;">学習内容が理解できないのは嫌だ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="goal-row">
+                                    <div class="goal-left">
+                                        遂行目標(パフォーマンス目標)<br>
+                                        <span style="font-size:0.8em; font-weight:normal; color:var(--text-muted);">(performance goal)</span>
+                                    </div>
+                                    <div class="goal-right">
+                                        <div class="goal-right-item">
+                                            <strong>遂行＆接近目標</strong>
+                                            <span style="color:var(--quiz-red); font-size:0.9em;">成績がいいのを示したい</span>
+                                        </div>
+                                        <div class="goal-right-item">
+                                            <strong>遂行＆回避目標</strong>
+                                            <span style="color:var(--quiz-red); font-size:0.9em;">成績が悪いと思われたくない</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:0.85em; font-weight:bold; color:var(--text-muted);">
+                                <div><strong><span class="fill-blank">ドゥエック</span></strong> による2分類</div>
+                                <div>エリオット らによる4分類</div>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【2】クイズセクション -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" title="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" title="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装
+        // ==========================================
+        const quizData = [
+            {
+                type: 'dragDrop',
+                parts: [
+                    "(1)特定の課題を達成するために必要な行動を、自身がどの程度うまく遂行可能かという主観的な確信（予期）のことを「",
+                    "」という。<br><br>(2)自発的な興味や関心に基づいて行っていた行動に対し、金銭や賞賛などの外的な報酬が与えられることで、かえって内発的動機づけが低下してしまう現象のことを「",
+                    "」という。"
+                ],
+                correctAnswers: ["自己効力感", "アンダーマイニング現象"],
+                options: ["アンダーマイニング現象", "機能的自律", "自己効力感", "学習性無力感"],
+                explanation: "正解は(1)自己効力感、(2)アンダーマイニング現象。\n\n[自己効力感 (セルフ・エフィカシー)]\nバンデューラ提唱。特定の課題を達成するために必要な行動を、自身がうまく遂行できるかという主観的な確信や見込み。\n\n[アンダーマイニング現象]\n内発的動機づけに基づく行動に対し、金銭や監視などの外的な報酬を与えることで、報酬自体が目的化し、本来の意欲が低下する現象。\n\n[機能的自律]\nオルポート提唱。当初は何らかの目的のための手段であった行動が、反復されるうちにそれ自体が自己目的化すること。\n\n[学習性無力感]\nセリグマン提唱。回避不可能な嫌悪刺激（罰）を繰り返し受けることで、「何をしても無駄だ」と学習し、無気力状態になること。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "(1)学習が成立するためには、学習者の心身がその学習を遂行できる発達段階に達している必要がある。この、学習を受け入れるために必要な心身の準備状態や成熟度のことを「",
+                    "」という。<br><br>(2)過去の学習経験が、その後の新たな学習や問題解決の場面において影響を及ぼす現象を「",
+                    "」という。これには、先行学習が後の学習を促進する場合（正の転移）と、阻害する場合（負の転移）がある。"
+                ],
+                correctAnswers: ["レディネス", "転移"],
+                options: ["レミニセンス", "メタ認知", "レディネス", "転移"],
+                explanation: "正解は(1)レディネス、(2)転移。\n\n【正解語句】\n・レディネス：学習を効果的に成立させるために必要な心身の準備状態。ゲゼルが重視。\n・転移：以前の学習経験が、その後の新たな学習や問題解決に影響を及ぼす現象。\n\n【その他の語群】\n・レミニセンス：学習直後よりも、一定時間経過した後の方が記憶の再生成績が優れている現象。脳内での情報整理によって起こる。\n・メタ認知：認知活動そのものを対象とした認知。「認知についての認知」。フラベル提唱。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "デシとライアンの自己決定理論において、「外発的動機づけ」は自律性の低いものから高いものへと4つの段階に分類される。 最も自律性が低く「非動機づけ」に近い外的調整から、最も自律性が高く「内発的動機づけ」に近い内的調整へと至る正しい順序を答えなさい。<br><br>外的調整<br>→「",
+                    "」調整 <br>→「",
+                    "」調整<br>→「",
+                    "」調整<br>→内的調整"
+                ],
+                correctAnswers: ["取り入れ的", "同一化的", "統合的"],
+                options: ["統合的", "同一化的", "取り入れ的"],
+                explanation: "正解は、取り入れ的(調整) → 同一化的(調整) → 統合的(調整)。\n\nデシとライアン(Deci & Ryan)の自己決定理論では、動機づけを自律性の度合いで連続的に捉える。\n\n1. 外的調整：「先生に叱られるからやる」等。統制は外部。\n2. 取り入れ的調整：「やらないと罪悪感がある」等。義務や恥の回避。\n3. 同一化的調整：「進路実現のために必要だから勉強する」等。行動の価値や必要性を理解・肯定している。\n4. 統合的調整：外発的動機づけの中で最も自律性が高い。「健康維持が自分の生き方だから運動する」等。自己の価値観と矛盾なく一体化している。\n5. 内的調整(内発的動機づけ)：活動そのものの面白さ、楽しさが源泉。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "ワイナーの原因帰属理論において、テストの点数が悪かった原因を「自分の能力が低いからだ」と考えることは、内的で不安定な要因への帰属である。", 
+                        correct: false, 
+                        explanation: "誤りです。「能力」は自分自身に属する「内的」な要因ですが、すぐに変わるものではないため「安定（固定的）」な要因に分類されます。「内的で不安定」な要因の代表例は「努力」です。"
+                    },
+                    { 
+                        text: "プラトー現象とは、学習の途中で一時的に成績の進歩が横ばいになる停滞期のことである。", 
+                        correct: true, 
+                        explanation: "正しい記述です。学習曲線において、進歩が一時的に見られなくなる平坦な時期をプラトー（高原）現象と呼びます。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let maxReachedIndex = 0;
+        let isReviewMode = false;
+        let isProgressBarBuilt = false;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                if (i < totalSteps) node.onclick = () => jumpToQuestion(i);
+                else node.classList.add('final-node');
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                if (i === totalSteps) {
+                    label.style.top = '-24px'; label.style.right = '-15px'; label.style.left = 'auto'; label.style.transform = 'none';
+                }
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (maxReachedIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (node) {
+                    node.classList.remove('active', 'completed', 'viewing');
+                    if (i < maxReachedIndex) node.classList.add('completed');
+                    if (i === currentQIndex) node.classList.add(i === maxReachedIndex ? 'active' : 'viewing');
+                }
+            }
+        }
+
+        window.jumpToQuestion = function(index) {
+            if (index > quizData.length) return;
+            currentQIndex = index;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.returnToCurrent = function() {
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function renderQuiz() {
+            if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
+            updateProgress();
+            
+            if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            
+            isReviewMode = (currentQIndex !== maxReachedIndex);
+            const q = quizData[currentQIndex];
+            
+            if (q.type === 'dragDrop') renderDragDrop(q);
+            else if (q.type === 'multipleChoice') renderMultipleChoice(q);
+            else if (q.type === 'trueFalse') renderTrueFalse(q);
+        }
+
+        function renderDragDrop(q) {
+            let ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            window.ddUserAnswers = ddUserAnswers;
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に語句を配置せよ</div>`;
+            html += `<div class="quiz-card">`;
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty ${isReviewMode ? 'disabled' : ''}" data-index="${index}" onclick="removeDDAnswer(${index})"><span class="slot-num">${index + 1}</span></span>`;
+                }
+            });
+            html += `</div>`;
+            html += `<div class="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード。解答順に進んでください。</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btn) {
+            if (isReviewMode) return;
+            const idx = window.ddUserAnswers.indexOf(null);
+            if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
+        };
+        
+        window.removeDDAnswer = function(idx) {
+            if (isReviewMode) return;
+            const text = window.ddUserAnswers[idx];
+            if (text) {
+                window.ddUserAnswers[idx] = null;
+                document.querySelectorAll('.option-btn').forEach(b => { if (b.innerText === text) b.disabled = false; });
+                updateDDSlots();
+            }
+        };
+        
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let full = true;
+            slots.forEach((s, i) => {
+                const t = window.ddUserAnswers[i];
+                s.innerHTML = t ? `${t}<span class="slot-num">${i + 1}</span>` : `<span class="slot-num">${i + 1}</span>`;
+                s.classList.toggle('empty', !t);
+                if (!t) full = false;
+            });
+            document.getElementById('check-btn').disabled = !full;
+        }
+        
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            let correct = true;
+            document.querySelectorAll('.slot').forEach((s, i) => {
+                const isC = window.ddUserAnswers[i] === q.correctAnswers[i];
+                s.classList.add(isC ? 'correct' : 'incorrect');
+                if (!isC) correct = false;
+            });
+            document.getElementById('check-btn').style.display = 'none';
+            showFeedback(correct, window.ddUserAnswers.join(' '), q.correctAnswers.join(' '));
+        };
+
+        function renderMultipleChoice(q) {
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：</div>`;
+            html += `<div class="quiz-card" style="margin-bottom:12px;">${q.questionText}</div>`;
+            html += `<div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 24px;">`;
+            q.options.forEach((o, i) => {
+                html += `<button class="mc-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectMC(${i})"><span style="font-weight:bold; color:var(--quiz-blue);">${i + 1}.</span><div>${o.text}</div></button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkMCAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectMC = function(i) {
+            window.currentMCSelected = i;
+            document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+            document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkMCAnswer = function() {
+            const q = quizData[currentQIndex];
+            const isC = q.options[window.currentMCSelected].isCorrect;
+            document.getElementById('check-btn').style.display = 'none';
+            document.querySelectorAll('.mc-btn').forEach((b, i) => {
+                b.disabled = true;
+                if (q.options[i].isCorrect) b.classList.add('correct-ans');
+                else if (i === window.currentMCSelected) b.classList.add('incorrect-ans');
+            });
+            showFeedback(isC, q.options[window.currentMCSelected].text, q.options.find(o=>o.isCorrect).text);
+        };
+
+        function renderTrueFalse(q) {
+            window.tfAnswers = new Array(q.questions.length).fill(null);
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：正誤判定</div>`;
+            html += `<div class="quiz-card">`;
+            q.questions.forEach((item, i) => {
+                html += `<div class="tf-item"><div class="tf-text">(${i+1}) ${item.text}</div><div class="tf-btns">
+                    <button class="tf-btn" id="tf-btn-${i}-t" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},true)">○ 正しい</button>
+                    <button class="tf-btn" id="tf-btn-${i}-f" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},false)">× 誤り</button>
+                </div><div class="tf-feedback" id="tf-feedback-${i}"></div></div>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectTF = function(idx, val) {
+            window.tfAnswers[idx] = val;
+            document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
+            document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
+            if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+            q.questions.forEach((item, i) => {
+                const isC = window.tfAnswers[i] === item.correct;
+                const f = document.getElementById(`tf-feedback-${i}`);
+                f.classList.add('show', isC ? 'correct' : 'incorrect');
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation.replace(/\n/g, '<br>')}`;
+            });
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        function generateFeedbackHTML(exp) {
+            return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
+                あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
+                <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
+                <div class="explanation-content">${exp.replace(/\n/g, '<br>')}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
+        }
+        
+        function showFeedback(isC, u, c) {
+            const fb = document.getElementById('feedback-box');
+            fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
+            document.getElementById('fb-title').innerText = isC ? "正解です！" : "不正解です";
+            document.getElementById('fb-title').className = "feedback-title " + (isC ? "text-green" : "text-red");
+            document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
+            document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
+        }
+        
+        window.nextQuestion = function() {
+            if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
+            currentQIndex = maxReachedIndex; 
+            renderQuiz();
+        };
+        
+        function showResultScreen() {
+            updateProgress();
+            quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--primary-color);">学習の基本用語、動機づけ クリア！</h2><p style="color: var(--text-muted); margin-bottom: 30px;">自己効力感や動機づけの理論について確認しました。</p>
+                <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                    <button class="check-btn" style="margin: 0; background: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="location.reload()">もう一度挑戦する</button>
+                    <a href="../index.html" class="next-btn" style="max-width: 320px;">教育心理 目次へ戻る</a>
+                </div></div>`;
+            lucide.createIcons();
+        }
+        
+        // 初回レンダリング
+        renderQuiz();
+    </script>
+</body>
+</html>
