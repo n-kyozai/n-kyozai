@@ -44,6 +44,7 @@
 
             --sidebar-width: 200px;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -52,7 +53,8 @@
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.7; /* 読みやすさ向上のため行間を拡大 */
+            font-size: 16px; /* ベースフォントサイズを明示 */
             display: flex;
             min-height: 100vh;
             overflow-x: hidden; /* 画面全体の横揺れ防止 */
@@ -65,11 +67,11 @@
         /* --- サイドバー --- */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--surface-color);
+            background-color: white;
             height: 100vh;
             position: fixed;
             left: 0; top: 0;
-            border-right: 1px solid var(--border-color);
+            border-right: 1px solid #e2e8f0;
             overflow-y: auto;
             z-index: 1000;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -80,10 +82,14 @@
             font-size: 0.95rem;
             font-weight: bold;
             color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
         }
 
         .nav-menu { padding: 6px 0; }
@@ -92,25 +98,27 @@
             font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
+            color: #94a3b8;
             font-weight: 600;
         }
         .nav-item {
             display: flex;
             align-items: center;
             padding: 6px 16px;
-            color: var(--text-muted);
+            color: #64748b;
             text-decoration: none;
             transition: all 0.2s;
             font-size: 0.8rem;
         }
-        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
         .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        /* 教職教養をアクティブ表示にする（緑ベース） */
         .nav-item.active {
-            color: var(--accent-color);
-            background-color: var(--nav-active-bg);
+            color: #059669; /* 教職教養の緑色 */
+            background-color: #ecfdf5;
             font-weight: bold;
-            border-right: 3px solid var(--accent-color);
+            border-right: 3px solid #059669;
         }
 
         /* --- モバイル用トグルボタン --- */
@@ -122,7 +130,7 @@
             z-index: 2000;
             width: 36px;
             height: 36px;
-            background-color: var(--surface-color);
+            background-color: rgba(255, 255, 255, 0.9);
             border: none;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
@@ -151,6 +159,7 @@
             flex-direction: column;
             max-width: 100vw;
             overflow-x: hidden;
+            transition: margin-left 0.3s ease;
         }
 
         .page-header {
@@ -205,6 +214,7 @@
             vertical-align: middle;
             font-weight: bold;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            white-space: nowrap; /* 改行防止 */
         }
         .fill-blank rt { color: transparent; transition: all 0.2s; }
         .fill-blank.revealed {
@@ -219,7 +229,7 @@
         .theme-box {
             background: var(--surface-color);
             border-radius: 12px;
-            padding: 30px;
+            padding: clamp(16px, 4vw, 30px); /* 画面幅に応じてパディング変動 */
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             margin-bottom: 40px;
@@ -228,7 +238,7 @@
         .theme-list { list-style: none; }
         .theme-list > li {
             position: relative;
-            padding-left: 24px;
+            padding-left: clamp(16px, 3vw, 24px);
             margin-bottom: 32px;
             font-size: 0.95rem;
             line-height: 1.8;
@@ -250,7 +260,7 @@
         }
         
         .theme-list h3 {
-            font-size: 1.1rem;
+            font-size: 1.15rem; /* 見やすく拡大 */
             color: var(--primary-color);
             margin-bottom: 16px;
             display: inline-block;
@@ -258,35 +268,17 @@
             padding-bottom: 2px;
         }
 
-        /* --- 横スクロール用コンテナ（はみ出し防止） --- */
-        .scrollable-container {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 8px;
-            margin-bottom: 16px;
-        }
-        .scrollable-container::-webkit-scrollbar { height: 6px; }
-        .scrollable-container::-webkit-scrollbar-track { background: var(--surface-color); border-radius: 4px; }
-        .scrollable-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-        .scrollable-container::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-        .scroll-content-flex {
-            display: flex;
-            gap: 30px;
-            align-items: flex-start;
-            min-width: max-content; /* 中身の要素が縮むのを防ぐ */
-        }
-
-        /* --- テーブルスタイル --- */
+        /* --- コンテンツ変動（レスポンシブ）設定 --- */
         .summary-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 2vw + 0.4rem, 0.95rem); /* 画面幅に応じて文字サイズが自動変動 */
+            word-break: break-word; /* はみ出し防止 */
+            table-layout: fixed; /* 列幅の比率を固定 */
         }
         .summary-table th, .summary-table td {
             border: 1px solid var(--border-color);
-            padding: 10px 12px;
+            padding: clamp(6px, 1.5vw, 12px) clamp(6px, 1.5vw, 12px); /* 余白も自動変動 */
             vertical-align: top;
         }
         .summary-table th {
@@ -295,26 +287,37 @@
             font-weight: bold;
             text-align: left;
         }
+        /* 列幅のベース指定（スマホでも比率を維持） */
+        .summary-table th:nth-child(1), .summary-table td:nth-child(1) { width: 25%; }
+        .summary-table th:nth-child(2), .summary-table td:nth-child(2) { width: 35%; }
+        .summary-table th:nth-child(3), .summary-table td:nth-child(3) { width: 40%; }
+
+        /* ロジャーズ表専用の列幅設定 */
+        .rogers-table th:nth-child(1), .rogers-table td:nth-child(1) { width: 35%; }
+        .rogers-table th:nth-child(2), .rogers-table td:nth-child(2) { width: 65%; }
+
         .summary-table tr:nth-child(even) { background-color: #fafafa; }
         .summary-table td ul { padding-left: 20px; margin-top: 4px; }
-        .table-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; display: block; }
+        .table-note { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; display: block; }
 
         /* 図解風のCSS */
         .diagram-box {
             background: #f8fafc;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 16px;
+            padding: clamp(10px, 2vw, 16px);
             text-align: center;
+            margin-top: 16px;
         }
         
-        /* 構造論図解 */
+        /* 構造論図解（レスポンシブ） */
         .mind-structure {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: clamp(5px, 2vw, 15px); /* ギャップも変動 */
             margin: 10px 0;
+            flex-wrap: wrap; /* 狭い画面では折り返しを許容 */
         }
         .mind-node {
             background: white;
@@ -322,46 +325,47 @@
             border-radius: 50px;
             padding: 8px 16px;
             text-align: center;
-            min-width: 100px;
+            min-width: clamp(80px, 15vw, 100px);
+            font-size: clamp(0.85rem, 2vw + 0.3rem, 0.95rem);
         }
         .mind-node strong { display: block; color: var(--primary-color); }
-        .mind-node span { font-size: 0.8rem; color: var(--text-muted); }
-        .mind-line { height: 2px; background: #94a3b8; width: 30px; }
+        .mind-node span { font-size: 0.8em; color: var(--text-muted); }
+        .mind-line { height: 2px; background: #94a3b8; width: clamp(15px, 4vw, 30px); }
 
-        /* マズローのピラミッド */
+        /* マズローのピラミッド（はみ出し防止・完全レスポンシブ構造） */
         .maslow-pyramid {
             display: flex;
             flex-direction: column;
-            align-items: center;
             gap: 4px;
-            margin: 20px 0;
-            padding-right: 110px; /* ラベル用の余白を確保 */
+            width: 100%;
+            margin: 16px 0;
         }
-        .layer {
+        .maslow-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .maslow-bar {
             background-color: var(--quiz-blue);
             color: white;
             text-align: center;
-            padding: 6px;
+            padding: clamp(4px, 1vw, 6px);
             border-radius: 4px;
             font-weight: bold;
-            font-size: 0.9rem;
-            position: relative;
+            font-size: clamp(0.75rem, 1.8vw + 0.3rem, 0.9rem);
         }
-        .layer-1 { width: 50%; background-color: #7c3aed; }
-        .layer-2 { width: 65%; background-color: #8b5cf6; }
-        .layer-3 { width: 80%; background-color: #a78bfa; }
-        .layer-4 { width: 95%; background-color: #c4b5fd; color: var(--text-color); }
-        .layer-5 { width: 100%; background-color: #ddd6fe; color: var(--text-color); }
+        .layer-1 { width: 40%; margin-left: 20%; background-color: #7c3aed; }
+        .layer-2 { width: 50%; margin-left: 15%; background-color: #8b5cf6; }
+        .layer-3 { width: 60%; margin-left: 10%; background-color: #a78bfa; }
+        .layer-4 { width: 70%; margin-left: 5%; background-color: #c4b5fd; color: var(--text-color); }
+        .layer-5 { width: 80%; margin-left: 0%; background-color: #ddd6fe; color: var(--text-color); }
         
-        .layer-label {
-            position: absolute;
-            left: calc(100% + 10px);
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.8rem;
+        .maslow-label {
+            flex: 1;
+            font-size: clamp(0.7rem, 1.5vw + 0.4rem, 0.8rem);
             color: var(--text-muted);
-            white-space: nowrap;
-            font-weight: normal;
+            line-height: 1.3;
             text-align: left;
         }
 
@@ -541,8 +545,11 @@
             .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
             .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
             .mc-btn { flex-direction: column; align-items: flex-start; }
-            .maslow-pyramid { padding-right: 0; }
-            .layer-label { position: static; transform: none; display: block; text-align: center; margin-top: 4px;}
+            
+            /* スマホ時は列幅比率の強制を解除し、自然に収める */
+            .summary-table th:nth-child(1), .summary-table td:nth-child(1) { width: 30%; }
+            .summary-table th:nth-child(2), .summary-table td:nth-child(2) { width: 35%; }
+            .summary-table th:nth-child(3), .summary-table td:nth-child(3) { width: 35%; }
         }
     </style>
 </head>
@@ -553,25 +560,29 @@
     </button>
     <div class="overlay" id="overlay"></div>
 
+    <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
-       <nav class="nav-menu">
+        <nav class="nav-menu">
             <div class="nav-category">MAIN</div>
-            <a href="#home" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
             <div class="nav-category">教養・指導要領</div>
-            <a href="#general" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
-            <a href="#pedagogy" class="nav-item active"><i data-lucide="users"></i>教職教養</a>
-            <a href="#guidelines" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item active"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
         </nav>
     </aside>
 
     <main class="main-content">
         <div class="page-header">
             <div class="breadcrumb">
-                <a href="#home">ホーム</a> ＞ 
-                <a href="#pedagogy">教職教養</a> ＞ 
-                <a href="#edu-p">教育心理</a> ＞ 心理学の大きな流れ
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="../index.html">教育心理</a> ＞ 心理学の大きな流れ
             </div>
             <h1 style="font-size: 1.4rem; color: var(--primary-color);">心理学の大きな流れ</h1>
         </div>
@@ -586,8 +597,8 @@
                         <h3>1. ヴントと3大流派の成立</h3>
                         <p>心理学は19世紀後半に哲学から独立し、その後様々な流派が生まれました。</p>
                         
-                        <div class="scrollable-container">
-                            <table class="summary-table" style="min-width: 600px;">
+                        <div style="width: 100%;">
+                            <table class="summary-table">
                                 <tr>
                                     <th>人物(年代・国)</th>
                                     <th>キーワード</th>
@@ -643,9 +654,9 @@
                         </div>
                         
                         <div class="diagram-box">
-                            <p style="font-size: 0.9rem; margin-bottom: 8px;"><strong>【補足】フロイトの心の構造論 模式図</strong></p>
-                            <div class="scrollable-container" style="margin-bottom: 0;">
-                                <div class="mind-structure" style="min-width: 340px;">
+                            <p style="font-size: 0.95rem; margin-bottom: 12px;"><strong>【補足】フロイトの心の構造論 模式図</strong></p>
+                            <div style="width: 100%;">
+                                <div class="mind-structure">
                                     <div class="mind-node"><strong>エス(イド)</strong><span>本能</span></div>
                                     <div class="mind-line"></div>
                                     <div class="mind-node" style="border-color:var(--quiz-blue); border-width:2px;"><strong>自我(エゴ)</strong><span>調節</span></div>
@@ -660,8 +671,8 @@
                         <h3>2. フロイトからの離反</h3>
                         <p>「過去」の束縛から離れていく動きが見られました。</p>
                         
-                        <div class="scrollable-container">
-                            <table class="summary-table" style="min-width: 600px;">
+                        <div style="width: 100%;">
+                            <table class="summary-table">
                                 <tr>
                                     <th>人物(年代・国)</th>
                                     <th>キーワード</th>
@@ -697,41 +708,54 @@
                         <h3>3. 人間性心理学</h3>
                         <p>人間の「成長可能性」を強調する立場です。</p>
                         
-                        <div class="scrollable-container">
-                            <div class="scroll-content-flex">
-                                <div style="width: 320px;">
-                                    <p style="font-weight: bold; color: var(--quiz-blue); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">マズロー の欲求階層説 (米 1908-1970)</p>
-                                    <div class="maslow-pyramid">
-                                        <div class="layer layer-1"><span class="fill-blank" style="background:rgba(255,255,255,0.2); color:#fff; border:none; box-shadow:none;">自己実現</span>欲求<span class="layer-label">成長欲求 (終わりが無い)</span></div>
-                                        <div class="layer layer-2"><span class="fill-blank" style="background:rgba(255,255,255,0.2); color:#fff; border:none; box-shadow:none;">承認</span>欲求<span class="layer-label">↑<br>欠乏欲求</span></div>
-                                        <div class="layer layer-3">社会的欲求</div>
-                                        <div class="layer layer-4"><span class="fill-blank" style="background:rgba(255,255,255,0.5); color:#333; border:none; box-shadow:none;">安全</span>欲求</div>
-                                        <div class="layer layer-5"><span class="fill-blank" style="background:rgba(255,255,255,0.5); color:#333; border:none; box-shadow:none;">生理的</span>欲求<span class="layer-label">下から満たされる</span></div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; width: 100%;">
+                            <div style="flex: 1 1 280px; min-width: 0;">
+                                <p style="font-weight: bold; color: var(--quiz-blue); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">マズロー の欲求階層説 (米 1908-1970)</p>
+                                <div class="maslow-pyramid">
+                                    <div class="maslow-row">
+                                        <div class="maslow-bar layer-1"><span class="fill-blank" style="background:rgba(255,255,255,0.2); color:#fff; border:none; box-shadow:none;">自己実現</span>欲求</div>
+                                        <div class="maslow-label">成長欲求<br>(終わりが無い)</div>
+                                    </div>
+                                    <div class="maslow-row">
+                                        <div class="maslow-bar layer-2"><span class="fill-blank" style="background:rgba(255,255,255,0.2); color:#fff; border:none; box-shadow:none;">承認</span>欲求</div>
+                                        <div class="maslow-label">↑<br>欠乏欲求</div>
+                                    </div>
+                                    <div class="maslow-row">
+                                        <div class="maslow-bar layer-3">社会的欲求</div>
+                                        <div class="maslow-label"></div>
+                                    </div>
+                                    <div class="maslow-row">
+                                        <div class="maslow-bar layer-4"><span class="fill-blank" style="background:rgba(255,255,255,0.5); color:#333; border:none; box-shadow:none;">安全</span>欲求</div>
+                                        <div class="maslow-label"></div>
+                                    </div>
+                                    <div class="maslow-row">
+                                        <div class="maslow-bar layer-5"><span class="fill-blank" style="background:rgba(255,255,255,0.5); color:#333; border:none; box-shadow:none;">生理的</span>欲求</div>
+                                        <div class="maslow-label">下から満たされる</div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div style="width: 380px;">
-                                    <p style="font-weight: bold; color: var(--quiz-blue); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">ロジャーズ の来談者中心カウンセリング (米 1902-1987)</p>
-                                    <p style="font-size: 0.85rem; margin: 8px 0;">指示・助言ではなく、クライエント自身が持つ力を信頼し援助する。<br>(※指示的カウンセリング＝ウィリアムソン)</p>
-                                    <table class="summary-table" style="margin-top: 0;">
-                                        <tr>
-                                            <th style="font-size: 0.8rem;">カウンセラーの3条件</th>
-                                            <th style="font-size: 0.8rem;">意味</th>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="fill-blank">自己一致</span></td>
-                                            <td style="font-size: 0.85rem;">カウンセラーの内心と態度に裏表がない。純粋性、真実性とも。</td>
-                                        </tr>
-                                        <tr>
-                                            <td>無条件の<span class="fill-blank">肯定的関心</span></td>
-                                            <td style="font-size: 0.85rem;">相手の価値観を批判せず、ありのまま尊重。受容とも。</td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="fill-blank">共感的理解</span></td>
-                                            <td style="font-size: 0.85rem;">相手のことを、あたかも自分自身のことのように感じること。</td>
-                                        </tr>
-                                    </table>
-                                </div>
+                            <div style="flex: 1 1 280px; min-width: 0;">
+                                <p style="font-weight: bold; color: var(--quiz-blue); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">ロジャーズ の来談者中心カウンセリング (米 1902-1987)</p>
+                                <p style="font-size: 0.85rem; margin: 8px 0;">指示・助言ではなく、クライエント自身が持つ力を信頼し援助する。<br>(※指示的カウンセリング＝ウィリアムソン)</p>
+                                <table class="summary-table rogers-table" style="margin-top: 0;">
+                                    <tr>
+                                        <th style="font-size: 0.8rem;">カウンセラーの3条件</th>
+                                        <th style="font-size: 0.8rem;">意味</th>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fill-blank">自己一致</span></td>
+                                        <td style="font-size: 0.85rem;">カウンセラーの内心と態度に裏表がない。純粋性、真実性とも。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>無条件の<span class="fill-blank">肯定的関心</span></td>
+                                        <td style="font-size: 0.85rem;">相手の価値観を批判せず、ありのまま尊重。受容とも。</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fill-blank">共感的理解</span></td>
+                                        <td style="font-size: 0.85rem;">相手のことを、あたかも自分自身のことのように感じること。</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </li>
@@ -1113,7 +1137,7 @@
                 <h2 style="color: var(--primary-color);">心理学の大きな流れ クリア！</h2><p style="color: var(--text-muted); margin-bottom: 30px;">主要な心理学者とキーワードを確認しました。</p>
                 <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
                     <button class="check-btn" style="margin: 0; background: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="location.reload()">もう一度挑戦する</button>
-                    <a href="#edu-p" class="next-btn" style="max-width: 320px;">教育心理 目次へ戻る</a>
+                    <a href="../index.html" class="next-btn" style="max-width: 320px;">教育心理 目次へ戻る</a>
                 </div></div>`;
             lucide.createIcons();
         }
