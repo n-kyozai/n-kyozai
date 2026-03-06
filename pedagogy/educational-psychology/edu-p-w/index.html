@@ -304,46 +304,70 @@
             margin-bottom: 16px;
         }
         
-        /* 認知説のツッコミ図解 */
-        .cognitive-flow {
-            display: flex;
-            align-items: stretch;
-            gap: 10px;
-            font-size: clamp(0.75rem, 1.8vw + 0.3rem, 0.85rem);
-        }
-        .flow-col {
+        /* 認知説のツッコミ図解 新レイアウト */
+        .cognitive-table {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            flex: 1;
+            font-size: clamp(0.75rem, 1.8vw + 0.3rem, 0.85rem);
         }
-        .flow-item {
+        .cog-header-row {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8em;
+            color: var(--text-muted);
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 4px;
+            text-align: center;
+        }
+        .cog-premise-header { flex: 1; }
+        .cog-arrow-header { width: clamp(60px, 12vw, 90px); }
+        .cog-theory-header { flex: 2; }
+
+        .cog-row {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+        }
+        .cog-premise {
+            flex: 1;
             background: #fff;
             border: 1px solid var(--border-color);
             padding: 8px;
             border-radius: 4px;
             text-align: center;
-            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .flow-arrow-col {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            color: var(--quiz-red);
-            font-weight: bold;
-            font-size: 0.8em;
-            text-align: center;
-            flex: 0 0 auto;
-            width: clamp(60px, 15vw, 100px);
-        }
-        .flow-arrow-item {
+        .cog-arrow {
+            width: clamp(60px, 12vw, 90px);
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            color: var(--quiz-red);
+            font-weight: bold;
+            font-size: 0.85em;
+            text-align: center;
+            flex-direction: column;
+        }
+        .cog-theory {
+            flex: 2;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 4px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .arrow-icon::after {
+            content: "→";
+            display: inline-block;
+            margin-left: 2px;
         }
 
         /* --- クイズUIスタイル --- */
@@ -508,14 +532,33 @@
             .tf-btn { max-width: 100%; }
             .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
             .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .mc-btn { flex-direction: column; align-items: flex-start; }
             
             /* スマホ時テーブル調整 */
             .table-3col th:nth-child(1), .table-3col td:nth-child(1) { width: 35%; }
             .table-3col th:nth-child(2), .table-3col td:nth-child(2) { width: 25%; }
             .table-3col th:nth-child(3), .table-3col td:nth-child(3) { width: 40%; }
             
-            .cognitive-flow { flex-direction: column; }
-            .flow-arrow-col { flex-direction: row; width: 100%; justify-content: center; transform: rotate(90deg); padding: 10px 0; }
+            /* 認知説図解のスマホレイアウト */
+            .cog-header-row { display: none; }
+            .cog-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+                margin-bottom: 15px;
+                background: #f1f5f9;
+                padding: 10px;
+                border-radius: 8px;
+            }
+            .cog-premise { width: 100%; padding: 10px; }
+            .cog-arrow {
+                width: 100%;
+                flex-direction: row;
+                padding: 5px 0;
+            }
+            .cog-arrow br { display: none; }
+            .cog-theory { width: 100%; }
+            .arrow-icon::after { content: "↓"; margin-left: 5px; }
         }
     </style>
 </head>
@@ -689,30 +732,35 @@
                         
                         <div class="diagram-box">
                             <p style="font-size: 0.95rem; margin-bottom: 12px; color: var(--primary-color); font-weight:bold;">連合説へのツッコミと認知説</p>
-                            <div class="cognitive-flow">
-                                <div class="flow-col">
-                                    <div style="font-size:0.8em; color:var(--text-muted); border-bottom:1px dashed #ccc; padding-bottom:4px; text-align:center;">連合説の前提</div>
-                                    <div class="flow-item">行動への報酬を<br>与える</div>
-                                    <div class="flow-item">何回も<br>繰り返す</div>
-                                    <div class="flow-item">その本人の行動に<br>対して行う！</div>
+                            <div class="cognitive-table">
+                                <div class="cog-header-row">
+                                    <div class="cog-premise-header">連合説の前提</div>
+                                    <div class="cog-arrow-header"></div>
+                                    <div class="cog-theory-header"></div>
                                 </div>
-                                <div class="flow-arrow-col">
-                                    <div class="flow-arrow-item">報酬いらん<br>くね？ →</div>
-                                    <div class="flow-arrow-item">一発で<br>よくね？ →</div>
-                                    <div class="flow-arrow-item">他人の行動<br>でもよくね？ →</div>
-                                </div>
-                                <div class="flow-col" style="flex:2;">
-                                    <div class="flow-item" style="flex-direction:column; align-items:flex-start; text-align:left;">
+                                
+                                <div class="cog-row">
+                                    <div class="cog-premise">行動への報酬を<br>与える</div>
+                                    <div class="cog-arrow"><span class="arrow-text">報酬いらん<br>くね？</span> <span class="arrow-icon"></span></div>
+                                    <div class="cog-theory">
                                         <strong>サイン・ゲシュタルト説 (<span class="fill-blank">トールマン</span>)</strong>
-                                        <span style="font-size:0.8em; color:var(--text-muted);">ネズミの迷路学習実験。報酬がない状態でも頭の中に「認知地図」が作られ、「潜在学習」が進むとした。S-R結合ではなく、意味(サイン)の把握を重視。</span>
+                                        <span style="font-size:0.8em; color:var(--text-muted); display:block; margin-top:4px;">ネズミの迷路学習実験。報酬がない状態でも頭の中に「認知地図」が作られ、「潜在学習」が進むとした。S-R結合ではなく、意味(サイン)の把握を重視。</span>
                                     </div>
-                                    <div class="flow-item" style="flex-direction:column; align-items:flex-start; text-align:left;">
+                                </div>
+                                <div class="cog-row">
+                                    <div class="cog-premise">何回も<br>繰り返す</div>
+                                    <div class="cog-arrow"><span class="arrow-text">一発で<br>よくね？</span> <span class="arrow-icon"></span></div>
+                                    <div class="cog-theory">
                                         <strong>洞察説 (<span class="fill-blank">ケーラー</span>)</strong>
-                                        <span style="font-size:0.8em; color:var(--text-muted);">チンパンジーが箱を積み上げたり棒を使ったりして、手の届かないバナナを取る実験。試行錯誤ではなく、状況の全体的把握(ゲシュタルト)による見通しを重視。</span>
+                                        <span style="font-size:0.8em; color:var(--text-muted); display:block; margin-top:4px;">チンパンジーが箱を積み上げたり棒を使ったりして、手の届かないバナナを取る実験。試行錯誤ではなく、状況の全体的把握(ゲシュタルト)による見通しを重視。</span>
                                     </div>
-                                    <div class="flow-item" style="flex-direction:column; align-items:flex-start; text-align:left;">
+                                </div>
+                                <div class="cog-row">
+                                    <div class="cog-premise">その本人の行動に<br>対して行う！</div>
+                                    <div class="cog-arrow"><span class="arrow-text">他人の行動<br>でもよくね？</span> <span class="arrow-icon"></span></div>
+                                    <div class="cog-theory">
                                         <strong>モデリング学習/観察学習 (<span class="fill-blank">バンデューラ</span>)</strong>
-                                        <span style="font-size:0.8em; color:var(--text-muted);">「社会的学習理論」の中で提唱。ボボ人形実験において、モデル(大人)が人形を殴るのを見た子供は、同様に攻撃的な行動をとるようになった。代理強化を含む。</span>
+                                        <span style="font-size:0.8em; color:var(--text-muted); display:block; margin-top:4px;">「社会的学習理論」の中で提唱。ボボ人形実験において、モデル(大人)が人形を殴るのを見た子供は、同様に攻撃的な行動をとるようになった。代理強化を含む。</span>
                                     </div>
                                 </div>
                             </div>
