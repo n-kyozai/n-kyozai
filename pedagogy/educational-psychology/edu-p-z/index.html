@@ -264,8 +264,9 @@
             width: 100%;
             border-collapse: collapse;
             font-size: clamp(0.75rem, 1.6vw + 0.3rem, 0.9rem); 
-            word-break: break-word; 
-            overflow-wrap: anywhere;
+            /* 英語の不自然なぶつ切りを防止 */
+            word-break: normal; 
+            overflow-wrap: break-word;
             table-layout: fixed; 
             margin-bottom: 16px;
         }
@@ -290,8 +291,8 @@
         .table-3col th:nth-child(2), .table-3col td:nth-child(2) { width: 30%; }
         .table-3col th:nth-child(3), .table-3col td:nth-child(3) { width: 45%; }
 
-        .table-3col-b th:nth-child(1), .table-3col-b td:nth-child(1) { width: 30%; }
-        .table-3col-b th:nth-child(2), .table-3col-b td:nth-child(2) { width: 20%; }
+        .table-3col-b th:nth-child(1), .table-3col-b td:nth-child(1) { width: 25%; }
+        .table-3col-b th:nth-child(2), .table-3col-b td:nth-child(2) { width: 25%; }
         .table-3col-b th:nth-child(3), .table-3col-b td:nth-child(3) { width: 50%; }
 
         /* 特性論用 特殊テーブル */
@@ -299,11 +300,23 @@
         .table-traits th:nth-child(1), .table-traits td:nth-child(1) { width: 20%; background-color: var(--slot-bg); font-weight: bold; text-align:center;}
         .table-traits th:nth-child(2), .table-traits td:nth-child(2) { width: 80%; }
 
-        /* ビッグファイブ表 */
-        .table-bf th:nth-child(1), .table-bf td:nth-child(1) { width: 35%; text-align:center; font-family: monospace;}
-        .table-bf th:nth-child(2), .table-bf td:nth-child(2) { width: 25%; text-align:center; font-weight:bold;}
+        /* ビッグファイブ表（英語列の幅を広げ、左寄せに調整） */
+        .table-bf th:nth-child(1), .table-bf td:nth-child(1) { width: 38%; text-align:left; padding-left:10px;}
+        .table-bf th:nth-child(2), .table-bf td:nth-child(2) { width: 22%; text-align:center; font-weight:bold;}
         .table-bf th:nth-child(3), .table-bf td:nth-child(3) { width: 40%; }
-        .bf-initial { color: var(--quiz-red); font-weight: bold; font-size: 1.1em;}
+        .bf-initial { color: var(--quiz-red); font-weight: bold; font-size: 1.2em;}
+
+        /* 横スクロール用コンテナ（スマホでの表の潰れ防止） */
+        .scrollable-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .scrollable-container::-webkit-scrollbar { height: 6px; }
+        .scrollable-container::-webkit-scrollbar-track { background: var(--surface-color); border-radius: 4px; }
+        .scrollable-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
         /* 図解風のCSS */
         .diagram-box {
@@ -476,15 +489,6 @@
             .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
             .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
             
-            /* スマホ時テーブル調整 */
-            .table-3col th:nth-child(1), .table-3col td:nth-child(1) { width: 30%; }
-            .table-3col th:nth-child(2), .table-3col td:nth-child(2) { width: 30%; }
-            .table-3col th:nth-child(3), .table-3col td:nth-child(3) { width: 40%; }
-            
-            .table-3col-b th:nth-child(1), .table-3col-b td:nth-child(1) { width: 30%; }
-            .table-3col-b th:nth-child(2), .table-3col-b td:nth-child(2) { width: 25%; }
-            .table-3col-b th:nth-child(3), .table-3col-b td:nth-child(3) { width: 45%; }
-            
             .table-traits th:nth-child(1), .table-traits td:nth-child(1) { width: 30%; }
             .table-traits th:nth-child(2), .table-traits td:nth-child(2) { width: 70%; }
         }
@@ -533,8 +537,8 @@
                         <h3>1. 類型論</h3>
                         <p style="font-size:0.9em; color:var(--text-muted); margin-bottom:12px;">性格をいくつかの「型」に分ける考え方です。</p>
                         
-                        <div style="width: 100%;">
-                            <table class="summary-table table-3col">
+                        <div class="scrollable-container">
+                            <table class="summary-table table-3col" style="min-width: 500px;">
                                 <tr>
                                     <th>提唱者</th>
                                     <th>分類基準</th>
@@ -622,38 +626,40 @@
                                             <strong><span class="fill-blank">ゴールドバーグ</span></strong> 提唱 (マクレー、コスタが整理)<br>
                                             <span style="color:var(--quiz-red); font-weight:bold;">5</span>因子モデル (ビッグ・ファイブ)
                                         </div>
-                                        <table class="summary-table table-bf" style="margin:0;">
-                                            <tr>
-                                                <th>英語名</th>
-                                                <th>日本語訳</th>
-                                                <th>内容のイメージ</th>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="bf-initial">O</span>penness to experience</td>
-                                                <td>経験への開放性</td>
-                                                <td>知的好奇心、想像力豊か、多様性の許容</td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="bf-initial">C</span>onscientiousness</td>
-                                                <td>誠実性 (勤勉性)</td>
-                                                <td>規則順守、計画性、自己コントロール</td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="bf-initial">E</span>xtraversion</td>
-                                                <td>外向性</td>
-                                                <td>積極的な社交、活動的、刺激の希求</td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="bf-initial">A</span>greeableness</td>
-                                                <td>調和性 (親和性)</td>
-                                                <td>利他的援助、協調性、対立回避</td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="bf-initial">N</span>euroticism</td>
-                                                <td>神経症的傾向</td>
-                                                <td>不安・抑うつ、ストレス脆弱性、感情不安定</td>
-                                            </tr>
-                                        </table>
+                                        <div class="scrollable-container">
+                                            <table class="summary-table table-bf" style="margin:0; min-width: 480px;">
+                                                <tr>
+                                                    <th>英語名</th>
+                                                    <th>日本語訳</th>
+                                                    <th>内容のイメージ</th>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="bf-initial">O</span>penness to experience</td>
+                                                    <td>経験への開放性</td>
+                                                    <td>知的好奇心、想像力豊か、多様性の許容</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="bf-initial">C</span>onscientiousness</td>
+                                                    <td>誠実性 (勤勉性)</td>
+                                                    <td>規則順守、計画性、自己コントロール</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="bf-initial">E</span>xtraversion</td>
+                                                    <td>外向性</td>
+                                                    <td>積極的な社交、活動的、刺激の希求</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="bf-initial">A</span>greeableness</td>
+                                                    <td>調和性 (親和性)</td>
+                                                    <td>利他的援助、協調性、対立回避</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="bf-initial">N</span>euroticism</td>
+                                                    <td>神経症的傾向</td>
+                                                    <td>不安・抑うつ、ストレス脆弱性、感情不安定</td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
@@ -663,8 +669,8 @@
                     <li>
                         <h3>3. 心理検査</h3>
                         
-                        <div style="width: 100%;">
-                            <table class="summary-table table-3col-b">
+                        <div class="scrollable-container">
+                            <table class="summary-table table-3col-b" style="min-width: 600px;">
                                 <tr>
                                     <th>種類</th>
                                     <th>名称 (略称)</th>
