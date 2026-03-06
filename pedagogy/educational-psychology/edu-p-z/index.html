@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>類型論と特性論、心理検査 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー (Violet) */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #ede9fe;
+            
+            --quiz-blue: #8b5cf6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #f5f3ff;
+            --fill-revealed-text: #7c3aed;
+            --fill-revealed-border: #ddd6fe;
+            
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #f5f3ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7; 
+            font-size: 16px; 
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 100vw;
+            overflow-x: hidden;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            white-space: nowrap; 
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: clamp(16px, 4vw, 30px);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: clamp(16px, 3vw, 24px);
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.15rem; 
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- コンテンツ変動（レスポンシブ）設定 --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.75rem, 1.6vw + 0.3rem, 0.9rem); 
+            word-break: break-word; 
+            overflow-wrap: anywhere;
+            table-layout: fixed; 
+            margin-bottom: 16px;
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: clamp(6px, 1.5vw, 12px) clamp(6px, 1.5vw, 12px); 
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: var(--slot-bg);
+            color: var(--primary-color);
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .summary-table tr:nth-child(even) { background-color: #fafafa; }
+        .summary-table td ul, .summary-table td ol { padding-left: 16px; margin-top: 4px; margin-bottom: 4px;}
+        .table-note { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; display: block; line-height: 1.4;}
+        
+        /* テーブルの列幅比率指定 */
+        .table-3col th:nth-child(1), .table-3col td:nth-child(1) { width: 25%; }
+        .table-3col th:nth-child(2), .table-3col td:nth-child(2) { width: 30%; }
+        .table-3col th:nth-child(3), .table-3col td:nth-child(3) { width: 45%; }
+
+        .table-3col-b th:nth-child(1), .table-3col-b td:nth-child(1) { width: 30%; }
+        .table-3col-b th:nth-child(2), .table-3col-b td:nth-child(2) { width: 20%; }
+        .table-3col-b th:nth-child(3), .table-3col-b td:nth-child(3) { width: 50%; }
+
+        /* 特性論用 特殊テーブル */
+        .table-traits th, .table-traits td { padding: 8px; vertical-align: top; }
+        .table-traits th:nth-child(1), .table-traits td:nth-child(1) { width: 20%; background-color: var(--slot-bg); font-weight: bold; text-align:center;}
+        .table-traits th:nth-child(2), .table-traits td:nth-child(2) { width: 80%; }
+
+        /* ビッグファイブ表 */
+        .table-bf th:nth-child(1), .table-bf td:nth-child(1) { width: 35%; text-align:center; font-family: monospace;}
+        .table-bf th:nth-child(2), .table-bf td:nth-child(2) { width: 25%; text-align:center; font-weight:bold;}
+        .table-bf th:nth-child(3), .table-bf td:nth-child(3) { width: 40%; }
+        .bf-initial { color: var(--quiz-red); font-weight: bold; font-size: 1.1em;}
+
+        /* 図解風のCSS */
+        .diagram-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: clamp(10px, 2vw, 16px);
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* --- クイズUIスタイル（文字サイズ縮小調整済み） --- */
+        .quiz-section { margin-top: 10px; }
+        .quiz-header { display: flex; justify-content: center; margin-bottom: 30px; }
+
+        .progress-bar {
+            display: flex; align-items: center; width: 100%; max-width: 600px;
+            justify-content: space-between; position: relative;
+        }
+        .progress-bar::before {
+            content: ''; position: absolute; top: 50%; left: 0; right: 0;
+            height: 4px; background-color: var(--quiz-gray); z-index: 1;
+            transform: translateY(-50%); border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute; top: 50%; left: 0; height: 4px;
+            background-color: var(--quiz-blue); z-index: 2;
+            transform: translateY(-50%); transition: width 0.4s ease-in-out; border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px; border-radius: 50%; background-color: var(--quiz-gray);
+            z-index: 3; position: relative; transition: background-color 0.4s, transform 0.2s; cursor: pointer;
+        }
+        .step-node.active { background-color: var(--quiz-blue); transform: scale(1.3); }
+        .step-node.completed { background-color: var(--quiz-blue); }
+        .step-label {
+            position: absolute; top: -24px; left: 50%; transform: translateX(-50%);
+            font-size: 0.75rem; color: var(--quiz-blue); font-weight: bold; opacity: 0;
+            white-space: nowrap; transition: opacity 0.2s;
+        }
+        .step-node.active .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        /* クイズ本文のフォントサイズを縮小 */
+        .quiz-question-title { 
+            color: var(--quiz-blue); font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+            font-size: clamp(0.9rem, 2vw + 0.3rem, 1rem);
+        }
+        .quiz-card {
+            background: var(--surface-color); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 20px; line-height: 1.8;
+            margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
+        }
+
+        .slot {
+            display: inline-flex; min-width: 60px; height: 30px; border-bottom: 2px solid var(--text-muted);
+            position: relative; cursor: pointer; margin: 0 4px; align-items: center; justify-content: center;
+            color: var(--text-color); padding: 0 8px; font-weight: bold; transition: all 0.2s;
+            vertical-align: middle; background-color: var(--slot-bg); border-radius: 4px 4px 0 0;
+            font-size: 0.9em;
+        }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+        .slot-num {
+            position: absolute; top: -8px; right: -8px; background-color: var(--quiz-blue);
+            color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 16px;
+            display: flex; flex-wrap: wrap; gap: 10px; background: var(--surface-color); margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: var(--surface-color); border: 1px solid var(--fill-border); color: var(--text-color);
+            padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.9rem);
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--quiz-blue); color: var(--quiz-blue); }
+        .option-btn:disabled { opacity: 0.4; cursor: default; background-color: var(--slot-bg); }
+
+        .mc-btn {
+            text-align: left; padding: 12px 16px; width: 100%; height: auto; border-radius: 8px;
+            background: var(--surface-color); border: 2px solid var(--fill-border);
+            color: var(--text-color); cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 12px; line-height: 1.5;
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
+        }
+        .mc-btn.selected { border-color: var(--quiz-blue); background: var(--slot-hover-bg); font-weight: bold; }
+        .mc-btn.correct-ans { border-color: var(--quiz-green) !important; background: var(--feedback-correct-bg) !important; color: var(--quiz-green) !important; }
+        .mc-btn.incorrect-ans { border-color: var(--quiz-red) !important; background: var(--quiz-red-bg) !important; color: var(--quiz-red) !important; }
+
+        .tf-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px dashed var(--border-color); }
+        .tf-text { margin-bottom: 10px; font-weight: 500; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1; max-width: 100px; padding: 6px; border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg); border-radius: 6px; cursor: pointer; font-weight: bold;
+            color: var(--text-muted); transition: all 0.2s; display: flex; justify-content: center;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem);
+        }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        
+        .tf-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; display: none; line-height: 1.6; font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem); }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        .check-btn {
+            display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 12px;
+            background-color: var(--quiz-blue); color: white; text-align: center; border-radius: 8px;
+            border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
+        }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none; background: var(--slot-bg); border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue); border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 24px;
+        }
+        .feedback-box.show { display: block; }
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+        .feedback-title { font-weight: bold; margin-bottom: 10px; font-size: clamp(1rem, 2vw + 0.3rem, 1.1rem); }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+        .feedback-detail { margin-bottom: 16px; color: var(--text-color); line-height: 1.8; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 20px; }
+        .explanation-summary { color: var(--quiz-blue); cursor: pointer; display: flex; align-items: center; gap: 6px; outline: none; list-style: none; font-weight: bold; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content { margin-top: 10px; color: var(--text-color); background: var(--surface-color); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); line-height: 1.7; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+
+        .next-btn {
+            display: block; width: 100%; padding: 12px; background-color: var(--text-muted); color: white;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0;
+            visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px; width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+
+        footer { background-color: var(--surface-color); border-top: 1px solid var(--border-color); padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.7rem; margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            /* スマホ時テーブル調整 */
+            .table-3col th:nth-child(1), .table-3col td:nth-child(1) { width: 30%; }
+            .table-3col th:nth-child(2), .table-3col td:nth-child(2) { width: 30%; }
+            .table-3col th:nth-child(3), .table-3col td:nth-child(3) { width: 40%; }
+            
+            .table-3col-b th:nth-child(1), .table-3col-b td:nth-child(1) { width: 30%; }
+            .table-3col-b th:nth-child(2), .table-3col-b td:nth-child(2) { width: 25%; }
+            .table-3col-b th:nth-child(3), .table-3col-b td:nth-child(3) { width: 45%; }
+            
+            .table-traits th:nth-child(1), .table-traits td:nth-child(1) { width: 30%; }
+            .table-traits th:nth-child(2), .table-traits td:nth-child(2) { width: 70%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="../index.html">教育心理</a> ＞ 類型論と特性論、心理検査
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">類型論と特性論、心理検査</h1>
+        </div>
+
+        <div class="container">
+            <div class="section-title"><i data-lucide="bookmark"></i>要点整理</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>1. 類型論</h3>
+                        <p style="font-size:0.9em; color:var(--text-muted); margin-bottom:12px;">性格をいくつかの「型」に分ける考え方です。</p>
+                        
+                        <div style="width: 100%;">
+                            <table class="summary-table table-3col">
+                                <tr>
+                                    <th>提唱者</th>
+                                    <th>分類基準</th>
+                                    <th>実際の分類</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="background:#e2e8f0; font-size:0.8em; padding:4px 10px;">体格(見た目)で分類</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">クレッチマー</span></strong></td>
+                                    <td>体型<br><span style="font-size:0.8em;color:var(--text-muted);">(精神医学がベース)</span></td>
+                                    <td>
+                                        肥満型 → 躁うつ気質<br>
+                                        細長型 → 分裂気質<br>
+                                        闘士型(マッチョ) → 粘着気質
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">シェルドン</span></strong></td>
+                                    <td>体型<br><span style="font-size:0.8em;color:var(--text-muted);">(受精卵のどの胚葉が発達するか、に注目)</span></td>
+                                    <td>
+                                        内胚葉型(肥満) → 社交的<br>
+                                        外胚葉型(細い) → 引っ込み思案<br>
+                                        中胚葉型(マッチョ) → 精力的
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="background:#e2e8f0; font-size:0.8em; padding:4px 10px;">精神面で分類</td>
+                                </tr>
+                                <tr>
+                                    <td>ユング</td>
+                                    <td>リビドー(心的エネルギー)の向く方向</td>
+                                    <td>外向型・内向型の2類型(4つの心理機能を組み合わせて8類型とする場合も)。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">シュプランガー</span></strong></td>
+                                    <td>文化的価値の置き所</td>
+                                    <td>理論、経済、審美、社会、権力、宗教の6類型 (『生の諸形式』)。</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <h3>2. 特性論</h3>
+                        <p style="font-size:0.9em; color:var(--text-muted); margin-bottom:12px;">性格をいくつかの「観点」を設定して数値化し評価する考え方です。</p>
+                        
+                        <div class="diagram-box">
+                            <table class="summary-table table-traits" style="margin:0; text-align:left;">
+                                <tr>
+                                    <td>初期研究</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                            <div>オルポート</div>
+                                            <div style="font-size:0.85em; color:var(--text-muted);">(辞書から1万8000語を抽出→4500語に絞る)</div>
+                                            <div>→ <strong><span class="fill-blank">プロフィール</span></strong> (サイコグラフ) に特性を可視化。</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>統計手法<br>充実後…</td>
+                                    <td>
+                                        <div style="display:flex; flex-wrap:wrap; gap:16px;">
+                                            <div style="flex:1; min-width:200px; border:1px dashed #ccc; padding:10px; border-radius:6px; background:#fff;">
+                                                <div style="font-weight:bold; color:var(--primary-color); margin-bottom:6px;"><strong><span class="fill-blank">アイゼンク</span></strong></div>
+                                                <div style="font-size:0.85em;">
+                                                    <span style="color:var(--quiz-red); font-weight:bold;">2</span>尺度「外向性ー内向性」「神経症傾向」に絞る(後に「精神病傾向」追加)<br>
+                                                    →モーズレイ人格目録(MPI)へ応用
+                                                </div>
+                                            </div>
+                                            <div style="flex:1; min-width:200px; border:1px dashed #ccc; padding:10px; border-radius:6px; background:#fff;">
+                                                <div style="font-weight:bold; color:var(--primary-color); margin-bottom:6px;"><strong><span class="fill-blank">キャッテル</span></strong></div>
+                                                <div style="font-size:0.85em;">
+                                                    最終的に <span style="color:var(--quiz-red); font-weight:bold;">16</span> の根源特性を確定<br>
+                                                    →16PFへ応用
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1980年代<br>以降〜</td>
+                                    <td>
+                                        <div style="margin-bottom:8px;">
+                                            <strong><span class="fill-blank">ゴールドバーグ</span></strong> 提唱 (マクレー、コスタが整理)<br>
+                                            <span style="color:var(--quiz-red); font-weight:bold;">5</span>因子モデル (ビッグ・ファイブ)
+                                        </div>
+                                        <table class="summary-table table-bf" style="margin:0;">
+                                            <tr>
+                                                <th>英語名</th>
+                                                <th>日本語訳</th>
+                                                <th>内容のイメージ</th>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="bf-initial">O</span>penness to experience</td>
+                                                <td>経験への開放性</td>
+                                                <td>知的好奇心、想像力豊か、多様性の許容</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="bf-initial">C</span>onscientiousness</td>
+                                                <td>誠実性 (勤勉性)</td>
+                                                <td>規則順守、計画性、自己コントロール</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="bf-initial">E</span>xtraversion</td>
+                                                <td>外向性</td>
+                                                <td>積極的な社交、活動的、刺激の希求</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="bf-initial">A</span>greeableness</td>
+                                                <td>調和性 (親和性)</td>
+                                                <td>利他的援助、協調性、対立回避</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="bf-initial">N</span>euroticism</td>
+                                                <td>神経症的傾向</td>
+                                                <td>不安・抑うつ、ストレス脆弱性、感情不安定</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>3. 心理検査</h3>
+                        
+                        <div style="width: 100%;">
+                            <table class="summary-table table-3col-b">
+                                <tr>
+                                    <th>種類</th>
+                                    <th>名称 (略称)</th>
+                                    <th>説明 (内容・開発者など)</th>
+                                </tr>
+                                <tr>
+                                    <td rowspan="4">
+                                        質問紙法<br>
+                                        <span style="font-size:0.8em;color:var(--text-muted);font-weight:normal;">…はい/いいえなどの選択肢で答える</span>
+                                        <div style="margin-top:10px; padding:6px; background:#fef2f2; border:1px dashed #fca5a5; border-radius:4px; font-size:0.8em; color:var(--quiz-red); font-weight:bold;">
+                                            アイゼンク、キャッテルの特性論の応用
+                                        </div>
+                                    </td>
+                                    <td>矢田部・ギルフォード性格検査<br>(YG性格検査)</td>
+                                    <td>質問数<span style="color:var(--quiz-red);font-weight:bold;">120</span>。12の特性を測定。矢田部達郎がギルフォードの理論を日本版に標準化。</td>
+                                </tr>
+                                <tr>
+                                    <td>ミネソタ多面人格目録<br>(<strong><span class="fill-blank">MMPI</span></strong>)</td>
+                                    <td>質問数<span style="color:var(--quiz-red);font-weight:bold;">550</span>。10の臨床尺度に加え、回答者の検査態度を測定する妥当性尺度を測定。ハサウェイとマッキンリーが開発。<br><span style="font-size:0.8em;color:var(--text-muted);">Minnesota Multiphasic Personality Inventory</span></td>
+                                </tr>
+                                <tr style="border-left:2px dashed var(--quiz-red); border-right:2px dashed var(--quiz-red); border-top:2px dashed var(--quiz-red);">
+                                    <td>モーズレイ人格目録(<strong><span class="fill-blank">MPI</span></strong>)</td>
+                                    <td>「外向性-内向性」と「神経症傾向」の2特性を測定。アイゼンクが開発。<br><span style="font-size:0.8em;color:var(--text-muted);">Maudsley Personality Inventory</span></td>
+                                </tr>
+                                <tr style="border-left:2px dashed var(--quiz-red); border-right:2px dashed var(--quiz-red); border-bottom:2px dashed var(--quiz-red);">
+                                    <td><strong><span class="fill-blank">16PF</span></strong></td>
+                                    <td>16の人格因子を測定。キャッテルが開発。<br><span style="font-size:0.8em;color:var(--text-muted);">16 Personality Factor Questionnaire</span></td>
+                                </tr>
+                                <tr>
+                                    <td>エゴグラム</td>
+                                    <td>交流分析に基づき5つの尺度(CP/NP/A/FC/AC)で自我状態を示す。デュセイが開発。</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="8">
+                                        投影法<br>
+                                        <span style="font-size:0.8em;color:var(--text-muted);font-weight:normal;">…言葉や作品で内面を表現する</span>
+                                    </td>
+                                    <td colspan="2" style="background:#e2e8f0; font-size:0.85em; padding:4px 10px;">言葉(セリフ)を答える</td>
+                                </tr>
+                                <tr>
+                                    <td>P-Fスタディ<br><span style="font-size:0.8em;color:var(--text-muted);">(Picture-Frustration Study)</span></td>
+                                    <td>絵の吹き出しに当てはまるセリフを答える。ローゼンツヴァイクが開発。</td>
+                                </tr>
+                                <tr>
+                                    <td>文章完成テスト(<strong><span class="fill-blank">SCT</span></strong>)</td>
+                                    <td>不完全な文章の続きを書いて完成させる。エビングハウスが開発。<br><span style="font-size:0.8em;color:var(--text-muted);">Sentence Completion Test</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="background:#e2e8f0; font-size:0.85em; padding:4px 10px;">イメージを答える</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">ロールシャッハ</span></strong>・テスト</td>
+                                    <td>左右対称のインクのシミが何に見えるか答える。ロールシャッハが開発。</td>
+                                </tr>
+                                <tr>
+                                    <td>主題統覚検査(<strong><span class="fill-blank">TAT</span></strong>)<br><span style="font-size:0.8em;color:var(--text-muted);">(絵画統覚検査)</span></td>
+                                    <td>絵画を見て想像される物語を述べる。マレーとモーガンが開発。<br><span style="font-size:0.8em;color:var(--text-muted);">Thematic Apperception Test</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="background:#e2e8f0; font-size:0.85em; padding:4px 10px;">絵を描く</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">バウム</span></strong>・テスト</td>
+                                    <td>実のなる「木」の絵を描く。コッホが開発。</td>
+                                </tr>
+                                <tr>
+                                    <td>HTPテスト</td>
+                                    <td>家(H)・木(T)・人(P)の絵を描く。バックが開発。</td>
+                                </tr>
+
+                                <tr>
+                                    <td>作業検査法</td>
+                                    <td>内田クレペリン検査</td>
+                                    <td>隣り合う数字を足す作業を繰り返す。内田勇三郎(クレペリンの理論を応用)が開発。</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【2】クイズセクション -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" title="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" title="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装
+        // ==========================================
+        const quizData = [
+            {
+                type: 'dragDrop',
+                parts: [
+                    "次は、ゴールドバーグらによって示された、パーソナリティ特性のビッグファイブに関する記述である。文を完成させよ。<br>・創造性や知的好奇心の高さを表し、新しい経験に対する受容性を示す因子は、「",
+                    "」である。<br>・責任感、慎重さ、自己規律の強さを表し、目標達成に向けた計画性を示す因子は、「",
+                    "」である。<br>・社交性や物事への積極性、エネルギーが外部に向けられる度合いを表す因子は、「",
+                    "」である。<br>・他者への共感性、寛容性、他者と協力的な関係を築こうとする傾向を表す因子は、「",
+                    "」である。<br>・不安や緊張の高さ、感情の起伏、心理的ストレスに対する傷つきやすさを表す因子は、「",
+                    "」である。<br>これらビッグファイブは、それぞれの頭文字をとって「OCEAN（オーシャン）モデル」とも呼ばれる。人間の個性を以下の5つの独立した次元で捉える、現在最も有力な特性モデルの一つである。"
+                ],
+                correctAnswers: ["開放性", "誠実性", "外向性", "調和性", "神経症傾向"],
+                options: ["誠実性", "調和性", "神経症傾向", "外向性", "開放性"],
+                explanation: "正解は、開放性/誠実性/外向性/調和性/神経症傾向。\n\nビッグファイブ（特性5因子モデル）\n・開放性（Openness to experience）：創造性、知的好奇心、新しい経験への受容性。\n・誠実性（Conscientiousness）：自己規律、責任感、計画性。「勤勉性」とも呼ぶ。\n・外向性（Extraversion）：社交性、積極性、関心が外部へ向く度合い。\n・調和性（Agreeableness）：他者への共感、協調性、信頼性。「協調性」とも呼ぶ。\n・神経症傾向（Neuroticism）：情緒不安定性、不安、ストレスへの脆弱性。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "心理検査に関する説明文を完成させよ。<br><br>(1) 「",
+                    "」は、マレーとモーガンによって考案された投影法による心理人格検査である。被検査者の空想力を刺激する比較的あいまいな絵を見せ、物語を作らせる。その内容を分析することで、個人の性格や潜在的な欲求を診断しようとする検査法。<br><br>(2) 「",
+                    "」は、ハサウェイとマッキンリーにより開発された、質問紙法による性格検査である。550の質問項目で構成されており、回答結果から妥当性尺度、臨床尺度を導き出す。"
+                ],
+                correctAnswers: ["TAT", "MMPI"],
+                options: ["16PF", "TAT", "MMPI", "バウム・テスト", "SCT"],
+                explanation: "正解は(1) TAT、(2) MMPI。\n\n【正解語句】\n(1) TAT (主題統覚検査)\nマレーとモーガン考案。投影法の一種。人物が描かれた曖昧な絵図版を提示し、物語を作らせる検査。物語の主人公と被検査者を同一視し、その内容から性格、欲求、葛藤、対人関係などを分析。\n\n(2) MMPI (ミネソタ多面人格目録)\nハサウェイとマッキンリー開発。質問紙法の中で最も代表的な検査。550の質問項目に対し「はい」「いいえ」「どちらでもない」で回答。心気症、抑うつなどの10の「臨床尺度」に加え、回答の信頼性や歪みを検出する4つの「妥当性尺度(疑問尺度、虚偽尺度など)」を備える。\n\n【関連語句】\nバウム・テスト\nコッホ考案。投影法（描画法）。画用紙に「実のなる木」を描かせる検査。木の全体的印象、空間配置、幹や枝の形状、筆圧などから人格の深層や内面的な安定性を診断。\n\n16PF (人格要因検査)\nキャッテル考案。質問紙法。オルポートの特性論を基礎とし、因子分析法を用いて抽出された「16の根源的特性」を測定。\n\nSCT (文章完成テスト)\n投影法の一種。「私の父は・・・」「もし私が・・・」といった不完全な刺激文を提示し、続きを自由に記述させて文章を完成させる。意識的な側面と無意識的な側面の両方が投影される。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "人格の類型論に関して述べたものである。文を完成させよ。<br><br>(1)「",
+                    "」は、受精卵の三胚葉に由来する体型と性格の関連性を分析し、内臓緊張型、身体緊張型、頭脳緊張型の3つを区別した。<br><br>(2)「",
+                    "」は、心的エネルギー（リビドー）が客観的な外の世界に向かうか、自身の主観的な内面に向かうかによって、外向型と内向型という類型論を提案した。"
+                ],
+                correctAnswers: ["シェルドン", "ユング"],
+                options: ["シュプランガー", "シェルドン", "クレッチマー", "ユング"],
+                explanation: "正解はシェルドン、ユング。\n\n【シェルドン】\n…アメリカの心理学者。受精卵の三胚葉に由来する体格と気質の関連を分析。内臓緊張型（肥満）、身体緊張型（筋肉）、頭脳緊張型（痩せ型）の3類型に分類。\n\n【ユング】\nスイスの精神科医。分析心理学を確立。心的エネルギー（リビドー）が自己の内面に向かう内向型と、外界へ向かう外向型の2類型を提唱。なお、４つの心的機能を組み合わせて「８分類」として出題される場合もある。\n\n以下、その他の選択肢\n【クレッチマー】\nドイツの精神医学者。体格と精神疾患の相関を統計的に研究。分裂気質（細長型）、躁鬱気質（肥満型）、粘着気質（闘士型）の3類型を提示。体型で分類という点ではシェルドンと似ているが、生物学的な用語を使ったシェルドンに対して、クレッチマーは精神医学がベース。\n\n【シュプランガー】\nドイツの哲学者。人生において何を重視するかという価値観による性格分類。理論、経済、審美、社会、権力、宗教の6類型を提唱。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "特性論において、アイゼンクは多数の質問項目から「外向性ー内向性」と「神経症傾向」の2つの次元（尺度）に絞り込み、モーズレイ人格目録（MPI）を作成した。", 
+                        correct: true, 
+                        explanation: "正しい記述です。アイゼンクは特性論に基づき、性格を大きく2つの次元（後に「精神病傾向」を加えて3つ）で捉え、MPIなどの質問紙法を開発しました。一方、キャッテルは16の根源特性を抽出しています。"
+                    },
+                    { 
+                        text: "ロールシャッハ・テストは、被検査者に「実のなる木」の絵を描かせ、その描き方から無意識の欲求や葛藤を診断する投影法の心理検査である。", 
+                        correct: false, 
+                        explanation: "誤りです。「実のなる木」を描かせる検査はコッホが考案した「バウム・テスト」です。ロールシャッハ・テストは、左右対称のインクのシミを見せて、何に見えるかを答えさせる投影法検査です。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let maxReachedIndex = 0;
+        let isReviewMode = false;
+        let isProgressBarBuilt = false;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                if (i < totalSteps) node.onclick = () => jumpToQuestion(i);
+                else node.classList.add('final-node');
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                if (i === totalSteps) {
+                    label.style.top = '-24px'; label.style.right = '-15px'; label.style.left = 'auto'; label.style.transform = 'none';
+                }
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (maxReachedIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (node) {
+                    node.classList.remove('active', 'completed', 'viewing');
+                    if (i < maxReachedIndex) node.classList.add('completed');
+                    if (i === currentQIndex) node.classList.add(i === maxReachedIndex ? 'active' : 'viewing');
+                }
+            }
+        }
+
+        window.jumpToQuestion = function(index) {
+            if (index > quizData.length) return;
+            currentQIndex = index;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.returnToCurrent = function() {
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function renderQuiz() {
+            if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
+            updateProgress();
+            
+            if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            
+            isReviewMode = (currentQIndex !== maxReachedIndex);
+            const q = quizData[currentQIndex];
+            
+            if (q.type === 'dragDrop') renderDragDrop(q);
+            else if (q.type === 'multipleChoice') renderMultipleChoice(q);
+            else if (q.type === 'trueFalse') renderTrueFalse(q);
+        }
+
+        function renderDragDrop(q) {
+            let ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            window.ddUserAnswers = ddUserAnswers;
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に語句を配置せよ</div>`;
+            html += `<div class="quiz-card">`;
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty ${isReviewMode ? 'disabled' : ''}" data-index="${index}" onclick="removeDDAnswer(${index})"><span class="slot-num">${index + 1}</span></span>`;
+                }
+            });
+            html += `</div>`;
+            html += `<div class="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード。解答順に進んでください。</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btn) {
+            if (isReviewMode) return;
+            const idx = window.ddUserAnswers.indexOf(null);
+            if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
+        };
+        
+        window.removeDDAnswer = function(idx) {
+            if (isReviewMode) return;
+            const text = window.ddUserAnswers[idx];
+            if (text) {
+                window.ddUserAnswers[idx] = null;
+                document.querySelectorAll('.option-btn').forEach(b => { if (b.innerText === text) b.disabled = false; });
+                updateDDSlots();
+            }
+        };
+        
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let full = true;
+            slots.forEach((s, i) => {
+                const t = window.ddUserAnswers[i];
+                s.innerHTML = t ? `${t}<span class="slot-num">${i + 1}</span>` : `<span class="slot-num">${i + 1}</span>`;
+                s.classList.toggle('empty', !t);
+                if (!t) full = false;
+            });
+            document.getElementById('check-btn').disabled = !full;
+        }
+        
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            let correct = true;
+            document.querySelectorAll('.slot').forEach((s, i) => {
+                const isC = window.ddUserAnswers[i] === q.correctAnswers[i];
+                s.classList.add(isC ? 'correct' : 'incorrect');
+                if (!isC) correct = false;
+            });
+            document.getElementById('check-btn').style.display = 'none';
+            showFeedback(correct, window.ddUserAnswers.join(' '), q.correctAnswers.join(' '));
+        };
+
+        function renderMultipleChoice(q) {
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：</div>`;
+            html += `<div class="quiz-card" style="margin-bottom:12px;">${q.questionText}</div>`;
+            html += `<div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 24px;">`;
+            q.options.forEach((o, i) => {
+                html += `<button class="mc-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectMC(${i})"><span style="font-weight:bold; color:var(--quiz-blue);">${i + 1}.</span><div>${o.text}</div></button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkMCAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectMC = function(i) {
+            window.currentMCSelected = i;
+            document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+            document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkMCAnswer = function() {
+            const q = quizData[currentQIndex];
+            const isC = q.options[window.currentMCSelected].isCorrect;
+            document.getElementById('check-btn').style.display = 'none';
+            document.querySelectorAll('.mc-btn').forEach((b, i) => {
+                b.disabled = true;
+                if (q.options[i].isCorrect) b.classList.add('correct-ans');
+                else if (i === window.currentMCSelected) b.classList.add('incorrect-ans');
+            });
+            showFeedback(isC, q.options[window.currentMCSelected].text, q.options.find(o=>o.isCorrect).text);
+        };
+
+        function renderTrueFalse(q) {
+            window.tfAnswers = new Array(q.questions.length).fill(null);
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：正誤判定</div>`;
+            html += `<div class="quiz-card">`;
+            q.questions.forEach((item, i) => {
+                html += `<div class="tf-item"><div class="tf-text">(${i+1}) ${item.text}</div><div class="tf-btns">
+                    <button class="tf-btn" id="tf-btn-${i}-t" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},true)">○ 正しい</button>
+                    <button class="tf-btn" id="tf-btn-${i}-f" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},false)">× 誤り</button>
+                </div><div class="tf-feedback" id="tf-feedback-${i}"></div></div>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectTF = function(idx, val) {
+            window.tfAnswers[idx] = val;
+            document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
+            document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
+            if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+            q.questions.forEach((item, i) => {
+                const isC = window.tfAnswers[i] === item.correct;
+                const f = document.getElementById(`tf-feedback-${i}`);
+                f.classList.add('show', isC ? 'correct' : 'incorrect');
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation.replace(/\n/g, '<br>')}`;
+            });
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        function generateFeedbackHTML(exp) {
+            return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
+                あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
+                <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
+                <div class="explanation-content">${exp.replace(/\n/g, '<br>')}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
+        }
+        
+        function showFeedback(isC, u, c) {
+            const fb = document.getElementById('feedback-box');
+            fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
+            document.getElementById('fb-title').innerText = isC ? "正解です！" : "不正解です";
+            document.getElementById('fb-title').className = "feedback-title " + (isC ? "text-green" : "text-red");
+            document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
+            document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
+        }
+        
+        window.nextQuestion = function() {
+            if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
+            currentQIndex = maxReachedIndex; 
+            renderQuiz();
+        };
+        
+        function showResultScreen() {
+            updateProgress();
+            quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--primary-color);">類型論と特性論、心理検査 クリア！</h2><p style="color: var(--text-muted); margin-bottom: 30px;">性格分類や心理検査の種類について確認しました。</p>
+                <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                    <button class="check-btn" style="margin: 0; background: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="location.reload()">もう一度挑戦する</button>
+                    <a href="../index.html" class="next-btn" style="max-width: 320px;">教育心理 目次へ戻る</a>
+                </div></div>`;
+            lucide.createIcons();
+        }
+        
+        // 初回レンダリング
+        renderQuiz();
+    </script>
+</body>
+</html>
