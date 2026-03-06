@@ -371,9 +371,9 @@
             text-align: left;
         }
 
-        /* --- クイズUIスタイル --- */
+        /* --- クイズUIスタイル（文字サイズ縮小・数字表示修正版） --- */
         .quiz-section { margin-top: 10px; }
-        .quiz-header { display: flex; justify-content: center; margin-bottom: 40px; }
+        .quiz-header { display: flex; justify-content: center; margin-bottom: 30px; }
 
         .progress-bar {
             display: flex; align-items: center; width: 100%; max-width: 600px;
@@ -394,66 +394,70 @@
             width: 16px; height: 16px; border-radius: 50%; background-color: var(--quiz-gray);
             z-index: 3; position: relative; transition: background-color 0.4s, transform 0.2s; cursor: pointer;
         }
-        .step-node:not(.final-node):hover { filter: brightness(0.9); box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3); }
-        .step-node.final-node { cursor: default; }
         .step-node.active { background-color: var(--quiz-blue); transform: scale(1.3); }
         .step-node.completed { background-color: var(--quiz-blue); }
-        .step-node.viewing { background-color: var(--quiz-blue); transform: scale(1.1); box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.7); }
+        
+        /* 1,2,3,4の数字が常に見えるように修正 */
         .step-label {
             position: absolute; top: -24px; left: 50%; transform: translateX(-50%);
-            font-size: 0.75rem; color: var(--quiz-blue); font-weight: bold; opacity: 0;
-            white-space: nowrap; transition: opacity 0.2s;
+            font-size: 0.75rem; color: var(--text-muted); font-weight: bold;
+            white-space: nowrap; transition: color 0.2s;
         }
-        .step-node.active .step-label, .step-node.viewing .step-label { opacity: 1; }
-        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
-        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+        .step-node.active .step-label, .step-node.completed .step-label { color: var(--quiz-blue); }
 
-        .quiz-question-title { color: var(--quiz-blue); font-weight: bold; font-size: 1.1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        /* クイズ本文のフォントサイズを縮小 */
+        .quiz-question-title { 
+            color: var(--quiz-blue); font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+            font-size: clamp(0.9rem, 2vw + 0.3rem, 1rem);
+        }
         .quiz-card {
             background: var(--surface-color); border: 1px solid var(--border-color);
-            border-radius: 8px; padding: 24px; font-size: 1.05rem; line-height: 2;
-            margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border-radius: 8px; padding: 20px; line-height: 1.8;
+            margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
         }
 
         /* --- ドラッグ＆ドロップ穴埋めスタイル --- */
         .slot {
-            display: inline-flex; min-width: 70px; height: 36px; border-bottom: 2px solid var(--text-muted);
-            position: relative; cursor: pointer; margin: 0 6px; align-items: center; justify-content: center;
-            color: var(--text-color); padding: 0 12px; font-weight: bold; transition: all 0.2s;
+            display: inline-flex; min-width: 60px; height: 30px; border-bottom: 2px solid var(--text-muted);
+            position: relative; cursor: pointer; margin: 0 4px; align-items: center; justify-content: center;
+            color: var(--text-color); padding: 0 8px; font-weight: bold; transition: all 0.2s;
             vertical-align: middle; background-color: var(--slot-bg); border-radius: 4px 4px 0 0;
+            font-size: 0.9em;
         }
         .slot:hover:not(.disabled) { background-color: var(--slot-hover-bg); border-bottom-color: var(--quiz-blue); }
         .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
         .slot.disabled { cursor: default; border-bottom-color: var(--fill-border); }
 
         .slot-num {
-            position: absolute; top: -12px; right: -10px; background-color: var(--quiz-blue);
-            color: white; font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            position: absolute; top: -8px; right: -8px; background-color: var(--quiz-blue);
+            color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
         .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
 
         .options-container {
-            border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;
-            display: flex; flex-wrap: wrap; gap: 12px; background: var(--surface-color); margin-bottom: 24px;
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 16px;
+            display: flex; flex-wrap: wrap; gap: 10px; background: var(--surface-color); margin-bottom: 20px;
         }
 
         .option-btn {
             background: var(--surface-color); border: 1px solid var(--fill-border); color: var(--text-color);
-            padding: 8px 18px; border-radius: 20px; font-size: 0.95rem; cursor: pointer;
-            transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.9rem);
         }
-        .option-btn:hover:not(:disabled) { border-color: var(--quiz-blue); color: var(--quiz-blue); transform: translateY(-1px); }
-        .option-btn:disabled { opacity: 0.4; cursor: default; background-color: var(--slot-bg); transform: none; box-shadow: none; }
+        .option-btn:hover:not(:disabled) { border-color: var(--quiz-blue); color: var(--quiz-blue); }
+        .option-btn:disabled { opacity: 0.4; cursor: default; background-color: var(--slot-bg); }
 
         /* --- 四択問題スタイル --- */
         .mc-btn {
-            text-align: left; padding: 16px; width: 100%; height: auto; border-radius: 8px;
+            text-align: left; padding: 12px 16px; width: 100%; height: auto; border-radius: 8px;
             background: var(--surface-color); border: 2px solid var(--fill-border);
             color: var(--text-color); cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; gap: 12px; font-size: 1rem; line-height: 1.5;
+            display: flex; align-items: center; gap: 12px; line-height: 1.5;
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
         }
         .mc-btn:hover:not(:disabled) { border-color: var(--quiz-blue); background: var(--slot-hover-bg); }
         .mc-btn.selected { border-color: var(--quiz-blue); background: var(--slot-hover-bg); font-weight: bold; }
@@ -462,56 +466,56 @@
         .mc-btn:disabled { cursor: default; }
 
         /* --- 正誤問題用UI --- */
-        .tf-item { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+        .tf-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px dashed var(--border-color); }
         .tf-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .tf-text { margin-bottom: 12px; font-weight: 500; }
+        .tf-text { margin-bottom: 10px; font-weight: 500; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
         .tf-btns { display: flex; gap: 8px; }
         .tf-btn {
-            flex: 1; max-width: 100px; padding: 6px 8px; border: 2px solid var(--tf-btn-border);
+            flex: 1; max-width: 100px; padding: 6px; border: 2px solid var(--tf-btn-border);
             background: var(--tf-btn-bg); border-radius: 6px; cursor: pointer; font-weight: bold;
-            font-size: 0.85rem; color: var(--text-muted); transition: all 0.2s; display: flex;
-            align-items: center; justify-content: center; gap: 4px;
+            color: var(--text-muted); transition: all 0.2s; display: flex; justify-content: center;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem);
         }
-        .tf-btn:hover:not(:disabled) { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
         .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
         .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
         .tf-btn:disabled { cursor: default; opacity: 0.5; }
         
-        .tf-feedback { margin-top: 12px; padding: 12px 16px; border-radius: 6px; font-size: 0.9rem; display: none; line-height: 1.6; }
+        .tf-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; display: none; line-height: 1.6; font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem); }
         .tf-feedback.show { display: block; }
         .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
         .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
 
         /* 共通ボタン */
         .check-btn {
-            display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 14px;
+            display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 12px;
             background-color: var(--quiz-blue); color: white; text-align: center; border-radius: 8px;
-            border: none; font-weight: bold; font-size: 1.05rem; cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s; box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+            border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
         }
         .check-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
         .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
         .feedback-box {
             display: none; background: var(--slot-bg); border: 1px solid var(--border-color);
-            border-left: 4px solid var(--quiz-blue); border-radius: 0 8px 8px 0; padding: 24px; margin-bottom: 24px;
+            border-left: 4px solid var(--quiz-blue); border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 24px;
         }
         .feedback-box.show { display: block; }
         .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
-        .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+        .feedback-title { font-weight: bold; margin-bottom: 10px; font-size: clamp(1rem, 2vw + 0.3rem, 1.1rem); }
         .text-red { color: var(--quiz-red); }
         .text-green { color: var(--quiz-green); }
-        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: var(--text-color); line-height: 1.8; }
+        .feedback-detail { margin-bottom: 16px; color: var(--text-color); line-height: 1.8; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
         .feedback-detail span { font-weight: bold; padding: 2px 6px; background: var(--surface-color); border-radius: 4px; border: 1px solid var(--border-color); margin: 0 4px;}
 
-        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 16px; margin-bottom: 24px; }
-        .explanation-summary { font-size: 0.95rem; color: var(--quiz-blue); cursor: pointer; display: flex; align-items: center; gap: 6px; outline: none; list-style: none; font-weight: bold; }
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 20px; }
+        .explanation-summary { color: var(--quiz-blue); cursor: pointer; display: flex; align-items: center; gap: 6px; outline: none; list-style: none; font-weight: bold; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
         .explanation-summary::-webkit-details-marker { display: none; }
-        .explanation-content { margin-top: 12px; font-size: 0.95rem; color: var(--text-color); background: var(--surface-color); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); line-height: 1.7; }
+        .explanation-content { margin-top: 10px; color: var(--text-color); background: var(--surface-color); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); line-height: 1.7; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
 
         .next-btn {
-            display: block; width: 100%; padding: 14px; background-color: var(--text-muted); color: white;
-            border: none; border-radius: 8px; font-weight: bold; font-size: 1.05rem; cursor: pointer; text-align: center; text-decoration: none;
+            display: block; width: 100%; padding: 12px; background-color: var(--text-muted); color: white;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
         }
         .next-btn:hover { filter: brightness(0.9); }
         .review-mode-msg { text-align: center; margin-bottom: 24px; color: var(--quiz-red); font-weight: bold; background: var(--quiz-red-bg); padding: 12px; border-radius: 8px; }
@@ -974,9 +978,12 @@
         function renderQuiz() {
             if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
             updateProgress();
+            
             if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            
             isReviewMode = (currentQIndex !== maxReachedIndex);
             const q = quizData[currentQIndex];
+            
             if (q.type === 'dragDrop') renderDragDrop(q);
             else if (q.type === 'multipleChoice') renderMultipleChoice(q);
             else if (q.type === 'trueFalse') renderTrueFalse(q);
@@ -1013,6 +1020,7 @@
             const idx = window.ddUserAnswers.indexOf(null);
             if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
         };
+        
         window.removeDDAnswer = function(idx) {
             if (isReviewMode) return;
             const text = window.ddUserAnswers[idx];
@@ -1022,6 +1030,7 @@
                 updateDDSlots();
             }
         };
+        
         function updateDDSlots() {
             const slots = document.querySelectorAll('.slot');
             let full = true;
@@ -1033,6 +1042,7 @@
             });
             document.getElementById('check-btn').disabled = !full;
         }
+        
         window.checkDDAnswer = function() {
             const q = quizData[currentQIndex];
             let correct = true;
@@ -1046,8 +1056,9 @@
         };
 
         function renderMultipleChoice(q) {
-            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：${q.questionText}</div>`;
-            html += `<div class="quiz-card" style="background:transparent; border:none; box-shadow:none; padding:0; display:flex; flex-direction:column; gap:12px;">`;
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：</div>`;
+            html += `<div class="quiz-card" style="margin-bottom:12px;">${q.questionText}</div>`;
+            html += `<div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 24px;">`;
             q.options.forEach((o, i) => {
                 html += `<button class="mc-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectMC(${i})"><span style="font-weight:bold; color:var(--quiz-blue);">${i + 1}.</span><div>${o.text}</div></button>`;
             });
@@ -1060,11 +1071,13 @@
             }
             quizContainer.innerHTML = html; lucide.createIcons();
         }
+        
         window.selectMC = function(i) {
             window.currentMCSelected = i;
             document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
             document.getElementById('check-btn').disabled = false;
         };
+        
         window.checkMCAnswer = function() {
             const q = quizData[currentQIndex];
             const isC = q.options[window.currentMCSelected].isCorrect;
@@ -1096,12 +1109,14 @@
             }
             quizContainer.innerHTML = html; lucide.createIcons();
         }
+        
         window.selectTF = function(idx, val) {
             window.tfAnswers[idx] = val;
             document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
             document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
             if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
         };
+        
         window.checkTFAnswer = function() {
             const q = quizData[currentQIndex];
             document.getElementById('check-btn').style.display = 'none';
@@ -1109,7 +1124,7 @@
                 const isC = window.tfAnswers[i] === item.correct;
                 const f = document.getElementById(`tf-feedback-${i}`);
                 f.classList.add('show', isC ? 'correct' : 'incorrect');
-                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation}`;
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation.replace(/\n/g, '<br>')}`;
             });
             document.getElementById('tf-next-btn').style.display = 'block';
         };
@@ -1118,8 +1133,9 @@
             return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
                 あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
                 <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
-                <div class="explanation-content">${exp}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
+                <div class="explanation-content">${exp.replace(/\n/g, '<br>')}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
         }
+        
         function showFeedback(isC, u, c) {
             const fb = document.getElementById('feedback-box');
             fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
@@ -1128,10 +1144,13 @@
             document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
             document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
         }
+        
         window.nextQuestion = function() {
             if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
-            currentQIndex = maxReachedIndex; renderQuiz();
+            currentQIndex = maxReachedIndex; 
+            renderQuiz();
         };
+        
         function showResultScreen() {
             updateProgress();
             quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
@@ -1143,6 +1162,8 @@
                 </div></div>`;
             lucide.createIcons();
         }
+        
+        // 初回レンダリング
         renderQuiz();
     </script>
 </body>
