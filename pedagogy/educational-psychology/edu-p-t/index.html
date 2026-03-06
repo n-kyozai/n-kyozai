@@ -53,14 +53,13 @@
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.7; /* 読みやすさ向上のため行間を拡大 */
-            font-size: 16px; /* ベースフォントサイズを明示 */
+            line-height: 1.7; 
+            font-size: 16px; 
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden; /* 画面全体の横揺れ防止 */
+            overflow-x: hidden; 
         }
 
-        /* ルビのスタイル調整 */
         ruby { ruby-align: center; }
         rt { font-size: 0.6em; color: var(--text-muted); }
 
@@ -206,7 +205,7 @@
             vertical-align: middle;
             font-weight: bold;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            white-space: nowrap; /* 改行防止 */
+            white-space: nowrap; 
         }
         .fill-blank rt { color: transparent; transition: all 0.2s; }
         .fill-blank.revealed {
@@ -221,7 +220,7 @@
         .theme-box {
             background: var(--surface-color);
             border-radius: 12px;
-            padding: clamp(16px, 4vw, 30px); /* 画面幅に応じてパディング変動 */
+            padding: clamp(16px, 4vw, 30px);
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             margin-bottom: 40px;
@@ -252,7 +251,7 @@
         }
         
         .theme-list h3 {
-            font-size: 1.15rem; /* 見やすく拡大 */
+            font-size: 1.15rem; 
             color: var(--primary-color);
             margin-bottom: 16px;
             display: inline-block;
@@ -264,13 +263,13 @@
         .summary-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: clamp(0.75rem, 1.8vw + 0.3rem, 0.85rem); /* 表のフォントサイズを少し縮小 */
-            word-break: break-word; /* はみ出し防止 */
-            table-layout: fixed; /* 列幅の比率を固定 */
+            font-size: clamp(0.75rem, 1.8vw + 0.3rem, 0.85rem);
+            word-break: break-word; 
+            table-layout: fixed; 
         }
         .summary-table th, .summary-table td {
             border: 1px solid var(--border-color);
-            padding: clamp(6px, 1.5vw, 12px) clamp(6px, 1.5vw, 12px); /* 余白も自動変動 */
+            padding: clamp(6px, 1.5vw, 12px) clamp(6px, 1.5vw, 12px); 
             vertical-align: top;
         }
         .summary-table th {
@@ -279,7 +278,7 @@
             font-weight: bold;
             text-align: left;
         }
-        /* 列幅のベース指定（スマホでも比率を維持） */
+        
         .summary-table th:nth-child(1), .summary-table td:nth-child(1) { width: 20%; }
         .summary-table th:nth-child(2), .summary-table td:nth-child(2) { width: 25%; }
         .summary-table th:nth-child(3), .summary-table td:nth-child(3) { width: 55%; }
@@ -388,6 +387,27 @@
         .mc-btn.incorrect-ans { border-color: var(--quiz-red) !important; background: var(--quiz-red-bg) !important; color: var(--quiz-red) !important; }
         .mc-btn:disabled { cursor: default; }
 
+        /* --- 正誤問題用UI --- */
+        .tf-item { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+        .tf-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .tf-text { margin-bottom: 12px; font-weight: 500; }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1; max-width: 100px; padding: 6px 8px; border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg); border-radius: 6px; cursor: pointer; font-weight: bold;
+            font-size: 0.85rem; color: var(--text-muted); transition: all 0.2s; display: flex;
+            align-items: center; justify-content: center; gap: 4px;
+        }
+        .tf-btn:hover:not(:disabled) { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.5; }
+        
+        .tf-feedback { margin-top: 12px; padding: 12px 16px; border-radius: 6px; font-size: 0.9rem; display: none; line-height: 1.6; }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
         /* 共通ボタン */
         .check-btn {
             display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 14px;
@@ -448,6 +468,8 @@
             .main-content { margin-left: 0; }
             .page-header { padding-left: 60px; }
             .container { padding: 16px; width: 100%; }
+            .tf-btns { flex-direction: column; gap: 8px; }
+            .tf-btn { max-width: 100%; }
             .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
             .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
             .mc-btn { flex-direction: column; align-items: flex-start; }
@@ -700,54 +722,49 @@
         });
 
         // ==========================================
-        // 動的クイズ機能の実装
+        // 動的クイズ機能の実装（全4問）
         // ==========================================
         const quizData = [
             {
                 type: 'multipleChoice',
-                questionText: "スキャモン（Scammon, R. E.）は身体の発達を４つの型に分類し、その違いを発達曲線(発育曲線)として示した。これによると、(　ア　)の生理機能は児童期後半にかけて急成長するが、その後は衰退する。",
+                questionText: "スキャモン（Scammon, R. E.）は身体の発達を４つの型に分類し、その違いを発達曲線として示した。これによると、(　ア　)の生理機能は児童期後半にかけて成人の約200%まで急成長するが、その後は衰退する。",
                 options: [
                     { text: "一般型", isCorrect: false },
                     { text: "リンパ型", isCorrect: true },
                     { text: "神経型", isCorrect: false },
                     { text: "生殖型", isCorrect: false }
                 ],
-                explanation: "正解はリンパ型。\n\n扁桃腺やリンパ腺、腸の分泌腺などを含むリンパ型は12歳頃（思春期前）に成人の約200％に達し、その後、成人レベル（100％）まで急激に衰退。免疫力の獲得に関与。\n\n一般型…身長、体重、内臓（肝臓、腎臓等）の発育を示す。乳幼児期と、思春期以降の2回急成長の時期がある「S字状曲線」が特徴。\n神経型…脳、脊髄、視覚器などの発達。乳幼児期に極めて急速に発達し、児童期後半にはその機能はほぼ完成し、成人期まで維持される。\n生殖型…精巣、卵巣などの生殖器系の発達。思春期以降に急激に発達する。"
+                explanation: "正解はリンパ型。\n\n扁桃腺やリンパ腺などを含むリンパ型は12歳頃に成人の約200％に達し、その後、成人レベルまで急激に衰退します。免疫力の獲得に関与します。\n\n一般型…身長、体重、内臓の発育。乳幼児期と、思春期以降の2回急成長の時期があります。\n神経型…脳、脊髄などの発達。乳幼児期に極めて急速に発達し、早期に大人レベルになります。\n生殖型…精巣、卵巣などの生殖器系の発達。思春期以降に急激に発達します。"
             },
             {
                 type: 'dragDrop',
                 parts: [
                     "(1) 「",
-                    "」は、環境閾値説を提唱し、各特性の持つ遺伝的要因を発揮するのには、環境的要因の固有な閾値を超えることが条件だとした。<br><br>(2) 生物学者の「",
-                    "」は、人間の誕生が他の高等哺乳類よりも1年早く起こっているという生物学的な結論（「生理的早産説」）を示した。"
+                    "」は、発達は遺伝的要因（成熟）によって決まるとする成熟優位説を提唱し、双生児の階段登り実験によってレディネス（準備性）の重要性を示した。<br><br>(2) 行動主義心理学の創始者である「",
+                    "」は、発達は生後の学習と訓練、環境刺激によって決定されるとする環境優位説を主張した。"
                 ],
-                correctAnswers: ["ジェンセン", "ポルトマン"],
-                options: ["ワトソン", "ゲゼル", "ポルトマン", "ジェンセン"],
-                explanation: "正解は(1)ジェンセン、(2)ポルトマン。\n\n(1)ジェンセン(Jensen,A.R.)\n知能や性格などの各特性が発現するためには、それぞれの特性に応じた一定水準の環境（閾値）が必要とする環境閾値説を示す。\n\n(2)ポルトマン(Portmann,A.)\n生理的早産説として、人間は他の高等哺乳類と比較して、約1年早く未熟な状態で生まれると主張。この空白の1年を「子宮外胎児期」と呼び、社会的な学習の重要性を強調。\n\n【その他の重要語句】\nワトソン(Watson,J.B.)\n行動主義心理学の創始者。環境優位説。発達は生後の学習と訓練、環境刺激によって決定されると主張。\n\nゲゼル(Gesell,A.L.)\n成熟優位説を提唱。一卵性双生児を用いた「階段登り実験」で有名。学習には心身の成熟による準備性（レディネス）が不可欠であり、適切な時期以前の訓練は効果が薄いと指摘。"
+                correctAnswers: ["ゲゼル", "ワトソン"],
+                options: ["ワトソン", "ゲゼル", "ポルトマン", "シュテルン"],
+                explanation: "正解は(1)ゲゼル、(2)ワトソン。\n\n遺伝を重視したのがゲゼルの「成熟優位説」、環境を重視したのがワトソンの「環境優位説」です。ゲゼルの双生児実験は、成熟を待ってから訓練した方が効率が良い（レディネスの重要性）ことを証明しました。"
             },
             {
                 type: 'dragDrop',
                 parts: [
-                    "(1) シュテルンは、発達は遺伝と環境との相互作用によるものであるとして「",
-                    "」を提唱した。<br><br>(2) ローレンツの体系的な研究により、「",
-                    "」という現象が広く知られるようになり、発達における初期経験の重要性が示された。"
+                    "(1) 「",
+                    "」は、環境閾値説を提唱し、各特性の持つ遺伝的要因が発現するためには、特性ごとに一定水準以上の環境（閾値）が必要であるとした。<br><br>(2) 生物学者の「",
+                    "」は、人間の誕生が他の高等哺乳類よりも約1年早く起こっているとする「生理的早産説」を示し、社会的な学習の重要性を強調した。"
                 ],
-                correctAnswers: ["輻輳説", "インプリンティング"],
-                options: ["輻輳説", "環境閾値説", "アタッチメント", "インプリンティング"],
-                explanation: "正解は (1) 輻輳説、(2) インプリンティング。\n\n■ 輻輳（ふくそう）説\n発達は「遺伝的要因」と「環境的要因」の双方が組み合わさって生じるとする考え方。シュテルンによる。\n\n■ 環境閾値（いきち）説\nJ.ジェンセンが提唱。発達の各特性が現れるには、その特性に応じた一定水準の環境刺激（閾値）が必要であるとする考え方。知能などの特性は低い閾値で、音感などの特殊才能は高い閾値で現れると説明。\n\n■ インプリンティング（刻印付け）\n離巣性の鳥類の雛が、孵化直後の特定の時期（臨界期）に目にした動く物体に追従する現象。学習が成立する時期が限定されており、一度成立すると消えにくいのが特徴。ローレンツによる。\n\n■ アタッチメント（愛着）\nJ.ボウルビィが提唱。乳幼児と特定の養育者との間に形成される心理的な結びつき、情緒的な絆。子どもの安全感の基盤となり、その後の社会性・対人関係形成に大きく影響する。"
+                correctAnswers: ["ジェンセン", "ポルトマン"],
+                options: ["ジェンセン", "ポルトマン", "ローレンツ", "ボウルビィ"],
+                explanation: "正解は(1)ジェンセン、(2)ポルトマン。\n\nジェンセンの環境閾値説では、身長などは低い閾値（発現しやすい）ですが、絶対音感などは高い閾値（良質な環境が必須）であると説明されます。\nポルトマンの生理的早産説は、人間が未熟な状態で生まれる空白の1年を「子宮外胎児期」と呼びました。"
             },
             {
                 type: 'trueFalse',
                 questions: [
                     { 
-                        text: "ワトソンは、発達は遺伝的要因によって決まるとする成熟優位説を唱えた。", 
-                        correct: false, 
-                        explanation: "誤りです。ワトソンは、発達は「学習」の結果であり環境からの働きかけを重視する「環境優位説」を唱えました。成熟優位説はゲゼルによるものです。"
-                    },
-                    { 
-                        text: "シュテルンの輻輳説は、発達において遺伝と環境の両方の要素が加算的に合わさって生じるとする考え方である。", 
+                        text: "シュテルンの輻輳（ふくそう）説は、発達において遺伝と環境の両方の要素が加算的に合わさって生じるとする考え方である。", 
                         correct: true, 
-                        explanation: "正しい記述です。シュテルンは遺伝と環境の両方が発達に寄与すると考え、ルクセンブルガーの図式などを用いて説明されました。"
+                        explanation: "正しい記述です。シュテルンは遺伝と環境の両方が発達に寄与すると考え、これをルクセンブルガーの図式などを用いて説明しました。"
                     },
                     { 
                         text: "ブロンフェンブレンナーの生態学的システム理論において、マクロシステムは家族や学校など、個人が直接関わる環境を指す。", 
@@ -815,9 +832,14 @@
         function renderQuiz() {
             if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
             updateProgress();
+            
+            // 全ての問題に回答した場合は結果画面へ
             if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            
             isReviewMode = (currentQIndex !== maxReachedIndex);
             const q = quizData[currentQIndex];
+            
+            // クイズ形式に応じたレンダリング
             if (q.type === 'dragDrop') renderDragDrop(q);
             else if (q.type === 'multipleChoice') renderMultipleChoice(q);
             else if (q.type === 'trueFalse') renderTrueFalse(q);
@@ -854,6 +876,7 @@
             const idx = window.ddUserAnswers.indexOf(null);
             if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
         };
+        
         window.removeDDAnswer = function(idx) {
             if (isReviewMode) return;
             const text = window.ddUserAnswers[idx];
@@ -863,6 +886,7 @@
                 updateDDSlots();
             }
         };
+        
         function updateDDSlots() {
             const slots = document.querySelectorAll('.slot');
             let full = true;
@@ -874,6 +898,7 @@
             });
             document.getElementById('check-btn').disabled = !full;
         }
+        
         window.checkDDAnswer = function() {
             const q = quizData[currentQIndex];
             let correct = true;
@@ -902,11 +927,13 @@
             }
             quizContainer.innerHTML = html; lucide.createIcons();
         }
+        
         window.selectMC = function(i) {
             window.currentMCSelected = i;
             document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
             document.getElementById('check-btn').disabled = false;
         };
+        
         window.checkMCAnswer = function() {
             const q = quizData[currentQIndex];
             const isC = q.options[window.currentMCSelected].isCorrect;
@@ -919,12 +946,52 @@
             showFeedback(isC, q.options[window.currentMCSelected].text, q.options.find(o=>o.isCorrect).text);
         };
 
+        function renderTrueFalse(q) {
+            window.tfAnswers = new Array(q.questions.length).fill(null);
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：正誤判定</div>`;
+            html += `<div class="quiz-card">`;
+            q.questions.forEach((item, i) => {
+                html += `<div class="tf-item"><div class="tf-text">(${i+1}) ${item.text}</div><div class="tf-btns">
+                    <button class="tf-btn" id="tf-btn-${i}-t" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},true)">○ 正しい</button>
+                    <button class="tf-btn" id="tf-btn-${i}-f" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},false)">× 誤り</button>
+                </div><div class="tf-feedback" id="tf-feedback-${i}"></div></div>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectTF = function(idx, val) {
+            window.tfAnswers[idx] = val;
+            document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
+            document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
+            if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+            q.questions.forEach((item, i) => {
+                const isC = window.tfAnswers[i] === item.correct;
+                const f = document.getElementById(`tf-feedback-${i}`);
+                f.classList.add('show', isC ? 'correct' : 'incorrect');
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation.replace(/\n/g, '<br>')}`;
+            });
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
         function generateFeedbackHTML(exp) {
             return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
                 あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
                 <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
                 <div class="explanation-content">${exp.replace(/\n/g, '<br>')}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
         }
+        
         function showFeedback(isC, u, c) {
             const fb = document.getElementById('feedback-box');
             fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
@@ -933,10 +1000,13 @@
             document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
             document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
         }
+        
         window.nextQuestion = function() {
             if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
-            currentQIndex = maxReachedIndex; renderQuiz();
+            currentQIndex = maxReachedIndex; 
+            renderQuiz();
         };
+        
         function showResultScreen() {
             updateProgress();
             quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
@@ -948,6 +1018,8 @@
                 </div></div>`;
             lucide.createIcons();
         }
+        
+        // 初回レンダリング
         renderQuiz();
     </script>
 </body>
