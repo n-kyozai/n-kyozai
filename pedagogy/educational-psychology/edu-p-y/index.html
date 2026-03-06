@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記憶、知能 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー (Violet) */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #ede9fe;
+            
+            --quiz-blue: #8b5cf6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #f5f3ff;
+            --fill-revealed-text: #7c3aed;
+            --fill-revealed-border: #ddd6fe;
+            
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #f5f3ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7; 
+            font-size: 16px; 
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 100vw;
+            overflow-x: hidden;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            white-space: nowrap; 
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: clamp(16px, 4vw, 30px);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: clamp(16px, 3vw, 24px);
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.15rem; 
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- コンテンツ変動（レスポンシブ）設定 --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.7rem, 1.6vw + 0.3rem, 0.85rem); 
+            word-break: break-word; 
+            overflow-wrap: anywhere;
+            table-layout: fixed; 
+            margin-bottom: 16px;
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: clamp(4px, 1vw, 10px) clamp(4px, 1vw, 10px); 
+            vertical-align: top;
+        }
+        .summary-table th {
+            background-color: var(--slot-bg);
+            color: var(--primary-color);
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .summary-table tr:nth-child(even) { background-color: #fafafa; }
+        .summary-table td ul, .summary-table td ol { padding-left: 16px; margin-top: 4px; margin-bottom: 4px;}
+        .table-note { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; display: block; line-height: 1.4;}
+        
+        /* テーブルの列幅比率指定 */
+        .table-3col th:nth-child(1), .table-3col td:nth-child(1) { width: 25%; }
+        .table-3col th:nth-child(2), .table-3col td:nth-child(2) { width: 20%; }
+        .table-3col th:nth-child(3), .table-3col td:nth-child(3) { width: 55%; }
+
+        .table-3col-b th:nth-child(1), .table-3col-b td:nth-child(1) { width: 25%; }
+        .table-3col-b th:nth-child(2), .table-3col-b td:nth-child(2) { width: 25%; }
+        .table-3col-b th:nth-child(3), .table-3col-b td:nth-child(3) { width: 50%; }
+
+        /* 図解風のCSS */
+        .diagram-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: clamp(10px, 2vw, 16px);
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* フローチャート用 */
+        .process-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: clamp(0.75rem, 1.8vw + 0.3rem, 0.9rem);
+        }
+        .process-box {
+            background: #fff;
+            border: 2px solid var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .process-arrow { color: var(--text-muted); font-weight: bold; }
+
+        /* ワーキングメモリ用 */
+        .wm-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(0.7rem, 1.6vw + 0.3rem, 0.85rem);
+            margin-top: 10px;
+        }
+        .wm-center {
+            border: 2px solid var(--primary-color);
+            padding: 6px 16px;
+            border-radius: 4px;
+            background: #fff;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .wm-sub-row {
+            display: flex;
+            gap: clamp(5px, 1.5vw, 15px);
+            align-items: stretch;
+            width: 100%;
+            justify-content: center;
+        }
+        .wm-sub-box {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+            border-radius: 4px;
+            background: #fff;
+            text-align: center;
+            flex: 1;
+            max-width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .wm-sub-box.main {
+            border: 2px solid var(--quiz-blue);
+            font-weight: bold;
+        }
+
+        /* --- クイズUIスタイル（文字サイズ縮小調整済み） --- */
+        .quiz-section { margin-top: 10px; }
+        .quiz-header { display: flex; justify-content: center; margin-bottom: 30px; }
+
+        .progress-bar {
+            display: flex; align-items: center; width: 100%; max-width: 600px;
+            justify-content: space-between; position: relative;
+        }
+        .progress-bar::before {
+            content: ''; position: absolute; top: 50%; left: 0; right: 0;
+            height: 4px; background-color: var(--quiz-gray); z-index: 1;
+            transform: translateY(-50%); border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute; top: 50%; left: 0; height: 4px;
+            background-color: var(--quiz-blue); z-index: 2;
+            transform: translateY(-50%); transition: width 0.4s ease-in-out; border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px; border-radius: 50%; background-color: var(--quiz-gray);
+            z-index: 3; position: relative; transition: background-color 0.4s, transform 0.2s; cursor: pointer;
+        }
+        .step-node.active { background-color: var(--quiz-blue); transform: scale(1.3); }
+        .step-node.completed { background-color: var(--quiz-blue); }
+        .step-label {
+            position: absolute; top: -24px; left: 50%; transform: translateX(-50%);
+            font-size: 0.75rem; color: var(--quiz-blue); font-weight: bold; opacity: 0;
+            white-space: nowrap; transition: opacity 0.2s;
+        }
+        .step-node.active .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        /* クイズ本文のフォントサイズを縮小 */
+        .quiz-question-title { 
+            color: var(--quiz-blue); font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+            font-size: clamp(0.9rem, 2vw + 0.3rem, 1rem);
+        }
+        .quiz-card {
+            background: var(--surface-color); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 20px; line-height: 1.8;
+            margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
+        }
+
+        .slot {
+            display: inline-flex; min-width: 60px; height: 30px; border-bottom: 2px solid var(--text-muted);
+            position: relative; cursor: pointer; margin: 0 4px; align-items: center; justify-content: center;
+            color: var(--text-color); padding: 0 8px; font-weight: bold; transition: all 0.2s;
+            vertical-align: middle; background-color: var(--slot-bg); border-radius: 4px 4px 0 0;
+            font-size: 0.9em;
+        }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+        .slot-num {
+            position: absolute; top: -8px; right: -8px; background-color: var(--quiz-blue);
+            color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 16px;
+            display: flex; flex-wrap: wrap; gap: 10px; background: var(--surface-color); margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: var(--surface-color); border: 1px solid var(--fill-border); color: var(--text-color);
+            padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.9rem);
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--quiz-blue); color: var(--quiz-blue); }
+        .option-btn:disabled { opacity: 0.4; cursor: default; background-color: var(--slot-bg); }
+
+        .mc-btn {
+            text-align: left; padding: 12px 16px; width: 100%; height: auto; border-radius: 8px;
+            background: var(--surface-color); border: 2px solid var(--fill-border);
+            color: var(--text-color); cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 12px; line-height: 1.5;
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
+        }
+        .mc-btn.selected { border-color: var(--quiz-blue); background: var(--slot-hover-bg); font-weight: bold; }
+        .mc-btn.correct-ans { border-color: var(--quiz-green) !important; background: var(--feedback-correct-bg) !important; color: var(--quiz-green) !important; }
+        .mc-btn.incorrect-ans { border-color: var(--quiz-red) !important; background: var(--quiz-red-bg) !important; color: var(--quiz-red) !important; }
+
+        .tf-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px dashed var(--border-color); }
+        .tf-text { margin-bottom: 10px; font-weight: 500; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1; max-width: 100px; padding: 6px; border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg); border-radius: 6px; cursor: pointer; font-weight: bold;
+            color: var(--text-muted); transition: all 0.2s; display: flex; justify-content: center;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem);
+        }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        
+        .tf-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; display: none; line-height: 1.6; font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem); }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        .check-btn {
+            display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 12px;
+            background-color: var(--quiz-blue); color: white; text-align: center; border-radius: 8px;
+            border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
+        }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none; background: var(--slot-bg); border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue); border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 24px;
+        }
+        .feedback-box.show { display: block; }
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+        .feedback-title { font-weight: bold; margin-bottom: 10px; font-size: clamp(1rem, 2vw + 0.3rem, 1.1rem); }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+        .feedback-detail { margin-bottom: 16px; color: var(--text-color); line-height: 1.8; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 20px; }
+        .explanation-summary { color: var(--quiz-blue); cursor: pointer; display: flex; align-items: center; gap: 6px; outline: none; list-style: none; font-weight: bold; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content { margin-top: 10px; color: var(--text-color); background: var(--surface-color); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); line-height: 1.7; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+
+        .next-btn {
+            display: block; width: 100%; padding: 12px; background-color: var(--text-muted); color: white;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0;
+            visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px; width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+
+        footer { background-color: var(--surface-color); border-top: 1px solid var(--border-color); padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.7rem; margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            /* スマホ時テーブル調整 */
+            .table-3col th:nth-child(1), .table-3col td:nth-child(1) { width: 30%; }
+            .table-3col th:nth-child(2), .table-3col td:nth-child(2) { width: 30%; }
+            .table-3col th:nth-child(3), .table-3col td:nth-child(3) { width: 40%; }
+            
+            .table-3col-b th:nth-child(1), .table-3col-b td:nth-child(1) { width: 30%; }
+            .table-3col-b th:nth-child(2), .table-3col-b td:nth-child(2) { width: 30%; }
+            .table-3col-b th:nth-child(3), .table-3col-b td:nth-child(3) { width: 40%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="../index.html">教育心理</a> ＞ 記憶、知能
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">記憶、知能</h1>
+        </div>
+
+        <div class="container">
+            <!-- 【1】テーマ別詳細 -->
+            <div class="section-title"><i data-lucide="bookmark"></i>要点整理</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>1. 記憶</h3>
+                        
+                        <p style="font-weight:bold; color:var(--primary-color);">・記憶の3プロセス</p>
+                        <div class="diagram-box">
+                            <div class="process-flow">
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <div class="process-box">符号化(記銘)</div>
+                                    <span style="font-size:0.8em; color:var(--text-muted); margin-top:4px;">覚える</span>
+                                </div>
+                                <div class="process-arrow">→</div>
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <div class="process-box">貯蔵(保持)</div>
+                                    <span style="font-size:0.8em; color:var(--text-muted); margin-top:4px;">維持する</span>
+                                </div>
+                                <div class="process-arrow">→</div>
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <div class="process-box">検索(想起)</div>
+                                    <span style="font-size:0.8em; color:var(--text-muted); margin-top:4px;">思い出す</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p style="font-weight:bold; color:var(--primary-color); margin-top:24px;">・アトキンソンとシフリンの二重貯蔵モデル</p>
+                        <div class="diagram-box" style="text-align:left;">
+                            <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start;">
+                                <div style="flex:1; min-width:250px;">
+                                    <p style="font-size:0.85em; color:var(--text-muted); margin-bottom:12px;">短期記憶・長期記憶の「ハコ」があるとする考え方。</p>
+                                    <div style="display:flex; align-items:center; gap:5px; font-size:0.85em; font-weight:bold; justify-content:flex-start; margin-bottom:12px;">
+                                        <div style="padding:4px 8px; border:1px solid #ccc; border-radius:4px; background:#fff;">感覚記憶</div>
+                                        <div style="color:var(--text-muted);">→</div>
+                                        <div style="padding:4px 8px; border:2px solid var(--primary-color); border-radius:4px; background:#fff;">短期記憶</div>
+                                        <div style="color:var(--text-muted);">→</div>
+                                        <div style="padding:4px 8px; border:2px solid var(--quiz-blue); border-radius:4px; background:#fff;">長期記憶</div>
+                                    </div>
+                                    <ul style="font-size:0.8em; color:var(--text-color); margin:0; padding-left:20px; line-height:1.6;">
+                                        <li><span style="color:var(--text-muted);">感覚記憶:</span> 1秒未満〜数秒</li>
+                                        <li><span style="color:var(--text-muted);">短期記憶:</span> 〜数十秒。<br>・リハーサル(思い出すことの反復)によって維持。<br>・7±2チャンク(まとまり)程度しか維持できない。</li>
+                                    </ul>
+                                </div>
+                                <div style="flex:1; min-width:280px; border-left:2px dashed #e2e8f0; padding-left:16px;">
+                                    <p style="font-size:0.9em; font-weight:bold; margin-bottom:8px;"><span class="fill-blank">スクワイア</span>による長期記憶の分類</p>
+                                    <ul style="font-size:0.85em; padding-left:0; list-style:none; line-height:1.6;">
+                                        <li style="margin-bottom:8px;">
+                                            <div style="border:1px solid var(--border-color); padding:6px; border-radius:4px; background:#fff;">
+                                                <strong>非宣言的</strong> <span class="fill-blank">手続き</span>記憶<br>
+                                                <span style="color:var(--text-muted); font-size:0.9em;">自転車の乗り方、泳ぎ方など手順や技能</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div style="border:1px dashed var(--quiz-blue); padding:6px; border-radius:4px; background:#f5f3ff;">
+                                                <strong>宣言的</strong>
+                                                <ul style="padding-left:16px; margin-top:4px; margin-bottom:0;">
+                                                    <li><strong>意味記憶</strong>：言葉の意味や事実などの普遍的な記憶</li>
+                                                    <li><strong>エピソード記憶</strong>：個人的な体験に基づく記憶</li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p style="font-weight:bold; color:var(--primary-color); margin-top:24px;">・ワーキングメモリ(作業記憶)のモデル</p>
+                        <p style="font-size:0.9em; color:var(--text-muted); margin-bottom:8px;">「短期記憶」の概念をアップデートし、ただのハコではなく制御機能があるとした。(<strong><span class="fill-blank">バドリー</span></strong>による)</p>
+                        
+                        <div class="diagram-box">
+                            <div class="wm-flow">
+                                <div style="text-align:center;">
+                                    <span style="color:var(--quiz-red);font-size:0.85em;font-weight:bold;">司司令塔</span><br>
+                                    <div class="wm-center">中央実行系</div>
+                                </div>
+                                <div style="color:var(--text-muted); font-weight:bold;">↑↓</div>
+                                <div class="wm-sub-row">
+                                    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+                                        <span style="color:var(--quiz-red);font-size:0.8em;font-weight:bold;">視覚データ</span>
+                                        <div class="wm-sub-box">視空間<br>スケッチパッド</div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; color:var(--text-muted); font-weight:bold;">↔</div>
+                                    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+                                        <span style="color:var(--quiz-red);font-size:0.8em;font-weight:bold;">デスク</span>
+                                        <div class="wm-sub-box main">エピソード・<br>バッファ</div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; color:var(--text-muted); font-weight:bold;">↔</div>
+                                    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+                                        <span style="color:var(--quiz-red);font-size:0.8em;font-weight:bold;">言語データ</span>
+                                        <div class="wm-sub-box">音韻<br>ループ</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; width:100%; max-width:350px; justify-content:space-around; color:var(--text-muted); font-weight:bold; margin-top:-5px;">
+                                    <div>↑↓</div><div>↑↓</div><div>↑↓</div>
+                                </div>
+                                <div style="border:1px solid #94a3b8; background:#e2e8f0; padding:8px 20px; border-radius:4px; width:80%; max-width:400px; text-align:center; font-weight:bold; color:var(--text-color);">長期記憶</div>
+                            </div>
+                        </div>
+
+                        <p style="font-weight:bold; color:var(--primary-color); margin-top:24px;">・記憶に関係した重要用語</p>
+                        <div style="width: 100%;">
+                            <table class="summary-table table-2col">
+                                <tr>
+                                    <th>用語</th>
+                                    <th>内容 (教採でのポイント)</th>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">孤立</span>効果</strong><br><span style="font-size:0.8em;color:var(--text-muted);">(フォン・レストルフ効果)</span></td>
+                                    <td>「他と違うものは覚えやすい」という現象。リストの中で、一つだけ色が違う、文字サイズが違うなど、際立った特徴を持つ項目は、他の項目よりも記憶に残りやすい。</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="background:#f1f5f9; padding:4px 10px; font-weight:bold;">系列位置効果</td>
+                                </tr>
+                                <tr>
+                                    <td>最初：<strong><span class="fill-blank">初頭</span>効果</strong></td>
+                                    <td>「最初の方は覚えやすい」という現象。単語リストなどを覚える際、最初の方に提示された語は、後からよく思い出せる。心の中で繰り返す（リハーサル）回数が多くなり、長期記憶に転送されやすいためとされる。</td>
+                                </tr>
+                                <tr>
+                                    <td>最後：<strong><span class="fill-blank">新近</span>効果</strong></td>
+                                    <td>「最後の方も覚えやすい」という現象。直近に提示された語は、まだ短期記憶に残っているため、よく思い出せる。ただし、直後に計算などの別の作業を挟むと、この効果は消滅する。</td>
+                                </tr>
+                                <tr>
+                                    <td>忘却曲線</td>
+                                    <td><strong><span class="fill-blank">エビングハウス</span></strong>によるもので、無意味綴り（意味のない文字の羅列）を用いた実験で、「節約率（覚え直すのにどれだけ時間が浮いたか）」を測定したもの。学習直後に急減し、その後は緩やかに減少する。</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <h3>2. 知能</h3>
+                        
+                        <p style="font-weight:bold; color:var(--primary-color);">・知能を捉えるモデル</p>
+                        <div style="width: 100%; margin-bottom: 24px;">
+                            <table class="summary-table table-3col">
+                                <tr>
+                                    <th>名称</th>
+                                    <th>提唱者</th>
+                                    <th>特徴</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="background:#e2e8f0; font-size:0.8em; padding:4px 10px;">知能の要素に注目する流れ</td>
+                                </tr>
+                                <tr>
+                                    <td>二因子説</td>
+                                    <td><strong><span class="fill-blank">スピアマン</span></strong></td>
+                                    <td>共通の「一般因子(g)」と、個別の「特殊因子(s)」の2つで構成。</td>
+                                </tr>
+                                <tr>
+                                    <td>多因子説</td>
+                                    <td><strong><span class="fill-blank">サーストン</span></strong></td>
+                                    <td>言語理解・数・空間など7つの因子で構成。</td>
+                                </tr>
+                                <tr>
+                                    <td>知能の立体構造モデル<br>(SIモデル)</td>
+                                    <td><strong><span class="fill-blank">ギルフォード</span></strong></td>
+                                    <td>知能を「内容(4種)・操作(5種)・産物(6種)」の3つの次元の組合せ(120通り)で捉える。操作の要素に含まれる「拡散的思考(創造性)」と「収束的思考」が有名。</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="background:#e2e8f0; font-size:0.8em; padding:4px 10px;">知能の質に注目する流れ</td>
+                                </tr>
+                                <tr>
+                                    <td>流動性・結晶性知能</td>
+                                    <td><strong><span class="fill-blank">キャッテル</span></strong></td>
+                                    <td>
+                                        「流動性知能」(新しい場面での問題解決能力。加齢で低下)<br>
+                                        「結晶性知能」(過去の経験・知識。加齢でも維持)<br>
+                                        に2分類。→後にホーン・キャロルと協力して発展(3名の頭文字をとりCHC理論という)。
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>多重知能理論<br><span style="font-size:0.8em;color:var(--text-muted);">(theory of multiple intelligences)</span></td>
+                                    <td><strong><span class="fill-blank">ガードナー</span></strong></td>
+                                    <td>IQには含まれない「芸術領域」の能力や、「個人的知能」を含む。</td>
+                                </tr>
+                                <tr>
+                                    <td>知能の鼎立理論<br><span style="font-size:0.8em;color:var(--text-muted);">(triarchic theory of intelligence)</span></td>
+                                    <td>スタンバーグ</td>
+                                    <td>「コンポーネント(成分)・経験・文脈」の3側面から捉える。</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <p style="font-weight:bold; color:var(--primary-color);">・知能検査</p>
+                        <div style="width: 100%;">
+                            <table class="summary-table table-3col-b">
+                                <tr>
+                                    <th>名称</th>
+                                    <th>人物</th>
+                                    <th>特徴 (教採ポイント)</th>
+                                </tr>
+                                <tr>
+                                    <td>ビネー式知能検査</td>
+                                    <td>ビネー、シモン</td>
+                                    <td>世界ではじめて、「精神年齢(MA)」という概念で測定。学習遅滞児の判別目的でフランスで開発された。</td>
+                                </tr>
+                                <tr>
+                                    <td>スタンフォード・ビネー式</td>
+                                    <td><strong><span class="fill-blank">ターマン</span></strong></td>
+                                    <td>ビネー式を改良し、「知能指数(<strong><span class="fill-blank">IQ</span></strong>)」を導入した。</td>
+                                </tr>
+                                <tr>
+                                    <td>ウェクスラー式知能検査</td>
+                                    <td>ウェクスラー</td>
+                                    <td>
+                                        「全検査IQ」に加え、言語理解、ワーキングメモリなど「4つの指標」(※)で測定。<br>
+                                        〇幼児用は <ruby>WPPSI<rt>ウィプシー</rt></ruby><br>
+                                        〇児童用は <ruby>WISC<rt>ウィスク</rt></ruby> (5歳0ヶ月〜16歳11ヶ月)<br>
+                                        〇成人は <ruby>WAIS<rt>ウェイス</rt></ruby>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>テスト・バッテリー</td>
+                                    <td>ー</td>
+                                    <td>単一ではなく、複数の検査を組み合わせて多面的に評価すること。(知能検査以外の文脈でも使用)</td>
+                                </tr>
+                            </table>
+                            <p class="table-note">(※)たとえば最新版のWISC-Vでは5観点に変更されている。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【2】クイズセクション -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" title="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" title="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装
+        // ==========================================
+        const quizData = [
+            {
+                type: 'dragDrop',
+                parts: [
+                    "キャッテルは、知能には大きく分けて2つの種類があると考えた。一つは、推論能力など、新しい環境に適応するための「",
+                    "」知能であり、もう一つは、言葉の意味や学校で学ぶ知識のような「",
+                    "」知能である。<br>この考え方は後にホーンによって発展させられ、さらにキャロルが世界中のデータを分析した結果とも整合することが明らかとなった。これら３人の考えが統合されたのが「",
+                    "」である。この理論は現在もっとも信頼性の高い知能理論とされ、多くの知能検査がこれに基づいて作成されている。"
+                ],
+                correctAnswers: ["流動性", "結晶性", "CHC理論"],
+                options: ["結晶性", "拡散的", "流動性", "収束的", "知能の鼎立理論", "CHC理論", "多重知能理論"],
+                explanation: "正解は、流動性/結晶性、CHC理論。\n\n【正解語句】\n流動性知能\n…新しい環境への適応力や情報処理の速さに関する知能。計算力、直感力、単純記憶力などが該当。\n\n結晶性知能\n…過去の学習や経験に基づく判断力や言語能力に関する知能。語彙力、理解力、知識の応用力などが該当。加齢による低下が緩やかで、高齢になっても維持する傾向がある。\n\nCHC理論\nキャッテル(Cattell)、ホーン(Horn)、キャロル(Carroll)の理論を統合した現代における最も有力な知能理論。近年の主要な知能検査の理論的基盤となっている。\n\n【正答以外の語群】\n拡散的思考／収束的思考\nギルフォードが「知性の構造モデル(SIモデル)」において区別した思考の働き。拡散的思考は一つの問題から多様なアイデアを生み出す創造的な思考。収束的思考は既知の情報から論理的に唯一の正解を導き出す思考。\n\n知能の鼎立理論\nスタンバーグが提唱。実際の生活環境における適応を重視し、知能は「成分」「経験」「文脈」の3側面から構成されるとした。\n\n多重知能理論(MI理論)\n…ガードナー提唱。従来のIQでは説明できない多様な側面を示した。「誰にでも得意な領域があり、その個性を活かすことができる」趣旨の説明で援用されることがよくある。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "【「系列位置効果」に関する以下記述を完成させなさい。】<br><br>まず、互いに無関連な30個の単語からなるリストを作成する。次に、被験者に対して、可能な限り記憶するよう教示した上で、1秒に1個のペースでリストを一度だけ読み上げる。全単語の提示終了後、提示順に関わらず自由な順序で単語を思い出すよう求める。<br>この実験の結果、一般的にリストの最初の方に提示された単語と最後の方に提示された単語の再生率が高くなることが知られている。このような提示順序によって記憶の正答率が変動する現象を系列位置効果と呼ぶ。<br>その中でも、リストの最初の方における正答率の上昇は「",
+                    "」効果と呼ばれ、長期記憶への転送が関与しているとされる。一方、リストの最後の方における上昇は「",
+                    "」効果と呼ばれ、短期記憶(ワーキングメモリ)の保持が関与していると考えられている。"
+                ],
+                correctAnswers: ["初頭", "新近"],
+                options: ["初頭", "新近", "孤立", "レミニセンス"],
+                explanation: "正解は、「初頭(効果)」「新近(効果)」。\n\n系列位置効果：学習項目の提示順序（位置）により、再生率が変動する現象。再生率をグラフ化するとU字型曲線を描く。リスト冒頭の再生率上昇が初頭効果、リスト末尾の再生率上昇が新近効果に対応。\n\n【正答以外の選択肢】\n孤立効果：ヴォン・レストルフ効果とも。リスト中に色、大きさ、カテゴリーなどが異なる異質な項目がある場合、その項目が特異的に記憶されやすくなる現象。\nレミニセンス：学習直後よりも、一定時間が経過した後の方が成績が良くなる現象。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "世界初の知能検査はフランスにおいて「",
+                    "」によって作成された。彼はその知能検査を改訂し、各年齢段階の知能水準と照らし合わせることで「",
+                    "」が推定できるようになった。その後、アメリカでターマンらによって改訂された知能検査では、「",
+                    "」が算出されるようになった。"
+                ],
+                correctAnswers: ["ビネー", "精神年齢", "知能指数"],
+                options: ["ビネー", "ウェクスラー", "精神年齢", "ワーキングメモリ", "知能指数", "非認知能力"],
+                explanation: "正解はビネー、精神年齢、知能指数。\n\n【ビネー】\n世界初の知能検査「ビネー・シモン検査」の創始者。1905年、フランスで就学困難児の判定を目的に開発。後に「精神年齢」という、検査の結果がどの年齢段階の平均的な知能水準に相当するかを示す指標を追加した。暦年齢（生活年齢）と対比させて知能の発達度を測定する。\n\n【知能指数（IQ）】\n知能の発達程度を数値化したもの。ターマンがスタンフォード・ビネー検査で「（精神年齢÷生活年齢）×100」の公式を採用。\n\n以下、正答以外の用語。\n【ウェクスラー】\nWISC（児童用）、WAIS（成人用）などの知能検査の開発者。言語理解、ワーキングメモリなどの側面から知能を多面的に測定。\n\n【ワーキングメモリ】\n作業記憶。情報を一時的に保持しつつ、同時に処理を行う能力。現在の知能検査（WISC-IV等）における主要な指標の一つ。\n\n【非認知能力】\nIQや学力テストでは測定できない力。忍耐力、自己抑制、意欲、社会性などの性格的・社会的な特性。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "エビングハウスの忘却曲線は、意味のある単語のリストを記憶した際の忘却の過程を示したものである。", 
+                        correct: false, 
+                        explanation: "誤りです。エビングハウスの忘却曲線は、「無意味綴り」（意味を持たないアルファベットの羅列）を用いて実験が行われました。意味を持たない情報を記憶し直す際の「節約率」の低下（忘却）を測定したものです。"
+                    },
+                    { 
+                        text: "ウェクスラー式知能検査は、全検査IQだけでなく、言語理解やワーキングメモリなどの複数の指標から知能を多面的に測定する特徴がある。", 
+                        correct: true, 
+                        explanation: "正しい記述です。ウェクスラー式知能検査（WISCやWAISなど）は、全体的な知能（全検査IQ）だけでなく、言語理解、知覚推理（視空間・流動性推論）、ワーキングメモリ、処理速度といった複数の指標（群指数）を測定し、個人の得意・不得意のばらつき（ディスクレパンシー）を把握できる特徴があります。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let maxReachedIndex = 0;
+        let isReviewMode = false;
+        let isProgressBarBuilt = false;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                if (i < totalSteps) node.onclick = () => jumpToQuestion(i);
+                else node.classList.add('final-node');
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                if (i === totalSteps) {
+                    label.style.top = '-24px'; label.style.right = '-15px'; label.style.left = 'auto'; label.style.transform = 'none';
+                }
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (maxReachedIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (node) {
+                    node.classList.remove('active', 'completed', 'viewing');
+                    if (i < maxReachedIndex) node.classList.add('completed');
+                    if (i === currentQIndex) node.classList.add(i === maxReachedIndex ? 'active' : 'viewing');
+                }
+            }
+        }
+
+        window.jumpToQuestion = function(index) {
+            if (index > quizData.length) return;
+            currentQIndex = index;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.returnToCurrent = function() {
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function renderQuiz() {
+            if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
+            updateProgress();
+            
+            if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            
+            isReviewMode = (currentQIndex !== maxReachedIndex);
+            const q = quizData[currentQIndex];
+            
+            if (q.type === 'dragDrop') renderDragDrop(q);
+            else if (q.type === 'multipleChoice') renderMultipleChoice(q);
+            else if (q.type === 'trueFalse') renderTrueFalse(q);
+        }
+
+        function renderDragDrop(q) {
+            let ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            window.ddUserAnswers = ddUserAnswers;
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に語句を配置せよ</div>`;
+            html += `<div class="quiz-card">`;
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty ${isReviewMode ? 'disabled' : ''}" data-index="${index}" onclick="removeDDAnswer(${index})"><span class="slot-num">${index + 1}</span></span>`;
+                }
+            });
+            html += `</div>`;
+            html += `<div class="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード。解答順に進んでください。</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btn) {
+            if (isReviewMode) return;
+            const idx = window.ddUserAnswers.indexOf(null);
+            if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
+        };
+        
+        window.removeDDAnswer = function(idx) {
+            if (isReviewMode) return;
+            const text = window.ddUserAnswers[idx];
+            if (text) {
+                window.ddUserAnswers[idx] = null;
+                document.querySelectorAll('.option-btn').forEach(b => { if (b.innerText === text) b.disabled = false; });
+                updateDDSlots();
+            }
+        };
+        
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let full = true;
+            slots.forEach((s, i) => {
+                const t = window.ddUserAnswers[i];
+                s.innerHTML = t ? `${t}<span class="slot-num">${i + 1}</span>` : `<span class="slot-num">${i + 1}</span>`;
+                s.classList.toggle('empty', !t);
+                if (!t) full = false;
+            });
+            document.getElementById('check-btn').disabled = !full;
+        }
+        
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            let correct = true;
+            document.querySelectorAll('.slot').forEach((s, i) => {
+                const isC = window.ddUserAnswers[i] === q.correctAnswers[i];
+                s.classList.add(isC ? 'correct' : 'incorrect');
+                if (!isC) correct = false;
+            });
+            document.getElementById('check-btn').style.display = 'none';
+            showFeedback(correct, window.ddUserAnswers.join(' '), q.correctAnswers.join(' '));
+        };
+
+        function renderMultipleChoice(q) {
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：</div>`;
+            html += `<div class="quiz-card" style="margin-bottom:12px;">${q.questionText}</div>`;
+            html += `<div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 24px;">`;
+            q.options.forEach((o, i) => {
+                html += `<button class="mc-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectMC(${i})"><span style="font-weight:bold; color:var(--quiz-blue);">${i + 1}.</span><div>${o.text}</div></button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkMCAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectMC = function(i) {
+            window.currentMCSelected = i;
+            document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+            document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkMCAnswer = function() {
+            const q = quizData[currentQIndex];
+            const isC = q.options[window.currentMCSelected].isCorrect;
+            document.getElementById('check-btn').style.display = 'none';
+            document.querySelectorAll('.mc-btn').forEach((b, i) => {
+                b.disabled = true;
+                if (q.options[i].isCorrect) b.classList.add('correct-ans');
+                else if (i === window.currentMCSelected) b.classList.add('incorrect-ans');
+            });
+            showFeedback(isC, q.options[window.currentMCSelected].text, q.options.find(o=>o.isCorrect).text);
+        };
+
+        function renderTrueFalse(q) {
+            window.tfAnswers = new Array(q.questions.length).fill(null);
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：正誤判定</div>`;
+            html += `<div class="quiz-card">`;
+            q.questions.forEach((item, i) => {
+                html += `<div class="tf-item"><div class="tf-text">(${i+1}) ${item.text}</div><div class="tf-btns">
+                    <button class="tf-btn" id="tf-btn-${i}-t" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},true)">○ 正しい</button>
+                    <button class="tf-btn" id="tf-btn-${i}-f" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},false)">× 誤り</button>
+                </div><div class="tf-feedback" id="tf-feedback-${i}"></div></div>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectTF = function(idx, val) {
+            window.tfAnswers[idx] = val;
+            document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
+            document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
+            if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+            q.questions.forEach((item, i) => {
+                const isC = window.tfAnswers[i] === item.correct;
+                const f = document.getElementById(`tf-feedback-${i}`);
+                f.classList.add('show', isC ? 'correct' : 'incorrect');
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation.replace(/\n/g, '<br>')}`;
+            });
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        function generateFeedbackHTML(exp) {
+            return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
+                あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
+                <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
+                <div class="explanation-content">${exp.replace(/\n/g, '<br>')}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
+        }
+        
+        function showFeedback(isC, u, c) {
+            const fb = document.getElementById('feedback-box');
+            fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
+            document.getElementById('fb-title').innerText = isC ? "正解です！" : "不正解です";
+            document.getElementById('fb-title').className = "feedback-title " + (isC ? "text-green" : "text-red");
+            document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
+            document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
+        }
+        
+        window.nextQuestion = function() {
+            if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
+            currentQIndex = maxReachedIndex; 
+            renderQuiz();
+        };
+        
+        function showResultScreen() {
+            updateProgress();
+            quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--primary-color);">記憶、知能 クリア！</h2><p style="color: var(--text-muted); margin-bottom: 30px;">記憶のモデルや知能検査について確認しました。</p>
+                <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                    <button class="check-btn" style="margin: 0; background: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="location.reload()">もう一度挑戦する</button>
+                    <a href="../index.html" class="next-btn" style="max-width: 320px;">教育心理 目次へ戻る</a>
+                </div></div>`;
+            lucide.createIcons();
+        }
+        
+        // 初回レンダリング
+        renderQuiz();
+    </script>
+</body>
+</html>
