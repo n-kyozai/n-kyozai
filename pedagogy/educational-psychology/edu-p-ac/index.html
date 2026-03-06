@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>評価や働きかけに関係した心理効果 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- カラーパレット --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #8b5cf6; /* 教育心理用アクセントカラー (Violet) */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #ede9fe;
+            
+            --quiz-blue: #8b5cf6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #f5f3ff;
+            --fill-revealed-text: #7c3aed;
+            --fill-revealed-border: #ddd6fe;
+            
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #f5f3ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7; 
+            font-size: 16px; 
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+
+        ruby { ruby-align: center; }
+        rt { font-size: 0.6em; color: var(--text-muted); }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 100vw;
+            overflow-x: hidden;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 穴埋め用のスタイル --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
+            color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            white-space: nowrap; 
+        }
+        .fill-blank rt { color: transparent; transition: all 0.2s; }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt { color: var(--text-muted); }
+
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: clamp(16px, 4vw, 30px);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .theme-list { list-style: none; }
+        .theme-list > li {
+            position: relative;
+            padding-left: clamp(16px, 3vw, 24px);
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.15rem; 
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- コンテンツ変動（レスポンシブ）設定 --- */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.75rem, 1.6vw + 0.3rem, 0.9rem); 
+            word-break: normal; 
+            overflow-wrap: break-word;
+            table-layout: fixed; 
+            margin-bottom: 16px;
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: clamp(6px, 1.5vw, 12px) clamp(6px, 1.5vw, 12px); 
+            vertical-align: middle;
+        }
+        .summary-table th {
+            background-color: var(--slot-bg);
+            color: var(--primary-color);
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .summary-table tr:nth-child(even) { background-color: #fafafa; }
+        .table-note { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; display: block; line-height: 1.4;}
+        
+        /* テーブルの列幅比率指定 */
+        .table-eval th:nth-child(1), .table-eval td:nth-child(1) { width: 25%; text-align: center; font-weight: bold; background-color: #f1f5f9; }
+        .table-eval th:nth-child(2), .table-eval td:nth-child(2) { width: 25%; font-weight: bold; }
+        .table-eval th:nth-child(3), .table-eval td:nth-child(3) { width: 50%; }
+
+        /* 横スクロール用コンテナ */
+        .scrollable-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .scrollable-container::-webkit-scrollbar { height: 6px; }
+        .scrollable-container::-webkit-scrollbar-track { background: var(--surface-color); border-radius: 4px; }
+        .scrollable-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        /* 図解風のCSS */
+        .diagram-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: clamp(10px, 2vw, 16px);
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* --- クイズUIスタイル（文字サイズ縮小調整済み） --- */
+        .quiz-section { margin-top: 10px; }
+        .quiz-header { display: flex; justify-content: center; margin-bottom: 30px; }
+
+        .progress-bar {
+            display: flex; align-items: center; width: 100%; max-width: 600px;
+            justify-content: space-between; position: relative;
+        }
+        .progress-bar::before {
+            content: ''; position: absolute; top: 50%; left: 0; right: 0;
+            height: 4px; background-color: var(--quiz-gray); z-index: 1;
+            transform: translateY(-50%); border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute; top: 50%; left: 0; height: 4px;
+            background-color: var(--quiz-blue); z-index: 2;
+            transform: translateY(-50%); transition: width 0.4s ease-in-out; border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px; border-radius: 50%; background-color: var(--quiz-gray);
+            z-index: 3; position: relative; transition: background-color 0.4s, transform 0.2s; cursor: pointer;
+        }
+        .step-node.active { background-color: var(--quiz-blue); transform: scale(1.3); }
+        .step-node.completed { background-color: var(--quiz-blue); }
+        .step-label {
+            position: absolute; top: -24px; left: 50%; transform: translateX(-50%);
+            font-size: 0.75rem; color: var(--quiz-blue); font-weight: bold; opacity: 0;
+            white-space: nowrap; transition: opacity 0.2s;
+        }
+        .step-node.active .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        .quiz-question-title { 
+            color: var(--quiz-blue); font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+            font-size: clamp(0.9rem, 2vw + 0.3rem, 1rem);
+        }
+        .quiz-card {
+            background: var(--surface-color); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 20px; line-height: 1.8;
+            margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
+        }
+
+        .slot {
+            display: inline-flex; min-width: 60px; height: 30px; border-bottom: 2px solid var(--text-muted);
+            position: relative; cursor: pointer; margin: 0 4px; align-items: center; justify-content: center;
+            color: var(--text-color); padding: 0 8px; font-weight: bold; transition: all 0.2s;
+            vertical-align: middle; background-color: var(--slot-bg); border-radius: 4px 4px 0 0;
+            font-size: 0.9em;
+        }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+        .slot-num {
+            position: absolute; top: -8px; right: -8px; background-color: var(--quiz-blue);
+            color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 16px;
+            display: flex; flex-wrap: wrap; gap: 10px; background: var(--surface-color); margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: var(--surface-color); border: 1px solid var(--fill-border); color: var(--text-color);
+            padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.9rem);
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--quiz-blue); color: var(--quiz-blue); }
+        .option-btn:disabled { opacity: 0.4; cursor: default; background-color: var(--slot-bg); }
+
+        .mc-btn {
+            text-align: left; padding: 12px 16px; width: 100%; height: auto; border-radius: 8px;
+            background: var(--surface-color); border: 2px solid var(--fill-border);
+            color: var(--text-color); cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 12px; line-height: 1.5;
+            font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
+        }
+        .mc-btn.selected { border-color: var(--quiz-blue); background: var(--slot-hover-bg); font-weight: bold; }
+        .mc-btn.correct-ans { border-color: var(--quiz-green) !important; background: var(--feedback-correct-bg) !important; color: var(--quiz-green) !important; }
+        .mc-btn.incorrect-ans { border-color: var(--quiz-red) !important; background: var(--quiz-red-bg) !important; color: var(--quiz-red) !important; }
+
+        .tf-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px dashed var(--border-color); }
+        .tf-text { margin-bottom: 10px; font-weight: 500; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1; max-width: 100px; padding: 6px; border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg); border-radius: 6px; cursor: pointer; font-weight: bold;
+            color: var(--text-muted); transition: all 0.2s; display: flex; justify-content: center;
+            font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem);
+        }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.5; }
+        
+        .tf-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; display: none; line-height: 1.6; font-size: clamp(0.8rem, 1.6vw + 0.3rem, 0.85rem); }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        .check-btn {
+            display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 12px;
+            background-color: var(--quiz-blue); color: white; text-align: center; border-radius: 8px;
+            border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
+        }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none; background: var(--slot-bg); border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue); border-radius: 0 8px 8px 0; padding: 20px; margin-bottom: 24px;
+        }
+        .feedback-box.show { display: block; }
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+        .feedback-title { font-weight: bold; margin-bottom: 10px; font-size: clamp(1rem, 2vw + 0.3rem, 1.1rem); }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+        .feedback-detail { margin-bottom: 16px; color: var(--text-color); line-height: 1.8; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 20px; }
+        .explanation-summary { color: var(--quiz-blue); cursor: pointer; display: flex; align-items: center; gap: 6px; outline: none; list-style: none; font-weight: bold; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content { margin-top: 10px; color: var(--text-color); background: var(--surface-color); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); line-height: 1.7; font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem); }
+
+        .next-btn {
+            display: block; width: 100%; padding: 12px; background-color: var(--text-muted); color: white;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+            font-size: clamp(0.95rem, 2vw + 0.3rem, 1rem);
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--text-muted); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0;
+            visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed; bottom: 95px; right: 35px; width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--accent-color); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; z-index: 2000;
+        }
+
+        footer { background-color: var(--surface-color); border-top: 1px solid var(--border-color); padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.7rem; margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            
+            /* スマホ時テーブル調整 */
+            .table-eval th:nth-child(1), .table-eval td:nth-child(1) { width: 25%; }
+            .table-eval th:nth-child(2), .table-eval td:nth-child(2) { width: 25%; }
+            .table-eval th:nth-child(3), .table-eval td:nth-child(3) { width: 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/pedagogy/index.html">教職教養</a> ＞ 
+                <a href="../index.html">教育心理</a> ＞ 評価や働きかけに関係した心理効果
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">評価や働きかけに関係した心理効果</h1>
+        </div>
+
+        <div class="container">
+            <div class="section-title"><i data-lucide="bookmark"></i>要点整理</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>1. 評価基準などのゆがみ</h3>
+                        
+                        <div class="scrollable-container">
+                            <table class="summary-table table-eval" style="min-width: 600px;">
+                                <tr>
+                                    <th>カテゴリー</th>
+                                    <th>用語</th>
+                                    <th>内容</th>
+                                </tr>
+                                <tr>
+                                    <td rowspan="4">評価基準のゆがみ</td>
+                                    <td><strong><span class="fill-blank">中心</span>化傾向</strong></td>
+                                    <td>極端な評価を避け、中央付近（5段階の3など）に評価を集中させる傾向。</td>
+                                </tr>
+                                <tr>
+                                    <td>寛容効果（寛大効果）</td>
+                                    <td>相手の望ましい面を強調し、望ましくない面を控えめに評価することで全体的に甘くなる傾向。</td>
+                                </tr>
+                                <tr>
+                                    <td>対比効果（対比誤差）</td>
+                                    <td>評価者自身の能力や属性を基準として相手を相対的に評価し、得意なことは厳しく、苦手なことは甘く評価する現象。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">天井</span>効果</strong></td>
+                                    <td>テストが簡単すぎて測定可能な上限に得点が集中し、能力差を正しく測れなくなる状態。</td>
+                                </tr>
+                                <tr>
+                                    <td>認知のゆがみ</td>
+                                    <td>バーナム効果</td>
+                                    <td>誰にでも当てはまる一般的な性格記述を、自分だけへの正確な診断だと信じ込む傾向。</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <h3>2. 事前情報が評価に影響するもの</h3>
+                        
+                        <div class="scrollable-container">
+                            <table class="summary-table table-eval" style="min-width: 600px;">
+                                <tr>
+                                    <th>カテゴリー</th>
+                                    <th>用語</th>
+                                    <th>内容</th>
+                                </tr>
+                                <tr>
+                                    <td rowspan="4">事前情報による影響</td>
+                                    <td><strong><span class="fill-blank">ピグマリオン</span>効果</strong><br><span style="font-size:0.8em;color:var(--text-muted);">(教師期待効果)</span></td>
+                                    <td>ローゼンタール(Rosenthal)が提唱。教師がもつ期待が、生徒の学習成績を左右する効果。悪い方の効果をゴーレム効果ということがある。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">ハロー</span>効果</strong><br><span style="font-size:0.8em;color:var(--text-muted);">(halo,光背効果)</span></td>
+                                    <td>対象のある顕著な特徴に引きずられて、他の無関係な側面まで同様の評価をしてしまう現象。</td>
+                                </tr>
+                                <tr>
+                                    <td>ホーソン効果</td>
+                                    <td>ホーソン工場での実験が由来。周囲から注目・期待されていると感じることで意欲が高まり、生産性が向上する現象。物理的な労働条件よりも、労働者の感情や職場内の人間関係が成果に大きな影響を与えることを証明し、現代の「人間関係論」や組織心理学の出発点となった。</td>
+                                </tr>
+                                <tr>
+                                    <td>プラセボ(プラシーボ)効果<br><span style="font-size:0.8em;color:var(--text-muted);">(placebo,偽薬効果)</span></td>
+                                    <td>「効く」と思い込むことによる心理的影響。有効成分のない薬（偽薬）でも実際に効果が現れる現象。</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>3. コミュニケーション場面で発生するもの</h3>
+                        
+                        <div class="scrollable-container">
+                            <table class="summary-table table-eval" style="min-width: 600px;">
+                                <tr>
+                                    <th>カテゴリー</th>
+                                    <th>用語</th>
+                                    <th>内容</th>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">コミュニケーション</td>
+                                    <td><strong><span class="fill-blank">ブーメラン</span>効果</strong></td>
+                                    <td>説得者の意図とは反対の方向へ相手の態度が変化してしまい、説得が逆効果になる現象。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span class="fill-blank">スリーパー</span>効果</strong></td>
+                                    <td>時間経過とともに送り手への不信感が薄れ、説得内容そのものへの信頼性が相対的に高まる現象。</td>
+                                </tr>
+                                <tr>
+                                    <td>注意の仕組み</td>
+                                    <td>カクテルパーティー効果</td>
+                                    <td>騒がしい場所でも、自分の名前や興味のある話題であれば、選別して聞き取ることができる現象。</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【2】クイズセクション -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" title="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" title="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装
+        // ==========================================
+        const quizData = [
+            {
+                type: 'multipleChoice',
+                questionText: "相手の態度を自らの意図する方向に変化させようと説得した結果、相手がこちらの意図とは逆の方向に態度を変化させる現象を(　ア　)という。",
+                options: [
+                    { text: "スリーパー効果", isCorrect: false },
+                    { text: "ブーメラン効果", isCorrect: true },
+                    { text: "プラセボ効果", isCorrect: false },
+                    { text: "バーナム効果", isCorrect: false }
+                ],
+                explanation: "正解はブーメラン効果。\n\nブーメラン効果\n…説得者が相手の意見や態度を変化させようと試みた際、被説得者が説得方向とは逆の態度を形成してしまう現象。説得が強引な場合や、信頼関係が構築されていない場合に起こりやすい。\n\n以下、正答以外の選択肢。\nスリーパー効果\n…信憑性の低い情報源からの説得であっても、時間の経過とともに情報源（誰が言ったか）の記憶が薄れ、内容（何を言ったか）のみが記憶に残り、説得効果が高まる現象。\n\nプラセボ効果\n…有効成分を含まない偽薬（プラセボ）であっても、有効であると信じて服用することで、症状の改善や治療効果が見られる現象。偽薬効果。\n\nバーナム効果\n…誰にでも当てはまるような曖昧で一般的な性格記述を、自分自身だけに当てはまる的確なものとして受容してしまう心理現象。占い、性格診断などが信じられる要因の一つ。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "(1)指導者が学習者に期待をもつことで、実際に学習者の成績や能力が向上する現象を「",
+                    "」という。<br><br>(2)学習者が何か優れた特徴をもっていると、それ以外のことも優れているだろうと判断してしまう現象を「",
+                    "」という。"
+                ],
+                correctAnswers: ["ピグマリオン効果", "ハロー効果"],
+                options: ["寛容効果", "ピグマリオン効果", "ゴーレム効果", "ホーソン効果", "ハロー効果"],
+                explanation: "正解は(1)ピグマリオン効果、(2)ハロー効果。\n\n【ピグマリオン効果】\n別名は教師期待効果。ローゼンタール提唱。指導者が学習者に期待を寄せることで、学習者の意欲が高まり、成績や能力が実際に向上する現象。悪い期待をすることで成績が下がる場合はゴーレム効果という。\n\n【ハロー効果】\n別名は光背効果、後光効果。対象者の顕著な特徴に評価が引きずられ、人物全体の評価が歪められる現象。\n\n以下、正答以外の選択肢。\n【ホーソン効果】\n「見られている」「注目されている」という意識により、対象者の行動や作業効率が変化する現象。メイヨーらによるホーソン工場での実験に由来。物理的条件より人間関係や集団の規範が生産性に影響することを示唆。\n\n【寛容効果】\n評価者が対象者を実際よりも好意的・寛大に評価してしまう傾向。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "(1)テストの難易度が低すぎて、多くの受験者の得点が満点付近に集中してしまい、受験者間の能力差を正しく測定できなくなる現象を「",
+                    "」という。<br><br>(2)評価者が、極端な評価を避けて、5段階評価の「3」などの中間的な評価を多くつけてしまう傾向を「",
+                    "」という。"
+                ],
+                correctAnswers: ["天井効果", "中心化傾向"],
+                options: ["天井効果", "床効果", "中心化傾向", "対比効果", "寛容効果"],
+                explanation: "正解は(1)天井効果、(2)中心化傾向。\n\n【天井効果】\nテストが易しすぎる場合などに、得点が上限（満点付近）に偏り、成績上位者の能力差が弁別できなくなる状態。逆に、テストが難しすぎて得点が下限（0点付近）に偏る状態を「床効果」という。\n\n【中心化傾向】\n評価者が自信を持てない場合や、対象者をよく知らない場合に、極端な評価（最高や最低）を避けて、無難な中央値付近に評価を集中させてしまう評価誤差の一つ。\n\n【対比効果】\n評価者が自分自身の能力や特徴を基準にして対象者を評価してしまうため、自分が得意な分野では他者を厳しく、苦手な分野では他者を甘く評価してしまう現象。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "ホーソン効果とは、労働環境の物理的な条件（照明の明るさなど）を改善することによってのみ、労働者の生産性が向上する現象のことである。", 
+                        correct: false, 
+                        explanation: "誤りです。ホーソン工場の実験では、物理的な労働条件よりも、「注目されている」「期待されている」といった心理的な要因や、職場の人間関係が生産性の向上に大きく影響することが明らかになりました。"
+                    },
+                    { 
+                        text: "バーナム効果とは、星座占いなどの誰にでも当てはまるようなあいまいで一般的な性格の記述を、自分だけに特別に当てはまっていると錯覚してしまう心理現象のことである。", 
+                        correct: true, 
+                        explanation: "正しい記述です。フォアラ―効果とも呼ばれ、血液型診断や占いなどで「当たっている」と感じてしまう理由の一つとされています。"
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let maxReachedIndex = 0;
+        let isReviewMode = false;
+        let isProgressBarBuilt = false;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                if (i < totalSteps) node.onclick = () => jumpToQuestion(i);
+                else node.classList.add('final-node');
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                if (i === totalSteps) {
+                    label.style.top = '-24px'; label.style.right = '-15px'; label.style.left = 'auto'; label.style.transform = 'none';
+                }
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (maxReachedIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (node) {
+                    node.classList.remove('active', 'completed', 'viewing');
+                    if (i < maxReachedIndex) node.classList.add('completed');
+                    if (i === currentQIndex) node.classList.add(i === maxReachedIndex ? 'active' : 'viewing');
+                }
+            }
+        }
+
+        window.jumpToQuestion = function(index) {
+            if (index > quizData.length) return;
+            currentQIndex = index;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.returnToCurrent = function() {
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function renderQuiz() {
+            if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
+            updateProgress();
+            
+            if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            
+            isReviewMode = (currentQIndex !== maxReachedIndex);
+            const q = quizData[currentQIndex];
+            
+            if (q.type === 'dragDrop') renderDragDrop(q);
+            else if (q.type === 'multipleChoice') renderMultipleChoice(q);
+            else if (q.type === 'trueFalse') renderTrueFalse(q);
+        }
+
+        function renderDragDrop(q) {
+            let ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            window.ddUserAnswers = ddUserAnswers;
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に語句を配置せよ</div>`;
+            html += `<div class="quiz-card">`;
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty ${isReviewMode ? 'disabled' : ''}" data-index="${index}" onclick="removeDDAnswer(${index})"><span class="slot-num">${index + 1}</span></span>`;
+                }
+            });
+            html += `</div>`;
+            html += `<div class="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード。解答順に進んでください。</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btn) {
+            if (isReviewMode) return;
+            const idx = window.ddUserAnswers.indexOf(null);
+            if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
+        };
+        
+        window.removeDDAnswer = function(idx) {
+            if (isReviewMode) return;
+            const text = window.ddUserAnswers[idx];
+            if (text) {
+                window.ddUserAnswers[idx] = null;
+                document.querySelectorAll('.option-btn').forEach(b => { if (b.innerText === text) b.disabled = false; });
+                updateDDSlots();
+            }
+        };
+        
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let full = true;
+            slots.forEach((s, i) => {
+                const t = window.ddUserAnswers[i];
+                s.innerHTML = t ? `${t}<span class="slot-num">${i + 1}</span>` : `<span class="slot-num">${i + 1}</span>`;
+                s.classList.toggle('empty', !t);
+                if (!t) full = false;
+            });
+            document.getElementById('check-btn').disabled = !full;
+        }
+        
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            let correct = true;
+            document.querySelectorAll('.slot').forEach((s, i) => {
+                const isC = window.ddUserAnswers[i] === q.correctAnswers[i];
+                s.classList.add(isC ? 'correct' : 'incorrect');
+                if (!isC) correct = false;
+            });
+            document.getElementById('check-btn').style.display = 'none';
+            showFeedback(correct, window.ddUserAnswers.join(' '), q.correctAnswers.join(' '));
+        };
+
+        function renderMultipleChoice(q) {
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：</div>`;
+            html += `<div class="quiz-card" style="margin-bottom:12px;">${q.questionText}</div>`;
+            html += `<div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 24px;">`;
+            q.options.forEach((o, i) => {
+                html += `<button class="mc-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectMC(${i})"><span style="font-weight:bold; color:var(--quiz-blue);">${i + 1}.</span><div>${o.text}</div></button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkMCAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectMC = function(i) {
+            window.currentMCSelected = i;
+            document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+            document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkMCAnswer = function() {
+            const q = quizData[currentQIndex];
+            const isC = q.options[window.currentMCSelected].isCorrect;
+            document.getElementById('check-btn').style.display = 'none';
+            document.querySelectorAll('.mc-btn').forEach((b, i) => {
+                b.disabled = true;
+                if (q.options[i].isCorrect) b.classList.add('correct-ans');
+                else if (i === window.currentMCSelected) b.classList.add('incorrect-ans');
+            });
+            showFeedback(isC, q.options[window.currentMCSelected].text, q.options.find(o=>o.isCorrect).text);
+        };
+
+        function renderTrueFalse(q) {
+            window.tfAnswers = new Array(q.questions.length).fill(null);
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：正誤判定</div>`;
+            html += `<div class="quiz-card">`;
+            q.questions.forEach((item, i) => {
+                html += `<div class="tf-item"><div class="tf-text">(${i+1}) ${item.text}</div><div class="tf-btns">
+                    <button class="tf-btn" id="tf-btn-${i}-t" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},true)">○ 正しい</button>
+                    <button class="tf-btn" id="tf-btn-${i}-f" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},false)">× 誤り</button>
+                </div><div class="tf-feedback" id="tf-feedback-${i}"></div></div>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        
+        window.selectTF = function(idx, val) {
+            window.tfAnswers[idx] = val;
+            document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
+            document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
+            if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
+        };
+        
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+            q.questions.forEach((item, i) => {
+                const isC = window.tfAnswers[i] === item.correct;
+                const f = document.getElementById(`tf-feedback-${i}`);
+                f.classList.add('show', isC ? 'correct' : 'incorrect');
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation.replace(/\n/g, '<br>')}`;
+            });
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        function generateFeedbackHTML(exp) {
+            return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
+                あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
+                <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
+                <div class="explanation-content">${exp.replace(/\n/g, '<br>')}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
+        }
+        
+        function showFeedback(isC, u, c) {
+            const fb = document.getElementById('feedback-box');
+            fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
+            document.getElementById('fb-title').innerText = isC ? "正解です！" : "不正解です";
+            document.getElementById('fb-title').className = "feedback-title " + (isC ? "text-green" : "text-red");
+            document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
+            document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
+        }
+        
+        window.nextQuestion = function() {
+            if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
+            currentQIndex = maxReachedIndex; 
+            renderQuiz();
+        };
+        
+        function showResultScreen() {
+            updateProgress();
+            quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--primary-color);">評価や働きかけに関係した心理効果 クリア！</h2><p style="color: var(--text-muted); margin-bottom: 30px;">様々な心理効果について確認しました。</p>
+                <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                    <button class="check-btn" style="margin: 0; background: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="location.reload()">もう一度挑戦する</button>
+                    <a href="../index.html" class="next-btn" style="max-width: 320px;">教育心理 目次へ戻る</a>
+                </div></div>`;
+            lucide.createIcons();
+        }
+        
+        // 初回レンダリング
+        renderQuiz();
+    </script>
+</body>
+</html>
