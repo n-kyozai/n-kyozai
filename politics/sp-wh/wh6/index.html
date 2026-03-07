@@ -2,222 +2,791 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- 【編集箇所 1】ページタイトル -->
-    <title>6.古代ギリシア世界① - 世界史講座</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6. 古代ギリシア世界① - 教員採用試験対策まとめ</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- デザインルール --- */
+        /* --- カラーパレット --- */
         :root {
-            --primary-color: #334155; /* Slate 700 */
-            --accent-color: #0369a1; /* Sky 700 (世界史用に青系) */
-            --accent-dark: #075985;  /* Sky 800 */
-            --accent-light: #f0f9ff; /* Sky 50 */
-            --bg-color: #f8fafc;     /* Slate 50 */
-            --sidebar-bg: #ffffff;
-            --sidebar-width: 220px;
-            --text-color: #1e293b;
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --card-padding: 32px;
             
-            /* 穴埋めスタイル */
-            --cloze-bg: #e2e8f0;
-            --cloze-active-bg: #fff1f2;
-            --cloze-active-text: #be123c;
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --timeline-line: #bae6fd;
+            --timeline-date-bg: #f0f9ff;
+            
+            --quiz-blue: #3b82f6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #eff6ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
-        /* 全体のフォントサイズ調整 */
-        html { font-size: 92.5%; }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
+            line-height: 1.6;
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby {
+            ruby-align: center;
+        }
+        rt {
+            font-size: 0.6em;
+            color: var(--text-muted);
         }
 
         /* --- サイドバー --- */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--sidebar-bg);
+            background-color: var(--surface-color);
             height: 100vh;
             position: fixed;
             left: 0; top: 0;
             border-right: 1px solid var(--border-color);
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .sidebar-header {
-            padding: 20px; font-size: 1rem; font-weight: 800;
-            color: var(--primary-color); border-bottom: 1px solid var(--border-color);
-            display: flex; align-items: center; gap: 10px;
-            background: #fff;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .nav-menu { padding: 12px 0; flex: 1; }
-        
-        .nav-category { 
-            padding: 12px 20px 4px; 
-            font-size: 0.7rem; 
-            color: #94a3b8; 
-            font-weight: 700; 
-            text-transform: uppercase; 
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
             letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
         }
-        
         .nav-item {
-            display: flex; align-items: center; padding: 10px 20px;
-            color: #475569; text-decoration: none; font-size: 0.9rem; font-weight: 500;
-            transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
         }
-        .nav-item:hover { background-color: var(--bg-color); color: var(--text-color); border-left-color: #cbd5e1; }
-        .nav-item i { margin-right: 10px; width: 18px; height: 18px; color: #64748b; }
-        .nav-item:hover i { color: var(--primary-color); }
-        .nav-item.active { background-color: var(--accent-light); color: var(--accent-color); border-left-color: var(--accent-color); }
-        .nav-item.active i { color: var(--accent-color); }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
 
         /* --- メインコンテンツ --- */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
-            padding: 32px;
-            width: 100%;
-            min-width: 0; 
-            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container { 
-            max-width: 820px; /* 読みやすさを重視した幅 */
-            margin: 0 auto; 
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
         }
 
-        /* パンくずリスト */
-        .breadcrumb { font-size: 0.8rem; color: #94a3b8; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-        .breadcrumb a { color: #64748b; text-decoration: none; transition: color 0.2s; }
-        .breadcrumb a:hover { color: var(--accent-color); text-decoration: underline; }
-        .breadcrumb span { font-weight: bold; color: var(--primary-color); cursor: default; }
-        .breadcrumb i { margin: 0 4px; color: #cbd5e1; width: 14px; height: 14px; }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
 
-        /* ページタイトル */
-        h1.main-title {
-            font-size: 1.8rem; color: var(--primary-color);
-            font-weight: 800; margin-bottom: 32px;
-            display: flex; align-items: center; gap: 12px;
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--border-color);
-            padding-bottom: 16px;
-        }
-        h1.main-title i { color: var(--accent-color); width: 32px; height: 32px; }
-
-        /* モバイルトグル */
-        .mobile-toggle-btn {
-            display: none; position: fixed; 
-            top: 10px; left: 10px; z-index: 2000;
-            width: 40px; height: 40px; 
-            background: white; border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
-            border: 1px solid #e2e8f0; 
-            cursor: pointer;
-            align-items: center; justify-content: center; 
-            color: #475569;
-        }
-        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; backdrop-filter: blur(2px); }
-        .overlay.active { display: block; }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); width: 220px; }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; padding-top: 60px; }
-            .mobile-toggle-btn { display: flex; }
-            :root { --card-padding: 20px; }
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* --- コンテンツスタイル --- */
-        
-        /* コンテンツカード */
-        .card {
-            background: #fff; border-radius: 16px; 
-            padding: var(--card-padding);
-            margin-bottom: 32px; 
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        /* 画像エリアスタイル（縦長画像対応） */
-        .top-image-container {
-            text-align: center; /* 画像を中央揃え */
-            margin-bottom: 32px;
-            background-color: #f1f5f9; /* 画像がない場合の背景色（任意） */
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-        
-        .top-image {
-            max-width: 100%;
-            height: auto;
-            max-height: 800px; /* PCで縦長になりすぎないよう制限 */
-            display: inline-block;
-            vertical-align: bottom;
-        }
-
-        /* 穴埋め本文 */
-        .text-section p { text-align: justify; margin-bottom: 1.2em; line-height: 1.8; }
-        .text-section p:last-child { margin-bottom: 0; }
-        
-        .cloze {
-            display: inline-block;
-            min-width: 2.5em;
-            padding: 0 4px;
-            margin: 0 2px;
-            background-color: var(--cloze-bg);
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
             color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
             border-radius: 4px;
-            border-bottom: 2px solid #cbd5e1;
             cursor: pointer;
-            transition: all 0.15s ease-out;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
             user-select: none;
-            font-weight: 600;
-            vertical-align: baseline;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .cloze:active { transform: scale(0.98); }
-        .cloze.revealed {
-            background-color: var(--cloze-active-bg);
-            color: var(--cloze-active-text);
-            border-bottom-color: var(--cloze-active-text);
+        /* テープがある時はルビも透明に */
+        .fill-blank rt {
+            color: transparent;
+            transition: all 0.2s;
+        }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        /* テープが剥がれたらルビを表示 */
+        .fill-blank.revealed rt {
+            color: var(--text-muted);
         }
 
-        /* ツールバー */
-        .toolbar {
-            display: flex; justify-content: flex-end; margin-bottom: 12px;
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
         }
-        .toggle-btn {
-            background: var(--primary-color); color: white; border: none;
-            padding: 8px 16px; border-radius: 20px; cursor: pointer;
-            font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
+
+        .theme-list {
+            list-style: none;
+        }
+
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- 画像ギャラリー・キャプション --- */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .image-figure {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .thumbnail-img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            background-color: var(--fill-bg);
+            min-height: 40px;
+            margin-right: 0;
+            vertical-align: middle;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .thumbnail-img[src=""] {
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: default;
+        }
+        .thumbnail-img[src=""]::after {
+            content: "画像準備中";
+        }
+        .thumbnail-img:hover:not([src=""]) {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .image-caption {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+            object-fit: contain;
+        }
+
+        /* --- クイズUIスタイル --- */
+        .quiz-section {
+            margin-top: 10px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 4px;
+            background-color: var(--quiz-gray);
+            z-index: 1;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute;
+            top: 50%; left: 0;
+            height: 4px;
+            background-color: var(--quiz-blue);
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.4s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background-color: var(--quiz-gray);
+            z-index: 3;
+            position: relative;
+            transition: background-color 0.4s, transform 0.2s;
+            cursor: pointer;
+        }
+        .step-node:not(.final-node):hover {
+            filter: brightness(0.9);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3);
+        }
+        .step-node.final-node {
+            cursor: default;
+        }
+        .step-node.active {
+            background-color: var(--quiz-blue);
+            transform: scale(1.3);
+        }
+        .step-node.completed {
+            background-color: var(--quiz-blue);
+        }
+        .step-node.viewing {
+            background-color: var(--quiz-blue);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.7);
+        }
+        .step-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--quiz-blue);
+            font-weight: bold;
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .step-node.active .step-label,
+        .step-node.viewing .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        .quiz-question-title {
+            color: var(--quiz-blue);
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            font-size: 0.95rem;
+            line-height: 2;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* --- ドラッグ＆ドロップ穴埋めスタイル --- */
+        .slot {
+            display: inline-flex;
+            min-width: 70px;
+            height: 36px;
+            border-bottom: 2px solid var(--text-muted);
+            position: relative;
+            cursor: pointer;
+            margin: 0 6px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            padding: 0 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            vertical-align: middle;
+            background-color: var(--slot-bg);
+            border-radius: 4px 4px 0 0;
+        }
+        .slot:hover:not(.disabled) { background-color: var(--slot-hover-bg); border-bottom-color: var(--quiz-blue); }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+        .slot.disabled { cursor: default; border-bottom-color: var(--fill-border); }
+
+        .slot-num {
+            position: absolute;
+            top: -12px; right: -10px;
+            background-color: var(--quiz-blue);
+            color: white;
+            font-size: 0.65rem;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--surface-color);
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--fill-border);
+            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            color: var(--quiz-blue);
+            transform: translateY(-1px);
+        }
+        .option-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            background-color: var(--slot-bg);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- 四択問題（Multiple Choice）スタイル --- */
+        .mc-btn {
+            text-align: left;
+            padding: 16px;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: var(--surface-color);
+            border: 2px solid var(--fill-border);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .mc-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            background: var(--slot-hover-bg);
+        }
+        .mc-btn.selected {
+            border-color: var(--quiz-blue);
+            background: var(--slot-hover-bg);
             font-weight: bold;
         }
+        .mc-btn.correct-ans {
+            border-color: var(--quiz-green) !important;
+            background: var(--feedback-correct-bg) !important;
+            color: var(--quiz-green) !important;
+        }
+        .mc-btn.incorrect-ans {
+            border-color: var(--quiz-red) !important;
+            background: var(--quiz-red-bg) !important;
+            color: var(--quiz-red) !important;
+        }
+        .mc-btn:disabled {
+            cursor: default;
+        }
 
+        /* --- 正誤問題用UI --- */
+        .tf-item {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .tf-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .tf-text { margin-bottom: 12px; font-weight: 500; font-size: 0.95rem; }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 8px;
+            border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .tf-btn:hover:not(:disabled) { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.5; }
+        
+        .tf-feedback {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+        }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        /* 共通ボタン */
+        .check-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 24px;
+            padding: 14px;
+            background-color: var(--quiz-blue);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        .check-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none;
+            background: var(--slot-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .feedback-box.show { display: block; }
+        
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+
+        .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+
+        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: var(--text-color); line-height: 1.8; }
+        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: var(--surface-color); border-radius: 4px; border: 1px solid var(--border-color); margin: 0 4px;}
+
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 16px; margin-bottom: 24px; }
+        .explanation-summary {
+            font-size: 0.95rem;
+            color: var(--quiz-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            list-style: none;
+            font-weight: bold;
+        }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background: var(--surface-color);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            line-height: 1.7;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .next-btn:hover { filter: brightness(0.9); }
+
+        .review-mode-msg {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--quiz-red);
+            font-weight: bold;
+            background: var(--quiz-red-bg);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed;
+            bottom: 95px;
+            right: 35px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .tf-btns { flex-direction: column; gap: 8px; }
+            .tf-btn { max-width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .mc-btn { flex-direction: column; align-items: flex-start; }
+            .thumbnail-img { max-width: 100%; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- モバイルトグルボタン -->
-    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
     <div class="overlay" id="overlay"></div>
 
-    <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
-        <nav class="nav-menu">
-            <!-- 【編集箇所 2】サイドバーのリンクは適宜調整してください -->
+       <nav class="nav-menu">
             <div class="nav-category">MAIN</div>
             <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
@@ -225,108 +794,487 @@
             <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
             <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
-            
+
             <div class="nav-category">専門科目</div>
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
-            <a href="/n-kyozai/politics/sp-wh/index.html" class="nav-item active"><i data-lucide="globe-2"></i>世界史</a>
         </nav>
     </aside>
 
-    <!-- メインコンテンツ -->
     <main class="main-content">
-        <div class="container">
-            <!-- パンくずリスト -->
+        <div class="page-header">
             <div class="breadcrumb">
-                <a href="/n-kyozai/index.html">ホーム</a> 
-                <i data-lucide="chevron-right"></i>
-                <a href="/n-kyozai/politics/index.html">専門科目</a> 
-                <i data-lucide="chevron-right"></i>
-                <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> 
-                <i data-lucide="chevron-right"></i>
-                <!-- 【編集箇所 3】現在の章タイトル -->
-                <span>6.古代ギリシア世界①</span>
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 6. 古代ギリシア世界①
             </div>
-
-            <!-- 【編集箇所 4】メインタイトル -->
-            <h1 class="main-title"><i data-lucide="globe-2"></i>6.古代ギリシア世界①</h1>
-
-            <!-- 画像セクション（新設） -->
-            <section class="top-image-container">
-                <!-- 【編集箇所 5】画像パスを設定してください -->
-                <!-- 縦長画像対応: width/heightは未指定でCSS制御、alt属性は必須 -->
-                <img src="2026-02-19_19h07_32.png" alt="解説画像" class="top-image">
-            </section>
-
-            <!-- 本文セクション -->
-            <div class="toolbar">
-                <button class="toggle-btn" onclick="toggleAllClozes()">
-                    <i data-lucide="eye" size="16"></i> 解答表示切替
-                </button>
-            </div>
-
-            <section class="card text-section">
-                <!-- 【編集箇所 6】ここに本文を入力してください -->
-                <!-- ルビ（ふりがな）を振る場合は、<ruby>漢<rt>かん</rt>字<rt>じ</rt></ruby>のように記述します。-->
-                <!--穴埋めの中にルビを入れることも可能です：<span class="cloze" onclick="reveal(this)"><ruby>答<rt>こた</rt></ruby>え</span> -->
-                <!-- 穴埋め箇所は <span class="cloze" onclick="reveal(this)">答え</span> で囲む -->
-                
-                <p>前20世紀頃に成立したエーゲ文明は<span class="cloze" onclick="reveal(this)">青銅器</span>文明で、クレタ文明とミケーネ文明に代表される。 クレタ文明はクレタ島の<span class="cloze" onclick="reveal(this)">クノッソス</span>を中心とし、<span class="cloze" onclick="reveal(this)">エヴァンズ</span>により発見された。 ミケーネ文明はギリシア本土のミケーネや<span class="cloze" onclick="reveal(this)">ティリンス</span>の遺跡に代表され、小アジアのトロイア遺跡と同じく<span class="cloze" onclick="reveal(this)">シュリーマン</span>により発見された。 ミケーネ文明では、王が農作物や手工業製品を農民から取り立てる貢納王政が行われ、使用された線文字Bはヴェントリスにより解読された。</p>
-                <p>エーゲ文明の滅亡後、ギリシアでは<span class="cloze" onclick="reveal(this)">暗黒時代</span>という混乱時代に入り、線文字も消滅した。 しかし一方で鉄器が普及し、<span class="cloze" onclick="reveal(this)">フェニキア</span>人の文字が伝わり、ギリシア文字（アルファベット）が成立した。</p>
-                <p>前8世紀には<span class="cloze" onclick="reveal(this)">集住</span>（シノイキスモス）によりポリスが成立し、中心の<span class="cloze" onclick="reveal(this)">アクロポリス</span>（城山）には神殿が築かれ、<span class="cloze" onclick="reveal(this)">アゴラ</span>（広場）には公共施設が置かれた。 多くのポリスでは小麦の自給が困難であったため、地中海や黒海の沿岸にマッサリア（現マルセイユ）やネアポリス（現ナポリ）、<span class="cloze" onclick="reveal(this)">ビザンティオン</span>（現イスタンブール）などの<span class="cloze" onclick="reveal(this)">植民市</span>が建設された。 また同一民族意識が強まり自分たちを<span class="cloze" onclick="reveal(this)">ヘレネス</span>、異民族を<span class="cloze" onclick="reveal(this)">バルバロイ</span>と呼んで区別し、重要事項の決定に際し各ポリスは<span class="cloze" onclick="reveal(this)">デルフォイ</span>の神託を参考にしたほか、<span class="cloze" onclick="reveal(this)">オリンピア</span>の祭典を4年ごとに開催し、期間中はいっさいの戦いが禁じられた。</p>
-                <p>小アジアの<span class="cloze" onclick="reveal(this)">リディア</span>で使用された鋳造貨幣が伝わると、貨幣の使用が盛んとなり、商工業が発展した。 安価になった武具を購入した富裕な平民は<span class="cloze" onclick="reveal(this)">重装歩兵</span>として活躍し、政治を独占していた貴族に対して参政権を要求した。</p>
-                <p><span class="cloze" onclick="reveal(this)">イオニア</span>人の建設したアテネでは前7世紀後半に<span class="cloze" onclick="reveal(this)">ドラコン</span>が従来の慣習法を成文化し、前6世紀には<span class="cloze" onclick="reveal(this)">ソロン</span>が債務奴隷の禁止や<span class="cloze" onclick="reveal(this)">財産</span>政治を断行した。 改革が不調に終わると、不満を持つ平民の支持で<span class="cloze" onclick="reveal(this)">ペイシストラトス</span>が<span class="cloze" onclick="reveal(this)"><ruby>僭<rt>せん</rt>主<rt>しゅ</rt></ruby></span>（非合法で政権を握った独裁者）となった。 しかし、その子は暴君化したため、<span class="cloze" onclick="reveal(this)"><ruby>僭<rt>せん</rt>主<rt>しゅ</rt></ruby></span>の出現を防止するために<span class="cloze" onclick="reveal(this)">クレイステネス</span>が<span class="cloze" onclick="reveal(this)">陶片追放</span>（オストラキスモス）を創設し、部族制の改革を行って、民主政の基礎を作った。</p>
-                <p><span class="cloze" onclick="reveal(this)">ドーリア</span>人の建設したスパルタでは<span class="cloze" onclick="reveal(this)">リュクルゴス</span>の国制の下、隷属農民である<span class="cloze" onclick="reveal(this)">ヘイロータイ（ヘロット）</span>の反乱を防止するために軍国主義が、市民間の団結や平等を維持し、貴金属貨幣の流入を阻止するために鎖国政策が採られ、商工業などには半自由民の<span class="cloze" onclick="reveal(this)">ペリオイコイ</span>が従事した。</p>
-                
-
-
-            </section>
-
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">6. 古代ギリシア世界①</h1>
         </div>
+
+        <div class="container">
+            <!-- 【1】テーマ別詳細 -->
+            <div class="section-title"><i data-lucide="globe"></i>テーマ別詳細</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>1. エーゲ文明（クレタ文明とミケーネ文明）</h3>
+                        <br>ギリシアの歴史は、オリエントの影響を受けた青銅器文明である<span class="fill-blank">エーゲ文明</span>から始まる。
+                        <br><b>【クレタ文明】</b>
+                        <br>前2000年頃からクレタ島で栄えた。中心地の<span class="fill-blank">クノッソス</span>の宮殿は、城壁を持たない開放的な構造で、海洋生物を描いた明るい壁画が残されている。<span class="fill-blank">線文字A</span>（未解読）が使用された。
+                        <br><b>【ミケーネ文明】</b>
+                        <br>前1600年頃から、ギリシア本土に南下したアカイア人が築いた文明。<span class="fill-blank">ミケーネ</span>や<span class="fill-blank">ティリンス</span>などに、巨石を用いた堅固な城壁を持つ王宮を築いた。彼らが使用した<span class="fill-blank">線文字B</span>は、のちにイギリスのヴェントリスによって解読された。この文明は前1200年頃に「海の民」の侵入などにより滅亡し、以後約400年間にわたる暗黒時代へと入った。
+                        <div class="image-gallery">
+                            <figure class="image-figure">
+                                <img src="page_8.png" alt="クレタ文明とミケーネ文明の比較" class="thumbnail-img" style="max-width: 100%; width: 450px;" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                                <figcaption class="image-caption">エーゲ文明の比較</figcaption>
+                            </figure>
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>2. ポリスの成立</h3>
+                        <br>暗黒時代が明ける前8世紀頃、ギリシア人は各地に<span class="fill-blank">ポリス</span>（都市国家）を形成した。ポリスの中心には、神殿が建つ丘である<span class="fill-blank">アクロポリス</span>と、広場や市場となる<span class="fill-blank">アゴラ</span>があった。
+                        <br>彼らはポリスごとに独立していたが、自らを<span class="fill-blank">ヘレネス</span>（ギリシア人）、異民族を<span class="fill-blank">バルバロイ</span>（聞き苦しい言葉を話す者）と呼んで区別し、<span class="fill-blank">オリンピアの祭典</span>などの共通の宗教行事を通じて、同じギリシア人としての連帯感を持っていた。
+                        <div class="image-gallery">
+                            <figure class="image-figure">
+                                <img src="polis.jpg" alt="ポリスの構造" class="thumbnail-img" style="max-width: 100%; width: 400px;" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                                <figcaption class="image-caption">ポリスの基本的な構造</figcaption>
+                            </figure>
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>3. アテネの民主政への歩み</h3>
+                        <br>イオニア人が建てた<span class="fill-blank">アテネ</span>では、当初は貴族政が行われていたが、徐々に平民が参政権を獲得していった。
+                        <br>・<b>ドラコンの成文法</b>：慣習法を成文化し、貴族による法の独占を打破した。
+                        <br>・<b><span class="fill-blank">ソロンの改革</span></b>（前6世紀初め）：財産に応じて市民を4等級に分け、参政権を定めた（財産政治）。また、借金で奴隷となることを禁止した。
+                        <br>・<b><span class="fill-blank">ペイシストラトス</span></b>：平民の支持を得て非合法に政権を握り、<span class="fill-blank">僭主</span>（せんしゅ）として独裁政治を行った。
+                        <br>・<b><span class="fill-blank">クレイステネスの改革</span></b>（前6世紀末）：血縁に代わる地縁的な部族制を導入し、僭主の出現を防ぐため<span class="fill-blank">陶片追放</span>（オストラキスモス）の制度を設けた。これにより民主政の基礎が確立した。
+                        <div class="image-gallery">
+                            <figure class="image-figure">
+                                <img src="athens_reform.jpg" alt="アテネの民主政への歩み" class="thumbnail-img" style="max-width: 100%; width: 450px;" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                                <figcaption class="image-caption">アテネの民主政への歩み</figcaption>
+                            </figure>
+                            <figure class="image-figure">
+                                <img src="ostrakon.jpg" alt="陶片（オストラコン）" class="thumbnail-img" style="max-width: 100%; width: 200px;" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                                <figcaption class="image-caption">陶片（オストラコン）</figcaption>
+                            </figure>
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>4. スパルタの軍国主義体制</h3>
+                        <br>ドーリア人がペロポネソス半島に建てた<span class="fill-blank">スパルタ</span>は、アテネとは対照的な国家体制をとった。
+                        <br>少数のスパルタ市民が、多数の被征服民である<span class="fill-blank">ヘロット</span>（奴隷的農民）とペリオイコイ（半自由民）を支配するため、<span class="fill-blank">リュクルゴス</span>の制と呼ばれる厳格な軍国主義的・鎖国的な体制を敷いた。
+                        <div class="image-gallery">
+                            <figure class="image-figure">
+                                <img src="sparta_system.jpg" alt="スパルタの身分制度" class="thumbnail-img" style="max-width: 100%; width: 400px;" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                                <figcaption class="image-caption">スパルタの身分制度</figcaption>
+                            </figure>
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>5. ペルシア戦争とアテネの全盛</h3>
+                        <br><b>【ペルシア戦争（前5世紀初め）】</b>
+                        <br>小アジアのイオニア植民市の反乱を機に、<span class="fill-blank">アケメネス朝</span>（ダレイオス1世ら）がギリシアに侵攻して始まった。
+                        <br>アテネは<span class="fill-blank">マラトンの戦い</span>や、テミストクレスの指導による<span class="fill-blank">サラミスの海戦</span>でペルシア艦隊を撃破した。スパルタもテルモピレーの戦いで奮戦し、最終的にギリシア側の勝利で終わった。
+                        <br><b>【デロス同盟とアテネ民主政の完成】</b>
+                        <br>ペルシアの再襲来に備え、アテネを盟主とする<span class="fill-blank">デロス同盟</span>が結成され、アテネは同盟の資金を流用して繁栄した。<span class="fill-blank">ペリクレス</span>の時代にアテネの民主政は完成し、成年男性市民全員が参加する<span class="fill-blank">民会</span>が最高の意思決定機関となった（ただし、女性・奴隷・在留外国人には参政権はなかった）。
+                        <div class="image-gallery">
+                            <figure class="image-figure">
+                                <img src="persian_war.jpg" alt="ペルシア戦争の地図" class="thumbnail-img" style="max-width: 100%; width: 450px;" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                                <figcaption class="image-caption">ペルシア戦争の主な戦い</figcaption>
+                            </figure>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【2】クイズセクション -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
     </main>
 
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
     <script>
-        // DOM要素の取得
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
-        // モバイルメニューのトグル
         const toggleSidebar = () => {
-            if (sidebar && overlay) {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            }
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
         };
 
-        if (menuToggle) {
-            menuToggle.addEventListener('click', toggleSidebar);
-            overlay.addEventListener('click', toggleSidebar);
-        }
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
 
-        // 穴埋め機能
-        window.reveal = function(element) {
-            element.classList.toggle('revealed');
-        }
-
-        window.toggleAllClozes = function() {
-            const clozes = document.querySelectorAll('.cloze');
-            const anyHidden = Array.from(clozes).some(c => !c.classList.contains('revealed'));
-            clozes.forEach(c => anyHidden ? c.classList.add('revealed') : c.classList.remove('revealed'));
-        }
-
-        // 初期化実行
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lucideアイコンの初期化
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            } else {
-                setTimeout(() => {
-                    if (typeof lucide !== 'undefined') lucide.createIcons();
-                }, 1000);
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.className = 'lightbox-overlay';
+        lightboxOverlay.innerHTML = '<img class="lightbox-img" src="" alt="拡大画像">';
+        document.body.appendChild(lightboxOverlay);
+        const lightboxImg = lightboxOverlay.querySelector('img');
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
 
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装（全4問）
+        // ==========================================
+        const quizData = [
+            {
+                type: 'multipleChoice',
+                questionText: "前2000年頃からクレタ島で栄え、城壁を持たない開放的な宮殿を特徴とし、線文字Aを使用した文明を何というか。",
+                options: [
+                    { text: "ミケーネ文明", isCorrect: false },
+                    { text: "クレタ文明", isCorrect: true },
+                    { text: "インダス文明", isCorrect: false },
+                    { text: "ヘレニズム文明", isCorrect: false }
+                ],
+                explanation: "クレタ島を中心に栄えた「クレタ文明（ミノア文明）」は、クノッソス宮殿に代表される明るく開放的な文化でした。一方、ギリシア本土で栄え、堅固な城壁を持つのが「ミケーネ文明」です。"
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "アテネの民主政への歩み。<br>前6世紀初め、「",
+                    "」は財産に応じて市民を4等級に分け、参政権を定める改革を行った。<br>その後、「",
+                    "」が非合法に政権を握り、僭主として独裁政治を行った。<br>前6世紀末には「",
+                    "」が血縁的部族制を解体し、僭主の出現を防ぐため「",
+                    "」の制度を設けて民主政の基礎を確立した。"
+                ],
+                correctAnswers: ["ソロン", "ペイシストラトス", "クレイステネス", "陶片追放"],
+                options: ["ソロン", "ドラコン", "ペイシストラトス", "ペリクレス", "クレイステネス", "陶片追放"],
+                explanation: "アテネの政治改革の流れは「ドラコン（成文化）→ソロン（財産政治）→ペイシストラトス（僭主政）→クレイステネス（陶片追放による民主政の基礎）」の順に押さえましょう。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "ギリシア人は各地に独立したポリス（都市国家）を形成したが、共通の言語を用い、自らをヘレネスと呼んで、オリンピアの祭典などを通じて連帯感を保っていた。", 
+                        correct: true, 
+                        explanation: "正しい記述です。異民族をバルバロイと呼んで区別しました。"
+                    },
+                    { 
+                        text: "アテネと対照的な国家体制をとったスパルタでは、少数の市民が多数の被征服民であるヘロットを支配するため、自由で開放的な民主政が導入された。", 
+                        correct: false, 
+                        explanation: "誤りです。スパルタは多数の被征服民（ヘロットやペリオイコイ）を支配するため、「リュクルゴスの制」と呼ばれる厳格な「軍国主義体制」を敷きました。"
+                    }
+                ]
+            },
+            {
+                type: 'dragDrop',
+                parts: [
+                    "ペルシア戦争とアテネの全盛期。<br>前5世紀、アケメネス朝の侵攻により始まったペルシア戦争において、アテネは「",
+                    "」の海戦などで勝利した。<br>戦後、ペルシアの再襲来に備えてアテネを盟主とする「",
+                    "」が結成された。<br>アテネは「",
+                    "」の指導の下で全盛期を迎え、成年男性市民全員が参加する「",
+                    "」が最高の意思決定機関として機能する民主政が完成した。"
+                ],
+                correctAnswers: ["サラミス", "デロス同盟", "ペリクレス", "民会"],
+                options: ["サラミス", "マラトン", "デロス同盟", "ペロポネソス同盟", "ペリクレス", "ソロン", "民会"],
+                explanation: "ペルシア戦争での勝利後、アテネはデロス同盟の盟主として覇権を握り、ペリクレス時代に民主政の黄金時代（完成期）を迎えました。"
+            }
+        ];
+
+        let currentQIndex = 0;
+        let maxReachedIndex = 0;
+        let isReviewMode = false;
+        let isProgressBarBuilt = false;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                if (i < totalSteps) node.onclick = () => jumpToQuestion(i);
+                else node.classList.add('final-node');
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                if (i === totalSteps) {
+                    label.style.top = '-24px'; label.style.right = '-15px'; label.style.left = 'auto'; label.style.transform = 'none';
+                }
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (maxReachedIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (node) {
+                    node.classList.remove('active', 'completed', 'viewing');
+                    if (i < maxReachedIndex) node.classList.add('completed');
+                    if (i === currentQIndex) node.classList.add(i === maxReachedIndex ? 'active' : 'viewing');
+                }
+            }
+        }
+
+        window.jumpToQuestion = function(index) {
+            if (index > quizData.length) return;
+            currentQIndex = index;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.returnToCurrent = function() {
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function renderQuiz() {
+            if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
+            updateProgress();
+            if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            isReviewMode = (currentQIndex !== maxReachedIndex);
+            const q = quizData[currentQIndex];
+            if (q.type === 'dragDrop') renderDragDrop(q);
+            else if (q.type === 'multipleChoice') renderMultipleChoice(q);
+            else if (q.type === 'trueFalse') renderTrueFalse(q);
+        }
+
+        function renderDragDrop(q) {
+            let ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            window.ddUserAnswers = ddUserAnswers;
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に当てはまる語句を選択せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty ${isReviewMode ? 'disabled' : ''}" data-index="${index}" onclick="removeDDAnswer(${index})"><span class="slot-num">${index + 1}</span></span>`;
+                }
+            });
+            html += `</div>`;
+            html += `<div class="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード。解答順に進んでください。</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btn) {
+            if (isReviewMode) return;
+            const idx = window.ddUserAnswers.indexOf(null);
+            if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
+        };
+        window.removeDDAnswer = function(idx) {
+            if (isReviewMode) return;
+            const text = window.ddUserAnswers[idx];
+            if (text) {
+                window.ddUserAnswers[idx] = null;
+                document.querySelectorAll('.option-btn').forEach(b => { if (b.innerText === text) b.disabled = false; });
+                updateDDSlots();
+            }
+        };
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let full = true;
+            slots.forEach((s, i) => {
+                const t = window.ddUserAnswers[i];
+                s.innerHTML = t ? `${t}<span class="slot-num">${i + 1}</span>` : `<span class="slot-num">${i + 1}</span>`;
+                s.classList.toggle('empty', !t);
+                if (!t) full = false;
+            });
+            document.getElementById('check-btn').disabled = !full;
+        }
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            let correct = true;
+            document.querySelectorAll('.slot').forEach((s, i) => {
+                const isC = window.ddUserAnswers[i] === q.correctAnswers[i];
+                s.classList.add(isC ? 'correct' : 'incorrect');
+                if (!isC) correct = false;
+            });
+            document.getElementById('check-btn').style.display = 'none';
+            showFeedback(correct, window.ddUserAnswers.join(' '), q.correctAnswers.join(' '));
+        };
+
+        function renderMultipleChoice(q) {
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：${q.questionText}</div>`;
+            html += `<div class="quiz-card" style="background:transparent; border:none; box-shadow:none; padding:0; display:flex; flex-direction:column; gap:12px;">`;
+            q.options.forEach((o, i) => {
+                html += `<button class="mc-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectMC(${i})"><span style="font-weight:bold; color:var(--quiz-blue);">${i + 1}.</span><div>${o.text}</div></button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkMCAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        window.selectMC = function(i) {
+            window.currentMCSelected = i;
+            document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+            document.getElementById('check-btn').disabled = false;
+        };
+        window.checkMCAnswer = function() {
+            const q = quizData[currentQIndex];
+            const isC = q.options[window.currentMCSelected].isCorrect;
+            document.getElementById('check-btn').style.display = 'none';
+            document.querySelectorAll('.mc-btn').forEach((b, i) => {
+                b.disabled = true;
+                if (q.options[i].isCorrect) b.classList.add('correct-ans');
+                else if (i === window.currentMCSelected) b.classList.add('incorrect-ans');
+            });
+            showFeedback(isC, q.options[window.currentMCSelected].text, q.options.find(o=>o.isCorrect).text);
+        };
+
+        function renderTrueFalse(q) {
+            window.tfAnswers = new Array(q.questions.length).fill(null);
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：次の各文の正誤を判定せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            q.questions.forEach((item, i) => {
+                html += `<div class="tf-item"><div class="tf-text">(${i+1}) ${item.text}</div><div class="tf-btns">
+                    <button class="tf-btn" id="tf-btn-${i}-t" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},true)">○ 正しい</button>
+                    <button class="tf-btn" id="tf-btn-${i}-f" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},false)">× 誤り</button>
+                </div><div class="tf-feedback" id="tf-feedback-${i}"></div></div>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        window.selectTF = function(idx, val) {
+            window.tfAnswers[idx] = val;
+            document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
+            document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
+            if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
+        };
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+            q.questions.forEach((item, i) => {
+                const isC = window.tfAnswers[i] === item.correct;
+                const f = document.getElementById(`tf-feedback-${i}`);
+                f.classList.add('show', isC ? 'correct' : 'incorrect');
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation}`;
+            });
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        function generateFeedbackHTML(exp) {
+            return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
+                あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
+                <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
+                <div class="explanation-content">${exp}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
+        }
+        function showFeedback(isC, u, c) {
+            const fb = document.getElementById('feedback-box');
+            fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
+            document.getElementById('fb-title').innerText = isC ? "正解です！" : "不正解です";
+            document.getElementById('fb-title').className = "feedback-title " + (isC ? "text-green" : "text-red");
+            document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
+            document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
+        }
+        window.nextQuestion = function() {
+            if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
+            currentQIndex = maxReachedIndex; renderQuiz();
+        };
+        function showResultScreen() {
+            updateProgress();
+            quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--primary-color);">古代ギリシア世界① 学習完了！</h2><p style="color: var(--text-muted); margin-bottom: 30px;">ポリスの成立からペルシア戦争までの歴史を確認しました。</p>
+                <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                    <button class="check-btn" style="margin: 0; background: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="location.reload()">もう一度挑戦する</button>
+                    <a href="/n-kyozai/politics/sp-wh/index.html" class="next-btn" style="max-width: 320px;">世界史 目次へ戻る</a>
+                </div></div>`;
+            lucide.createIcons();
+        }
+        renderQuiz();
     </script>
 </body>
 </html>
-
