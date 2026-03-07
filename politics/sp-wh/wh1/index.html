@@ -2,222 +2,818 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- 【編集箇所 1】ページタイトル -->
-    <title>1.先史時代 - 世界史講座</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. 先史時代 - 教員採用試験対策まとめ</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- デザインルール --- */
+        /* --- カラーパレット --- */
         :root {
-            --primary-color: #334155; /* Slate 700 */
-            --accent-color: #0369a1; /* Sky 700 (世界史用に青系) */
-            --accent-dark: #075985;  /* Sky 800 */
-            --accent-light: #f0f9ff; /* Sky 50 */
-            --bg-color: #f8fafc;     /* Slate 50 */
-            --sidebar-bg: #ffffff;
-            --sidebar-width: 220px;
-            --text-color: #1e293b;
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #334155;
+            --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --card-padding: 32px;
             
-            /* 穴埋めスタイル */
-            --cloze-bg: #e2e8f0;
-            --cloze-active-bg: #fff1f2;
-            --cloze-active-text: #be123c;
+            --nav-hover-bg: #f1f5f9;
+            --nav-active-bg: #e0f2fe;
+            
+            --quiz-blue: #3b82f6;
+            --quiz-red: #ef4444;
+            --quiz-red-bg: #fee2e2;
+            --quiz-green: #10b981;
+            --quiz-gray: #d1d5db;
+            --feedback-correct-bg: #ecfdf5;
+            
+            --fill-bg: #e2e8f0;
+            --fill-border: #cbd5e1;
+            --fill-revealed-bg: #fff0f6;
+            --fill-revealed-text: #e11d48;
+            --fill-revealed-border: #fbcfe8;
+            
+            --slot-bg: #f9fafb;
+            --slot-hover-bg: #f3f4f6;
+
+            --tf-btn-bg: #ffffff;
+            --tf-btn-hover-bg: #f9fafb;
+            --tf-btn-border: #e5e7eb;
+            --tf-true-bg: #eff6ff;
+            --tf-false-bg: #fef2f2;
+
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
-        /* 全体のフォントサイズ調整 */
-        html { font-size: 92.5%; }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
+            line-height: 1.6;
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
+        }
+
+        /* ルビのスタイル調整 */
+        ruby {
+            ruby-align: center;
+        }
+        rt {
+            font-size: 0.6em;
+            color: var(--text-muted);
         }
 
         /* --- サイドバー --- */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--sidebar-bg);
+            background-color: var(--surface-color);
             height: 100vh;
             position: fixed;
             left: 0; top: 0;
             border-right: 1px solid var(--border-color);
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .sidebar-header {
-            padding: 20px; font-size: 1rem; font-weight: 800;
-            color: var(--primary-color); border-bottom: 1px solid var(--border-color);
-            display: flex; align-items: center; gap: 10px;
-            background: #fff;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .nav-menu { padding: 12px 0; flex: 1; }
-        
-        .nav-category { 
-            padding: 12px 20px 4px; 
-            font-size: 0.7rem; 
-            color: #94a3b8; 
-            font-weight: 700; 
-            text-transform: uppercase; 
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
             letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
         }
-        
         .nav-item {
-            display: flex; align-items: center; padding: 10px 20px;
-            color: #475569; text-decoration: none; font-size: 0.9rem; font-weight: 500;
-            transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
         }
-        .nav-item:hover { background-color: var(--bg-color); color: var(--text-color); border-left-color: #cbd5e1; }
-        .nav-item i { margin-right: 10px; width: 18px; height: 18px; color: #64748b; }
-        .nav-item:hover i { color: var(--primary-color); }
-        .nav-item.active { background-color: var(--accent-light); color: var(--accent-color); border-left-color: var(--accent-color); }
-        .nav-item.active i { color: var(--accent-color); }
+        .nav-item:hover { background-color: var(--nav-hover-bg); color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: var(--nav-active-bg);
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
 
         /* --- メインコンテンツ --- */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
-            padding: 32px;
-            width: 100%;
-            min-width: 0; 
-            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container { 
-            max-width: 820px; /* 読みやすさを重視した幅 */
-            margin: 0 auto; 
+        .page-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
         }
 
-        /* パンくずリスト */
-        .breadcrumb { font-size: 0.8rem; color: #94a3b8; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-        .breadcrumb a { color: #64748b; text-decoration: none; transition: color 0.2s; }
-        .breadcrumb a:hover { color: var(--accent-color); text-decoration: underline; }
-        .breadcrumb span { font-weight: bold; color: var(--primary-color); cursor: default; }
-        .breadcrumb i { margin: 0 4px; color: #cbd5e1; width: 14px; height: 14px; }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
 
-        /* ページタイトル */
-        h1.main-title {
-            font-size: 1.8rem; color: var(--primary-color);
-            font-weight: 800; margin-bottom: 32px;
-            display: flex; align-items: center; gap: 12px;
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--border-color);
-            padding-bottom: 16px;
-        }
-        h1.main-title i { color: var(--accent-color); width: 32px; height: 32px; }
-
-        /* モバイルトグル */
-        .mobile-toggle-btn {
-            display: none; position: fixed; 
-            top: 10px; left: 10px; z-index: 2000;
-            width: 40px; height: 40px; 
-            background: white; border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
-            border: 1px solid #e2e8f0; 
-            cursor: pointer;
-            align-items: center; justify-content: center; 
-            color: #475569;
-        }
-        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; backdrop-filter: blur(2px); }
-        .overlay.active { display: block; }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); width: 220px; }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; padding-top: 60px; }
-            .mobile-toggle-btn { display: flex; }
-            :root { --card-padding: 20px; }
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* --- コンテンツスタイル --- */
-        
-        /* コンテンツカード */
-        .card {
-            background: #fff; border-radius: 16px; 
-            padding: var(--card-padding);
-            margin-bottom: 32px; 
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        /* 画像エリアスタイル（縦長画像対応） */
-        .top-image-container {
-            text-align: center; /* 画像を中央揃え */
-            margin-bottom: 32px;
-            background-color: #f1f5f9; /* 画像がない場合の背景色（任意） */
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-        
-        .top-image {
-            max-width: 100%;
-            height: auto;
-            max-height: 800px; /* PCで縦長になりすぎないよう制限 */
-            display: inline-block;
-            vertical-align: bottom;
-        }
-
-        /* 穴埋め本文 */
-        .text-section p { text-align: justify; margin-bottom: 1.2em; line-height: 1.8; }
-        .text-section p:last-child { margin-bottom: 0; }
-        
-        .cloze {
-            display: inline-block;
-            min-width: 2.5em;
-            padding: 0 4px;
-            margin: 0 2px;
-            background-color: var(--cloze-bg);
+        /* --- 穴埋め用のスタイル (トグル対応) --- */
+        .fill-blank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fill-bg);
             color: transparent;
+            padding: 2px 8px;
+            margin: 2px 4px;
             border-radius: 4px;
-            border-bottom: 2px solid #cbd5e1;
             cursor: pointer;
-            transition: all 0.15s ease-out;
+            min-width: 40px;
+            min-height: 24px;
+            transition: all 0.2s;
             user-select: none;
-            font-weight: 600;
-            vertical-align: baseline;
+            border: 1px solid var(--fill-border);
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .cloze:active { transform: scale(0.98); }
-        .cloze.revealed {
-            background-color: var(--cloze-active-bg);
-            color: var(--cloze-active-text);
-            border-bottom-color: var(--cloze-active-text);
+        .fill-blank rt {
+            color: transparent;
+            transition: all 0.2s;
+        }
+        .fill-blank.revealed {
+            background-color: var(--fill-revealed-bg);
+            color: var(--fill-revealed-text);
+            border-color: var(--fill-revealed-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .fill-blank.revealed rt {
+            color: var(--text-muted);
         }
 
-        /* ツールバー */
-        .toolbar {
-            display: flex; justify-content: flex-end; margin-bottom: 12px;
+        /* --- テーマ別まとめスタイル --- */
+        .theme-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
         }
-        .toggle-btn {
-            background: var(--primary-color); color: white; border: none;
-            padding: 8px 16px; border-radius: 20px; cursor: pointer;
-            font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .theme-list {
+            list-style: none;
+        }
+
+        .theme-list > li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .theme-list > li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .theme-list > li::before {
+            content: '◆';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1rem;
+        }
+        
+        .theme-list h3 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: inline-block;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- 年表スタイル --- */
+        .timeline-box {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 10px;
+            border-left: 3px solid var(--timeline-line);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 4px solid var(--accent-color);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            background: var(--timeline-date-bg);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- 画像ギャラリー --- */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* --- クイズUIスタイル --- */
+        .quiz-section {
+            margin-top: 10px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 4px;
+            background-color: var(--quiz-gray);
+            z-index: 1;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .progress-line-fill {
+            position: absolute;
+            top: 50%; left: 0;
+            height: 4px;
+            background-color: var(--quiz-blue);
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.4s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .step-node {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background-color: var(--quiz-gray);
+            z-index: 3;
+            position: relative;
+            transition: background-color 0.4s, transform 0.2s;
+            cursor: pointer;
+        }
+        .step-node:not(.final-node):hover {
+            filter: brightness(0.9);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3);
+        }
+        .step-node.final-node {
+            cursor: default;
+        }
+        .step-node.active {
+            background-color: var(--quiz-blue);
+            transform: scale(1.3);
+        }
+        .step-node.completed {
+            background-color: var(--quiz-blue);
+        }
+        .step-node.viewing {
+            background-color: var(--quiz-blue);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.7);
+        }
+        .step-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--quiz-blue);
+            font-weight: bold;
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .step-node.active .step-label,
+        .step-node.viewing .step-label { opacity: 1; }
+        .step-node:last-child .step-label { opacity: 1; color: var(--text-muted); }
+        .step-node.completed:last-child .step-label { color: var(--quiz-blue); }
+
+        .quiz-question-title {
+            color: var(--quiz-blue);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* --- ドラッグ＆ドロップ穴埋めスタイル --- */
+        .slot {
+            display: inline-flex;
+            min-width: 70px;
+            height: 36px;
+            border-bottom: 2px solid var(--text-muted);
+            position: relative;
+            cursor: pointer;
+            margin: 0 6px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            padding: 0 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            vertical-align: middle;
+            background-color: var(--slot-bg);
+            border-radius: 4px 4px 0 0;
+        }
+        .slot:hover:not(.disabled) { background-color: var(--slot-hover-bg); border-bottom-color: var(--quiz-blue); }
+        .slot.empty { border-bottom: 2px solid var(--quiz-blue); background-color: transparent; }
+        .slot.disabled { cursor: default; border-bottom-color: var(--fill-border); }
+
+        .slot-num {
+            position: absolute;
+            top: -12px; right: -10px;
+            background-color: var(--quiz-blue);
+            color: white;
+            font-size: 0.65rem;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .slot.correct { color: var(--quiz-green); border-bottom-color: var(--quiz-green); background-color: var(--feedback-correct-bg); }
+        .slot.incorrect { color: var(--quiz-red); background-color: var(--quiz-red-bg); border-bottom: none; border-radius: 4px; }
+
+        .options-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--surface-color);
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--fill-border);
+            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            color: var(--quiz-blue);
+            transform: translateY(-1px);
+        }
+        .option-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            background-color: var(--slot-bg);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- 四択問題（Multiple Choice）スタイル --- */
+        .mc-btn {
+            text-align: left;
+            padding: 16px;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: var(--surface-color);
+            border: 2px solid var(--fill-border);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .mc-btn:hover:not(:disabled) {
+            border-color: var(--quiz-blue);
+            background: var(--slot-hover-bg);
+        }
+        .mc-btn.selected {
+            border-color: var(--quiz-blue);
+            background: var(--slot-hover-bg);
             font-weight: bold;
         }
+        .mc-btn.correct-ans {
+            border-color: var(--quiz-green) !important;
+            background: var(--feedback-correct-bg) !important;
+            color: var(--quiz-green) !important;
+        }
+        .mc-btn.incorrect-ans {
+            border-color: var(--quiz-red) !important;
+            background: var(--quiz-red-bg) !important;
+            color: var(--quiz-red) !important;
+        }
+        .mc-btn:disabled {
+            cursor: default;
+        }
 
+        /* --- 画像拡大・埋め込みスタイル --- */
+        .thumbnail-img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            background-color: var(--fill-bg);
+            min-height: 40px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .thumbnail-img[src=""] {
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: default;
+        }
+        .thumbnail-img[src=""]::after {
+            content: "画像準備中";
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            cursor: zoom-out;
+            object-fit: contain;
+        }
+
+        /* --- 正誤問題用UI --- */
+        .tf-item {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .tf-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .tf-text { margin-bottom: 12px; font-weight: 500; }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 8px;
+            border: 2px solid var(--tf-btn-border);
+            background: var(--tf-btn-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .tf-btn:hover:not(:disabled) { background: var(--tf-btn-hover-bg); border-color: var(--fill-border); }
+        .tf-btn.selected-true { border-color: var(--quiz-blue); background: var(--tf-true-bg); color: var(--quiz-blue); }
+        .tf-btn.selected-false { border-color: var(--quiz-red); background: var(--tf-false-bg); color: var(--quiz-red); }
+        .tf-btn:disabled { cursor: default; opacity: 0.5; }
+        
+        .tf-feedback {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+        }
+        .tf-feedback.show { display: block; }
+        .tf-feedback.correct { background: var(--feedback-correct-bg); border-left: 4px solid var(--quiz-green); }
+        .tf-feedback.incorrect { background: var(--quiz-red-bg); border-left: 4px solid var(--quiz-red); }
+
+        /* 共通ボタン */
+        .check-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 24px;
+            padding: 14px;
+            background-color: var(--quiz-blue);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        .check-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .feedback-box {
+            display: none;
+            background: var(--slot-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--quiz-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .feedback-box.show { display: block; }
+        
+        .feedback-box.correct-bg { border-left-color: var(--quiz-green); background-color: var(--feedback-correct-bg);}
+
+        .feedback-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+        .text-red { color: var(--quiz-red); }
+        .text-green { color: var(--quiz-green); }
+
+        .feedback-detail { font-size: 0.95rem; margin-bottom: 20px; color: var(--text-color); line-height: 1.8; }
+        .feedback-detail span { font-weight: bold; padding: 2px 6px; background: var(--surface-color); border-radius: 4px; border: 1px solid var(--border-color); margin: 0 4px;}
+
+        .explanation-details { border-top: 1px dashed var(--border-color); padding-top: 16px; margin-bottom: 24px; }
+        .explanation-summary {
+            font-size: 0.95rem;
+            color: var(--quiz-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            list-style: none;
+            font-weight: bold;
+        }
+        .explanation-summary::-webkit-details-marker { display: none; }
+        .explanation-content {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background: var(--surface-color);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            line-height: 1.7;
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .next-btn:hover { filter: brightness(0.9); }
+
+        .review-mode-msg {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--quiz-red);
+            font-weight: bold;
+            background: var(--quiz-red-bg);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        /* --- スクロールトップボタン --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        /* --- 全穴埋め表示切替ボタン --- */
+        .toggle-all-blanks-btn {
+            position: fixed;
+            bottom: 95px;
+            right: 35px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toggle-all-blanks-btn:hover { filter: brightness(0.9); }
+
+        footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .tf-btns { flex-direction: column; gap: 8px; }
+            .tf-btn { max-width: 100%; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .toggle-all-blanks-btn { bottom: 80px; right: 24.5px; width: 36px; height: 36px; }
+            .mc-btn { flex-direction: column; align-items: flex-start; }
+            .thumbnail-img { max-width: 100%; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- モバイルトグルボタン -->
-    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
     <div class="overlay" id="overlay"></div>
 
-    <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
-        <nav class="nav-menu">
-            <!-- 【編集箇所 2】サイドバーのリンクは適宜調整してください -->
+       <nav class="nav-menu">
             <div class="nav-category">MAIN</div>
             <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
@@ -225,102 +821,505 @@
             <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
             <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
-            
+
             <div class="nav-category">専門科目</div>
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
-            <a href="/n-kyozai/politics/sp-wh/index.html" class="nav-item active"><i data-lucide="globe-2"></i>世界史</a>
         </nav>
     </aside>
 
-    <!-- メインコンテンツ -->
     <main class="main-content">
-        <div class="container">
-            <!-- パンくずリスト -->
+        <div class="page-header">
             <div class="breadcrumb">
-                <a href="/n-kyozai/index.html">ホーム</a> 
-                <i data-lucide="chevron-right"></i>
-                <a href="/n-kyozai/politics/index.html">専門科目</a> 
-                <i data-lucide="chevron-right"></i>
-                <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> 
-                <i data-lucide="chevron-right"></i>
-                <!-- 【編集箇所 3】現在の章タイトル -->
-                <span>1.先史時代</span>
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 1. 先史時代
             </div>
-
-            <!-- 【編集箇所 4】メインタイトル -->
-            <h1 class="main-title"><i data-lucide="globe-2"></i>1.先史時代</h1>
-
-            <!-- 画像セクション（新設） -->
-            <section class="top-image-container">
-                <!-- 【編集箇所 5】画像パスを設定してください -->
-                <!-- 縦長画像対応: width/heightは未指定でCSS制御、alt属性は必須 -->
-                <img src="2026-02-19_01h22_03.png" alt="解説画像" class="top-image">
-            </section>
-
-            <!-- 本文セクション -->
-            <div class="toolbar">
-                <button class="toggle-btn" onclick="toggleAllClozes()">
-                    <i data-lucide="eye" size="16"></i> 解答表示切替
-                </button>
-            </div>
-
-            <section class="card text-section">
-                <!-- 【編集箇所 6】ここに本文を入力してください -->
-                <!-- 穴埋め箇所は <span class="cloze" onclick="reveal(this)">答え</span> で囲む -->
-                
-                <p>人類が文字を発明して、歴史を記録に残すようになるまでを<span class="cloze" onclick="reveal(this)">先史</span>時代とよぶ。チンパンジーなどの類人猿と異なり、<span class="cloze" onclick="reveal(this)">直立二足歩行</span>と道具の製作・使用を特徴とする人類の起源は、現在のところ約700万年前にアフリカに出現した猿人とされる。猿人の代表は、<span class="cloze" onclick="reveal(this)">アウストラロピテクス</span>で、礫石器のような簡単な打製石器を使用した。打製石器を用いて、狩猟・漁労・採集により食料を獲得していた時代を<span class="cloze" onclick="reveal(this)">旧石器</span>時代という。</p>
-                <p>約180万年前には<span class="cloze" onclick="reveal(this)">火</span>や言語の使用を始め、狩りに必要なハンドアックス（握斧）などの打製石器を用いた原人（ホモ＝エレクトゥス）が出現した。彼らはアフリカを離れて、各地に分散したため、東南アジアからは<span class="cloze" onclick="reveal(this)">ジャワ</span>原人が、中国からは<span class="cloze" onclick="reveal(this)">北京</span>原人などが発見されている。</p>
-                <p>約60万年前には旧人が出現した。ドイツで発見された<span class="cloze" onclick="reveal(this)">ネアンデルタール</span>人に代表される旧人は、身にまとう毛皮の加工に必要な剥片石器を使用し、死者を悼んで<span class="cloze" onclick="reveal(this)">埋葬</span>の習慣を始めた。</p>
-                <p>約20万年前にはそれまでの人類とちがい、現代の人類（現生人類）と同じ姿の新人が現れた。フランスの<span class="cloze" onclick="reveal(this)">クロマニョン</span>人や中国の周口店上洞人に代表されるが、彼らは精巧な打製石器のほか、狩猟のための骨や角を加工した<span class="cloze" onclick="reveal(this)">骨角器</span>を使用した。フランスの<span class="cloze" onclick="reveal(this)">ラスコー</span>やスペインの<span class="cloze" onclick="reveal(this)">アルタミラ</span>などの洞穴には、彼らが狩猟の成功を祈願するために描いたと思われる動物の絵画が残されている（洞穴絵画）。</p>
-                <p>約1万年前に最後の氷期が終わり、気候が温暖化するとやがて人類は農耕・牧畜を営み、食料を自ら生産する<span class="cloze" onclick="reveal(this)">新石器</span>時代に入った。それまでの打製石器以外に、砂などで磨かれた磨製石器の製作が始まり、石斧や石臼が作られ、また調理や貯蔵のため<span class="cloze" onclick="reveal(this)">土器</span>も作成された。</p>
-                <p>前3500年頃からメソポタミアを先駆けとして、農耕に必要な水を人工的に供給する<span class="cloze" onclick="reveal(this)">灌漑</span>農業が始まった。この結果、定住生活が進み、多くの人口をもつ<span class="cloze" onclick="reveal(this)">都市</span>や国家の形成が可能となった。また戦いや儀式に用いる<span class="cloze" onclick="reveal(this)">青銅器</span>などの金属器が作られ、政治を記録するために<span class="cloze" onclick="reveal(this)">文字</span>が発明された。文字が発明された以降の時代を<span class="cloze" onclick="reveal(this)">歴史</span>時代という。</p>
-            </section>
-
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">1. 先史時代</h1>
         </div>
+
+        <div class="container">
+            <!-- 【1】年表まとめ -->
+            <div class="section-title"><i data-lucide="clock"></i>年表で見る 先史時代</div>
+            
+            <div class="timeline-box">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">約700万年前</div>
+                        <div class="timeline-content">
+                            最古の人類である<span class="fill-blank"><ruby>猿人<rt>えんじん</rt></ruby></span>（サヘラントロプス・チャデンシス、アウストラロピテクスなど）が出現し、<span class="fill-blank">直立二足歩行</span>を始めた。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約240万年前</div>
+                        <div class="timeline-content">
+                            ホモ・ハビリスが現れ、自然石を打ち欠いただけの簡単な打製石器（<span class="fill-blank"><ruby>礫石器<rt>れきせっき</rt></ruby></span>）を製作し始めた。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約180万年前</div>
+                        <div class="timeline-content">
+                            <span class="fill-blank"><ruby>原人<rt>げんじん</rt></ruby></span>（ホモ・エレクトス、北京原人など）が出現。<span class="fill-blank">火</span>や言語を使用し、狩猟の道具として<span class="fill-blank"><ruby>握斧<rt>あくふ</rt></ruby></span>（ハンドアックス）を用いた。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約60万年前</div>
+                        <div class="timeline-content">
+                            <span class="fill-blank"><ruby>旧人<rt>きゅうじん</rt></ruby></span>（ネアンデルタール人など）が出現。剥片石器を使用し、<span class="fill-blank">死者の埋葬</span>を行うなど精神文化が芽生えた。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約20万年前</div>
+                        <div class="timeline-content">
+                            <span class="fill-blank"><ruby>新人<rt>しんじん</rt></ruby></span>（現生人類、クロマニョン人など）が出現。精巧な骨角器を使用し、鮮やかな<span class="fill-blank">洞穴絵画</span>を残した。
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">約1万年前</div>
+                        <div class="timeline-content">
+                            氷期が終わり温暖な完新世へ。<span class="fill-blank">農耕・牧畜</span>が始まり、<span class="fill-blank"><ruby>磨製石器<rt>ませいせっき</rt></ruby></span>や土器を用いる新石器時代へと移行した。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【2】テーマ別詳細 -->
+            <div class="section-title"><i data-lucide="globe"></i>テーマ別詳細</div>
+            
+            <div class="theme-box">
+                <ul class="theme-list">
+                    <li>
+                        <h3>1. 人類の進化と特徴</h3>
+                        <br><b>【<ruby>猿人<rt>えんじん</rt></ruby>】</b>
+                        <br>最古の人類（サヘラントロプス・チャデンシス、アウストラロピテクスなど）。類人猿と異なり、<span class="fill-blank">直立二足歩行</span>を行い、前肢が自由になったことで道具を発明した。自然石を打ち欠いた簡単な打製石器である<span class="fill-blank"><ruby>礫石器<rt>れきせっき</rt></ruby></span>を使用した。
+                        <br><b>【<ruby>原人<rt>げんじん</rt></ruby>】</b>
+                        <br>ホモ・エレクトス（ジャワ原人、北京原人など）。やや進歩した打製石器である<span class="fill-blank"><ruby>握斧<rt>あくふ</rt></ruby></span>（ハンドアックス）を使用し、狩猟や採集を行った。<span class="fill-blank">火</span>や言語を使用し始めたとされる。
+                        <br><b>【<ruby>旧人<rt>きゅうじん</rt></ruby>】</b>
+                        <br><span class="fill-blank">ネアンデルタール人</span>などが代表的。石の破片を加工した剥片石器を使用。また、<span class="fill-blank">死者の埋葬</span>（花を供えるなど）を行っており、宗教的・精神文化が芽生えていたことがわかる。
+                        <br><b>【<ruby>新人<rt>しんじん</rt></ruby>（現生人類）】</b>
+                        <br>ホモ・サピエンス（ヨーロッパの<span class="fill-blank">クロマニョン人</span>や、中国の周口店上洞人など）。現代人の直接の祖先。精巧な石器や、動物の骨・角で作った<span class="fill-blank"><ruby>骨角器<rt>こっかくき</rt></ruby></span>（釣り針や銛など）を使用し、豊かな芸術的才能を示した。
+                        <div class="image-gallery">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Biface_de_Saint-Acheul_MHNT.jpg/640px-Biface_de_Saint-Acheul_MHNT.jpg" alt="握斧（ハンドアックス）" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Neanderthalensis.jpg/640px-Neanderthalensis.jpg" alt="ネアンデルタール人の頭骨" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <h3>2. 旧石器時代の文化と芸術</h3>
+                        <br><b>【獲得経済の社会】</b>
+                        <br>打製石器を使用し、狩猟や植物の採集に頼って生活していた時代を<span class="fill-blank">旧石器時代</span>と呼ぶ。自然の恵みに依存する<span class="fill-blank">獲得経済</span>であり、食糧を求めて移動生活を送っていた。
+                        <br><b>【洞穴美術と呪術】</b>
+                        <br>新人（クロマニョン人など）は、豊猟や狩猟の成功を祈る呪術的な目的で、洞穴の壁に彩色画を残した。スペインの<span class="fill-blank"><ruby>アルタミラ<rt>あるたみら</rt></ruby></span>洞穴絵画や、フランスの<span class="fill-blank"><ruby>ラスコー<rt>らすこー</rt></ruby></span>洞穴絵画（牛や馬などが描かれている）が世界的に有名である。
+                        <br>また、多産や豊作を祈る目的で、女性の特徴を誇張した石の彫刻（<span class="fill-blank">ヴィレンドルフのヴィーナス</span>など）も作られた。
+                        <div class="image-gallery">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Altamira_Bison_B.jpg/640px-Altamira_Bison_B.jpg" alt="アルタミラの洞穴絵画" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Lascaux_01.jpg/640px-Lascaux_01.jpg" alt="ラスコーの洞穴絵画" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Venus_von_Willendorf_01.png/640px-Venus_von_Willendorf_01.png" alt="ヴィレンドルフのヴィーナス" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+
+                    <li>
+                        <h3>3. 新石器時代と文明の誕生</h3>
+                        <br><b>【食糧生産革命】</b>
+                        <br>約1万年前、氷期が終わり温暖な気候（完新世）になると、小型の<span class="fill-blank">細石器</span>が使用される中石器時代を経て、人類は大きな転換点を迎える。<span class="fill-blank">農耕</span>と<span class="fill-blank">牧畜</span>が始まり、自然に頼る獲得経済から、自ら食糧を作り出す<span class="fill-blank">生産経済</span>へと移行した。これを食糧生産革命という。
+                        <br><b>【新石器時代の生活】</b>
+                        <br>農耕の開始に伴い、人々は定住生活を始めた。石を磨いて作った<span class="fill-blank"><ruby>磨製石器<rt>ませいせっき</rt></ruby></span>（石斧や石臼など）や、食物の煮炊き・貯蔵のための<span class="fill-blank">土器</span>、そして織物が作られるようになった。
+                        <br><b>【都市と国家の形成（文明の誕生）】</b>
+                        <br>大河の流域で<span class="fill-blank">灌漑農業</span>（人工的に水を引く農業）が始まると、食糧の余剰生産物が生まれ、それを管理する指導者が現れた。これにより貧富の差や<span class="fill-blank">階級</span>が発生した。人々が集住して<span class="fill-blank">都市</span>が形成され、青銅器などの金属器や、政治・経済の記録のための<span class="fill-blank">文字</span>が発明された。こうして、各地で国家（文明）が誕生した。
+                        <div class="image-gallery">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Jomon_Pottery.JPG/640px-Jomon_Pottery.JPG" alt="土器" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Ur_ziggurat_2.jpg/640px-Ur_ziggurat_2.jpg" alt="ウルのジッグラト" class="thumbnail-img" onclick="if(this.getAttribute('src') !== '') openLightbox(this.src);">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 【3】クイズセクション -->
+            <div class="quiz-section" id="quiz-section">
+                <div class="section-title"><i data-lucide="pen-tool"></i>確認クイズ</div>
+                
+                <div class="quiz-header">
+                    <div class="progress-bar" id="dynamic-progress-bar">
+                        <div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-container">
+                    <!-- JSで問題が描画されます -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
     </main>
 
+    <!-- 全穴埋め表示切替ボタン -->
+    <button class="toggle-all-blanks-btn" id="toggleAllBlanksBtn" aria-label="すべての穴埋めを表示/非表示">
+        <i data-lucide="eye" id="toggleAllBlanksIcon" style="width: 20px; height: 20px;"></i>
+    </button>
+
+    <!-- トップへ戻るボタン -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="ページトップへ戻る">
+        <i data-lucide="chevron-up" style="width: 28px; height: 28px;"></i>
+    </button>
+
     <script>
-        // DOM要素の取得
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
-        // モバイルメニューのトグル
         const toggleSidebar = () => {
-            if (sidebar && overlay) {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            }
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
         };
 
-        if (menuToggle) {
-            menuToggle.addEventListener('click', toggleSidebar);
-            overlay.addEventListener('click', toggleSidebar);
-        }
+        if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
 
-        // 穴埋め機能
-        window.reveal = function(element) {
-            element.classList.toggle('revealed');
-        }
-
-        window.toggleAllClozes = function() {
-            const clozes = document.querySelectorAll('.cloze');
-            const anyHidden = Array.from(clozes).some(c => !c.classList.contains('revealed'));
-            clozes.forEach(c => anyHidden ? c.classList.add('revealed') : c.classList.remove('revealed'));
-        }
-
-        // 初期化実行
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lucideアイコンの初期化
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            } else {
-                setTimeout(() => {
-                    if (typeof lucide !== 'undefined') lucide.createIcons();
-                }, 1000);
+        // --- 画像拡大（ライトボックス）機能 ---
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.className = 'lightbox-overlay';
+        lightboxOverlay.innerHTML = '<img class="lightbox-img" src="" alt="拡大画像">';
+        document.body.appendChild(lightboxOverlay);
+        const lightboxImg = lightboxOverlay.querySelector('img');
+        window.openLightbox = function(src) {
+            lightboxImg.src = src;
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
 
+        // --- トップへ戻るボタン制御 ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // --- 全穴埋め表示/非表示トグル機能 ---
+        const toggleAllBlanksBtn = document.getElementById('toggleAllBlanksBtn');
+        const toggleAllBlanksIcon = document.getElementById('toggleAllBlanksIcon');
+        let allRevealed = false;
+        toggleAllBlanksBtn.addEventListener('click', () => {
+            allRevealed = !allRevealed;
+            document.querySelectorAll('.fill-blank').forEach(el => {
+                if (allRevealed) el.classList.add('revealed');
+                else el.classList.remove('revealed');
+            });
+            toggleAllBlanksIcon.setAttribute('data-lucide', allRevealed ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+        document.querySelectorAll('.fill-blank').forEach(el => {
+            el.addEventListener('click', () => el.classList.toggle('revealed'));
+        });
+
+        // ==========================================
+        // 動的クイズ機能の実装
+        // ==========================================
+        const quizData = [
+            {
+                type: 'dragDrop',
+                parts: [
+                    "人類の進化について。<br>最古の人類である「",
+                    "」は直立二足歩行を始めた。<br>次に現れた「",
+                    "」は火や言語を使用し始めた。<br>ネアンデルタール人などの「",
+                    "」は死者の埋葬を行い、精神文化の発達が見られた。<br>そして現生人類である「",
+                    "」は精巧な骨角器や洞穴美術を残した。"
+                ],
+                correctAnswers: ["猿人", "原人", "旧人", "新人"],
+                options: ["猿人", "原人", "旧人", "新人", "超人", "ホモ・ハビリス"],
+                explanation: "人類の進化の順序（猿人→原人→旧人→新人）と、それぞれの代表的な特徴（二足歩行、火の使用、死者の埋葬、洞穴絵画）をしっかりと結びつけて覚えましょう。"
+            },
+            {
+                type: 'multipleChoice',
+                questionText: "次の画像が示す、新人が残したスペインにある洞穴絵画の名称として【正しいもの】を1つ選べ。<br><div style='display:flex;gap:12px;margin-top:8px;'><!-- 💡 オススメ画像：アルタミラの洞穴絵画 --><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Altamira_Bison_B.jpg/640px-Altamira_Bison_B.jpg' alt='アルタミラの洞穴絵画' class='thumbnail-img' onclick='event.stopPropagation(); if(this.getAttribute(\"src\") !== \"\") openLightbox(this.src);'></div>",
+                options: [
+                    { text: "ラスコーの洞穴絵画", isCorrect: false },
+                    { text: "アルタミラの洞穴絵画", isCorrect: true },
+                    { text: "ショーヴェの洞穴絵画", isCorrect: false },
+                    { text: "タッシリ・ナジェールの岩絵", isCorrect: false }
+                ],
+                explanation: "新人が残した代表的な洞穴美術のうち、スペインにあるのが「アルタミラ」の洞穴絵画、フランスにあるのが「ラスコー」の洞穴絵画です。これらは狩猟の成功を祈る呪術的な目的で描かれました。"
+            },
+            {
+                type: 'trueFalse',
+                questions: [
+                    { 
+                        text: "新石器時代には、狩猟・採集を中心とする獲得経済から、農耕・牧畜を中心とする生産経済へと移行した。", 
+                        correct: true, 
+                        explanation: "正しい記述です。約1万年前に始まったこの大転換を「食糧生産革命」と呼びます。"
+                    },
+                    { 
+                        text: "旧石器時代の人類は、すでに石を磨いて作った磨製石器や土器を使用し、定住生活を行っていた。", 
+                        correct: false, 
+                        explanation: "誤りです。旧石器時代は「打製石器」を使用し、獲物を追って「移動生活」を行っていました。磨製石器や土器を使用し、定住を始めたのは「新石器時代」からです。"
+                    },
+                    { 
+                        text: "大河の流域で灌漑農業が始まると、余剰生産物によって階級が発生し、やがて文字や青銅器を使用する都市国家（文明）が誕生した。", 
+                        correct: true, 
+                        explanation: "正しい記述です。大規模な治水や灌漑を管理するために指導者が現れ、それが権力となって国家へと発展していきました。"
+                    }
+                ]
+            },
+            {
+                type: 'multipleChoice',
+                questionText: "旧人の代表例であり、死者の埋葬を行っていたことで知られる人類を何というか。",
+                options: [
+                    { text: "アウストラロピテクス", isCorrect: false },
+                    { text: "ジャワ原人", isCorrect: false },
+                    { text: "ネアンデルタール人", isCorrect: true },
+                    { text: "クロマニョン人", isCorrect: false }
+                ],
+                explanation: "死者の埋葬を行っていた旧人の代表は「ネアンデルタール人」です。アウストラロピテクスは猿人、ジャワ原人は原人、クロマニョン人は新人の代表例です。"
+            }
+        ];
+
+        let currentQIndex = 0;
+        let maxReachedIndex = 0;
+        let isReviewMode = false;
+        let isProgressBarBuilt = false;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function buildProgressBar() {
+            const bar = document.getElementById('dynamic-progress-bar');
+            bar.innerHTML = '<div class="progress-line-fill" id="progress-line" style="width: 0%;"></div>';
+            const totalSteps = quizData.length;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.createElement('div');
+                node.className = 'step-node';
+                node.id = `step-${i}`;
+                if (i < totalSteps) node.onclick = () => jumpToQuestion(i);
+                else node.classList.add('final-node');
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.innerText = i === totalSteps ? '完了' : (i + 1);
+                if (i === totalSteps) {
+                    label.style.top = '-24px'; label.style.right = '-15px'; label.style.left = 'auto'; label.style.transform = 'none';
+                }
+                node.appendChild(label);
+                bar.appendChild(node);
+            }
+        }
+
+        function updateProgress() {
+            const totalSteps = quizData.length;
+            const progressPercent = (maxReachedIndex / totalSteps) * 100;
+            document.getElementById('progress-line').style.width = `${progressPercent}%`;
+            for (let i = 0; i <= totalSteps; i++) {
+                const node = document.getElementById(`step-${i}`);
+                if (node) {
+                    node.classList.remove('active', 'completed', 'viewing');
+                    if (i < maxReachedIndex) node.classList.add('completed');
+                    if (i === currentQIndex) node.classList.add(i === maxReachedIndex ? 'active' : 'viewing');
+                }
+            }
+        }
+
+        window.jumpToQuestion = function(index) {
+            if (index > quizData.length) return;
+            currentQIndex = index;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        window.returnToCurrent = function() {
+            currentQIndex = maxReachedIndex;
+            renderQuiz();
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        function renderQuiz() {
+            if (!isProgressBarBuilt) { buildProgressBar(); isProgressBarBuilt = true; }
+            updateProgress();
+            if (currentQIndex >= quizData.length) { showResultScreen(); return; }
+            isReviewMode = (currentQIndex !== maxReachedIndex);
+            const q = quizData[currentQIndex];
+            if (q.type === 'dragDrop') renderDragDrop(q);
+            else if (q.type === 'multipleChoice') renderMultipleChoice(q);
+            else if (q.type === 'trueFalse') renderTrueFalse(q);
+        }
+
+        function renderDragDrop(q) {
+            let ddUserAnswers = new Array(q.correctAnswers.length).fill(null);
+            window.ddUserAnswers = ddUserAnswers;
+            let html = `<div class="quiz-question-title"><i data-lucide="edit-3"></i>問${currentQIndex + 1}：空欄に当てはまる語句を選択せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            q.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < q.correctAnswers.length) {
+                    html += `<span class="slot empty ${isReviewMode ? 'disabled' : ''}" data-index="${index}" onclick="removeDDAnswer(${index})"><span class="slot-num">${index + 1}</span></span>`;
+                }
+            });
+            html += `</div>`;
+            html += `<div class="options-container">`;
+            q.options.forEach(opt => {
+                html += `<button class="option-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectDDOption('${opt}', this)">${opt}</button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード。解答順に進んでください。</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkDDAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+
+        window.selectDDOption = function(text, btn) {
+            if (isReviewMode) return;
+            const idx = window.ddUserAnswers.indexOf(null);
+            if (idx !== -1) { window.ddUserAnswers[idx] = text; btn.disabled = true; updateDDSlots(); }
+        };
+        window.removeDDAnswer = function(idx) {
+            if (isReviewMode) return;
+            const text = window.ddUserAnswers[idx];
+            if (text) {
+                window.ddUserAnswers[idx] = null;
+                document.querySelectorAll('.option-btn').forEach(b => { if (b.innerText === text) b.disabled = false; });
+                updateDDSlots();
+            }
+        };
+        function updateDDSlots() {
+            const slots = document.querySelectorAll('.slot');
+            let full = true;
+            slots.forEach((s, i) => {
+                const t = window.ddUserAnswers[i];
+                s.innerHTML = t ? `${t}<span class="slot-num">${i + 1}</span>` : `<span class="slot-num">${i + 1}</span>`;
+                s.classList.toggle('empty', !t);
+                if (!t) full = false;
+            });
+            document.getElementById('check-btn').disabled = !full;
+        }
+        window.checkDDAnswer = function() {
+            const q = quizData[currentQIndex];
+            let correct = true;
+            document.querySelectorAll('.slot').forEach((s, i) => {
+                const isC = window.ddUserAnswers[i] === q.correctAnswers[i];
+                s.classList.add(isC ? 'correct' : 'incorrect');
+                if (!isC) correct = false;
+            });
+            document.getElementById('check-btn').style.display = 'none';
+            showFeedback(correct, window.ddUserAnswers.join(' '), q.correctAnswers.join(' '));
+        };
+
+        function renderMultipleChoice(q) {
+            let html = `<div class="quiz-question-title"><i data-lucide="help-circle"></i>問${currentQIndex + 1}：${q.questionText}</div>`;
+            html += `<div class="quiz-card" style="background:transparent; border:none; box-shadow:none; padding:0; display:flex; flex-direction:column; gap:12px;">`;
+            q.options.forEach((o, i) => {
+                html += `<button class="mc-btn" ${isReviewMode ? 'disabled' : ''} onclick="selectMC(${i})"><span style="font-weight:bold; color:var(--quiz-blue);">${i + 1}.</span><div>${o.text}</div></button>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkMCAnswer()">判定する</button>`;
+                html += generateFeedbackHTML(q.explanation);
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        window.selectMC = function(i) {
+            window.currentMCSelected = i;
+            document.querySelectorAll('.mc-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
+            document.getElementById('check-btn').disabled = false;
+        };
+        window.checkMCAnswer = function() {
+            const q = quizData[currentQIndex];
+            const isC = q.options[window.currentMCSelected].isCorrect;
+            document.getElementById('check-btn').style.display = 'none';
+            document.querySelectorAll('.mc-btn').forEach((b, i) => {
+                b.disabled = true;
+                if (q.options[i].isCorrect) b.classList.add('correct-ans');
+                else if (i === window.currentMCSelected) b.classList.add('incorrect-ans');
+            });
+            showFeedback(isC, q.options[window.currentMCSelected].text, q.options.find(o=>o.isCorrect).text);
+        };
+
+        function renderTrueFalse(q) {
+            window.tfAnswers = new Array(q.questions.length).fill(null);
+            let html = `<div class="quiz-question-title"><i data-lucide="check-square"></i>問${currentQIndex + 1}：次の各文の正誤を判定せよ。</div>`;
+            html += `<div class="quiz-card">`;
+            q.questions.forEach((item, i) => {
+                html += `<div class="tf-item"><div class="tf-text">(${i+1}) ${item.text}</div><div class="tf-btns">
+                    <button class="tf-btn" id="tf-btn-${i}-t" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},true)">○ 正しい</button>
+                    <button class="tf-btn" id="tf-btn-${i}-f" ${isReviewMode ? 'disabled' : ''} onclick="selectTF(${i},false)">× 誤り</button>
+                </div><div class="tf-feedback" id="tf-feedback-${i}"></div></div>`;
+            });
+            html += `</div>`;
+            if (isReviewMode) {
+                html += `<div class="review-mode-msg">※閲覧モード</div><button class="check-btn" onclick="returnToCurrent()">現在の問題に戻る</button>`;
+            } else {
+                html += `<button class="check-btn" id="check-btn" disabled onclick="checkTFAnswer()">一括採点</button>`;
+                html += `<button class="next-btn" id="tf-next-btn" style="display:none;" onclick="nextQuestion()">次の問題へ</button>`;
+            }
+            quizContainer.innerHTML = html; lucide.createIcons();
+        }
+        window.selectTF = function(idx, val) {
+            window.tfAnswers[idx] = val;
+            document.getElementById(`tf-btn-${idx}-t`).classList.toggle('selected-true', val);
+            document.getElementById(`tf-btn-${idx}-f`).classList.toggle('selected-false', !val);
+            if (window.tfAnswers.every(a => a !== null)) document.getElementById('check-btn').disabled = false;
+        };
+        window.checkTFAnswer = function() {
+            const q = quizData[currentQIndex];
+            document.getElementById('check-btn').style.display = 'none';
+            q.questions.forEach((item, i) => {
+                const isC = window.tfAnswers[i] === item.correct;
+                const f = document.getElementById(`tf-feedback-${i}`);
+                f.classList.add('show', isC ? 'correct' : 'incorrect');
+                f.innerHTML = `<strong>${isC ? '正解！' : '不正解'}</strong><br>${item.explanation}`;
+            });
+            document.getElementById('tf-next-btn').style.display = 'block';
+        };
+
+        function generateFeedbackHTML(exp) {
+            return `<div class="feedback-box" id="feedback-box"><div class="feedback-title" id="fb-title"></div><div class="feedback-detail">
+                あなたの答え：<span id="fb-user"></span><br>正解：<span id="fb-correct"></span></div>
+                <details class="explanation-details"><summary class="explanation-summary"><i data-lucide="lightbulb"></i>解説</summary>
+                <div class="explanation-content">${exp}</div></details><button class="next-btn" onclick="nextQuestion()">次の問題へ</button></div>`;
+        }
+        function showFeedback(isC, u, c) {
+            const fb = document.getElementById('feedback-box');
+            fb.classList.add('show', isC ? 'correct-bg' : 'incorrect-bg');
+            document.getElementById('fb-title').innerText = isC ? "正解です！" : "不正解です";
+            document.getElementById('fb-title').className = "feedback-title " + (isC ? "text-green" : "text-red");
+            document.getElementById('fb-user').innerText = u.replace(/<[^>]*>?/gm, '').substring(0, 50);
+            document.getElementById('fb-correct').innerText = c.replace(/<[^>]*>?/gm, '').substring(0, 50);
+        }
+        window.nextQuestion = function() {
+            if (!isReviewMode && currentQIndex === maxReachedIndex) maxReachedIndex++;
+            currentQIndex = maxReachedIndex; renderQuiz();
+        };
+        function showResultScreen() {
+            updateProgress();
+            quizContainer.innerHTML = `<div style="text-align:center; padding: 40px 0; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                <i data-lucide="award" style="width: 80px; height: 80px; color: var(--quiz-green); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--primary-color);">先史時代 学習完了！</h2><p style="color: var(--text-muted); margin-bottom: 30px;">人類の進化から文明の誕生までの重要事項を確認しました。</p>
+                <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                    <button class="check-btn" style="margin: 0; background: transparent; color: var(--quiz-blue); border: 2px solid var(--quiz-blue); box-shadow: none;" onclick="location.reload()">もう一度挑戦する</button>
+                    <a href="/n-kyozai/politics/sp-wh/index.html" class="next-btn" style="max-width: 320px;">世界史 目次へ戻る</a>
+                </div></div>`;
+            lucide.createIcons();
+        }
+        renderQuiz();
     </script>
 </body>
 </html>
