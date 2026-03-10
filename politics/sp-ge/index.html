@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理 - 専門科目 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- タブUI --- */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            overflow-x: auto; /* モバイルで横スクロール可能に */
+            scrollbar-width: none; /* Firefox用 */
+        }
+        .tabs::-webkit-scrollbar { display: none; } /* Chrome用スクロールバー非表示 */
+
+        .tab-btn {
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 0.8rem; /* フォントサイズ少し小さく */
+            font-weight: bold;
+            color: #64748b;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            margin-bottom: -2px; /* 下線を重ねる */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-btn i { width: 16px; height: 16px; }
+        .tab-btn:hover { color: var(--accent-color); }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* タブコンテンツ */
+        .tab-content { display: none; }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 目次リストスタイル --- */
+        .chapter-block {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .chapter-header {
+            background: #f8fafc;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            border-left: 4px solid var(--accent-color);
+        }
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            padding: 16px;
+        }
+        
+        /* リストアイテム (リンク) */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.8rem; /* フォントサイズ少し小さく */
+            transition: all 0.2s;
+            background: white;
+        }
+        .list-item:hover:not(.disabled) {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            color: var(--accent-color);
+        }
+        
+        /* 連番表示 */
+        .item-number {
+            font-family: monospace;
+            color: #94a3b8;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+
+        .item-title { flex: 1; line-height: 1.3; }
+
+        /* --- 非公開（準備中）のスタイル --- */
+        .list-item.disabled {
+            background: #f8fafc;
+            border-style: dashed;
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none; /* クリック無効化 */
+        }
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #fee2e2;
+            color: #ef4444;
+            white-space: nowrap;
+            margin-left: 8px;
+            border: 1px solid #fca5a5;
+        }
+
+        /* --- 用語暗記バナー --- */
+        .vocab-banner {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #bae6fd;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .vocab-banner:hover:not(.disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+        }
+        .vocab-banner.disabled {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .vocab-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            margin-right: 16px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .vocab-banner.disabled .vocab-icon {
+            color: #94a3b8;
+        }
+        .vocab-text h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .vocab-text p {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center;
+            color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <!-- 地理内でも、大分類である「専門科目」をアクティブにしておく -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item active"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 地理
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="map" style="color: var(--accent-color);"></i>地理 目次一覧
+            </h1>
+        </div>
+
+        <div class="container">
+            <!-- 用語暗記バナー（専用ページへ遷移） -->
+            <a href="/n-kyozai/politics/sp-ge/vocabulary/index.html" class="vocab-banner disabled">
+                <div class="vocab-icon"><i data-lucide="book-a"></i></div>
+                <div class="vocab-text">
+                    <h3>用語暗記 <span class="status-badge">準備中</span></h3>
+                    <p>分野別の重要用語を体系的に確認・学習できる専用ページです。</p>
+                </div>
+            </a>
+
+            <!-- タブメニュー -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('systematic')"><i data-lucide="globe"></i>系統地理編</button>
+                <button class="tab-btn" onclick="switchTab('regional')"><i data-lucide="map-pin"></i>地誌編</button>
+                <button class="tab-btn" onclick="switchTab('links')"><i data-lucide="external-link"></i>お役立ちリンク</button>
+            </div>
+
+            <!-- コンテンツ描画領域 -->
+            <div id="systematic" class="tab-content active"></div>
+            <div id="regional" class="tab-content"></div>
+            <div id="links" class="tab-content"></div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        /* =========================================================================
+           【目次データと公開設定システム】
+           各アイテムの `isPublished: false` を `true` に変更するだけで、
+           そのページのリンクが有効化され、「準備中」バッジが消える仕組みです。
+           url には実際のHTMLファイルパスを指定してください。
+        ========================================================================= */
+        const geographyData = {
+            systematic: [
+                {
+                    chapter: "第1章 地形・地形図",
+                    items: [
+                        { title: "プレートテクトニクス", isPublished: false, url: "sys-01-01.html" },
+                        { title: "火山地形と海底地形（補講）", isPublished: false, url: "sys-01-02.html" },
+                        { title: "大地形と侵食平野", isPublished: false, url: "sys-01-03.html" },
+                        { title: "堆積平野", isPublished: false, url: "sys-01-04.html" },
+                        { title: "海岸地形", isPublished: false, url: "sys-01-05.html" },
+                        { title: "その他の地形", isPublished: false, url: "sys-01-06.html" },
+                        { title: "日本の地形と災害", isPublished: false, url: "sys-01-07.html" },
+                        { title: "地形図の読図", isPublished: false, url: "sys-01-08.html" },
+                        { title: "地球、地図と図法（補講）", isPublished: false, url: "sys-01-09.html" }
+                    ]
+                },
+                {
+                    chapter: "第2章 気候・植生・土壌",
+                    items: [
+                        { title: "気温", isPublished: false, url: "sys-02-01.html" },
+                        { title: "気圧と風、降水(1)", isPublished: false, url: "sys-02-02.html" },
+                        { title: "気圧と風、降水(2)", isPublished: false, url: "sys-02-03.html" },
+                        { title: "ケッペンの気候区分", isPublished: false, url: "sys-02-04.html" },
+                        { title: "雨温図・ハイサーグラフの読み取り方（◎）", isPublished: false, url: "sys-02-05.html" },
+                        { title: "気候と生活文化（補講）", isPublished: false, url: "sys-02-06.html" },
+                        { title: "植生・土壌", isPublished: false, url: "sys-02-07.html" },
+                        { title: "海洋と陸水", isPublished: false, url: "sys-02-08.html" },
+                        { title: "日本の気候と災害", isPublished: false, url: "sys-02-09.html" },
+                        { title: "自然災害（◎テーマ別集中演習）", isPublished: false, url: "sys-02-10.html" }
+                    ]
+                },
+                {
+                    chapter: "第3章 農林水産業",
+                    items: [
+                        { title: "農業の生産性", isPublished: false, url: "sys-03-01.html" },
+                        { title: "農業の類型", isPublished: false, url: "sys-03-02.html" },
+                        { title: "農畜産物", isPublished: false, url: "sys-03-03.html" },
+                        { title: "食文化と食料問題", isPublished: false, url: "sys-03-04.html" },
+                        { title: "林業・水産業", isPublished: false, url: "sys-03-05.html" },
+                        { title: "日本の農林水産業", isPublished: false, url: "sys-03-06.html" }
+                    ]
+                },
+                {
+                    chapter: "第4章 鉱工業",
+                    items: [
+                        { title: "エネルギー", isPublished: false, url: "sys-04-01.html" },
+                        { title: "鉱産資源", isPublished: false, url: "sys-04-02.html" },
+                        { title: "工業の発達段階", isPublished: false, url: "sys-04-03.html" },
+                        { title: "工業立地論", isPublished: false, url: "sys-04-04.html" },
+                        { title: "工業の類型", isPublished: false, url: "sys-04-05.html" },
+                        { title: "日本の工業", isPublished: false, url: "sys-04-06.html" }
+                    ]
+                },
+                {
+                    chapter: "第5章 環境問題",
+                    items: [
+                        { title: "環境問題", isPublished: false, url: "sys-05-01.html" }
+                    ]
+                },
+                {
+                    chapter: "第6章 人口",
+                    items: [
+                        { title: "人口分布", isPublished: false, url: "sys-06-01.html" },
+                        { title: "人口転換と人口問題", isPublished: false, url: "sys-06-02.html" },
+                        { title: "産業別人口構成", isPublished: false, url: "sys-06-03.html" },
+                        { title: "人口移動", isPublished: false, url: "sys-06-04.html" },
+                        { title: "日本の人口問題", isPublished: false, url: "sys-06-05.html" }
+                    ]
+                },
+                {
+                    chapter: "第7章 村落・都市",
+                    items: [
+                        { title: "村落・都市の形態・機能", isPublished: false, url: "sys-07-01.html" },
+                        { title: "都市・居住問題", isPublished: false, url: "sys-07-02.html" },
+                        { title: "都市人口と都市人口率", isPublished: false, url: "sys-07-03.html" },
+                        { title: "日本の都市・居住問題", isPublished: false, url: "sys-07-04.html" }
+                    ]
+                },
+                {
+                    chapter: "第8章 商業・観光、交通、貿易",
+                    items: [
+                        { title: "商業・観光業", isPublished: false, url: "sys-08-01.html" },
+                        { title: "交通・通信", isPublished: false, url: "sys-08-02.html" },
+                        { title: "貿易と国際援助", isPublished: false, url: "sys-08-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第9章 国家・国家群",
+                    items: [
+                        { title: "国家・国家群", isPublished: false, url: "sys-09-01.html" }
+                    ]
+                },
+                {
+                    chapter: "第10章 言語・宗教、紛争",
+                    items: [
+                        { title: "言語・宗教", isPublished: false, url: "sys-10-01.html" },
+                        { title: "紛争・難民", isPublished: false, url: "sys-10-02.html" }
+                    ]
+                }
+            ],
+            regional: [
+                {
+                    chapter: "第1章 東アジア",
+                    items: [
+                        { title: "自然環境", isPublished: false, url: "reg-01-01.html" },
+                        { title: "産業", isPublished: false, url: "reg-01-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-01-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第2章 東南・南アジア",
+                    items: [
+                        { title: "自然環境", isPublished: false, url: "reg-02-01.html" },
+                        { title: "産業", isPublished: false, url: "reg-02-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-02-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第3章 西・中央アジア",
+                    items: [
+                        { title: "自然環境", isPublished: false, url: "reg-03-01.html" },
+                        { title: "産業", isPublished: false, url: "reg-03-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-03-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第4章 アフリカ",
+                    items: [
+                        { title: "自然環境", isPublished: false, url: "reg-04-01.html" },
+                        { title: "産業", isPublished: false, url: "reg-04-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-04-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第5章 ヨーロッパ",
+                    items: [
+                        { title: "自然環境と農林水産業", isPublished: false, url: "reg-05-01.html" },
+                        { title: "鉱工業", isPublished: false, url: "reg-05-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-05-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第6章 ロシアと周辺諸国",
+                    items: [
+                        { title: "自然環境と言語・宗教", isPublished: false, url: "reg-06-01.html" },
+                        { title: "社会と産業", isPublished: false, url: "reg-06-02.html" }
+                    ]
+                },
+                {
+                    chapter: "第7章 アングロアメリカ",
+                    items: [
+                        { title: "自然環境と農林水産業", isPublished: false, url: "reg-07-01.html" },
+                        { title: "鉱工業", isPublished: false, url: "reg-07-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-07-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第8章 ラテンアメリカ",
+                    items: [
+                        { title: "自然環境", isPublished: false, url: "reg-08-01.html" },
+                        { title: "産業", isPublished: false, url: "reg-08-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-08-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第9章 オセアニア",
+                    items: [
+                        { title: "自然環境", isPublished: false, url: "reg-09-01.html" },
+                        { title: "産業", isPublished: false, url: "reg-09-02.html" },
+                        { title: "社会・文化", isPublished: false, url: "reg-09-03.html" }
+                    ]
+                },
+                {
+                    chapter: "第10章 日本",
+                    items: [
+                        { title: "日本の国土像と地域調査", isPublished: false, url: "reg-10-01.html" },
+                        { title: "最低限知っておいてほしい日本の地図・統計（◎）", isPublished: false, url: "reg-10-02.html" },
+                        { title: "比較地誌（◎テーマ別集中演習）", isPublished: false, url: "reg-10-03.html" }
+                    ]
+                }
+            ],
+            links: [
+                {
+                    chapter: "学習に有用な公的機関・データリンク集",
+                    items: [
+                        { title: "国土地理院「地理院地図」", isPublished: true, url: "https://maps.gsi.go.jp/", isExternal: true, hideNumber: true },
+                        { title: "外務省「各国・地域情勢」", isPublished: true, url: "https://www.mofa.go.jp/mofaj/area/index.html", isExternal: true, hideNumber: true },
+                        { title: "気象庁「各種データ・資料」", isPublished: true, url: "https://www.jma.go.jp/jma/menu/menureport.html", isExternal: true, hideNumber: true },
+                        { title: "総務省統計局「統計データ」", isPublished: true, url: "https://www.stat.go.jp/data/index.html", isExternal: true, hideNumber: true }
+                    ]
+                }
+            ]
+        };
+
+        // 全体通し番号用のカウンター
+        let globalCounter = 1;
+
+        // 目次HTMLを生成してDOMに挿入する関数
+        function renderContent(tabId, dataArray) {
+            const container = document.getElementById(tabId);
+            let html = '';
+
+            dataArray.forEach(chapter => {
+                let itemsHtml = chapter.items.map(item => {
+                    // クラスとURLの設定（非公開ならdisabledクラス付与）
+                    const disabledClass = item.isPublished ? "" : "disabled";
+                    const targetUrl = item.isPublished ? item.url : "javascript:void(0)";
+                    const targetAttr = (item.isPublished && item.isExternal) ? 'target="_blank" rel="noopener noreferrer"' : '';
+                    const badgeHtml = item.isPublished ? '' : '<span class="status-badge">準備中</span>';
+                    
+                    // 連番の生成（hideNumber: true の場合は振らない）
+                    let numHtml = '';
+                    if (!item.hideNumber) {
+                        numHtml = `<span class="item-number">${String(globalCounter).padStart(3, '0')}</span>`;
+                        globalCounter++;
+                    }
+
+                    return `
+                        <a href="${targetUrl}" class="list-item ${disabledClass}" ${targetAttr}>
+                            ${numHtml}
+                            <span class="item-title">${item.title}</span>
+                            ${badgeHtml}
+                        </a>
+                    `;
+                }).join('');
+
+                html += `
+                    <div class="chapter-block">
+                        <div class="chapter-header">${chapter.chapter}</div>
+                        <div class="items-grid">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 初期描画
+        renderContent('systematic', geographyData.systematic);
+        renderContent('regional', geographyData.regional);
+        renderContent('links', geographyData.links);
+
+        // タブ切り替え制御
+        function switchTab(tabId) {
+            // ボタンのアクティブ状態切り替え
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // コンテンツのアクティブ状態切り替え
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // サイドバー制御（モバイル用）
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
