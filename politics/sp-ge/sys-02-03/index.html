@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>気圧と風、降水(2) - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ (情報量凝縮) --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.85rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応の重要用語スタイル --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のモバイルスクロール対応 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.85rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.85rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第2章 気候・植生・土壌 - 気圧と風、降水(2)
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 降水のメカニズムと多雨地域</h3>
+                    <p>降水（雨が降ること）の最大のポイントは「<strong><span class="important-word">上昇気流</span></strong>」です。水蒸気を含んだ空気が上に昇って雲ができやすい場所が、多雨地域となります。主に以下の3つのパターンがあります。</p>
+                    <ul>
+                        <li><strong>低気圧性降雨</strong>：赤道低圧帯や亜寒帯低圧帯など、<strong><span class="important-word">低気圧</span></strong>の圏内で発生する上昇気流による降水。</li>
+                        <li><strong>前線性降雨</strong>：冷たい空気（寒気）と暖かい空気（暖気）がぶつかる<strong><span class="important-word">前線</span></strong>（寒帯前線や梅雨前線など）付近で生じる上昇気流による降水。</li>
+                        <li><strong>地形性降雨</strong>：海から吹く湿った風（貿易風、偏西風、季節風など）が山地にぶつかって強制的に上昇させられることで降る雨。山地の<strong><span class="important-word">風上</span></strong>側は多雨となります。</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/precipitation_mechanisms.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>2. 緯度別の降水量と蒸発量</h3>
+                    <p>緯度帯によって、気圧帯の影響で降水量と蒸発量のバランスが大きく異なります。</p>
+                    <ul>
+                        <li>赤道付近（赤道低圧帯）や緯度60度付近（亜寒帯低圧帯）では、上昇気流により<strong>降水量が蒸発量を上回ります</strong>。</li>
+                        <li>緯度20〜30度付近（亜熱帯高圧帯）では、強い下降気流により乾燥するため、<strong><span class="important-word">蒸発量</span>が降水量を上回ります</strong>。</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー2 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/precipitation_evaporation.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>3. 少雨地域とその要因</h3>
+                    <p>雨が極端に少ない（少雨・乾燥）地域となるには、主に5つの要因があります。なぜ砂漠ができるのか、その理由を理解しましょう。</p>
+                    <ul>
+                        <li><strong><span class="important-word">高圧帯</span>の圏内</strong>：亜熱帯高圧帯など、下降気流が卓越する場所。（例：サハラ砂漠）</li>
+                        <li><strong>山地の<span class="important-word">風下</span>側</strong>：山を越えて水分を失った乾いた風（フェーン）が吹き下ろす場所。これを雨陰（ういん）効果といいます。（例：パタゴニア）</li>
+                        <li><strong>隔海度が大きい<span class="important-word">大陸内部</span></strong>：海から遠く、湿った空気が届きにくい場所。（例：ゴビ砂漠、タクラマカン砂漠）</li>
+                        <li><strong>沖合に<span class="important-word">寒流</span>が流れる低緯度の大陸西岸</strong>：冷たい海水によって下層の空気が冷やされて重くなり、大気が安定して上昇気流が起きないため。（例：アタカマ砂漠、ナミブ砂漠）</li>
+                        <li><strong>寒冷な極地方</strong>：極高圧帯に覆われ、空気が冷やされて下降気流が生じるため。降雪量も実は非常に少ないです。</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー3 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/world_dry_regions.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 多雨地域の要因について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            降水をもたらす主な要因は、空気が上に昇る 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="updraft">上昇気流</option>
+                                <option value="downdraft">下降気流</option>
+                            </select> 
+                            である。これが発生しやすい場所として、赤道付近などの 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="low_pressure">低気圧</option>
+                                <option value="high_pressure">高気圧</option>
+                            </select> 
+                            帯や、寒気と暖気がぶつかる 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="front">前線</option>
+                                <option value="ridge">気圧の尾根</option>
+                            </select> 
+                            付近、および海からの湿った風が山地にぶつかる 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="windward">風上</option>
+                                <option value="leeward">風下</option>
+                            </select> 
+                            側があり、これらは多雨地域となる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 正誤問題 -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 地形性降雨において、海からの湿った風が山地にぶつかる風上側では雨が多く降るが、山を越えた風下側では水分を失った乾燥した空気が吹き下ろすため、少雨（乾燥）地域となる。</div>
+                        <div class="tf-buttons" id="q2-opts">
+                            <button class="tf-btn" onclick="selectTF('q2', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q2', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkTF('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryTF('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 少雨（乾燥）地域の要因について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            少雨地域となる主な要因として、下降気流が卓越する亜熱帯高圧帯などの 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="low_pressure">低気圧</option>
+                                <option value="high_pressure">高気圧</option>
+                            </select> 
+                            に覆われる地域、海から遠く水蒸気が届きにくい 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="coastal">沿岸部</option>
+                                <option value="inland">大陸内部</option>
+                            </select> 
+                            、および沖合に 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="warm_current">暖流</option>
+                                <option value="cold_current">寒流</option>
+                            </select> 
+                            が流れる低緯度の大陸西岸などがあげられる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 穴埋め -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 緯度帯ごとの降水量と蒸発量について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            緯度帯による降水量と蒸発量のバランスについて、赤道付近の低緯度や緯度60度付近の高緯度では、上昇気流による降水量が蒸発量を 
+                            <select class="blank-select" id="q4-a">
+                                <option value="">---</option>
+                                <option value="exceed">上回る</option>
+                                <option value="fall_below">下回る</option>
+                            </select> 
+                            。一方、緯度20〜30度付近の中緯度帯（亜熱帯高圧帯）では、下降気流により乾燥するため、蒸発量が降水量を 
+                            <select class="blank-select" id="q4-b">
+                                <option value="">---</option>
+                                <option value="exceed">上回る</option>
+                                <option value="fall_below">下回る</option>
+                            </select> 
+                            。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkBlank('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryBlank('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 沖合に寒流が流れる低緯度の大陸西岸では、冷たい海水によって下層の空気が冷やされて重くなるため、上昇気流が活発に発生し、一年中雨が多い多雨地域となる。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'updraft', 'q1-b': 'low_pressure', 'q1-c': 'front', 'q1-d': 'windward' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>雨が降るための最大の条件は「上昇気流」です。これが生じる「低気圧帯」「前線付近」「山地の風上」が、世界の主な多雨地域となります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>空気が上に昇る（上昇気流）と雲ができます。低気圧帯、前線、山に風がぶつかる風上側が雨の降りやすい場所です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'high_pressure', 'q3-b': 'inland', 'q3-c': 'cold_current' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>砂漠などの少雨地域ができる要因です。下降気流の「高気圧帯」、海から遠い「大陸内部」、大気が安定してしまう「寒流」沿岸は雨が少なくなります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>下降気流の「高気圧帯」、水蒸気が来ない「大陸内部」、下から冷やされる「寒流」沿岸などが乾燥する要因です。'
+            },
+            'q4': {
+                answers: { 'q4-a': 'exceed', 'q4-b': 'exceed' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>赤道や高緯度（60度付近）の低気圧帯では「降水量＞蒸発量」となり、中緯度（20〜30度付近）の高圧帯では「蒸発量＞降水量」となって乾燥します。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>低圧帯（赤道・60度付近）は降水量が上回り、高圧帯（20〜30度付近）は蒸発量が上回ります。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q2': { 
+                correct: true, 
+                explanation: 'その通りです。山を越える際に水分を落とすため、風下側には乾いた風が吹き下ろし、雨が少なく（雨陰効果）なります。'
+            },
+            'q5': { 
+                correct: false, 
+                explanation: '寒流によって下層の空気が冷やされると、重い空気が下、軽い空気が上という<strong>安定した状態</strong>になり、雨を降らせる<strong>「上昇気流」が起きなくなります</strong>。そのため、海岸沿いにもかかわらず極端に雨が少ない砂漠（アタカマ砂漠など）が形成されます。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
