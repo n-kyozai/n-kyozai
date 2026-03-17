@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大地形と侵食平野 - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ (情報量凝縮) --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.85rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応の重要用語スタイル --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のモバイルスクロール対応 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.85rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.85rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <!-- ご要望通り active クラスを削除 -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第1章 地形・地形図 - 大地形と侵食平野
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 地質年代による大地形の分類</h3>
+                    <p>陸地は「いつ造山運動を受けたか」によって、大きく3つに分類されます。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>区分</th>
+                                <th>形成された時代</th>
+                                <th>地形の特徴</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">安定陸塊</span></strong></td>
+                                <td><span class="important-word">先カンブリア時代</span><br>（約46億年〜約5億年前）</td>
+                                <td>最も古く、長期間の侵食により<strong>起伏のなだらかな平原や高原</strong>が多い。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">古期造山帯</span></strong></td>
+                                <td><span class="important-word">古生代</span><br>（約5億年〜約2.5億年前）</td>
+                                <td>造山運動後に数億年侵食され、<strong>なだらかな山地や丘陵</strong>がみられる。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">新期造山帯</span></strong></td>
+                                <td><span class="important-word">中生代〜新生代</span><br>（約2.5億年前〜現在）</td>
+                                <td>現在も造山運動（プレート境界）が活発で、<strong>高くて険しい山地</strong>が多い。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>2. 大地形の分布と古期造山帯の代表的な山脈</h3>
+                    <p>大地形の分布はプレート境界（新期造山帯）と関連づけて覚えましょう。</p>
+                    <ul>
+                        <li><strong>新期造山帯</strong>：アルプス＝ヒマラヤ造山帯、環太平洋造山帯など。（プレート境界周辺）</li>
+                        <li><strong>古期造山帯</strong>：なだらかな山々。特に以下の7つの山脈は位置も含めて必須知識。
+                            <ul>
+                                <li>1. <span class="important-word">ペニン山脈</span>（イギリス）</li>
+                                <li>2. <span class="important-word">スカンディナヴィア山脈</span>（北欧）</li>
+                                <li>3. <span class="important-word">ウラル山脈</span>（ロシア・ヨーロッパとアジアの境界）</li>
+                                <li>4. <span class="important-word">テンシャン山脈</span>（中央アジア ※例外的に一部が再隆起し高峻）</li>
+                                <li>5. <span class="important-word">ドラケンスバーグ山脈</span>（南アフリカ）</li>
+                                <li>6. <span class="important-word">グレートディヴァイディング山脈</span>（オーストラリア東部）</li>
+                                <li>7. <span class="important-word">アパラチア山脈</span>（アメリカ東部）</li>
+                            </ul>
+                        </li>
+                        <li><strong>安定陸塊</strong>：上記以外の広大な範囲。</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/landform_distribution.png" alt="【画像挿入箇所】世界の大地形分布図（新期・古期・安定陸塊の色分け地図）">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>3. 安定陸塊の分類と資源の分布</h3>
+                    <p>安定陸塊は地層の重なり方によって「楯状地」と「卓状地」に分けられます。</p>
+                    <ul>
+                        <li><strong><span class="important-word">楯状地</span></strong>：長期間の侵食により、先カンブリア時代の<strong>古い岩盤が露出（むき出し）</strong>している地域。</li>
+                        <li><strong><span class="important-word">卓状地</span></strong>：楯状地の上に、古生代以降の<strong>地層が堆積</strong>している地域。</li>
+                    </ul>
+                    <p>また、これらの形成年代と「産出される地下資源」には強い結びつきがあります（※あくまで傾向です）。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>資源</th>
+                                <th>多く分布する地形</th>
+                                <th>理由（成因）</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">鉄鉱石</span></strong></td>
+                                <td><strong><span class="important-word">安定陸塊</span></strong><br>（特に楯状地）</td>
+                                <td>先カンブリア時代に、海水中の鉄が海底に堆積してできたため。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">石炭</span></strong></td>
+                                <td><strong><span class="important-word">古期造山帯</span></strong></td>
+                                <td>大型のシダ植物が繁茂していた古生代の地層に埋蔵されるため。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">原油</span></strong></td>
+                                <td><strong><span class="important-word">新期造山帯</span></strong>など</td>
+                                <td>中生代以降のプランクトンの死骸などが、褶曲した地層に集積するため。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー2 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/shield_and_platform.png" alt="【画像挿入箇所】楯状地と卓状地の断面模式図">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>4. 侵食平野の特徴</h3>
+                    <p>長期間の侵食によって形成された広大な平野を「侵食平野」といいます。</p>
+                    <ul>
+                        <li><strong><span class="important-word">準平原</span></strong>：侵食が進んだ楯状地などに分布する、非常に緩やかな平原。硬い岩石が削り残された<strong><span class="important-word">残丘</span></strong>（モナドノック）がみられることがある。（例：オーストラリアの<strong><span class="important-word">ウルル/エアーズロック</span></strong>）</li>
+                        <li><strong><span class="important-word">構造平野</span></strong>：卓状地など、地層が水平に堆積した地域に分布する平野。軟らかい地層が削られ、硬い地層が削り残される<strong><span class="important-word">差別侵食</span></strong>によって特徴的な地形ができる。
+                            <ul>
+                                <li><strong><span class="important-word">メサ</span></strong>（台地状）、<strong><span class="important-word">ビュート</span></strong>（塔状）：例）アメリカのモニュメントヴァレー</li>
+                                <li><strong><span class="important-word">ケスタ</span></strong>：緩やかに傾斜した硬軟の互層が非対称な斜面（波状）となった地形。例）フランスの<strong><span class="important-word">パリ盆地</span></strong>（水はけが良くブドウ栽培・シャンパン生産が盛ん）</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー3 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/erosional_plains.png" alt="【画像挿入箇所】構造平野（メサ、ビュート、ケスタ）と準平原（残丘）の断面模式図">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 地質年代と大地形の分類について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            地球の陸地は造山運動を受けた時代によって分類される。約46億年前の地球誕生から続く最も古い「先カンブリア時代」に形成されたのが 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="stable">安定陸塊</option>
+                                <option value="old">古期造山帯</option>
+                                <option value="new">新期造山帯</option>
+                            </select> 
+                            である。その後、「古生代」に形成されたのが 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="stable">安定陸塊</option>
+                                <option value="old">古期造山帯</option>
+                                <option value="new">新期造山帯</option>
+                            </select> 
+                            であり、数億年の侵食を経てなだらかな地形となっている。さらに時代が下り、「中生代から新生代」にかけて激しい造山運動を受けた地域が 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="stable">安定陸塊</option>
+                                <option value="old">古期造山帯</option>
+                                <option value="new">新期造山帯</option>
+                            </select> 
+                            であり、アルプス＝ヒマラヤのように高くて険しい山地が多くみられる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 正誤問題 -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. ロシアの「ウラル山脈」やアメリカの「アパラチア山脈」は、中生代以降に形成された新期造山帯に属しており、高くて険しい地形である。</div>
+                        <div class="tf-buttons" id="q2-opts">
+                            <button class="tf-btn" onclick="selectTF('q2', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q2', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkTF('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryTF('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 安定陸塊の地形と地下資源について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            安定陸塊のうち、長期間の侵食によって先カンブリア時代の古い岩盤が地表にむき出しになっている地域を 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="shield">楯状地</option>
+                                <option value="platform">卓状地</option>
+                            </select> 
+                            といい、その岩盤の上に古生代以降の地層が重なっている地域を 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="shield">楯状地</option>
+                                <option value="platform">卓状地</option>
+                            </select> 
+                            という。形成された時代に関連して、安定陸塊では 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="iron">鉄鉱石</option>
+                                <option value="coal">石炭</option>
+                                <option value="oil">原油</option>
+                            </select> 
+                            が多く産出される傾向がある。一方で、シダ植物が繁茂していた古生代の地層がある古期造山帯では 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="iron">鉄鉱石</option>
+                                <option value="coal">石炭</option>
+                                <option value="oil">原油</option>
+                            </select> 
+                            が多く産出される。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. オーストラリアにある巨大な一枚岩「ウルル（エアーズロック）」は、構造平野の地層が差別侵食を受けて形成された「ケスタ」の一種である。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 穴埋め -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 侵食平野の地形について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            卓状地のように地層が水平に堆積した地域に広がる「構造平野」では、軟らかい地層が削られ硬い地層が残る 
+                            <select class="blank-select" id="q5-a">
+                                <option value="">---</option>
+                                <option value="differential">差別侵食</option>
+                                <option value="weathering">風化作用</option>
+                            </select> 
+                            によって特徴的な地形ができる。例えば、台地状の 
+                            <select class="blank-select" id="q5-b">
+                                <option value="">---</option>
+                                <option value="mesa">メサ</option>
+                                <option value="butte">ビュート</option>
+                                <option value="cuesta">ケスタ</option>
+                            </select> 
+                            や、それがさらに削られて塔状になった 
+                            <select class="blank-select" id="q5-c">
+                                <option value="">---</option>
+                                <option value="mesa">メサ</option>
+                                <option value="butte">ビュート</option>
+                                <option value="cuesta">ケスタ</option>
+                            </select> 
+                            がある。また、フランスのパリ盆地のように、緩やかに傾斜した互層が削られて波状の斜面となった地形を 
+                            <select class="blank-select" id="q5-d">
+                                <option value="">---</option>
+                                <option value="mesa">メサ</option>
+                                <option value="butte">ビュート</option>
+                                <option value="cuesta">ケスタ</option>
+                            </select> 
+                            といい、ここでは水はけの良さを活かしたブドウ栽培が盛んである。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkBlank('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryBlank('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'stable', 'q1-b': 'old', 'q1-c': 'new' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>古い順から「安定陸塊（先カンブリア時代）」「古期造山帯（古生代）」「新期造山帯（中生代〜新生代）」です。新期ほど高くて険しい山地になります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>最も古い時代（先カンブリア時代）が「安定陸塊」、その次（古生代）が「古期造山帯」、新しい時代（中生代〜）が「新期造山帯」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'shield', 'q3-b': 'platform', 'q3-c': 'iron', 'q3-d': 'coal' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>安定陸塊のうち、古い岩盤がむき出しなのが「楯状地」、地層が重なっているのが「卓状地」です。資源との結びつきとして「安定陸塊＝鉄鉱石」「古期造山帯＝石炭」のセットを覚えておきましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>岩盤むき出しが「楯状地」です。資源は「安定陸塊で鉄鉱石」「古期造山帯で石炭」が頻出ポイントです。'
+            },
+            'q5': {
+                answers: { 'q5-a': 'differential', 'q5-b': 'mesa', 'q5-c': 'butte', 'q5-d': 'cuesta' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>硬さの違いによる「差別侵食」でできるのが特徴です。台地状の広いものが「メサ」、塔のように細いものが「ビュート」、パリ盆地のような波状の地形が「ケスタ」です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>硬さの違いで削られ方が変わるのが「差別侵食」です。台地状が「メサ」、塔状が「ビュート」、波状が「ケスタ」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q2': { 
+                correct: false, 
+                explanation: 'ウラル山脈やアパラチア山脈は、古生代に形成された<strong>「古期造山帯」</strong>です。数億年にわたる侵食を受けているため、<strong>なだらかな山地や丘陵</strong>となっています。'
+            },
+            'q4': { 
+                correct: false, 
+                explanation: 'ウルル（エアーズロック）はケスタではなく、準平原に硬い岩石が削り残されてできた<strong>「残丘（モナドノック）」</strong>です。ケスタはパリ盆地などが代表例です。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
