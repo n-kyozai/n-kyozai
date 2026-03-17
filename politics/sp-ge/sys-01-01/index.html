@@ -27,6 +27,8 @@
             line-height: 1.5;
             display: flex;
             min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden; /* モバイルでの横揺れ・意図せぬ画面拡大を防止 */
         }
 
         /* --- サイドバー（共通） --- */
@@ -98,16 +100,10 @@
         }
         .overlay.active { display: block; }
 
-        @media (max-width: 768px) {
-            .mobile-toggle-btn { display: flex; }
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.active { transform: translateX(0); }
-            .sidebar-header { padding-left: 60px; }
-        }
-
         /* --- メインコンテンツ --- */
         .main-content {
             flex: 1;
+            min-width: 0; /* Flexbox内で子要素によってはみ出さないようにする必須設定 */
             margin-left: var(--sidebar-width);
             min-height: 100vh;
             display: flex;
@@ -115,8 +111,16 @@
             transition: margin-left 0.3s ease;
             position: relative; /* FAB配置用 */
         }
+        
         @media (max-width: 768px) {
-            .main-content { margin-left: 0; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { 
+                margin-left: 0; 
+                width: 100%;
+            }
             .page-header { padding-left: 60px !important; }
         }
 
@@ -212,7 +216,9 @@
         /* --- 表のモバイルスクロール対応 --- */
         .table-container {
             width: 100%;
+            max-width: 100%;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
             margin-bottom: 16px;
             border: 1px solid #cbd5e1;
             border-radius: 4px;
@@ -250,7 +256,9 @@
             margin: 0 auto;
             font-size: 0.75rem;
             color: #64748b;
-            line-height: 180px;
+            padding: 20px;
+            line-height: 1.4; /* テキストが折り返した時のために調整 */
+            word-break: break-all; /* 長いURLやaltが突き抜けないように */
         }
         .img-caption {
             font-size: 0.75rem;
@@ -366,7 +374,7 @@
             font-weight: bold;
             font-size: 0.9rem;
             transition: background 0.2s;
-            display: none; /* 初期は非表示 */
+            display: none;
             align-items: center;
             gap: 6px;
         }
@@ -461,7 +469,7 @@
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
 
             <div class="nav-category">専門科目</div>
-            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+            <a href="/n-kyozai/politics/index.html" class="nav-item active"><i data-lucide="book-open"></i>専門科目</a>
         </nav>
     </aside>
 
@@ -521,7 +529,8 @@
                     <!-- GitHubアップロード用 画像プレースホルダー1 -->
                     <div class="img-placeholder-wrapper">
                         <img src="2026-03-17_12h24_06.png" alt="図1: プレート境界の種類と地形 (広がる・狭まる・ずれる) の断面図">
-                        
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
 
                     <h3>3. 地震と火山の分布</h3>
                     <ul>
@@ -796,7 +805,7 @@
                     // 正解の表示
                     resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
                 } else {
-                    // 不正解の表示（ユーザーの回答を取り消し線で表示し、正解を併記）
+                    // 不正解の表示
                     isAllCorrect = false;
                     resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
                 }
