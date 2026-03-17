@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>農畜産物 - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        /* 専門科目のactiveは外す */
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ (情報量凝縮) --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.85rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応の重要用語スタイル --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のモバイルスクロール対応 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.85rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.85rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <!-- 専門科目の active は外しています -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第3章 農林水産業 - 農畜産物
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 三大穀物（米・小麦・トウモロコシ）の特徴</h3>
+                    <p>世界の食料を支える三大穀物は、それぞれ栽培条件や利用目的が大きく異なります。特に入試では「<strong><span class="important-word">米と小麦の対比</span></strong>」が頻出です。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>作物</th>
+                                <th>栽培条件・特徴・用途</th>
+                                <th>主な生産国</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">米</span></strong></td>
+                                <td>生育に<strong><span class="important-word">高温多雨</span></strong>な環境が必要。<br>主に<strong><span class="important-word">モンスーンアジア</span></strong>（季節風の影響で夏に多雨）で栽培される。生産地＝消費地という<strong><span class="important-word">自給的</span></strong>な性格が強く、国際的な<strong><span class="important-word">貿易量が少ない</span></strong>（生産量の約1割未満）。</td>
+                                <td>1位：<strong><span class="important-word">中国</span></strong><br>2位：<strong><span class="important-word">インド</span></strong><br>（※この2か国で世界の半分を占める）</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">小麦</span></strong></td>
+                                <td>米に比べて<strong>冷涼・少雨</strong>でも育つため栽培範囲が<strong><span class="important-word">広い</span></strong>。<br>新大陸などでの<strong>商業的</strong>な生産（企業的穀物農業）が多く、主食として世界中で消費されるため、<strong><span class="important-word">貿易量が多い</span></strong>。</td>
+                                <td>1位：<strong><span class="important-word">中国</span></strong><br>2位：<strong><span class="important-word">インド</span></strong><br>3位：ロシア<br>4位：アメリカ</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">トウモロコシ</span></strong></td>
+                                <td>アメリカの<strong>コーンベルト</strong>などで大規模に生産される。食用だけでなく、家畜の<strong><span class="important-word">飼料</span></strong>や、自動車燃料となる<strong><span class="important-word">バイオエタノール</span></strong>の原料としての需要が大きい。</td>
+                                <td>1位：<strong><span class="important-word">アメリカ</span></strong><br>2位：中国<br>3位：ブラジル</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/major_crops_distribution.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>2. その他の主要な農作物</h3>
+                    <p>商品作物や大豆などの特徴と主産地も確認しておきましょう。</p>
+                    <ul>
+                        <li><strong><span class="important-word">大豆</span></strong>：アメリカ、ブラジル、アルゼンチンなどの新大陸で生産・輸出が多い。近年は<strong>遺伝子組み換え作物</strong>としての栽培も急増している。</li>
+                        <li><strong><span class="important-word">茶</span></strong>：水はけの良い傾斜地で栽培。中国やインドなどアジアでの生産が多い。</li>
+                        <li><strong><span class="important-word">コーヒー</span></strong>：水はけの良い<strong><span class="important-word">熱帯の高原</span></strong>で栽培される。<strong><span class="important-word">ブラジル</span></strong>、ベトナム、コロンビアなどが主産地。</li>
+                        <li><strong><span class="important-word">カカオ</span></strong>：赤道直下の<strong>高温多湿</strong>な環境を好む。アフリカの<strong><span class="important-word">コートジボワール</span></strong>やガーナが主産地。</li>
+                        <li><strong>砂糖の原料</strong>：熱帯では<strong><span class="important-word">サトウキビ</span></strong>（ブラジル、インド等）、冷涼な地域では<strong><span class="important-word">テンサイ</span></strong>（ロシア、フランス等）が栽培される。</li>
+                        <li><strong><span class="important-word">綿花</span></strong>：生育期に高温多雨、収穫期に乾燥が必要。インド、中国、アメリカが主産地。</li>
+                        <li><strong>天然ゴム</strong>：熱帯雨林気候で栽培。タイ、インドネシアなど東南アジアが中心。</li>
+                    </ul>
+
+                    <h3>3. 畜産と宗教の関わり</h3>
+                    <p>家畜の分布は、気候だけでなくその地域の「<strong><span class="important-word">宗教（食のタブー）</span></strong>」と強く結びついています。必ずセットで覚えましょう。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>家畜</th>
+                                <th>飼育国の特徴と宗教の関わり</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">牛</span></strong></td>
+                                <td>飼育頭数はブラジルと<strong><span class="important-word">インド</span></strong>が多い。しかし、インドの多数派である<strong><span class="important-word">ヒンドゥー教</span></strong>では牛を神聖視するため、肉として食べることは禁忌（タブー）であり、消費・生産は少ない。<br>（※牛肉の生産量1位はアメリカ）</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">豚</span></strong></td>
+                                <td>飼育頭数・肉生産量ともに<strong><span class="important-word">中国</span></strong>が圧倒的1位。<br>一方、<strong><span class="important-word">イスラーム教</span></strong>では豚は不浄なものとして禁忌（タブー）とされているため、中東などのイスラーム圏では飼育も消費も一切されない。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">羊</span></strong></td>
+                                <td>乾燥に強く<strong>粗食</strong>に耐えるため、主に<strong><span class="important-word">乾燥帯</span></strong>で遊牧などにより飼育される。中国のほか、<strong><span class="important-word">オーストラリア</span></strong>やニュージーランドでは人口よりも羊の頭数の方が多い。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー2 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/livestock_and_religion.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 三大穀物の特徴について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            米は生育に高温多雨な環境が必要であり、主に 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="monsoon_asia">モンスーンアジア</option>
+                                <option value="europe">ヨーロッパ</option>
+                            </select> 
+                            で生産される。生産地で消費される自給的性格が強いため、国際的な 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="trade_volume">貿易量</option>
+                                <option value="production">生産量</option>
+                            </select> 
+                            は少ない。一方、小麦は冷涼や少雨にも耐えるため栽培範囲が広く、商業的に生産されるため貿易量が 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="many">多い</option>
+                                <option value="few">少ない</option>
+                            </select> 
+                            。トウモロコシは主に家畜の 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="feed">飼料</option>
+                                <option value="staple_food">主食</option>
+                            </select> 
+                            やバイオエタノールの原料として利用され、アメリカなどが大生産国である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 主な商品作物について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            コーヒーは主に水はけの良い 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="tropical_highland">熱帯の高原</option>
+                                <option value="temperate_plain">温帯の平野</option>
+                            </select> 
+                            で栽培され、ブラジルなどが最大の生産国である。一方、カカオは赤道直下の高温多湿な環境を好み、アフリカの 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="cote_divoire">コートジボワール</option>
+                                <option value="kenya">ケニア</option>
+                            </select> 
+                            などが主要な生産国である。また、砂糖の原料として、熱帯地域では 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="sugarcane">サトウキビ</option>
+                                <option value="cacao">カカオ</option>
+                            </select> 
+                            が、冷涼な地域では 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="sugar_beet">テンサイ</option>
+                                <option value="natural_rubber">天然ゴム</option>
+                            </select> 
+                            が栽培される。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 畜産と宗教の関わりについて、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            インドでは 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="cow">牛</option>
+                                <option value="sheep">羊</option>
+                            </select> 
+                            の飼育頭数が世界トップクラスに多いが、これは多数派の宗教である 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="hinduism">ヒンドゥー教</option>
+                                <option value="buddhism">仏教</option>
+                            </select> 
+                            において神聖な動物とされているためであり、肉としてはあまり消費されない。一方、中国で圧倒的に多く飼育されている 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="pig">豚</option>
+                                <option value="horse">馬</option>
+                            </select> 
+                            は、中東などで信仰される 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="islam">イスラーム教</option>
+                                <option value="christianity">キリスト教</option>
+                            </select> 
+                            においては不浄なものとして禁忌（タブー）とされており、飼育も消費も行われない。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 稲作（米の栽培）は小麦に比べて栽培条件が厳しくないため世界中で広く行われており、生産地と消費地が大きく離れているため国際的な貿易量が非常に多いのが特徴である。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 羊は乾燥に強く粗食に耐えることができるため、主に乾燥帯での飼育が多く、オーストラリアやニュージーランドなどでは人間の人口よりも羊の飼育頭数の方が多い。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'monsoon_asia', 'q1-b': 'trade_volume', 'q1-c': 'many', 'q1-d': 'feed' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>米は高温多雨な「モンスーンアジア」で生産・消費が完結するため「貿易量が少ない」のが特徴です。逆に小麦は栽培範囲が広く、商業的に作られるため貿易量が「多い」です。トウモロコシは家畜の「飼料」や燃料としての利用が主です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>米と小麦の対比（アジアと新大陸、自給的と商業的、貿易量の少と多）は非常によく出題されます。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'tropical_highland', 'q2-b': 'cote_divoire', 'q2-c': 'sugarcane', 'q2-d': 'sugar_beet' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>コーヒーは「熱帯の高原」、カカオは「コートジボワール」などの高温多湿な低地が主産地です。砂糖の原料として熱帯の「サトウキビ」と冷涼な「テンサイ」の区別も重要です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>コーヒーは高原、カカオはコートジボワール・ガーナ。熱帯のサトウキビ、冷涼なテンサイという組み合わせを覚えましょう。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'cow', 'q3-b': 'hinduism', 'q3-c': 'pig', 'q3-d': 'islam' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>宗教との関わりは頻出です。インドでは「ヒンドゥー教」で「牛」が神聖視されます。「豚」は中国で圧倒的に多いですが、「イスラーム教」では不浄なものとして禁忌（タブー）とされています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>牛を神聖視するのがヒンドゥー教（インド）。豚を禁忌とするのがイスラーム教（中東など）です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: false, 
+                explanation: '米と小麦の特徴が<strong>逆</strong>になっています。<strong>米は栽培条件が厳しく（高温多湿）</strong>、主にアジアで自給的に生産されるため<strong>「貿易量が少ない」</strong>のが特徴です。広く栽培され貿易量が多いのは小麦です。'
+            },
+            'q5': { 
+                correct: true, 
+                explanation: 'その通りです。羊は乾燥した地域でも少量の草で生き延びることができるため、乾燥帯で広く飼育されています。オーストラリアやニュージーランドでは広大な土地を利用した羊の放牧が盛んです。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
