@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地形図の読図 - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ (情報量凝縮) --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.85rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応の重要用語スタイル --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のモバイルスクロール対応 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.85rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.85rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第1章 地形・地形図 - 地形図の読図
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 地形図と地理院地図</h3>
+                    <p>地形図は国土地理院が発行している地図で、主に<span class="important-word">1/25,000</span>や<span class="important-word">1/50,000</span>の縮尺が用いられます。<br>
+                    近年はインターネット上で閲覧できる電子国土基本図（地理院地図）が整備され、地図を切れ目なく表示（シームレス）でき、緯度・経度の座標データをもつため <strong><span class="important-word">GIS（地理情報システム）</span></strong> として防災や経済活動に幅広く活用されています。</p>
+
+                    <h3>2. 等高線</h3>
+                    <p>標高が等しい地点を結んだ線を<span class="important-word">等高線</span>といい、地形の高さや起伏を表します。<br>
+                    主曲線（細い実線）、計曲線（太い実線）、補助曲線（破線）の3種類があり、縮尺によって間隔が異なります。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>種類</th>
+                                <th>1/25,000地形図</th>
+                                <th>1/50,000地形図</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">主曲線</span></strong>（細線）</td>
+                                <td><strong><span class="important-word">10m</span></strong> ごと</td>
+                                <td><strong><span class="important-word">20m</span></strong> ごと</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">計曲線</span></strong>（太線）</td>
+                                <td><strong><span class="important-word">50m</span></strong> ごと</td>
+                                <td><strong><span class="important-word">100m</span></strong> ごと</td>
+                            </tr>
+                            <tr>
+                                <td>補助曲線（破線）</td>
+                                <td>5m（または2.5m）ごと</td>
+                                <td>10m（または5m）ごと</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/contour_lines.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <p><strong>【等高線の重要なルール】</strong></p>
+                    <ul>
+                        <li>閉曲線（閉じた等高線）の内側は周囲より標高が<strong>高い</strong>。（※内側が低い場合はケバ付きの凹地の記号が使われる）</li>
+                        <li>等高線の間隔が<strong>広いと緩傾斜</strong>、<strong>狭いと急傾斜</strong>。</li>
+                        <li><strong><span class="important-word">尾根</span></strong>：等高線が標高の<strong>高い方から低い方へ</strong>向かって屈曲している部分。（※山の出っ張り）</li>
+                        <li><strong><span class="important-word">谷</span></strong>：等高線が標高の<strong>低い方から高い方へ</strong>向かって屈曲している部分。（※水は尾根を越えず、低い方へ谷を流れ下る）</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー2 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/ridge_and_valley.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>3. 距離・面積・勾配の計算</h3>
+                    <ul>
+                        <li><strong>実際の距離</strong>：地図上の長さ × 縮尺の分母（例：1/25,000の地図上で4cmなら、4cm × 25,000 = 100,000cm = <span class="important-word">1,000m（1km）</span>）</li>
+                        <li><strong>実際の面積</strong>：(縦の実際距離) × (横の実際距離)。面積を出すときは必ず<strong>「実際の長さに直してから」掛け算</strong>すること。</li>
+                        <li><strong>平均勾配（傾斜）</strong>：<span class="important-word">比高（標高差）</span> ÷ <span class="important-word">水平距離</span></li>
+                    </ul>
+
+                    <h3>4. 重要な地図記号</h3>
+                    <p>基本的な記号の形と意味を区別できるようにしておきましょう。</p>
+                    <ul>
+                        <li><strong>役所</strong>：市役所（◎）、町村役場（〇）</li>
+                        <li><strong>警察・消防</strong>：警察署（〇の中に×）、交番（×）、消防署（〇の中にY）</li>
+                        <li><strong>学校</strong>：小・中学校（文）、高等学校（〇の中に文）</li>
+                        <li><strong>宗教</strong>：神社（鳥居）、寺院（卍）</li>
+                        <li><strong>植生・農地</strong>：針葉樹林（↑）、広葉樹林（丸い木）、果樹園（〇の中に点）、茶畑（∴）、桑畑（Y）</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー3 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/map_symbols.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>5. 読図の実践（土地利用から地形を推測する）</h3>
+                    <p>地形図を読む際は、等高線だけでなく「土地利用」からその場所の地形（水はけの良し悪しや水害リスク）を推測することが重要です。</p>
+                    <ul>
+                        <li><strong><span class="important-word">扇状地</span></strong>：山麓で等高線が扇状に広がる。水が伏流して得にくい<strong><span class="important-word">扇央</span></strong>には<strong>畑や果樹園</strong>が広がり、水が湧き出す<strong><span class="important-word">扇端</span></strong>には<strong>水田や集落</strong>が列状に並ぶことが多い。</li>
+                        <li><strong><span class="important-word">氾濫原</span></strong>：平坦な地形で河川が蛇行している。水害を避けやすい微高地の<strong><span class="important-word">自然堤防</span></strong>には<strong>集落や畑</strong>が分布し、水はけが悪い低湿地の<strong><span class="important-word">後背湿地</span></strong>には<strong>水田</strong>が広がる。また、過去の流路である<strong>旧河道</strong>沿いにも自然堤防の集落が残ることがある。</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー4 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/reading_maps.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 地形図の縮尺と等高線の間隔について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            2万5千分の1地形図において、標高を示す等高線のうち、細い実線で描かれる主曲線は 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="10">10m</option>
+                                <option value="20">20m</option>
+                                <option value="50">50m</option>
+                                <option value="100">100m</option>
+                            </select> 
+                            ごとに引かれ、太い実線で描かれる計曲線は 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="10">10m</option>
+                                <option value="20">20m</option>
+                                <option value="50">50m</option>
+                                <option value="100">100m</option>
+                            </select> 
+                            ごとに引かれる。一方、5万分の1地形図では、主曲線は 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="10">10m</option>
+                                <option value="20">20m</option>
+                                <option value="50">50m</option>
+                                <option value="100">100m</option>
+                            </select> 
+                            ごと、計曲線は 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="10">10m</option>
+                                <option value="20">20m</option>
+                                <option value="50">50m</option>
+                                <option value="100">100m</option>
+                            </select> 
+                            ごとになる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 正誤問題 -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 等高線が標高の高い方から低い方へ向かってV字型に屈曲している部分を「谷」といい、雨水はこの部分に集まって流れ下る。</div>
+                        <div class="tf-buttons" id="q2-opts">
+                            <button class="tf-btn" onclick="selectTF('q2', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q2', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkTF('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryTF('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 地形図の活用と距離の計算について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            地理院地図のように、位置情報をもつさまざまなデータを電子地図上で重ね合わせて分析や表示を行うシステムを 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="gps">GPS</option>
+                                <option value="gis">GIS</option>
+                                <option value="gnss">GNSS</option>
+                            </select> 
+                            という。また、2万5千分の1地形図において、地図上で4cm離れている2点間の実際の水平距離は 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="100m">100m</option>
+                                <option value="1km">1km</option>
+                                <option value="10km">10km</option>
+                            </select> 
+                            である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 地図記号において、市役所は「◎」、町村役場は「〇」で表される。また、警察署は「×」、交番は「〇の中に×」で表される。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 穴埋め -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 土地利用から地形を推測する方法について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            扇状地において、等高線の間隔が広く果樹園や畑の地図記号が多くみられる場所は、水が伏流して得にくい 
+                            <select class="blank-select" id="q5-a">
+                                <option value="">---</option>
+                                <option value="sen_ou">扇央</option>
+                                <option value="sentan">扇端</option>
+                            </select> 
+                            であると推測できる。一方、その下流側で集落が列状に並び水田が広がっている場所は、水が得やすい 
+                            <select class="blank-select" id="q5-b">
+                                <option value="">---</option>
+                                <option value="sen_ou">扇央</option>
+                                <option value="sentan">扇端</option>
+                            </select> 
+                            であると推測できる。また、平坦な氾濫原において、河川沿いや旧河道沿いに畑や集落が細長く続いている場所は、水害を避けやすい微高地である 
+                            <select class="blank-select" id="q5-c">
+                                <option value="">---</option>
+                                <option value="natural_levee">自然堤防</option>
+                                <option value="backswamp">後背湿地</option>
+                            </select> 
+                            であり、その周囲に広がる水田地帯は低湿な 
+                            <select class="blank-select" id="q5-d">
+                                <option value="">---</option>
+                                <option value="natural_levee">自然堤防</option>
+                                <option value="backswamp">後背湿地</option>
+                            </select> 
+                            であると推測できる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkBlank('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryBlank('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': '10', 'q1-b': '50', 'q1-c': '20', 'q1-d': '100' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>1/25,000地形図は主曲線が10m、計曲線が50mごと。1/50,000地形図は主曲線が20m、計曲線が100mごとです。「ニ(2)コッ(5)と(10)」という語呂合わせで覚えるのもおすすめです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>1/25,000は10mと50m間隔。1/50,000はその2倍で20mと100m間隔になります。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'gis', 'q3-b': '1km' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>地理情報システムは「GIS」です。計算は、4cm × 25,000 = 100,000cm。100cmが1mなので、下から0を2つ消して1,000m = 1kmとなります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>地図上でデータを重ねるシステムはGIS。距離は 4cm × 25,000 = 100,000cm = 1,000m = 1km と計算します。'
+            },
+            'q5': {
+                answers: { 'q5-a': 'sen_ou', 'q5-b': 'sentan', 'q5-c': 'natural_levee', 'q5-d': 'backswamp' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>地形図の問題では、「水を得にくい扇央＝畑」「水が得やすい扇端＝集落・水田」「水害を避けやすい自然堤防＝集落・畑」「水はけの悪い後背湿地＝水田」という土地利用の原則から地形を推測することが重要です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>扇状地の中央の畑が多い場所が「扇央」、末端の集落や水田が「扇端」です。平野部の微高地の集落が「自然堤防」、その周りの水田が「後背湿地」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q2': { 
+                correct: false, 
+                explanation: '等高線が標高の<strong>高い方から低い方へ</strong>向かって出っ張っている（屈曲している）部分は<strong>「尾根（山の出っ張り部分）」</strong>です。「谷」は、標高の低い方から高い方へ向かって屈曲している部分であり、ここに水が集まって川になります。'
+            },
+            'q4': { 
+                correct: false, 
+                explanation: '警察・消防の記号が<strong>逆</strong>です。大きな組織である警察署が「〇の中に×」、地域の交番が「×」です。市役所「◎」、町村役場「〇」は正しいです。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
