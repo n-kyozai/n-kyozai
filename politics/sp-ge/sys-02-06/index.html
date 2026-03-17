@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>植生・土壌 - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ (情報量凝縮) --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.85rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応の重要用語スタイル --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のモバイルスクロール対応 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.85rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.85rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第2章 気候・植生・土壌 - 植生・土壌
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 植生の基本</h3>
+                    <p>植生とは、ある地域を代表する植物の集まりのことです。気候（特に気温と降水量）によって大きく変わります。</p>
+                    <ul>
+                        <li><strong>樹林の有無</strong>：A（熱帯）、C（温帯）、D（亜寒帯/冷帯）の気候帯では樹木が育ちますが、極端に乾燥するB（乾燥帯）や寒冷なE（寒帯）では育ちません。</li>
+                        <li><strong>広葉樹と針葉樹</strong>：一般に、温暖な地域（低緯度や低地）では葉の広い<strong><span class="important-word">広葉樹</span></strong>が、冷涼な地域（高緯度や高地）では寒さに強い<strong><span class="important-word">針葉樹</span></strong>が中心となります。</li>
+                        <li><strong>常緑樹と落葉樹</strong>：一年中葉をつけているのが<strong><span class="important-word">常緑樹</span></strong>です。一方、極度の乾燥（乾季）や冬の厳しい寒さに耐えるために、ある時期に葉を落とす樹木が<strong><span class="important-word">落葉樹</span></strong>です。</li>
+                    </ul>
+
+                    <!-- 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/vegetation_types.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>2. 成帯土壌（気候の影響を強く受けた土壌）</h3>
+                    <p>気候と植生の影響を長期間受けて、気候帯に沿って帯状に広く分布する土壌を<strong><span class="important-word">成帯土壌</span></strong>といいます。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>土壌名</th>
+                                <th>分布する気候帯</th>
+                                <th>特徴・農業との関わり</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">黒色土</span></strong></td>
+                                <td>ステップ気候など<br>（適度な降水がある草原）</td>
+                                <td>枯れ草由来の腐植が厚く堆積した<strong>非常に肥沃</strong>な土壌。ウクライナ〜ロシア南部の<strong><span class="important-word">チェルノーゼム</span></strong>、北米の<strong><span class="important-word">プレーリー土</span></strong>、南米の<strong><span class="important-word">パンパ土</span></strong>が有名。世界的な<strong><span class="important-word">大規模小麦生産</span></strong>地帯となっている。（※やや乾燥が強い地域には栗色土が分布する）</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">褐色森林土</span></strong></td>
+                                <td>温帯</td>
+                                <td>落葉が適度に分解され腐植が堆積した暗褐色の肥沃な土壌。日本にも広く分布する。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">ポドゾル</span></strong></td>
+                                <td>亜寒帯（冷帯）</td>
+                                <td>低温で有機物の分解が進まず、酸によって養分（鉄やアルミニウム）が溶け出してしまった<strong><span class="important-word">灰白色</span></strong>の<strong><span class="important-word">強酸性</span></strong>土壌。農業には不向きな<strong>やせ土</strong>。※熱帯の赤い土（ラトソル）も同様にやせ土である。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ツンドラ土</strong></td>
+                                <td>寒帯</td>
+                                <td>寒冷で植生が乏しく有機物の分解が進まないため、多湿で強酸性の土壌。地下には長期間凍結している<strong><span class="important-word">永久凍土</span></strong>が広がる。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー2 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/zonal_soils.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>3. 間帯土壌（母岩の影響を強く受けた土壌）</h3>
+                    <p>気候の影響よりも、その土地の元々の岩石（<strong><span class="important-word">母岩</span></strong>）の性質を強く受け継ぎ、局地的に分布する土壌を<strong><span class="important-word">間帯土壌</span></strong>といいます。<br>
+                    石灰岩が風化してできた土壌（テラロッサなど）や、火山灰からできた土壌などがあり、地域特有の農作物栽培と深く結びついています。</p>
+
+                    <!-- 画像プレースホルダー3 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/chernozem_wheat.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 植生の基本について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            樹木の種類は気候によって異なり、温暖な地域では葉の広い 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="broadleaf">広葉樹</option>
+                                <option value="conifer">針葉樹</option>
+                            </select> 
+                            が、冷涼な地域では 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="broadleaf">広葉樹</option>
+                                <option value="conifer">針葉樹</option>
+                            </select> 
+                            が中心となる。また、厳しい乾季や冬の寒さから身を守るためにある時期に葉を落とす樹木を 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="deciduous">落葉樹</option>
+                                <option value="evergreen">常緑樹</option>
+                            </select> 
+                            といい、一年中葉をつけているものを 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="deciduous">落葉樹</option>
+                                <option value="evergreen">常緑樹</option>
+                            </select> 
+                            という。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 黒色土と農業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            適度な降水がある地域に広がる草原では、腐植が厚く堆積して肥沃な 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="black_soil">黒色土</option>
+                                <option value="chestnut_soil">栗色土</option>
+                            </select> 
+                            が形成される。代表例として、ウクライナ周辺の 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="chernozem">チェルノーゼム</option>
+                                <option value="latosol">ラトソル</option>
+                            </select> 
+                            や北米の 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="prairie">プレーリー土</option>
+                                <option value="pampa">パンパ土</option>
+                            </select> 
+                            があり、ここでは 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="wheat">小麦</option>
+                                <option value="rice">稲</option>
+                            </select> 
+                            の大規模な栽培が盛んである。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 正誤問題 -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 亜寒帯（冷帯）に分布するポドゾルは、低温のため有機物の分解が進まず、養分が溶け出してしまうため、灰白色をした強酸性の「やせ土」であり、農業には不向きである。</div>
+                        <div class="tf-buttons" id="q3-opts">
+                            <button class="tf-btn" onclick="selectTF('q3', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q3', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkTF('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryTF('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 穴埋め -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 褐色森林土とツンドラ土について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            温帯の森林地帯には、落葉が適度に分解されて腐植を多く含んだ肥沃な 
+                            <select class="blank-select" id="q4-a">
+                                <option value="">---</option>
+                                <option value="brown_forest">褐色森林土</option>
+                                <option value="podzol">ポドゾル</option>
+                            </select> 
+                            が分布し、日本にも広くみられる。一方、寒帯には寒冷で多湿な 
+                            <select class="blank-select" id="q4-b">
+                                <option value="">---</option>
+                                <option value="tundra">ツンドラ土</option>
+                                <option value="permafrost">永久凍土</option>
+                            </select> 
+                            が分布し、その地下には長期間凍結したままの 
+                            <select class="blank-select" id="q4-c">
+                                <option value="">---</option>
+                                <option value="permafrost">永久凍土</option>
+                                <option value="tundra">ツンドラ土</option>
+                            </select> 
+                            が広がっている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkBlank('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryBlank('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 気候の影響を長期間受けて帯状に広く分布する土壌を「間帯土壌」といい、特定の岩石（母岩）の性質を強く受けて局地的に分布する土壌を「成帯土壌」という。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'broadleaf', 'q1-b': 'conifer', 'q1-c': 'deciduous', 'q1-d': 'evergreen' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>温暖＝広葉樹、冷涼＝針葉樹。そして、乾燥や寒さから身を守るために葉を落とすのが落葉樹、年中葉があるのが常緑樹です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>暖かいと葉が広い（広葉樹）、寒いと針のよう（針葉樹）になります。厳しい環境下で葉を落とすのが落葉樹です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'black_soil', 'q2-b': 'chernozem', 'q2-c': 'prairie', 'q2-d': 'wheat' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>腐植が堆積した「黒色土」は超肥沃です。ウクライナの「チェルノーゼム」や北米の「プレーリー土」は、世界的な「小麦」の生産地帯となっています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>肥沃なのは黒色土。チェルノーゼムやプレーリー土は小麦の大規模栽培で頻出です。'
+            },
+            'q4': {
+                answers: { 'q4-a': 'brown_forest', 'q4-b': 'tundra', 'q4-c': 'permafrost' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>温帯の肥沃な土が「褐色森林土」です。寒帯の「ツンドラ土」の地下には、長期間凍りついた「永久凍土」が広がっています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>温帯は褐色森林土、寒帯はツンドラ土。凍りついた土壌が永久凍土です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q3': { 
+                correct: true, 
+                explanation: 'その通りです。亜寒帯のポドゾルは、灰白色をした強酸性の「やせ土」であり、農業には向きません。（※熱帯の赤い土「ラトソル」もやせ土であるため併せて覚えましょう）'
+            },
+            'q5': { 
+                correct: false, 
+                explanation: '用語の意味が<strong>逆</strong>です。気候帯に沿って広範囲に分布するのが「成帯（せいたい）土壌」、局地的な岩石（母岩）の性質を強く受けるのが「間帯（かんたい）土壌」です。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
