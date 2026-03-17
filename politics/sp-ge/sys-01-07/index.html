@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本の地形と災害 - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ (情報量凝縮) --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.85rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応の重要用語スタイル --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のモバイルスクロール対応 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.85rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.85rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第1章 地形・地形図 - 日本の地形と災害
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 日本の地形とプレート</h3>
+                    <p>日本列島付近は4つのプレートが接しており、地形が複雑で地震や火山活動が非常に活発な変動帯です。</p>
+                    <ul>
+                        <li><strong>海洋プレート</strong>：<span class="important-word">太平洋プレート</span>、<span class="important-word">フィリピン海プレート</span>。これらが大陸プレートの下に沈み込み、日本海溝や南海トラフ（海盆）などを形成しています。</li>
+                        <li><strong>大陸プレート</strong>：<span class="important-word">北アメリカプレート</span>、<span class="important-word">ユーラシアプレート</span>。</li>
+                        <li><strong>主な構造線</strong>：
+                            <ul>
+                                <li><strong><span class="important-word">フォッサマグナ</span></strong>（大地溝帯）：その西縁を<strong><span class="important-word">糸魚川・静岡構造線</span></strong>といい、東北日本と西南日本を区分します。</li>
+                                <li><strong><span class="important-word">中央構造線</span></strong>：西南日本を内帯（日本海側）と外帯（太平洋側）に区分する大断層帯です。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/japan_plates.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>2. 地震と火山</h3>
+                    <p>日本列島付近はプレート境界が密集しているため、地震が多発します。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>地震の種類</th>
+                                <th>メカニズムと特徴</th>
+                                <th>代表的な災害例</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">海溝型地震</span></strong></td>
+                                <td>海洋プレートの沈み込みで蓄積されたひずみが解放され、大陸プレートが跳ね上がる。<strong>大規模な津波</strong>を引き起こすことがある。</td>
+                                <td>2011年 東北地方太平洋沖地震（東日本大震災）</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">直下型地震</span></strong></td>
+                                <td>日本各地に存在する<strong><span class="important-word">活断層</span></strong>（将来も活動する可能性が高い断層）の動きによる。震源が浅く、直上の居住地域に甚大な被害をもたらす。</td>
+                                <td>1995年 兵庫県南部地震（阪神・淡路大震災）</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p>また、沈み込み帯では海溝から一定の距離離れた場所でマグマが発生します。この火山分布の海溝側の限界線を<strong><span class="important-word">火山前線（火山フロント）</span></strong>といいます。<br>
+                    ※そのため、火山前線より海溝側にある<strong>四国や紀伊半島には火山がありません</strong>。</p>
+                    <ul>
+                        <li><strong>火山災害</strong>：溶岩流、<span class="important-word">火砕流</span>、噴石のほか、火山灰による農作物の生育不良、交通阻害など。</li>
+                        <li><strong>二次災害</strong>：火山灰が積もった後の雨による<strong><span class="important-word">火山泥流</span></strong>や土石流、噴出物の海への流入による津波など。</li>
+                        <li><strong>対策</strong>：退避壕や、土石流を防ぐための<strong><span class="important-word">砂防ダム</span></strong>（堰堤）の建設。</li>
+                    </ul>
+
+                    <h3>3. 地形と災害（水害・土砂災害）</h3>
+                    <p>地形の性質により、発生しやすい災害が異なります。</p>
+                    <ul>
+                        <li><strong><span class="important-word">沖積平野</span></strong>：低湿で地盤が軟弱なため、地震の揺れが大きくなりやすく、水を含む砂層が液体化する<strong><span class="important-word">液状化現象</span></strong>（道路の陥没や建物の倒壊）が発生しやすい。特に<span class="important-word">後背湿地</span>、<span class="important-word">旧河道</span>、埋立地・干拓地で危険性が高い。</li>
+                        <li><strong>台地</strong>：地盤が強固で揺れにくく、周囲より標高が高いため浸水被害も受けにくい。（※ただし崖付近では土砂災害に注意）</li>
+                    </ul>
+
+                    <p>河川流域や沿岸部では、洪水や高潮、津波の被害に注意が必要です。</p>
+                    <ul>
+                        <li><strong><span class="important-word">高潮</span></strong>：強い低気圧（台風など）による<strong>吸い上げ効果</strong>と、強風による<strong>吹き寄せ効果</strong>によって高波が海岸を襲う現象。</li>
+                        <li><strong>水害対策の工夫</strong>：防潮堤や津波避難タワーの建設のほか、河川ではダムや連続堤防、わざと開口部を設けて洪水の勢いを逃がす<strong><span class="important-word">不連続堤防（霞堤）</span></strong>などがある。また、濃尾平野などでみられる、集落を堤防で囲んだ伝統的な<strong><span class="important-word">輪中（わじゅう）集落</span></strong>も有名。</li>
+                        <li><strong>土砂災害</strong>：山地周辺での崖崩れや地すべりのほか、谷に沿って水と土石が急速に流下する<strong><span class="important-word">土石流</span></strong>に注意が必要。</li>
+                    </ul>
+
+                    <!-- GitHubアップロード用 画像プレースホルダー2 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/disasters.png" alt="">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                    </div>
+
+                    <h3>4. 防災と減災</h3>
+                    <p>災害を防ぐ「防災」と、被害を最小限に抑える「減災」の考え方が重要です。</p>
+                    <ul>
+                        <li><strong><span class="important-word">ハザードマップ</span></strong>：自治体ごとに作成され、想定される災害の程度や範囲、避難場所や避難経路が掲載された地図。</li>
+                        <li>災害時には、自分の身は自分で守る「<strong><span class="important-word">自助</span></strong>」、地域で協力する「<strong><span class="important-word">共助</span></strong>」、公的な救助・支援である「<strong><span class="important-word">公助</span></strong>」の3つが重要視されています。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 日本の地形とプレートについて、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            日本列島の周辺では、海洋プレートである太平洋プレートや 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="philippine">フィリピン海プレート</option>
+                                <option value="eurasian">ユーラシアプレート</option>
+                                <option value="north_american">北アメリカプレート</option>
+                            </select> 
+                            が、大陸プレートの下に沈み込んでいる。また、日本列島には大きな断層帯があり、東北日本と西南日本を分けるフォッサマグナ（大地溝帯）の西側の縁を 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="itoigawa">糸魚川・静岡構造線</option>
+                                <option value="median">中央構造線</option>
+                            </select> 
+                            といい、西南日本を日本海側の内帯と太平洋側の外帯に分ける断層帯を 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="itoigawa">糸魚川・静岡構造線</option>
+                                <option value="median">中央構造線</option>
+                            </select> 
+                            という。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 地震の種類と被害について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            東日本大震災を引き起こした東北地方太平洋沖地震のように、海洋プレートの沈み込みによって蓄積されたひずみが解放されて起こる地震を 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="trench">海溝型地震</option>
+                                <option value="inland">直下型地震</option>
+                            </select> 
+                            といい、大規模な 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="tsunami">津波</option>
+                                <option value="liquefaction">液状化現象</option>
+                            </select> 
+                            を引き起こすことが多い。一方、阪神・淡路大震災のように、過去から繰り返し活動し将来も動く可能性が高い 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="active_fault">活断層</option>
+                                <option value="plate_boundary">プレート境界</option>
+                            </select> 
+                            が動くことで発生する地震を 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="trench">海溝型地震</option>
+                                <option value="inland">直下型地震</option>
+                            </select> 
+                            といい、震源が浅いため直上の地域に甚大な被害をもたらす。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 正誤問題 -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 日本列島周辺の沈み込み帯において、火山が分布する海溝側の限界線を「火山前線（火山フロント）」という。四国や紀伊半島はこの火山前線よりも海溝側に位置しているため、火山は存在しない。</div>
+                        <div class="tf-buttons" id="q3-opts">
+                            <button class="tf-btn" onclick="selectTF('q3', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q3', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkTF('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryTF('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 地震の際、水を含む砂層が揺れによって液体化する「液状化現象」は、地盤が強固で水はけが良い台地や扇状地の扇央部で発生しやすく、逆に低湿な沖積平野（後背湿地や旧河道）では発生しにくい。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 穴埋め -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 水害や土砂災害、防災の取り組みについて、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            台風などの強い低気圧が接近した際、気圧低下による吸い上げ効果と強風による吹き寄せ効果で海面が上昇し海岸を襲う現象を 
+                            <select class="blank-select" id="q5-a">
+                                <option value="">---</option>
+                                <option value="storm_surge">高潮</option>
+                                <option value="tsunami">津波</option>
+                            </select> 
+                            という。河川の洪水対策として、あえて堤防を開口させて水を逃がす 
+                            <select class="blank-select" id="q5-b">
+                                <option value="">---</option>
+                                <option value="open_levee">霞堤（不連続堤防）</option>
+                                <option value="waju">輪中</option>
+                            </select> 
+                            や、集落を堤防で囲む 
+                            <select class="blank-select" id="q5-c">
+                                <option value="">---</option>
+                                <option value="open_levee">霞堤（不連続堤防）</option>
+                                <option value="waju">輪中集落</option>
+                            </select> 
+                            などの工夫がみられる。また、山地周辺で谷に沿って水と土石が急速に流れ下る 
+                            <select class="blank-select" id="q5-d">
+                                <option value="">---</option>
+                                <option value="landslide">地すべり</option>
+                                <option value="debris_flow">土石流</option>
+                            </select> 
+                            を防ぐために、砂防ダム（堰堤）の建設が進められている。自治体が作成する、想定される災害範囲や避難場所を示した地図を 
+                            <select class="blank-select" id="q5-e">
+                                <option value="">---</option>
+                                <option value="topographic_map">地形図</option>
+                                <option value="hazard_map">ハザードマップ</option>
+                            </select> 
+                            という。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkBlank('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryBlank('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'philippine', 'q1-b': 'itoigawa', 'q1-c': 'median' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>沈み込んでいる海洋プレートは太平洋プレートと「フィリピン海プレート」です。東西を分けるのがフォッサマグナ西縁の「糸魚川・静岡構造線」、西南日本を内帯・外帯に分けるのが「中央構造線」です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>日本の南にあるのがフィリピン海プレート。東西を分断するのが糸魚川・静岡構造線、西南日本を縦断するのが中央構造線です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'trench', 'q2-b': 'tsunami', 'q2-c': 'active_fault', 'q2-d': 'inland' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>プレートが跳ね上がる「海溝型地震」は大規模な「津波」を伴います。「活断層」が動く「直下型地震」は震源が浅いため、都市の真下で起きると揺れが激しく大被害になります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>海のプレートの跳ね上がりが海溝型地震（津波の原因）、陸の活断層が動くのが直下型地震です。'
+            },
+            'q5': {
+                answers: { 'q5-a': 'storm_surge', 'q5-b': 'open_levee', 'q5-c': 'waju', 'q5-d': 'debris_flow', 'q5-e': 'hazard_map' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>低気圧による海面上昇を「高潮」といいます。洪水対策として堤防に切れ目を設ける「霞堤」や、集落を囲む「輪中」があります。谷を流下する「土石流」対策には砂防ダムが有効で、避難には「ハザードマップ」を活用します。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>低気圧によるのが高潮。切れ目がある堤防が霞堤、集落を囲むのが輪中。谷を流れる土砂が土石流、防災地図がハザードマップです。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q3': { 
+                correct: true, 
+                explanation: 'その通りです。プレートが海溝から沈み込み、マグマが発生する深さに達するまでの距離が必要なため、海溝のすぐ近く（火山前線より海側）には火山はできません。'
+            },
+            'q4': { 
+                correct: false, 
+                explanation: '発生しやすい場所が<strong>逆</strong>です。液状化現象は、水を含んだ軟弱な砂層で発生するため、低湿な<strong>沖積平野（後背湿地、旧河道、埋立地など）で発生しやすい</strong>です。台地は地盤が固く水はけが良いため、液状化は発生しにくいです。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
