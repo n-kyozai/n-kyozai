@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紛争・難民 - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のスタイル --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 500px;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+            line-height: 1.6;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- FAB --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="swords" style="color: var(--accent-color);"></i>
+                第10章 言語・宗教、紛争 - 紛争・難民
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. ヨーロッパと北米・中南米の紛争・対立</h3>
+                    <p>世界の紛争・対立問題は、**「対立の構図（宗教・言語など）」**と**「位置（地図上の場所）」**をセットで覚えることが重要です。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>紛争・対立名</th>
+                                <th>対立の構図と特徴</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">北アイルランド</span></strong>紛争</td>
+                                <td>イギリス領北アイルランドにおける、<strong><span class="important-word">カトリック</span></strong>系住民（アイルランドへの帰属を求める）と<strong><span class="important-word">プロテスタント</span></strong>系住民（イギリス残留を求める）の宗教対立。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">ベルギー</span></strong>の言語対立</td>
+                                <td>北部（フランデレン地域）の<strong><span class="important-word">オランダ語</span></strong>系住民と、南部（ワロン地域）の<strong><span class="important-word">フランス語</span></strong>系住民の対立。</td>
+                            </tr>
+                            <tr>
+                                <td>旧<strong><span class="important-word">ユーゴスラビア</span></strong>紛争</td>
+                                <td>複数の民族・宗教が共存する連邦国家だったが、1990年代の冷戦終結に伴い各民族が分離独立を宣言し、激しい内戦となった。（例：ボスニア・ヘルツェゴビナ紛争）</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">ウクライナ</span></strong>問題</td>
+                                <td>2014年のロシアによるクリミア半島併合や、2022年以降のロシアの軍事侵攻による争い。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">ケベック州</span></strong>独立問題</td>
+                                <td>カナダ（国全体ではイギリス系が多数）において、フランス系住民が多数を占めるケベック州が独立を求めている問題。（公用語は英語と<strong><span class="important-word">フランス語</span></strong>）</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>2. アジア・中東の紛争・対立</h3>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>紛争・対立名</th>
+                                <th>対立の構図と特徴</th>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">パレスチナ</span></strong>問題</td>
+                                <td>聖地エルサレム周辺をめぐる、建国を宣言したイスラエル（<strong><span class="important-word">ユダヤ人</span></strong>）と、先住の<strong><span class="important-word">アラブ人</span></strong>諸国・パレスチナ人との長年の対立。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">クルド人</span></strong>問題</td>
+                                <td>トルコ・イラク・イランなどの国境地帯にまたがって居住する民族。自治・独立を要求しているが各国から厳しく弾圧され、難民も発生。<strong>「国家を持たない最大の民族」</strong>と呼ばれる。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">カシミール</span></strong>紛争</td>
+                                <td>1947年のイギリスからの分離独立以降続く、国境付近のカシミール地方の帰属をめぐる<strong><span class="important-word">インド</span></strong>（ヒンドゥー教）と<strong><span class="important-word">パキスタン</span></strong>（イスラーム）の激しい対立。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">スリランカ</span></strong>内戦</td>
+                                <td>多数派の<strong><span class="important-word">シンハラ人</span></strong>（仏教）と、少数派の<strong><span class="important-word">タミル人</span></strong>（ヒンドゥー教）による内戦（2009年に終結）。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">マレーシア</span></strong>の民族対立</td>
+                                <td>人口の2割である華人（中国系）が経済的優位に立っていることに対し、人口の6割を占める<strong><span class="important-word">マレー人</span></strong>（イスラーム）が反発。マレー人を優遇する<strong><span class="important-word">ブミプトラ政策</span></strong>がとられた。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>3. アフリカの紛争と難民問題</h3>
+                    <ul>
+                        <li><strong><span class="important-word">ルワンダ</span></strong>内戦：多数派の<strong><span class="important-word">フツ族</span></strong>と少数派の<strong><span class="important-word">ツチ族</span></strong>による激しい内戦と大虐殺（1990年代）。</li>
+                        <li><strong><span class="important-word">スーダン</span></strong>内戦：北部の<strong><span class="important-word">アラブ</span></strong>（イスラーム）系政府と、南部の非アラブ（キリスト教や土着宗教）系住民の対立。2011年に<strong>南スーダン</strong>が独立したが、その後も油田などを巡り対立。</li>
+                        <li><strong><span class="important-word">アパルトヘイト</span></strong>（南アフリカ）：少数の<strong>白人</strong>による黒人などの有色人種に対する隔離（差別）政策。1991年に廃止されたが、現在も経済格差などの問題が残る。</li>
+                    </ul>
+
+                    <!-- 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/world_conflicts_map.png" alt="世界の主な紛争地域マップ">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。（世界の主な紛争地域をプロットした地図）</div>
+                    </div>
+
+                    <h4>【難民問題について】</h4>
+                    <ul>
+                        <li><strong>難民とは</strong>：人種、宗教、政治的主張などの理由で迫害を受ける恐れがあり、他国へ逃れている人々のこと。</li>
+                        <li><strong>難民の発生地</strong>：シリア、アフガニスタン、ウクライナ、南スーダンなど、<strong>内戦や紛争により国内情勢が不安定な国</strong>で発生数が多い。</li>
+                        <li><strong>難民の受け入れ地</strong>：難民は身の安全を優先するため、トルコやイラン、ウガンダなど、<strong>難民発生国の「<span class="important-word">隣国</span>」での受け入れが非常に多い</strong>のが特徴です。また、ドイツやフランスなどのヨーロッパの経済大国への流入も多いです。</li>
+                    </ul>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. ヨーロッパと北米の対立について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            イギリスの北アイルランドでは 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="protestant">プロテスタント</option>
+                                <option value="islam">イスラーム</option>
+                            </select> 
+                            系住民とカトリック系住民の対立が続いてきた。ベルギーでは北部の 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="dutch">オランダ語</option>
+                                <option value="german">ドイツ語</option>
+                            </select> 
+                            系住民と南部のフランス語系住民の対立がある。また、カナダのケベック州では、 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="french">フランス系</option>
+                                <option value="english">イギリス系</option>
+                            </select> 
+                            の住民が多数を占めており、独立問題が存在する。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. アジアの対立について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            カシミール地方の帰属をめぐっては、ヒンドゥー教徒が多い 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="india">インド</option>
+                                <option value="china">中国</option>
+                            </select> 
+                            と、イスラーム教徒が多いパキスタンが激しく対立している。スリランカでは多数派の 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="sinhalese">シンハラ人</option>
+                                <option value="tamil">タミル人</option>
+                            </select> 
+                            （仏教）と少数派のタミル人（ヒンドゥー教）による内戦が起きた。マレーシアでは、マレー人を優遇する 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="bumiputera">ブミプトラ政策</option>
+                                <option value="apartheid">アパルトヘイト</option>
+                            </select> 
+                            がとられている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. アフリカの対立と難民について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ルワンダでは、多数派のフツ族と少数派の 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="tutsi">ツチ族</option>
+                                <option value="ibo">イボ族</option>
+                            </select> 
+                            による激しい内戦が起きた。南アフリカ共和国で行われていた白人による人種隔離政策を 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="apartheid">アパルトヘイト</option>
+                                <option value="bumiputera">ブミプトラ</option>
+                            </select> 
+                            という。また、内戦などで発生した難民の受け入れ先を見ると、難民は身の安全を優先するため、難民発生国の 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="neighbor">隣国</option>
+                                <option value="island">島国</option>
+                            </select> 
+                            に逃れるケースが非常に多い。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 中東に広く居住するクルド人は、長年の独立運動の末に独自の国家を建国し、現在は国際連合にも加盟している。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 世界の難民の受け入れ先を見ると、難民は身の安全を優先してまずは陸続きの近隣諸国へ逃れるため、難民発生国の「隣国」での受け入れ数が多い傾向がある。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'protestant', 'q1-b': 'dutch', 'q1-c': 'french' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>紛争問題は「どこで・誰と誰が対立しているか」をセットで覚えます。北アイルランドの宗教対立、ベルギーの言語対立、ケベック州のフランス系住民問題は頻出です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>北アイルランドはカトリックと「プロテスタント」、ベルギー北部は「オランダ語」系、カナダのケベック州は「フランス系」住民の問題です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'india', 'q2-b': 'sinhalese', 'q2-c': 'bumiputera' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>カシミールはインドとパキスタン。スリランカはシンハラ人とタミル人。マレーシアのマレー人優遇策は「ブミプトラ政策」です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>カシミール紛争は「インド」とパキスタンの対立です。スリランカの多数派は「シンハラ人」。マレーシアの優遇政策は「ブミプトラ政策」といいます。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'tutsi', 'q3-b': 'apartheid', 'q3-c': 'neighbor' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ルワンダのツチ族とフツ族、南アフリカのアパルトヘイトは歴史的にも重要です。難民が真っ先に逃れるのが「隣国」であることもテストでよく狙われます。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>ルワンダ内戦はフツ族と「ツチ族」。南アフリカの隔離政策は「アパルトヘイト」です。難民の受け入れ先は、発生国の「隣国」に集中します。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: false, 
+                explanation: 'クルド人は、トルコやイラク、イランなどにまたがって約3000万人以上が居住していますが、<strong>独自の国家を持っていません</strong>。そのため「国家を持たない最大の民族」と呼ばれ、各国で弾圧を受けながら自治・独立を求めています。'
+            },
+            'q5': { 
+                correct: true, 
+                explanation: 'その通りです。難民は遠く離れた先進国へ逃げる余裕がない場合が多く、命を守るためにまずは陸続きの隣接する国（トルコやイラン、パキスタン、ウガンダなど）へ逃れるため、隣国での受け入れ数が非常に多くなります。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
