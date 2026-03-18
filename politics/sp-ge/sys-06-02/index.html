@@ -21,7 +21,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
-            -webkit-text-size-adjust: 100%; /* スマホでの文字サイズの自動拡大・縮小を強力に防止 */
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
@@ -77,7 +77,6 @@
         }
         .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
         .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
-        /* 専門科目のactiveは外す仕様 */
         .nav-item.active {
             color: var(--accent-color);
             background-color: #e0f2fe;
@@ -124,6 +123,7 @@
             .sidebar-header { padding-left: 60px; }
             .main-content { margin-left: 0; width: 100%; }
             .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
         }
 
         .page-header {
@@ -147,8 +147,8 @@
         }
 
         .container {
-            width: 95%; max-width: 1000px;
-            margin: 0 auto; padding: 24px 0; flex: 1;
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
         }
 
         /* --- セクションボックス --- */
@@ -172,20 +172,14 @@
             gap: 8px;
         }
 
-        /* --- まとめコンテンツ (情報量凝縮) --- */
-        /* ★フォントサイズ統一のための設定★ */
+        /* --- まとめコンテンツ --- */
         .summary-content {
             padding: 20px;
-            font-size: 0.9rem; /* ベースの文字サイズを少し大きくして視認性アップ */
+            font-size: 0.85rem; 
             line-height: 1.7;
         }
-        /* 本文の段落やリスト、表のセルをすべて1em(親要素の0.9rem)に統一 */
-        .summary-content p, .summary-content li, .data-table th, .data-table td {
-            font-size: 1em; 
-        }
-
         .summary-content h3 {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--accent-color);
             border-bottom: 2px solid #e0f2fe;
             padding-bottom: 4px;
@@ -199,7 +193,12 @@
         }
         .summary-content li { margin-bottom: 6px; }
         
-        /* --- 暗記モード対応の重要用語スタイル --- */
+        /* 本文と表内のフォントサイズを統一 */
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        /* --- 暗記モード --- */
         .important-word {
             font-weight: bold;
             color: #b91c1c;
@@ -219,7 +218,7 @@
             background-color: #fee2e2;
         }
 
-        /* --- 表のモバイルスクロール対応 --- */
+        /* --- 表のレイアウト最適化 --- */
         .table-container {
             width: 100%;
             max-width: 100%;
@@ -231,20 +230,31 @@
         }
         .data-table {
             width: 100%;
-            min-width: 500px;
+            min-width: 600px; /* ある程度の横幅を確保して縦長化を防ぐ */
             border-collapse: collapse;
         }
         .data-table th, .data-table td {
             border: 1px solid #cbd5e1;
-            padding: 8px 10px;
+            padding: 10px 12px;
             text-align: left;
             border-top: none;
             border-left: none;
             line-height: 1.6;
+            vertical-align: top;
         }
         .data-table th:last-child, .data-table td:last-child { border-right: none; }
         .data-table tr:last-child td { border-bottom: none; }
-        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+        .data-table th { 
+            background: #f1f5f9; 
+            color: var(--primary-color); 
+            white-space: nowrap; 
+        }
+        
+        /* 文章が入る列に最小幅を設定して縦に間延びさせない */
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
 
         /* --- 画像プレースホルダー --- */
         .img-placeholder-wrapper {
@@ -278,12 +288,12 @@
         .quiz-container { padding: 20px; }
         .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
         .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
         
-        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
         select.blank-select {
             padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
-            background: white; font-size: 0.9rem; color: var(--primary-color);
+            background: white; font-size: 0.85rem; color: var(--primary-color);
             outline: none; cursor: pointer; margin: 0 4px;
         }
         select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
@@ -298,13 +308,13 @@
             background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
             border-bottom: 2px solid var(--incorrect-color);
         }
-        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
         .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
 
         .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
         .tf-btn {
             padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
-            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
             font-weight: bold; color: #64748b; transition: all 0.2s;
             flex: 1; max-width: 150px;
         }
@@ -326,7 +336,7 @@
 
         .feedback {
             margin-top: 16px; padding: 12px 16px; border-radius: 6px;
-            font-size: 0.9rem; display: none; line-height: 1.6;
+            font-size: 0.85rem; display: none; line-height: 1.6;
         }
         .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
         .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
@@ -379,7 +389,6 @@
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
 
             <div class="nav-category">専門科目</div>
-            <!-- 専門科目の active は外しています -->
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
         </nav>
     </aside>
@@ -410,31 +419,34 @@
                         <table class="data-table">
                             <tr>
                                 <th>段階</th>
-                                <th>出生・死亡率と人口の推移</th>
-                                <th>該当する国・地域の例</th>
+                                <th class="col-text">出生・死亡率と人口の推移</th>
+                                <th class="col-text">該当する国・地域の例</th>
                             </tr>
                             <tr>
                                 <td><strong><span class="important-word">多産多死</span></strong>型</td>
-                                <td>出生率・死亡率（特に乳幼児）ともに高く、人口はあまり増えない。</td>
-                                <td>かつてのアジア・アフリカなど。<br>※現在これに該当する国はほぼない。</td>
+                                <td class="col-text">出生率・死亡率（特に乳幼児）ともに高く、人口はあまり増えない。</td>
+                                <td class="col-text">かつてのアジア・アフリカなど。<br>※現在これに該当する国はほぼない。</td>
                             </tr>
                             <tr>
                                 <td><strong><span class="important-word">多産少死</span></strong>型</td>
-                                <td>医療・衛生状態の改善で<strong>死亡率が低下</strong>するが、出生率は高いまま。自然増加率が高くなり「<strong><span class="important-word">人口爆発</span></strong>」が起こる。</td>
-                                <td>戦後の<strong><span class="important-word">発展途上国</span></strong>の多くが該当。</td>
+                                <td class="col-text">医療・衛生状態の改善で<strong>死亡率が低下</strong>するが、出生率は高いまま。自然増加率が高くなり「<strong><span class="important-word">人口爆発</span></strong>」が起こる。</td>
+                                <td class="col-text">戦後の<strong><span class="important-word">発展途上国</span></strong>の多くが該当。</td>
                             </tr>
                             <tr>
                                 <td><strong><span class="important-word">少産少死</span></strong>型</td>
-                                <td>女性の高学歴化や社会進出、家族計画の普及などにより<strong>出生率も低下</strong>する。人口増加は緩やかになる（または減少に転じる）。</td>
-                                <td>欧米や日本などの<strong><span class="important-word">先進国</span></strong>。</td>
+                                <td class="col-text">女性の高学歴化や社会進出、家族計画の普及などにより<strong>出生率も低下</strong>する。人口増加は緩やかになる（または減少に転じる）。</td>
+                                <td class="col-text">欧米や日本などの<strong><span class="important-word">先進国</span></strong>。</td>
                             </tr>
                         </table>
                     </div>
 
                     <!-- 画像プレースホルダー1 -->
                     <div class="img-placeholder-wrapper">
-                        <img src="./images/demographic_transition.png" alt="">
-                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                        <img src="2026-03-19_00h48_24.png" alt="">
+                    </div>
+                    <!-- 画像プレースホルダー2 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="2026-03-19_00h48_39.png" alt="">
                     </div>
 
                     <h3>2. 人口ピラミッドの３つの型</h3>
@@ -445,10 +457,13 @@
                         <li><strong><span class="important-word">つぼ</span>型</strong>：少産少死がさらに進み、「<strong><span class="important-word">少子高齢化</span></strong>」となった状態。年少人口が少なく、老年人口（65歳以上）の割合が高い。<strong><span class="important-word">日本</span></strong>やドイツ、イタリアなどが典型。</li>
                     </ul>
 
-                    <!-- 画像プレースホルダー2 -->
+                    <!-- 画像プレースホルダー3 -->
                     <div class="img-placeholder-wrapper">
-                        <img src="./images/population_pyramids.png" alt="">
-                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。</div>
+                        <img src="2026-03-19_00h48_54.png" alt="">
+                    </div>
+                    <!-- 画像プレースホルダー4 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="2026-03-19_00h49_05.png" alt="">
                     </div>
 
                     <h3>3. 発展途上国と先進国の人口問題</h3>
@@ -466,6 +481,10 @@
                         <li><strong>課題</strong>：<strong><span class="important-word">生産年齢人口</span></strong>（15〜64歳、働き手となる人口）が減少し、深刻な労働力不足に陥ります。また、社会保障費（年金や医療費）の負担増も課題です。</li>
                         <li><strong>対策</strong>：労働力不足を補うため、ヨーロッパなどの多くの先進国では<strong><span class="important-word">外国人労働者</span></strong>（移民）の受け入れが進められています。</li>
                     </ul>
+                    <!-- 画像プレースホルダー5 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="2026-03-19_00h49_16.png" alt="">
+                    </div>
 
                 </div>
             </section>
