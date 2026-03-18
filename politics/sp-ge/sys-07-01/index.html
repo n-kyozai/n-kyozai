@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>村落・都市の形態・機能 - 系統地理編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 95%; max-width: 1000px;
+            margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のスタイル --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .data-table {
+            width: 100%;
+            min-width: 500px;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            border-top: none;
+            border-left: none;
+            line-height: 1.6;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- FAB --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 系統地理編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="building" style="color: var(--accent-color);"></i>
+                第7章 村落・都市 - 形態・機能
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 村落の形態（分類）</h3>
+                    <p>農林水産業を基盤とした集落である「村落」は、家屋の並び方によって<strong>集村</strong>と<strong>散村</strong>に大きく分けられます。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>分類</th>
+                                <th>形態名</th>
+                                <th>特徴・代表例</th>
+                            </tr>
+                            <tr>
+                                <td rowspan="3"><strong><span class="important-word">集村</span></strong><br>（家屋が集まる）</td>
+                                <td><strong><span class="important-word">塊村</span></strong></td>
+                                <td>自然発生的で塊状。共同での農作業や防御に適する。日本の古代の条里集落など。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">円村</span></strong></td>
+                                <td>教会や広場を中心に円状に並ぶ。防御機能あり。ヨーロッパで発達（日本にはない）。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">列村</span></strong></td>
+                                <td>道路や河川沿いに列状に並ぶ。道路沿いの<strong><span class="important-word">路村</span></strong>（林地村や新田集落など）や、商業機能の強い<strong>街村</strong>（門前町・宿場町）などがある。</td>
+                            </tr>
+                            <tr>
+                                <td><strong><span class="important-word">散村</span></strong><br>（家屋が分散）</td>
+                                <td><strong>散村</strong></td>
+                                <td>家屋の近くに広い農地を持てる。アメリカ・カナダや北海道の開拓地、および風雨を防ぐ<strong><span class="important-word">屋敷林</span></strong>（防風林）で有名な<strong><span class="important-word">砺波平野</span></strong>（富山県）が代表的。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>2. 日本の村落（歴史的背景による分類）</h3>
+                    <p>日本の村落は、それが「いつの時代」に「どのような背景」で形成されたかによって分類されます。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th>時代</th>
+                                <th>集落名</th>
+                                <th>特徴</th>
+                            </tr>
+                            <tr>
+                                <td>古代</td>
+                                <td><strong><span class="important-word">条里集落</span></strong></td>
+                                <td>条里制に基づく。<strong><span class="important-word">直交型（碁盤目状）</span></strong>の地割で、塊村が多い。「〜条」という地名が残る。</td>
+                            </tr>
+                            <tr>
+                                <td>中世</td>
+                                <td><strong><span class="important-word">環濠集落</span></strong></td>
+                                <td>戦乱期に外敵から守るため、周囲を濠（ほり）で囲んだ防御的な集落。</td>
+                            </tr>
+                            <tr>
+                                <td>近世（江戸）</td>
+                                <td><strong><span class="important-word">新田集落</span></strong></td>
+                                <td>人口増加に伴う開拓。台地上の武蔵野台地（<strong>三富新田</strong>など）が有名で、<strong><span class="important-word">路村</span></strong>の代表例。「〜新田」の地名が残る。</td>
+                            </tr>
+                            <tr>
+                                <td>近代（明治以降）</td>
+                                <td><strong><span class="important-word">屯田兵村</span></strong></td>
+                                <td>北海道の防衛と開拓のために設置。北米の<strong><span class="important-word">タウンシップ制</span></strong>を取り入れた、直交型の計画的な地割が特徴。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー1 -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/village_types.png" alt="集落分類の図解">
+                        <div class="img-caption">※ Githubに画像をアップロードし、srcパスを調整してください。（路村、林地村、散村などの形態図）</div>
+                    </div>
+
+                    <h3>3. 都市の形態（城郭・街路網）</h3>
+                    <ul>
+                        <li><strong><span class="important-word">城塞都市</span></strong>：市街地を城壁で囲んだ都市。外敵との争いが激しかったヨーロッパや中国に多い。</li>
+                        <li><strong><span class="important-word">城下町</span></strong>：近世日本の県庁所在地の起源。防御のための<strong>屈曲路や丁字路</strong>、身分による<strong>町割</strong>（武家町、町人町など）が特徴。</li>
+                    </ul>
+                    <p><strong>【街路網のパターン】</strong></p>
+                    <ul>
+                        <li><strong><span class="important-word">直交路型</span></strong>：京都、札幌、ニューヨーク、北京など（碁盤目状）。</li>
+                        <li><strong><span class="important-word">放射直交路型</span></strong>：ワシントンD.C.。</li>
+                        <li><strong><span class="important-word">放射環状路型</span></strong>：パリ、モスクワ、キャンベラなど。</li>
+                        <li><strong><span class="important-word">迷路型</span></strong>：西アジアや北アフリカの<strong><span class="important-word">旧市街地</span></strong>（イスラーム都市にみられる自然発生的な複雑な街路）。</li>
+                    </ul>
+
+                    <h3>4. 機能別の都市分類</h3>
+                    <p>都市が持つ特別な機能による分類です。代表的なものを覚えておきましょう。</p>
+                    <ul>
+                        <li><strong>政治都市</strong>：キャンベラ、ブラジリア、ワシントンD.C.</li>
+                        <li><strong>宗教都市</strong>：エルサレム、メッカ、ヴァラナシ、ラサ</li>
+                        <li><strong>学術都市</strong>：オックスフォード、ケンブリッジ、ハイデルベルク</li>
+                        <li><strong>工業都市</strong>：デトロイト、豊田（愛知）</li>
+                    </ul>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 村落の形態について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            家屋が密集する集村のうち、自然発生的に塊状に集まったものを 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="kaison">塊村</option>
+                                <option value="enson">円村</option>
+                            </select> 
+                            といい、道路沿いなどに並ぶものを列村という。林地村や新田集落は列村のうちの 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="roson">路村</option>
+                                <option value="gaison">街村</option>
+                            </select> 
+                            に分類される。一方、家屋が分散している形態を 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="sanson">散村</option>
+                                <option value="shuson">集村</option>
+                            </select> 
+                            といい、富山県の砺波平野などが有名である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 日本の村落の歴史的分類について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            古代に形成された、直交型の地割が特徴の集落を 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="jori">条里集落</option>
+                                <option value="kango">環濠集落</option>
+                            </select> 
+                            という。江戸時代には台地などに 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="shinden">新田集落</option>
+                                <option value="tondenhei">屯田兵村</option>
+                            </select> 
+                            が多く開拓された。明治時代以降は、北海道の開拓と防衛のために 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="shinden">新田集落</option>
+                                <option value="tondenhei">屯田兵村</option>
+                            </select> 
+                            が設置され、北米のタウンシップ制を取り入れた直交型の地割が特徴である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 都市の形態について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            日本の多くの県庁所在地の起源となっている 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="jyokamachi">城下町</option>
+                                <option value="jyosaitoshi">城塞都市</option>
+                            </select> 
+                            は、防御のための屈曲路や身分による町割が特徴である。街路網のパターンとして、パリやモスクワ、キャンベラなどは 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="chokko">直交路型</option>
+                                <option value="hosha_kanjo">放射環状路型</option>
+                            </select> 
+                            である。また、西アジアのイスラーム都市の旧市街地には 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="meiro">迷路型</option>
+                                <option value="hosha_chokko">放射直交路型</option>
+                            </select> 
+                            の複雑な街路が多くみられる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 富山県の砺波（となみ）平野にみられる散村では、風雨の影響を避けるために家屋の周囲に「屋敷林」と呼ばれる防風林が設けられていることが多い。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 西アジアや北アフリカの都市でよくみられる「迷路型」の複雑な街路は、近代以降に計画的に建設された新市街地に共通してみられる特徴である。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'kaison', 'q1-b': 'roson', 'q1-c': 'sanson' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>塊状に集まるのが「塊村」、道沿いに並ぶのが「路村」、家が点在するのが「散村」です。それぞれの特徴と代表例を結びつけて覚えましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>自然発生的に集まるのは「塊村」、新田集落などの道沿いの集落は「路村」、家がバラバラにあるのは「散村」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'jori', 'q2-b': 'shinden', 'q2-c': 'tondenhei' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>古代＝条里集落、江戸＝新田集落、明治＝屯田兵村という時代の流れと名称をしっかり押さえておきましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>古代は「条里集落」、江戸時代は台地等を開拓した「新田集落」、明治以降の北海道は「屯田兵村」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'jyokamachi', 'q3-b': 'hosha_kanjo', 'q3-c': 'meiro' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>城下町は防衛のための複雑な道や町割が特徴。パリなどは放射環状路型、イスラームの旧市街地は迷路型になります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>日本の県庁所在地の起源の多くは「城下町」です。パリ等は「放射環状路型」、イスラームの古い街並みは「迷路型」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: true, 
+                explanation: 'その通りです。散村は家と家の間が離れているため風の影響を受けやすく、砺波平野では家の周りに「屋敷林」を植えて防風林としています。'
+            },
+            'q5': { 
+                correct: false, 
+                explanation: '「新市街地」ではなく、歴史的に古くからある<strong>「旧市街地」</strong>の特徴です。近代以降に計画的に建設された新市街地は、整然とした街路網を持つのが一般的です。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
