@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白地図まとめ - 世界史 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #334155; 
+            --accent-color: #0369a1;  
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px; font-size: 0.95rem; font-weight: bold;
+            color: var(--primary-color); border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; padding: 6px 16px;
+            color: #64748b; text-decoration: none; transition: all 0.2s; font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color); background-color: #e0f2fe;
+            font-weight: bold; border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none; position: fixed; top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px; background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color); align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px !important; }
+        }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+            display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+        }
+        .page-header {
+            background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 24px;
+        }
+        .breadcrumb { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; color: var(--accent-color); }
+
+        .container {
+            width: 95%; max-width: 1000px; margin: 0 auto; padding: 24px 0; flex: 1;
+        }
+
+        /* --- 目次リストスタイル --- */
+        .chapter-block {
+            background: white; border-radius: 8px; box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0; margin-bottom: 20px; overflow: hidden;
+        }
+        .chapter-header {
+            background: #f8fafc; padding: 12px 16px; font-size: 0.85rem;
+            font-weight: bold; color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0; border-left: 4px solid var(--accent-color);
+        }
+        .items-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; padding: 16px;
+        }
+        .list-item {
+            display: flex; align-items: center; padding: 10px 14px;
+            border: 1px solid #e2e8f0; border-radius: 6px; text-decoration: none;
+            color: var(--text-color); font-size: 0.8rem; transition: all 0.2s; background: white;
+        }
+        .list-item:hover:not(.disabled) {
+            border-color: var(--accent-color); transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); color: var(--accent-color);
+        }
+        .item-number {
+            font-family: monospace; color: white; background: var(--primary-color);
+            padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 12px; font-weight: bold;
+        }
+        .item-title { flex: 1; line-height: 1.3; }
+
+        /* 非公開用スタイル */
+        .list-item.disabled {
+            background: #f8fafc; border-style: dashed; opacity: 0.6; cursor: not-allowed; pointer-events: none;
+        }
+        .status-badge {
+            font-size: 0.65rem; padding: 2px 6px; border-radius: 4px;
+            background: #fee2e2; color: #ef4444; white-space: nowrap; margin-left: 8px; border: 1px solid #fca5a5;
+        }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0; padding: 15px;
+            text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <!-- パンくずリストで階層を明示 -->
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ 
+                <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 
+                <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 
+                白地図まとめ
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="map" style="color: var(--accent-color);"></i>白地図を使ったまとめ
+            </h1>
+        </div>
+
+        <div class="container">
+            <div id="map-container"></div>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        /* =========================================================================
+           【公開設定システム（白地図用）】
+           公開したい特別編のID（文字列）を入力してください。例: ['MAP01', 'MAP02']
+        ========================================================================= */
+        const publishedMaps = []; 
+
+        /* =========================================================================
+           【目次データ（白地図）】
+        ========================================================================= */
+        const mapSyllabusData = [
+            {
+                chapter: "白地図を使ったまとめ一覧",
+                items: [
+                    { id: "MAP01", title: "古代オリエント・地中海世界の白地図まとめ" },
+                    { id: "MAP02", title: "ヨーロッパの変遷 白地図まとめ" },
+                    { id: "MAP03", title: "中国王朝の変遷 白地図まとめ" },
+                    { id: "MAP04", title: "イスラーム世界の拡大 白地図まとめ" }
+                ]
+            }
+        ];
+
+        // --- レンダリング処理 ---
+        function renderMapContent() {
+            const container = document.getElementById('map-container');
+            let html = '';
+
+            mapSyllabusData.forEach(chapter => {
+                let itemsHtml = chapter.items.map(item => {
+                    const isPublished = publishedMaps.includes(item.id);
+                    
+                    const disabledClass = isPublished ? "" : "disabled";
+                    // ※実際のディレクトリ構造に合わせて遷移先パスを調整してください
+                    const targetUrl = isPublished ? `/n-kyozai/politics/sp-wh/${item.id}/index.html` : "javascript:void(0)";
+                    const badgeHtml = isPublished ? '' : '<span class="status-badge">準備中</span>';
+                    
+                    return `
+                        <a href="${targetUrl}" class="list-item ${disabledClass}">
+                            <span class="item-number">${item.id}</span>
+                            <span class="item-title">${item.title}</span>
+                            ${badgeHtml}
+                        </a>
+                    `;
+                }).join('');
+
+                html += `
+                    <div class="chapter-block">
+                        <div class="chapter-header">${chapter.chapter}</div>
+                        <div class="items-grid">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // 初期描画
+        renderMapContent();
+
+        // --- サイドバー制御（モバイル用） ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
