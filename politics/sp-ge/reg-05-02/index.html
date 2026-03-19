@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヨーロッパの鉱工業 - 地誌編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* 本文と表内のフォントサイズを統一 */
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        /* --- 暗記モード --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化（縦長化の強力な防止） --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            /* ★スマホでも絶対に押しつぶされないように最低幅を固定★ */
+            min-width: 650px; 
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+            font-size: 1em; 
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        
+        /* 短い単語の列（中央揃えで幅を固定し、無駄な余白を減らす） */
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        /* 説明文が入る列（最小幅を指定して、文字が縦に1文字ずつ並ぶのを防ぐ） */
+        .data-table .col-text {
+            min-width: 250px;
+            white-space: normal;
+        }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 地誌編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第5章 ヨーロッパ - 鉱工業
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. ヨーロッパの鉱工業の歴史</h3>
+                    <p>ヨーロッパは早くから世界の工業をリードしてきましたが、時代とともに主力となる産業や立地が変化してきました。</p>
+                    <ul>
+                        <li><strong>産業革命期～</strong>：石炭に依存し、イギリスやフランス北部、ドイツなどの<strong><span class="important-word">内陸の炭田</span></strong>を中心に鉄鋼業など重工業が発達しました（原料立地型）。</li>
+                        <li><strong>第二次世界大戦後</strong>：エネルギー革命や資源の枯渇により、輸入資源に頼るようになり、鉄鋼業や石油化学工業が<strong><span class="important-word">臨海部</span></strong>へと移動しました。</li>
+                        <li><strong>現在</strong>：古い工業地帯は衰退し、付加価値の高い機械工業や<strong><span class="important-word">先端技術産業</span></strong>への転換が進んでいます。</li>
+                        <li><strong>「<span class="important-word">青いバナナ</span>」</strong>：イギリス南部からイタリア北部にかけての大都市・工業地帯が連なる地域は、その形状から「ブルーバナナ」と呼ばれています。</li>
+                    </ul>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/europe_industry_map.jpg" alt="ヨーロッパの鉱工業分布">
+                        <div class="img-caption">図1：ヨーロッパの鉱工業分布。「青いバナナ」の位置に注目（PDF: p.506参照）</div>
+                    </div>
+
+                    <h3>2. イギリス・イタリアの鉱工業</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">国名</th>
+                                <th class="col-text">主な工業都市と特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>イギリス</strong></td>
+                                <td class="col-text">
+                                    産業革命の発祥地。偏西風の風上にあたる<strong>ランカシャー地方</strong>（マンチェスター等）で<strong><span class="important-word">綿工業</span></strong>、風下のヨークシャー地方で<strong>毛織物工業</strong>が発達。鉄鋼業の中心だったバーミンガムは衰退し機械工業へ転換。現在、鉄鋼業はカーディフなどの<strong>臨海部</strong>へ移動。北海沿岸では<strong>北海油田</strong>を背景に石油化学が、スコットランドではエレクトロニクス産業が発達。首都ロンドンは世界金融の中心です。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>イタリア</strong></td>
+                                <td class="col-text">
+                                    北部のトリノ、ミラノ、ジェノヴァを結ぶ<strong>「<span class="important-word">工業の三角地帯</span>」</strong>が最大。南北格差の是正のため、南部のタラントに<strong><span class="important-word">臨海型製鉄所</span></strong>が建設されました。北東部・中部の<strong>「<span class="important-word">第3のイタリア</span>（サードイタリア）」</strong>では、中小企業や職人による繊維、皮革、家具などの<strong>多品種少量生産</strong>が盛んです。
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/uk_italy_industry.jpg" alt="イギリス・イタリアの工業都市">
+                        <div class="img-caption">図2・図3：イギリス・イタリアの工業都市（PDF: p.507参照）</div>
+                    </div>
+
+                    <h3>3. フランス・スペイン・ドイツの鉱工業</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">国名</th>
+                                <th class="col-text">主な工業都市と特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>フランス</strong></td>
+                                <td class="col-text">かつてのロレーヌ地方の鉄鋼業は衰退し、ダンケルクやフォスに<strong>臨海型鉄鋼業</strong>が立地。パリ周辺に最大級の工業地帯。南部のトゥールーズでは<strong><span class="important-word">航空機</span></strong>（エアバス社）の組み立てが行われています。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>スペイン</strong></td>
+                                <td class="col-text">バルセロナなど北部が発展し、南部に遅れ。外国企業の進出により<strong><span class="important-word">自動車工業</span></strong>が発達し、生産台数はヨーロッパ2位です。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ドイツ</strong></td>
+                                <td class="col-text">ヨーロッパ最大の工業国で、都市が分散しています。西部の<strong><span class="important-word">ルール地方</span></strong>は最大の工業地域で、かつてエッセン等で鉄鋼業が栄えましたが、現在は機械・化学工業等へ転換。フランクフルトは金融都市、シュツットガルトやミュンヘン、ヴォルフスブルクでは<strong><span class="important-word">自動車工業</span></strong>が盛んです。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/france_germany_industry.jpg" alt="フランス・ドイツとその周辺の工業都市">
+                        <div class="img-caption">図：フランス・ドイツとその周辺の工業都市など（PDF: p.508参照）</div>
+                    </div>
+
+                    <h3>4. その他の主要国の鉱工業と東欧の発展</h3>
+                    <ul>
+                        <li><strong>オランダ</strong>：ロッテルダムにヨーロッパ最大の貿易港<strong><span class="important-word">ユーロポート</span></strong>があり、中継貿易と石油化学工業が盛ん。</li>
+                        <li><strong>スイス</strong>：時計や精密機械など、付加価値の高い工業が発達。</li>
+                        <li><strong>スウェーデン</strong>：木材・パルプ・製紙のほか鉄鋼や自動車も盛ん。北部のキルナで鉄鉱石を産出。</li>
+                        <li><strong>ノルウェー</strong>：<strong>原油・天然ガス</strong>の輸出。発電はほぼ<strong>水力</strong>。</li>
+                        <li><strong><span class="important-word">東欧諸国</span></strong>：ポーランド（石炭産出最大）やチェコ（機械・ガラス）など。2000年代の<strong><span class="important-word">EU加盟</span></strong>を背景に外国企業の進出が活発化し、<strong><span class="important-word">自動車</span></strong>生産が急増しています。</li>
+                    </ul>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. イギリスの工業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            産業革命発祥の地であるイギリスでは、偏西風の風上にあたり湿潤な気候である 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="lancashire">ランカシャー地方</option>
+                                <option value="yorkshire">ヨークシャー地方</option>
+                            </select> 
+                            で 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="cotton">綿工業</option>
+                                <option value="wool">毛織物工業</option>
+                            </select> 
+                            が発達した。また、かつて内陸部の炭田地帯で発展した鉄鋼業は、資源の枯渇などに伴い、カーディフなどの 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="coastal">臨海部</option>
+                                <option value="inland">内陸部</option>
+                            </select> 
+                            へと移動した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. イタリアの工業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            イタリアの工業は、トリノ、ミラノ、ジェノヴァを結ぶ北部の「工業の三角地帯」が最大である。南部の工業化の遅れを是正するため、 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="taranto">タラント</option>
+                                <option value="venice">ヴェネツィア</option>
+                            </select> 
+                            に国営の臨海型製鉄所が建設された。また、中部のフィレンツェなどを含む地域は「 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="third_italy">第3のイタリア</option>
+                                <option value="blue_banana">青いバナナ</option>
+                            </select> 
+                            」とよばれ、中小企業や職人による皮革や家具などの 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="small_variety">多品種少量生産</option>
+                                <option value="mass_production">少品種大量生産</option>
+                            </select> 
+                            が盛んである。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. フランスとスペインの工業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            フランス南部の都市トゥールーズでは、ヨーロッパが共同設立したエアバス社による 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="aircraft">航空機</option>
+                                <option value="automobile">自動車</option>
+                            </select> 
+                            の組み立てが行われている。また、スペインでは安価な労働力を求めた外国企業の進出により 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="automobile">自動車</option>
+                                <option value="aircraft">航空機</option>
+                            </select> 
+                            工業が発達し、その生産台数はドイツに次いでヨーロッパ第2位である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. ヨーロッパ最大の工業国であるドイツでは、西部のルール地方が最大の工業地域となっている。かつては炭田を基礎に鉄鋼業が栄えたが、現在は機械・化学工業などへの転換が進み、閉鎖された工場の一部は産業遺産として保全されている。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. ポーランドやチェコなどの東欧諸国は、1990年代の社会主義体制崩壊後も経済の低迷が続いており、2000年代のEU加盟以降も外国企業の進出はほとんど見られず、工業化は停滞している。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'lancashire', 'q1-b': 'cotton', 'q1-c': 'coastal' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>偏西風の風上側で湿潤な「ランカシャー地方」で「綿工業」が発達しました。また、鉄鋼業は内陸から「臨海部」へ立地が変化したことも重要です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>風上の「ランカシャー地方」が「綿工業」、風下のヨークシャー地方が毛織物です。鉄鋼業は輸入に便利な「臨海部」へ移動しました。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'taranto', 'q2-b': 'third_italy', 'q2-c': 'small_variety' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>南北格差是正のために建設されたのが南部の「タラント」の製鉄所です。中部の「第3のイタリア」では職人による「多品種少量生産」が盛んです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>南部の臨海型製鉄所は「タラント」。中部は「第3のイタリア」と呼ばれ、繊維や皮革などの「多品種少量生産」が特徴です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'aircraft', 'q3-b': 'automobile' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>フランスのトゥールーズではエアバス社の「航空機」組み立てが行われています。スペインは外国資本を受け入れ「自動車」工業が大きく発展しました。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>トゥールーズは「航空機」の最終組み立て地です。スペインは安価な労働力を活かして「自動車」生産が盛んになりました。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: true, 
+                explanation: 'その通りです。ドイツ西部のルール地方はヨーロッパ最大の工業地域であり、石炭（ルール炭田）から鉄鋼業へ、そして現在は付加価値の高い機械・化学工業などへの転換が進んでいます。'
+            },
+            'q5': { 
+                correct: false, 
+                explanation: '<strong>誤り</strong>です。東欧諸国では、2000年代以降の<strong>「EU加盟」</strong>を背景に、安価で良質な労働力を求めて西欧などから外国企業の進出が<strong>活発化</strong>し、特に<strong>自動車生産が急増</strong>して工業発展が顕著になっています。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
