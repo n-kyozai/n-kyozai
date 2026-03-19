@@ -29,6 +29,7 @@
             min-height: 100vh;
             width: 100%;
             overflow-x: hidden;
+            -webkit-text-size-adjust: 100%; /* スマホでの文字サイズの自動調整を防止 */
         }
 
         /* --- サイドバー（共通） --- */
@@ -171,11 +172,11 @@
         /* --- まとめコンテンツ (情報量凝縮) --- */
         .summary-content {
             padding: 20px;
-            font-size: 0.85rem; 
+            font-size: 0.9rem; /* 少し見やすく0.9remに */
             line-height: 1.7;
         }
         .summary-content h3 {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: var(--accent-color);
             border-bottom: 2px solid #e0f2fe;
             padding-bottom: 4px;
@@ -188,6 +189,11 @@
             margin-bottom: 16px;
         }
         .summary-content li { margin-bottom: 6px; }
+        
+        /* 本文と表内のフォントサイズを完全に統一 */
+        .summary-content p, .summary-content li {
+            font-size: 1em; 
+        }
         
         /* --- 暗記モード対応の重要用語スタイル --- */
         .important-word {
@@ -209,7 +215,7 @@
             background-color: #fee2e2;
         }
 
-        /* --- 表のモバイルスクロール対応 --- */
+        /* --- 表のモバイルスクロール対応とフォント統一 --- */
         .table-container {
             width: 100%;
             max-width: 100%;
@@ -223,42 +229,36 @@
             width: 100%;
             min-width: 650px;
             border-collapse: collapse;
-            /* ここにあった font-size: 0.8rem; を削除し、本文と同じサイズになるようにしました */
         }
-        /* 本文と表内のフォントサイズを統一し、モバイルでの自動縮小を防止 */
-        .summary-content p, .summary-content li, .data-table th, .data-table td {
-            font-size: 1em; 
-        }
+        
         .data-table th, .data-table td {
             border: 1px solid #cbd5e1;
             padding: 8px 10px;
             text-align: left;
             border-top: none;
             border-left: none;
+            line-height: 1.6;
+            vertical-align: middle;
+            font-size: 1em; /* ★ここで表内の文字サイズを本文と強制的に統一 */
         }
         .data-table th:last-child, .data-table td:last-child { border-right: none; }
         .data-table tr:last-child td { border-bottom: none; }
         .data-table th { background: #f1f5f9; color: var(--primary-color); white-space: nowrap; }
 
-        /* --- 画像プレースホルダー --- */
+        /* --- 修正版：画像プレースホルダー（はみ出し防止） --- */
         .img-placeholder-wrapper {
             margin: 20px 0;
             text-align: center;
+            width: 100%; /* 親要素幅に制限 */
         }
         .img-placeholder-wrapper img {
             max-width: 100%;
             height: auto;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
-            background-color: #f1f5f9;
-            min-height: 180px;
             display: block;
             margin: 0 auto;
-            font-size: 0.75rem;
-            color: #64748b;
-            padding: 20px;
-            line-height: 1.4;
-            word-break: break-all;
+            /* 実際の画像用に合わせて余計なpaddingなどを削除 */
         }
         .img-caption {
             font-size: 0.75rem;
@@ -272,12 +272,12 @@
         .quiz-container { padding: 20px; }
         .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
         .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .quiz-question { font-size: 0.9rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
         
-        .fill-in-blank { line-height: 2.2; font-size: 0.85rem; }
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
         select.blank-select {
             padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
-            background: white; font-size: 0.85rem; color: var(--primary-color);
+            background: white; font-size: 0.9rem; color: var(--primary-color);
             outline: none; cursor: pointer; margin: 0 4px;
         }
         select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
@@ -292,13 +292,13 @@
             background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
             border-bottom: 2px solid var(--incorrect-color);
         }
-        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.8rem; }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
         .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
 
         .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
         .tf-btn {
             padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
-            border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
             font-weight: bold; color: #64748b; transition: all 0.2s;
             flex: 1; max-width: 150px;
         }
@@ -320,7 +320,7 @@
 
         .feedback {
             margin-top: 16px; padding: 12px 16px; border-radius: 6px;
-            font-size: 0.85rem; display: none; line-height: 1.6;
+            font-size: 0.9rem; display: none; line-height: 1.6;
         }
         .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
         .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
@@ -373,7 +373,6 @@
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
 
             <div class="nav-category">専門科目</div>
-            <!-- 専門科目の active は外しています -->
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
         </nav>
     </aside>
@@ -443,9 +442,7 @@
                     <div class="img-placeholder-wrapper">
                         <img src="2026-03-18_20h19_56.png" alt="成人肥満率">
                     </div>
-                       
-
-                    
+                        
 
                 </div>
             </section>
