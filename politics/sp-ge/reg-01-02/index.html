@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東アジアの自然と産業 - 地誌編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* 本文と表内のフォントサイズを統一 */
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        /* --- 暗記モード --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化（縦長化の強力な防止） --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            /* ★スマホでも絶対に押しつぶされないように最低幅を固定★ */
+            min-width: 650px; 
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+            font-size: 1em; 
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        
+        /* 短い単語の列（中央揃えで幅を固定し、無駄な余白を減らす） */
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 15%;
+        }
+        /* 説明文が入る列（最小幅を指定して、文字が縦に1文字ずつ並ぶのを防ぐ） */
+        .data-table .col-text {
+            min-width: 250px;
+            white-space: normal;
+        }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 地誌編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第1章 東アジア - 自然環境と産業
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. 東アジアの地形と気候</h3>
+                    <p>中国の地形は全体的に「<strong><span class="important-word">西高東低</span></strong>」の形をしており、気候も東部と西部で大きく異なります。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">地域</th>
+                                <th class="col-text">地形の特徴</th>
+                                <th class="col-text">気候と生活の特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>西部<br>（内陸・高地）</strong></td>
+                                <td class="col-text">標高が高く山がちです。平均標高4,000m以上の<strong><span class="important-word">チベット高原</span></strong>や、<strong><span class="important-word">タクラマカン砂漠</span></strong>、モンゴル高原、さらに黄河中流域には風で運ばれた<strong><span class="important-word">黄土（レス）高原</span></strong>が広がります。</td>
+                                <td class="col-text">海から遠いため<strong><span class="important-word">少雨（乾燥）</span></strong>となり、砂漠やステップ（草原）が広がります。チベットは寒冷な<strong><span class="important-word">高山気候</span></strong>で、ヤクの遊牧などが行われています。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>東部<br>（沿岸）</strong></td>
+                                <td class="col-text">標高が低く、華北平原や東北平原などの平野が広がります。長江流域には<strong>四川（スーチョワン）盆地</strong>や三峡ダム、桂林の<strong><span class="important-word">タワーカルスト</span></strong>が見られます。</td>
+                                <td class="col-text">季節風（<strong><span class="important-word">モンスーン</span></strong>）の影響を強く受け、夏は温暖多雨、冬は寒冷少雨となります。中国の人口の9割以上がこの東部に集中しています。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/east_asia_topography.jpg" alt="東アジアの地形と気候">
+                        <div class="img-caption">※画像ファイルはスペースを除いたファイル名でGitHubに配置してください。</div>
+                    </div>
+
+                    <h3>2. 朝鮮半島と日本の気候の比較</h3>
+                    <p>朝鮮半島と日本は緯度的に近いですが、冬の気候に大きな違いがあります。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">地域</th>
+                                <th class="col-short">冬の気候</th>
+                                <th class="col-text">特徴・文化</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>朝鮮半島</strong></td>
+                                <td class="col-short">気温が低く<br><strong><span class="important-word">少雨</span></strong></td>
+                                <td class="col-text">大陸に位置するため、大陸からの冷たく乾いたモンスーンの影響を直接受けます。この厳しい寒さに対応するため、伝統的な床暖房である<strong><span class="important-word">オンドル</span></strong>が普及しています。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>日本<br>（日本海側）</strong></td>
+                                <td class="col-short">気温は比較的<br>高いが<strong><span class="important-word">豪雪</span></strong></td>
+                                <td class="col-text">海に囲まれており、大陸からの冷たい北西モンスーンが<strong>日本海上で大量の水蒸気を含む</strong>ため、山地にぶつかる日本海側に豪雪をもたらします。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>3. 中国の農業</h3>
+                    <p>1980年頃から市場経済が導入され、農家が余剰分を自由に販売できる<strong><span class="important-word">生産責任制</span></strong>によって農業生産が飛躍的に増加しました。</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">地域</th>
+                                <th class="col-text">農業の特徴と主な農作物</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>東部（南部）</strong></td>
+                                <td class="col-text"><strong><span class="important-word">チンリン・ホワイ線</span></strong>（年降水量約1,000mm）より南の地域です。温暖多雨なため<strong>稲作</strong>が主体で、丘陵地では茶、最南部では米の二期作やサトウキビ栽培が行われます。また、長江流域では湖沼を利用した<strong>内水面養殖業</strong>が盛んです。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>東部（北部）</strong></td>
+                                <td class="col-text">チンリン・ホワイ線より北の地域です。冷涼少雨なため<strong>畑作</strong>が主体となり、華北平原では<strong>冬小麦</strong>や綿花が栽培されます。東北地方では大豆やトウモロコシが栽培されますが、近年は耐寒性品種の導入により稲作も盛ん（黒竜江省など）です。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>西部（内陸）</strong></td>
+                                <td class="col-text">乾燥地域であるため、羊やヤギの遊牧や、オアシス農業（綿花など）が行われています。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>4. 中国と韓国の鉱工業</h3>
+                    <p>東アジアの国々は、政府の政策と外資の導入によって急速な経済成長を遂げてきました。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">国名</th>
+                                <th class="col-text">工業発展の歴史と特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>中国</strong></td>
+                                <td class="col-text">
+                                    1978年からの<strong><span class="important-word">改革・開放政策</span></strong>により、沿海部に<strong><span class="important-word">経済特区</span></strong>（シェンチェンなど）を設けて外国の資本や技術を導入しました。農村では自治体や個人が経営する<strong><span class="important-word">郷鎮企業</span></strong>が発展しました。現在は内陸部の格差是正のため、油田・ガス田開発などを進める「<strong><span class="important-word">西部大開発</span></strong>」が行われています。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>韓国</strong></td>
+                                <td class="col-text">
+                                    1970年代に鉄鋼業や石油化学などの重化学工業、80年代にエレクトロニクス産業が発達し、台湾などとともに<strong><span class="important-word">アジアNIES</span></strong>（新興工業経済地域）とよばれました。サムスンなどの<strong>財閥</strong>が経済を牽引しています。また、農村の近代化を図るため「<strong>セマウル運動</strong>」が展開されました。
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 東アジアの地形と気候について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            中国の地形は全体的に「 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="west_high">西高東低</option>
+                                <option value="east_high">東高西低</option>
+                            </select> 
+                            」である。西部には平均標高4000m以上の 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="tibet">チベット高原</option>
+                                <option value="yunnan">雲貴高原</option>
+                            </select> 
+                            があり、寒冷な高山気候となっている。一方、人口の大部分が集中する東部は 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="monsoon">モンスーン（季節風）</option>
+                                <option value="westerlies">偏西風</option>
+                            </select> 
+                            の影響を強く受け、夏は温暖多雨となる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 中国の農業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            中国の農業は、1980年頃に導入された 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="responsibility">生産責任制</option>
+                                <option value="commune">人民公社</option>
+                            </select> 
+                            によって生産が飛躍的に増加した。また、東部の農業は年降水量約1,000mmのラインである 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="qinling_huaihe">チンリン・ホワイ線</option>
+                                <option value="great_wall">万里の長城</option>
+                            </select> 
+                            を境界として、南側では 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="rice">稲作</option>
+                                <option value="wheat">畑作（小麦など）</option>
+                            </select> 
+                            が、北側では 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="wheat">畑作（小麦など）</option>
+                                <option value="rice">稲作</option>
+                            </select> 
+                            が主体となっている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 中国と韓国の産業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            中国は1978年からの 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="reform_open">改革・開放政策</option>
+                                <option value="cultural_revolution">文化大革命</option>
+                            </select> 
+                            により、シェンチェンなどの沿海部に 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="sez">経済特区</option>
+                                <option value="capital">直轄市</option>
+                            </select> 
+                            を設けて外国資本を導入した。一方、韓国や台湾などは1970年代以降に急速な経済成長を遂げ、 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="nies">アジアNIES</option>
+                                <option value="asean">ASEAN</option>
+                            </select> 
+                            とよばれるようになった。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 中国の農村部では、市場経済の導入に伴って自治体や個人が経営する「郷鎮企業」が生まれ、農村の余剰労働力を吸収しながら発展した。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 中国における「西部大開発」とは、人口が密集する東部沿海地域の環境悪化を防ぐため、東部の工業施設を強制的に内陸部へ移転させる政策のことである。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'west_high', 'q1-b': 'tibet', 'q1-c': 'monsoon' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>中国の地形は「西高東低」で、西部に「チベット高原」などの高地があり、人口が集中する東部は「モンスーン」の影響を強く受けて温暖多雨になります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>地形は「西高東低」です。標高4000m以上が「チベット高原」で、東部の気候は「モンスーン」の影響を受けます。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'responsibility', 'q2-b': 'qinling_huaihe', 'q2-c': 'rice', 'q2-d': 'wheat' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>農家が自由に販売できる「生産責任制」により生産が増加しました。また、「チンリン・ホワイ線」の南は「稲作」、北は「畑作」という境界は非常によく出題されます。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>農業は「生産責任制」で発展しました。境界線は「チンリン・ホワイ線」で、降水量の多い南が「稲作」、少ない北が「畑作」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'reform_open', 'q3-b': 'sez', 'q3-c': 'nies' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>中国は「改革・開放政策」によって沿海部に「経済特区」を設け、外資を導入して世界の工場へと成長しました。韓国や台湾は「アジアNIES（新興工業経済地域）」とよばれます。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>中国の経済発展のきっかけは「改革・開放政策」と「経済特区」です。韓国や台湾の急速な成長は「アジアNIES」とよばれます。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: true, 
+                explanation: 'その通りです。市場経済化が進む中で、農村部では「郷鎮企業」と呼ばれる小規模な工業や商業が盛んになり、農家の所得向上に大きく貢献しました。'
+            },
+            'q5': { 
+                correct: false, 
+                explanation: '<strong>誤り</strong>です。西部大開発の目的は、経済発展が著しい東部（沿海部）と、遅れている西部（内陸部）との<strong>「経済格差を是正すること」</strong>です。そのために油田やガス田の開発、パイプラインの建設などのインフラ整備が進められています。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
