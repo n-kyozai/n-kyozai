@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヨーロッパの自然と農林水産業 - 地誌編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* 本文と表内のフォントサイズを統一 */
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        /* --- 暗記モード --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化（縦長化の強力な防止） --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            /* ★スマホでも絶対に押しつぶされないように最低幅を固定★ */
+            min-width: 650px; 
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+            font-size: 1em; 
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        
+        /* 短い単語の列（中央揃えで幅を固定し、無駄な余白を減らす） */
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 15%;
+        }
+        /* 説明文が入る列（最小幅を指定して、文字が縦に1文字ずつ並ぶのを防ぐ） */
+        .data-table .col-text {
+            min-width: 250px;
+            white-space: normal;
+        }
+
+        /* --- 画像プレースホルダー --- */
+        .img-placeholder-wrapper {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .img-placeholder-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            min-height: 180px;
+            display: block;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 20px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+        .img-caption {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 地誌編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第5章 ヨーロッパ - 自然環境と農林水産業
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. ヨーロッパの地形</h3>
+                    <p>ヨーロッパは入試最頻出地域の1つです。同じヨーロッパでも「西欧と東欧」「北欧と南欧」など、<strong>地域ごとの違い（域内差）</strong>を意識することが重要です。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">地体構造・特徴</th>
+                                <th class="col-text">具体的な地形の例</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>プレートの境界</strong></td>
+                                <td class="col-text">
+                                    アイスランド島は<strong><span class="important-word">広がる境界</span>（海嶺）</strong>に位置し、線状噴火がみられます。また、地中海周辺は<strong><span class="important-word">狭まる境界</span>（沈み込み帯）</strong>にあたり、イタリア南部では地震や火山活動が活発です。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">新期造山帯</span></strong><br>（ヨーロッパ南部）</td>
+                                <td class="col-text">ピレネー山脈、アルプス山脈、カルパティア山脈より南の範囲です。起伏が大きい山がちな地形です。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">古期造山帯</span>・<span class="important-word">安定陸塊</span></strong><br>（北部・中部）</td>
+                                <td class="col-text">
+                                    スカンディナヴィア山脈やペニン山脈などの<strong>古期造山帯</strong>のほか、バルト海周辺は低平な<strong>楯状地</strong>（安定陸塊）です。フランスのパリ盆地には、硬い地層と軟らかい地層が交互に重なってできた<strong><span class="important-word">ケスタ</span></strong>という波状の地形がみられます。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>氷河地形と海岸線</strong></td>
+                                <td class="col-text">
+                                    北部はかつて大陸氷河に覆われていました。ノルウェーの<strong><span class="important-word">フィヨルド</span></strong>、フィンランドの<strong>氷河湖</strong>が有名です。また、スペイン北西部の<strong><span class="important-word">リアス海岸</span></strong>や、テムズ川やセーヌ川の河口にある<strong><span class="important-word">エスチュアリー</span>（三角江）</strong>などの沈水海岸もよく出題されます。
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/europe_topography.jpg" alt="ヨーロッパの地形">
+                        <div class="img-caption">図1：ヨーロッパの地形（PDF: p.498参照）</div>
+                    </div>
+
+                    <h3>2. ヨーロッパの気候</h3>
+                    <p>ヨーロッパの気候を理解する上で最も重要なポイントは、<strong>「暖流」と「偏西風」の影響の違い（東西の差）</strong>です。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">気候区</th>
+                                <th class="col-text">分布と特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">西岸海洋性気候</span><br>（Cfb）</strong></td>
+                                <td class="col-text">大陸の<strong>西部</strong>に分布します。海からの<strong><span class="important-word">偏西風</span></strong>と、沖合を流れる暖流（<strong><span class="important-word">北大西洋海流</span></strong>）の影響を強く受けるため、高緯度であるにもかかわらず<strong>冬が比較的温暖</strong>になります。ヨーロッパには風を遮る高い山脈が少ないため、内陸部までこの気候が広く分布します。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">亜寒帯湿潤気候</span><br>（Df）</strong></td>
+                                <td class="col-text">大陸の<strong>東部</strong>（ポーランド付近以東）に分布します。海からの暖気の影響が弱まるため、<strong><span class="important-word">冬が寒冷</span></strong>になります。また、スカンディナヴィア山脈の風下側（東側）も、山脈に風が遮られるためDfとなります。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">地中海性気候</span><br>（Cs）</strong></td>
+                                <td class="col-text">大陸の<strong>南部</strong>（地中海沿岸）に分布します。夏は亜熱帯高圧帯の影響で<strong>高温・少雨</strong>となるのが特徴です。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/europe_climate.jpg" alt="ヨーロッパの気候と1月の気温">
+                        <div class="img-caption">図2・図3：ヨーロッパの気候と1月の気温。東に行くほど寒くなる（PDF: p.499参照）</div>
+                    </div>
+
+                    <h3>3. ヨーロッパの農業の全体像と経営規模</h3>
+                    <p>気候や地形の違いから、各国で得意な作物を栽培し、互いに輸出し合う「地域内分業」が行われています。</p>
+                    <ul>
+                        <li><strong>地域別の農業形態</strong>
+                            <ul>
+                                <li>北部（冷涼・やせ地）とアルプス：<strong><span class="important-word">酪農</span></strong></li>
+                                <li>中部：<strong><span class="important-word">混合農業</span></strong>（北・東部はライ麦とジャガイモ、南・西部は小麦とトウモロコシ）</li>
+                                <li>南部（夏少雨）：<strong><span class="important-word">地中海式農業</span></strong>、輸送園芸</li>
+                            </ul>
+                        </li>
+                        <li><strong>経営規模の地域差</strong>
+                            <ul>
+                                <li><strong>大規模</strong>：イギリスやフランスなど、広大な平野が広がる<strong><span class="important-word">北部</span></strong>の国々。</li>
+                                <li><strong>小規模</strong>：イタリアやスペインなど山がちな<strong><span class="important-word">南部</span></strong>の国々や、ルーマニアなど農業人口率が高い<strong>東欧</strong>の国々。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/europe_farm_size.jpg" alt="ヨーロッパ各国の農業経営規模">
+                        <div class="img-caption">図4：農家の農業経営規模（PDF: p.500参照）</div>
+                    </div>
+
+                    <h3>4. 各国の農業の特徴</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">国名</th>
+                                <th class="col-text">農業の特徴とキーワード</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>フランス</strong></td>
+                                <td class="col-text">ヨーロッパ最大の農業国。<strong><span class="important-word">パリ盆地</span></strong>の広大な緩斜面で大規模な小麦栽培が行われます。また、ワイン生産が盛んですが、<strong><span class="important-word">ブドウ栽培の北限</span></strong>がパリ盆地付近であることは入試頻出です。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ドイツ</strong></td>
+                                <td class="col-text">やや冷涼な気候で酪農や<strong>混合農業</strong>が盛ん。ライ麦やジャガイモを栽培し、豚の飼育頭数はヨーロッパ上位です。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>オランダ</strong></td>
+                                <td class="col-text">国土の一部を干拓した「<strong><span class="important-word">ポルダー</span></strong>」を利用し、酪農や輸出用の花卉（かき）・野菜を栽培する<strong><span class="important-word">園芸農業</span></strong>が盛んです。ICTを導入したスマート農業も発達しています。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>デンマーク</strong></td>
+                                <td class="col-text">農業協同組合などを通じて競争力の高い<strong>酪農</strong>や肉類の生産・輸出が行われています。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>イタリア<br>スペイン</strong></td>
+                                <td class="col-text">地中海式農業のほか、夏の高温を利用し、<strong><span class="important-word">灌漑（かんがい）</span></strong>による<strong><span class="important-word">稲作</span></strong>も盛んです（リゾットやパエリアなど）。スペインのイベリア高原では羊の移牧もみられます。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>北欧</strong></td>
+                                <td class="col-text">スウェーデン・フィンランドではタイガ（冷帯林）を活かした<strong>林業</strong>、ノルウェーでは<strong><span class="important-word">フィヨルド</span></strong>の穏やかな内湾を利用した<strong>サケの養殖</strong>が盛んです。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 画像プレースホルダー -->
+                    <div class="img-placeholder-wrapper">
+                        <img src="./images/europe_agriculture.jpg" alt="ヨーロッパの農業分布">
+                        <div class="img-caption">図5：ヨーロッパの農業分布（PDF: p.501参照）</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. ヨーロッパの地形について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            アイスランド島はプレートの 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="divergent">広がる境界</option>
+                                <option value="convergent">狭まる境界</option>
+                            </select> 
+                            に位置し、海嶺の一部が地上に現れたものである。ヨーロッパ南部はアルプス山脈などに代表される 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="new_fold">新期造山帯</option>
+                                <option value="old_fold">古期造山帯</option>
+                            </select> 
+                            に属す。また、北欧のノルウェーなどにはかつての氷河による侵食でできた 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="fjord">フィヨルド</option>
+                                <option value="estuary">エスチュアリー</option>
+                            </select> 
+                            があり、イギリスのテムズ川の河口には 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="estuary">エスチュアリー</option>
+                                <option value="fjord">フィヨルド</option>
+                            </select> 
+                            という沈水海岸が発達している。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. ヨーロッパの気候について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ヨーロッパ西部の気候は、一年中海から吹き込む 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="westerlies">偏西風</option>
+                                <option value="trade_winds">貿易風</option>
+                            </select> 
+                            と、その沖合を流れる暖流である 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="north_atlantic">北大西洋海流</option>
+                                <option value="benguela">ベンゲラ海流</option>
+                            </select> 
+                            の影響を強く受けるため、高緯度のわりに冬が温暖な 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="cfb">西岸海洋性気候（Cfb）</option>
+                                <option value="df">亜寒帯湿潤気候（Df）</option>
+                            </select> 
+                            となる。一方、大陸の東部やスカンディナヴィア山脈の風下側では海からの暖気の影響が弱まるため、冬が寒冷な 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="df">亜寒帯湿潤気候（Df）</option>
+                                <option value="cfb">西岸海洋性気候（Cfb）</option>
+                            </select> 
+                            となる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. ヨーロッパの農業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ヨーロッパの農業経営規模は地域差があり、イギリスやフランスなど広大な平野が広がる 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="north">北部</option>
+                                <option value="south">南部</option>
+                            </select> 
+                            の国々では大規模であるのに対し、山がちな地形が多い 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="south">南部</option>
+                                <option value="north">北部</option>
+                            </select> 
+                            の国々では小規模な傾向がある。また、オランダでは「 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="polder">ポルダー</option>
+                                <option value="kesta">ケスタ</option>
+                            </select> 
+                            」とよばれる干拓地を利用して酪農や、花卉・野菜を栽培する 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="horticulture">園芸農業</option>
+                                <option value="plantation">プランテーション農業</option>
+                            </select> 
+                            が盛んに行われている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. フランスはヨーロッパ最大の農業国であり、パリ盆地などの広大な平野で大規模な小麦栽培が行われている。また、ワイン生産も盛んだが、ブドウ栽培の北限は地中海沿岸部にとどまっている。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. ヨーロッパでは全体的に、偏西風や暖流の影響を受ける西部から、内陸に向かって東部へ行くほど、冬の平均気温が下がって寒冷になっていくという特徴がある。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'divergent', 'q1-b': 'new_fold', 'q1-c': 'fjord', 'q1-d': 'estuary' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>アイスランド島は「広がる境界」、ヨーロッパ南部はアルプスに代表される「新期造山帯」です。氷河地形の「フィヨルド」と、河口が沈水してできた「エスチュアリー」の区別も重要です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>アイスランドは海嶺が露出した「広がる境界」、南部は「新期造山帯」です。北欧の入り組んだ海岸は「フィヨルド」、テムズ川などの河口は「エスチュアリー」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'westerlies', 'q2-b': 'north_atlantic', 'q2-c': 'cfb', 'q2-d': 'df' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ヨーロッパの気候は「偏西風」と暖流の「北大西洋海流」がポイントです。これらにより西部は冬温暖な「西岸海洋性気候（Cfb）」に、海から遠い東部は冬寒冷な「亜寒帯湿潤気候（Df）」となります。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>気候を決定づけるのは「偏西風」と暖流の「北大西洋海流」です。西が冬温暖な「Cfb」、東が冬寒冷な「Df」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'north', 'q3-b': 'south', 'q3-c': 'polder', 'q3-d': 'horticulture' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>農業の経営規模は、平野の多い「北部」で大きく、山がちな「南部」で小さくなります。オランダの干拓地「ポルダー」で行われる花や野菜の「園芸農業」は頻出キーワードです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>経営規模はフランス等の「北部」で大きく、イタリア等の「南部」で小さいです。オランダの干拓地は「ポルダー」、そこで行われるのが「園芸農業」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: false, 
+                explanation: 'ブドウの栽培北限が<strong>誤り</strong>です。フランスは地中海沿岸だけでなく、中・南部でもブドウ栽培が盛んです。ブドウ栽培の北限は<strong>「パリ盆地」付近</strong>にあることが入試でよく問われます。'
+            },
+            'q5': { 
+                correct: true, 
+                explanation: 'その通りです。ヨーロッパは西にいくほど暖流と偏西風の影響を受けて冬が温暖になり、東（内陸）にいくほどその影響が弱まるため、冬の気温が低く（寒冷に）なります。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
