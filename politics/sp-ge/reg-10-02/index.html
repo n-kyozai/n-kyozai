@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本の地図・統計 - 地誌編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* 本文と表内のフォントサイズを統一 */
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        /* --- 暗記モード --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            /* スマホでも絶対に押しつぶされないように最低幅を固定 */
+            min-width: 450px; 
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+            font-size: 1em; 
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        
+        /* 数値の列（中央揃えで幅を固定） */
+        .data-table .col-num {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 15%;
+        }
+        /* 短い単語の列 */
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 25%;
+        }
+        /* 説明文が入る列 */
+        .data-table .col-text {
+            min-width: 180px;
+            white-space: normal;
+        }
+        .unit {
+            font-size: 0.8em;
+            font-weight: normal;
+            color: #64748b;
+        }
+
+        /* --- 画像プレースホルダー（軽量化・モダン化） --- */
+        .image-placeholder {
+            margin: 20px 0;
+            padding: 40px 20px;
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .image-placeholder i {
+            color: #94a3b8;
+            width: 32px;
+            height: 32px;
+        }
+        /* 画像ギャラリー風に並べる場合 */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .image-gallery .image-placeholder {
+            margin: 0;
+            padding: 30px 10px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 地誌編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第10章 日本 - 日本の地図・統計
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> 最低限知っておいてほしい日本の地図・統計
+                </div>
+                <div class="summary-content">
+                    <h3>1. 人口上位の都府県（2023年）</h3>
+                    <p>日本の人口は、東京圏・名古屋圏・大阪圏の三大都市圏に集中しています。特に<strong><span class="important-word">上位5都府県</span></strong>の順位と規模はしっかり押さえておきましょう。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-num">順位</th>
+                                <th class="col-short">都府県名</th>
+                                <th class="col-num">人口<br><span class="unit">（万人）</span></th>
+                            </tr>
+                            <tr>
+                                <td class="col-num">1位</td>
+                                <td class="col-short"><strong><span class="important-word">東京都</span></strong></td>
+                                <td class="col-num">1,409</td>
+                            </tr>
+                            <tr>
+                                <td class="col-num">2位</td>
+                                <td class="col-short"><strong><span class="important-word">神奈川県</span></strong></td>
+                                <td class="col-num">923</td>
+                            </tr>
+                            <tr>
+                                <td class="col-num">3位</td>
+                                <td class="col-short"><strong><span class="important-word">大阪府</span></strong></td>
+                                <td class="col-num">876</td>
+                            </tr>
+                            <tr>
+                                <td class="col-num">4位</td>
+                                <td class="col-short"><strong><span class="important-word">愛知県</span></strong></td>
+                                <td class="col-num">748</td>
+                            </tr>
+                            <tr>
+                                <td class="col-num">5位</td>
+                                <td class="col-short"><strong><span class="important-word">埼玉県</span></strong></td>
+                                <td class="col-num">733</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="image-gallery">
+                        <div class="image-placeholder">
+                            <i data-lucide="image"></i>
+                            <span></span>
+                        </div>
+                        <div class="image-placeholder">
+                            <i data-lucide="image"></i>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <h3>2. 47都道府県と都道府県庁所在地</h3>
+                    <p>日本の地理の基本として、47都道府県の位置と名称は必須知識です。特に、<strong><span class="important-word">都道府県名と県庁所在地名が異なるもの</span></strong>（全国で18道県）は、試験で非常によく狙われます。地図上の位置とあわせて正確に暗記しましょう。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">地方</th>
+                                <th class="col-short">都道府県名</th>
+                                <th class="col-text">都道府県庁所在地（※名称が異なるもの）</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short" rowspan="3"><strong>北海道・東北</strong></td>
+                                <td class="col-short">北海道</td>
+                                <td class="col-text"><strong><span class="important-word">札幌市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">岩手県</td>
+                                <td class="col-text"><strong><span class="important-word">盛岡市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">宮城県</td>
+                                <td class="col-text"><strong><span class="important-word">仙台市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short" rowspan="4"><strong>関東</strong></td>
+                                <td class="col-short">茨城県</td>
+                                <td class="col-text"><strong><span class="important-word">水戸市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">栃木県</td>
+                                <td class="col-text"><strong><span class="important-word">宇都宮市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">群馬県</td>
+                                <td class="col-text"><strong><span class="important-word">前橋市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">埼玉県 / 神奈川県</td>
+                                <td class="col-text"><strong><span class="important-word">さいたま市</span></strong> / <strong><span class="important-word">横浜市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short" rowspan="2"><strong>中部</strong></td>
+                                <td class="col-short">石川県 / 山梨県</td>
+                                <td class="col-text"><strong><span class="important-word">金沢市</span></strong> / <strong><span class="important-word">甲府市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">愛知県</td>
+                                <td class="col-text"><strong><span class="important-word">名古屋市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short" rowspan="2"><strong>近畿</strong></td>
+                                <td class="col-short">三重県 / 滋賀県</td>
+                                <td class="col-text"><strong><span class="important-word">津市</span></strong> / <strong><span class="important-word">大津市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">兵庫県</td>
+                                <td class="col-text"><strong><span class="important-word">神戸市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short" rowspan="2"><strong>中国・四国</strong></td>
+                                <td class="col-short">島根県</td>
+                                <td class="col-text"><strong><span class="important-word">松江市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">香川県 / 愛媛県</td>
+                                <td class="col-text"><strong><span class="important-word">高松市</span></strong> / <strong><span class="important-word">松山市</span></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>九州・沖縄</strong></td>
+                                <td class="col-short">沖縄県</td>
+                                <td class="col-text"><strong><span class="important-word">那覇市</span></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="image-placeholder">
+                        <i data-lucide="image"></i>
+                        <span></span>
+                    </div>
+
+                    <div class="image-gallery">
+                        <div class="image-placeholder">
+                            <i data-lucide="image"></i>
+                            <span></span>
+                        </div>
+                        <div class="image-placeholder">
+                            <i data-lucide="image"></i>
+                            <span></span>
+                        </div>
+                        <div class="image-placeholder">
+                            <i data-lucide="image"></i>
+                            <span></span>
+                        </div>
+                        <div class="image-placeholder">
+                            <i data-lucide="image"></i>
+                            <span></span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 日本の人口上位都府県について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            2023年時点の日本の人口上位5都府県について、第1位は 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="tokyo">東京都</option>
+                                <option value="osaka">大阪府</option>
+                            </select> 
+                            であり、第2位は 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="kanagawa">神奈川県</option>
+                                <option value="osaka">大阪府</option>
+                            </select> 
+                            、第3位は 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="osaka">大阪府</option>
+                                <option value="aichi">愛知県</option>
+                            </select> 
+                            である。さらに第4位には 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="aichi">愛知県</option>
+                                <option value="saitama">埼玉県</option>
+                            </select> 
+                            、第5位には 
+                            <select class="blank-select" id="q1-e">
+                                <option value="">---</option>
+                                <option value="saitama">埼玉県</option>
+                                <option value="chiba">千葉県</option>
+                            </select> 
+                            が続いている。これらの都府県はいずれも人口が700万人を超えている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 東日本において県名と県庁所在地名が異なる県について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            北海道の道庁所在地は 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="sapporo">札幌市</option>
+                                <option value="hakodate">函館市</option>
+                            </select> 
+                            である。東北地方では、岩手県の県庁所在地が 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="morioka">盛岡市</option>
+                                <option value="sendai">仙台市</option>
+                            </select> 
+                            、宮城県が 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="sendai">仙台市</option>
+                                <option value="aomori">青森市</option>
+                            </select> 
+                            である。関東地方では、茨城県が 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="mito">水戸市</option>
+                                <option value="tsukuba">つくば市</option>
+                            </select> 
+                            、栃木県が 
+                            <select class="blank-select" id="q2-e">
+                                <option value="">---</option>
+                                <option value="utsunomiya">宇都宮市</option>
+                                <option value="maebashi">前橋市</option>
+                            </select> 
+                            、群馬県が 
+                            <select class="blank-select" id="q2-f">
+                                <option value="">---</option>
+                                <option value="maebashi">前橋市</option>
+                                <option value="takasaki">高崎市</option>
+                            </select> 
+                            である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 西日本において県名と県庁所在地名が異なる県について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            中部地方では、石川県の県庁所在地が 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="kanazawa">金沢市</option>
+                                <option value="nagoya">名古屋市</option>
+                            </select> 
+                            、愛知県が 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="nagoya">名古屋市</option>
+                                <option value="kofu">甲府市</option>
+                            </select> 
+                            である。近畿地方では、兵庫県が 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="kobe">神戸市</option>
+                                <option value="otsu">大津市</option>
+                            </select> 
+                            である。中国・四国地方では、島根県が 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="matsue">松江市</option>
+                                <option value="tottori">鳥取市</option>
+                            </select> 
+                            、香川県が 
+                            <select class="blank-select" id="q3-e">
+                                <option value="">---</option>
+                                <option value="takamatsu">高松市</option>
+                                <option value="matsuyama">松山市</option>
+                            </select> 
+                            、愛媛県が 
+                            <select class="blank-select" id="q3-f">
+                                <option value="">---</option>
+                                <option value="matsuyama">松山市</option>
+                                <option value="kochi">高知市</option>
+                            </select> 
+                            である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 日本の総人口のうち、上位5つの都府県（東京都・神奈川県・大阪府・愛知県・埼玉県）の人口をすべて合計すると、約4,600万人となり、日本全体の人口の約3分の1以上がこの5都府県に集中していることになる。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 47都道府県の中で、県名と県庁所在地名が異なるものは一つもないため、すべての県において「〇〇県の県庁所在地は〇〇市である」という法則が成り立つ。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'tokyo', 'q1-b': 'kanagawa', 'q1-c': 'osaka', 'q1-d': 'aichi', 'q1-e': 'saitama' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>人口ランキングは「1位 東京、2位 神奈川、3位 大阪、4位 愛知、5位 埼玉」です。いずれも三大都市圏（東京・名古屋・大阪）を構成する都府県であり、人口集中が際立っています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>1位は東京、2位は神奈川、3位は大阪、4位は愛知、5位は埼玉です。順位を正確に覚えましょう。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'sapporo', 'q2-b': 'morioka', 'q2-c': 'sendai', 'q2-d': 'mito', 'q2-e': 'utsunomiya', 'q2-f': 'maebashi' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>県名と異なる県庁所在地は非常に重要です。岩手（盛岡）、宮城（仙台）、茨城（水戸）、栃木（宇都宮）、群馬（前橋）の組み合わせは確実に暗記しましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>岩手県＝盛岡市、宮城県＝仙台市、茨城県＝水戸市、栃木県＝宇都宮市、群馬県＝前橋市です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'kanazawa', 'q3-b': 'nagoya', 'q3-c': 'kobe', 'q3-d': 'matsue', 'q3-e': 'takamatsu', 'q3-f': 'matsuyama' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>石川（金沢）、愛知（名古屋）、兵庫（神戸）、島根（松江）、香川（高松）、愛媛（松山）も頻出です。地図上の位置とあわせて確認しておきましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>石川県＝金沢市、愛知県＝名古屋市、兵庫県＝神戸市、島根県＝松江市、香川県＝高松市、愛媛県＝松山市です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: true, 
+                explanation: 'その通りです。日本の総人口（約1億2000万人強）のうち、この上位5都府県の人口（1409万＋923万＋876万＋748万＋733万 ≒ 4689万人）だけで、全体の約3分の1以上を占めており、都市部への極端な人口集中がわかります。'
+            },
+            'q5': { 
+                correct: false, 
+                explanation: '<strong>誤り</strong>です。47都道府県のうち、北海道（札幌市）、宮城県（仙台市）、愛知県（名古屋市）など、<strong>県名と県庁所在地名が「異なる」ものが全国に18道県あります</strong>。これらは地図問題で非常によく問われるため、すべて正確に覚えておく必要があります。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
