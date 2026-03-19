@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オセアニアの産業 - 地誌編 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+        
+        /* 本文と表内のフォントサイズを統一 */
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; 
+        }
+
+        /* --- 暗記モード --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化（縦長化の強力な防止） --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            /* ★スマホでも絶対に押しつぶされないように最低幅を固定★ */
+            min-width: 650px; 
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+            font-size: 1em; 
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        
+        /* 短い単語の列（中央揃えで幅を固定し、無駄な余白を減らす） */
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 25%;
+        }
+        /* 説明文が入る列（最小幅を指定して、文字が縦に1文字ずつ並ぶのを防ぐ） */
+        .data-table .col-text {
+            min-width: 250px;
+            white-space: normal;
+        }
+
+        /* --- 画像プレースホルダー（軽量化・モダン化） --- */
+        .image-placeholder {
+            margin: 20px 0;
+            padding: 40px 20px;
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .image-placeholder i {
+            color: #94a3b8;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">地理</a> ＞ 地誌編
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="file-text" style="color: var(--accent-color);"></i>
+                第9章 オセアニア - 産業
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <h3>1. オーストラリアとニュージーランドの農牧業</h3>
+                    <p>オーストラリアとニュージーランドは、どちらも一次産品（鉱産資源や農産物）や食料品の輸出が中心となっている珍しい先進国です。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">国名・地域</th>
+                                <th class="col-text">農業・牧畜の特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>オーストラリア<br>（内陸部・北部）</strong></td>
+                                <td class="col-text">
+                                    乾燥した内陸の<strong><span class="important-word">グレートアーテジアン盆地</span>（大鑽井盆地）</strong>では、<strong><span class="important-word">被圧地下水</span></strong>を利用してメリノ種などの<strong><span class="important-word">牧羊</span></strong>が広く営まれています。また、北部を中心に<strong>牧牛</strong>が行われ、牛肉や羊毛の輸出が盛んです。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>オーストラリア<br>（東部・南部）</strong></td>
+                                <td class="col-text">
+                                    降水量の多い東部では、フィードロットによる肉牛の肥育が盛んです。<br>
+                                    やや降水量の多い南西部や南東部では<strong><span class="important-word">小麦</span>栽培</strong>が行われます。また、南東部の<strong>マリーダーリング盆地</strong>では、東岸の多雨地域から水を引く灌漑（かんがい）計画（<strong><span class="important-word">スノーウィーマウンテンズ計画</span></strong>）により農地が拡大しました。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">ニュージーランド</span></strong></td>
+                                <td class="col-text">
+                                    <strong>北島</strong>では<strong><span class="important-word">酪農</span></strong>や肉牛飼育が盛んです。<br>
+                                    <strong>南島</strong>では、偏西風がサザンアルプス山脈に遮られて風下側（東側）がやや乾燥するため、<strong><span class="important-word">羊の飼育</span>と<span class="important-word">小麦</span>栽培</strong>を組み合わせた混合農業がみられます。
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="image-placeholder">
+                        <i data-lucide="image"></i>
+                        <span></span>
+                    </div>
+
+                    <h3>2. オセアニアの鉱産資源と工業</h3>
+                    <p>オーストラリアは鉱産資源の宝庫であり、資源の産出地域は試験で頻出です。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">鉱産資源</th>
+                                <th class="col-text">オーストラリアでの主な産出地域・特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">鉄鉱石</span></strong></td>
+                                <td class="col-text">主に<strong><span class="important-word">北西部</span></strong>の安定陸塊（<strong><span class="important-word">ピルバラ地区</span></strong>など）で産出され、中国や日本へ輸出されます。鉄鉱石は<strong>生産・輸出ともに世界一</strong>です。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">石炭</span></strong></td>
+                                <td class="col-text">主に<strong><span class="important-word">東部</span></strong>の古期造山帯（グレートディヴァイディング山脈周辺）で産出されます。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ボーキサイト</strong></td>
+                                <td class="col-text">主に<strong>北部</strong>の熱帯地域で多く産出されます。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>その他の資源</strong></td>
+                                <td class="col-text">金や、原子力発電の燃料となる<strong>ウラン</strong>も豊富に産出されます。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <ul>
+                        <li><strong>ニュージーランドの工業</strong>：資源に乏しいですが、食品加工業のほか、豊富な<strong><span class="important-word">水力発電</span></strong>をいかしたアルミニウム生産がみられます。</li>
+                    </ul>
+
+                    <div class="image-placeholder">
+                        <i data-lucide="image"></i>
+                        <span></span>
+                    </div>
+
+                    <h3>3. 貿易相手国の変化（アジアへの接近）</h3>
+                    <p>オーストラリアとニュージーランドの貿易相手国は、歴史的に大きく変化してきました。</p>
+                    <ul>
+                        <li><strong>かつての貿易</strong>：旧宗主国であり、結びつきが強かった<strong><span class="important-word">イギリス</span></strong>との貿易が中心でした。</li>
+                        <li><strong>現在の貿易</strong>：イギリスの地位が大きく低下し、代わって<strong><span class="important-word">中国</span></strong>や<strong><span class="important-word">日本</span></strong>、アメリカ合衆国といった<strong><span class="important-word">環太平洋諸国</span>やアジアの国々</strong>が貿易の上位を占めるようになっています。</li>
+                    </ul>
+
+                    <div class="image-placeholder">
+                        <i data-lucide="image"></i>
+                        <span></span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. オーストラリアの農業と地形について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            オーストラリアの内陸に広がる 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="artesian">グレートアーテジアン盆地</option>
+                                <option value="murray_darling">マリーダーリング盆地</option>
+                            </select> 
+                            では、自噴する 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="artesian_water">被圧地下水</option>
+                                <option value="glacier_meltwater">氷河の融け水</option>
+                            </select> 
+                            を利用して羊を飼育する 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="sheep_farming">牧羊</option>
+                                <option value="dairy_farming">酪農</option>
+                            </select> 
+                            が広く営まれている。一方、南東部のマリーダーリング盆地では、東岸の多雨地域から水を引く 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="snowy">スノーウィーマウンテンズ</option>
+                                <option value="tennessee">テネシーヴァレー</option>
+                            </select> 
+                            計画とよばれる灌漑によって農地が拡大し、小麦栽培などが盛んに行われている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. ニュージーランドの農牧業について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ニュージーランドの北島では主に 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="dairy">酪農</option>
+                                <option value="wheat">小麦栽培</option>
+                            </select> 
+                            や肉牛飼育が盛んである。一方、南島ではサザンアルプス山脈の風下にあたる 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="east">東側</option>
+                                <option value="west">西側</option>
+                            </select> 
+                            がやや乾燥するため、 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="sheep_wheat">羊の飼育と小麦栽培</option>
+                                <option value="pig_corn">豚の飼育とトウモロコシ栽培</option>
+                            </select> 
+                            を組み合わせた混合農業がみられる。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. オセアニアの鉱産資源について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            オーストラリアでは資源の分布に明確な特徴がある。ピルバラ地区などの 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="north_west">北西部</option>
+                                <option value="east">東部</option>
+                            </select> 
+                            の安定陸塊では 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="iron">鉄鉱石</option>
+                                <option value="coal">石炭</option>
+                            </select> 
+                            が多く産出され、生産量・輸出量ともに世界一を誇る。一方、古期造山帯が連なる 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="east">東部</option>
+                                <option value="north_west">北西部</option>
+                            </select> 
+                            では 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="coal">石炭</option>
+                                <option value="iron">鉄鉱石</option>
+                            </select> 
+                            が多く産出される。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第4問: 正誤問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. ニュージーランドは鉱産資源に乏しいが、国内の河川や氷河を利用した豊富な水力発電をいかし、電力を大量に消費するアルミニウムの精錬が行われている。</div>
+                        <div class="tf-buttons" id="q4-opts">
+                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第5問: 正誤問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. オーストラリアとニュージーランドは、現在でも旧宗主国であるイギリスとの経済的な結びつきが最も強く、貿易相手国のトップは常にイギリスが占めている。</div>
+                        <div class="tf-buttons" id="q5-opts">
+                            <button class="tf-btn" onclick="selectTF('q5', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q5', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkTF('q5')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q5-retry-btn" onclick="retryTF('q5')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め問題) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'artesian', 'q1-b': 'artesian_water', 'q1-c': 'sheep_farming', 'q1-d': 'snowy' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>内陸の「グレートアーテジアン盆地（大鑽井盆地）」での「被圧地下水」を利用した「牧羊」は超頻出です。また、南東部のマリーダーリング盆地を潤す灌漑計画が「スノーウィーマウンテンズ計画」です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>内陸は「グレートアーテジアン盆地」で被圧地下水を利用した「牧羊」。南東部は「マリーダーリング盆地」で「スノーウィーマウンテンズ」計画による灌漑が行われています。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'dairy', 'q2-b': 'east', 'q2-c': 'sheep_wheat' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ニュージーランドの北島は「酪農」、南島は偏西風の風下で乾燥する「東側」で「羊と小麦の混合農業」が行われています。南北の島で農業が異なる点を押さえましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>北島は「酪農」、南島は風下で乾燥する「東側」で「羊と小麦」の農業が行われています。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'north_west', 'q3-b': 'iron', 'q3-c': 'east', 'q3-d': 'coal' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>オーストラリアの資源分布の基本です。「北西部＝鉄鉱石（安定陸塊）」「東部＝石炭（古期造山帯）」の組み合わせは地図問題で必ず出題されます。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字で修正された箇所を確認しましょう。<br>「北西部」のピルバラ地区で「鉄鉱石」、「東部」の山脈周辺で「石炭」が採れるという位置関係を覚えましょう。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q4': { 
+                correct: true, 
+                explanation: 'その通りです。ニュージーランドはカナダやノルウェーと同様に、豊富な水力（や地熱）発電による安価な電力を活用して、電力を大量に消費するアルミニウムの精錬産業が発達しています。'
+            },
+            'q5': { 
+                correct: false, 
+                explanation: '<strong>誤り</strong>です。かつては旧宗主国イギリスとの結びつきが強かったものの、現在ではイギリスの地位は大きく低下し、代わって<strong>中国や日本、アメリカ合衆国</strong>といったアジアや環太平洋諸国との貿易が中心となっています。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
