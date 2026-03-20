@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国史①（殷・周・春秋戦国） - アジア諸地域の展開 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; /* 文字サイズを本文と統一 */
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px; /* ボーダー位置調整 */
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px; /* スマホでの縦長化防止 */
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応（はみ出し・見切れ防止の完全版） --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 80%; /* デスクトップでは画面いっぱいにならないよう一回り小さく制限 */
+            margin: 24px auto;
+            text-align: center;
+        }
+        .img-wrapper img {
+            max-width: 100%; /* 親要素の幅を決して超えない */
+            height: auto;    /* アスペクト比を維持して縮小・拡大 */
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        /* モバイル（画面幅が狭い場合）は横幅いっぱいに表示する */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+            }
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像を横に並べるためのギャラリー設定 */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            gap: 16px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            max-width: 100%; /* グリッド内ではコンテナに合わせる */
+            margin: 0;
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <!-- 専門科目の active は外しています -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">世界史</a> ＞ 第3章 アジア諸地域の展開
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                中国史①（殷・周・春秋戦国）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>中国の歴史の舞台となるのは、大きく分けて北の<strong>黄河</strong>流域と南の<strong>長江</strong>（揚子江）流域です。古代の中国では、この2つの大河の周辺でそれぞれ独自の文明が発達し、やがてそれらが統合されて広大な国家が形成されていきました。</p>
+
+                    <h3>1. 中国の古代文明と国家の形成</h3>
+                    <p>石器時代から青銅器時代にかけて、農耕を基盤とした文化が各地で誕生しました。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">文明・文化</th>
+                                <th class="col-short">時期</th>
+                                <th class="col-text">特徴と代表的な土器・遺跡</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>黄河文明（前半）<br><span class="important-word">仰韶（ぎょうしょう）文化</span></strong></td>
+                                <td class="col-short">前5000年頃〜</td>
+                                <td class="col-text">黄河中流域で発達。アワやキビなどの畑作や牧畜が基礎。<br>特徴的な土器：幾何学文様が描かれた<strong><span class="important-word">彩陶</span></strong>（素焼きの彩文土器）。<br>おもな遺跡：半坡（はんぱ）遺跡など。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>黄河文明（後半）<br><span class="important-word">竜山（りゅうざん）文化</span></strong></td>
+                                <td class="col-short">前3000年頃〜</td>
+                                <td class="col-text">黄河下流域を中心に発達。ろくろを使用し、土器の製作技術が飛躍的に向上した。<br>特徴的な土器：薄手で黒色の<strong><span class="important-word">黒陶</span></strong>（黒色磨研土器）や、三本足の土器など。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">長江文明</span></strong></td>
+                                <td class="col-short">前5000年頃〜</td>
+                                <td class="col-text">黄河文明に対し、高温多湿な環境を活かした<strong><span class="important-word">稲作</span></strong>が中心であったことが最大の特徴。<br>おもな遺跡・文化：<strong>河姆渡（かぼと）遺跡</strong>、良渚（りょうしょ）文化など。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">その他の文明</td>
+                                <td class="col-short">-</td>
+                                <td class="col-text">四川盆地の<strong>三星堆（さんせいたい）文化</strong>（特異な青銅製の仮面が出土）や、東北地方の<strong>遼河文明</strong>（紅山文化）など、黄河・長江以外にも多様な文化が存在した。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p>こうした農耕の発達とともに人口が増加し、血縁を中心とした氏族共同体が集まって、「<strong>邑（ゆう）</strong>」と呼ばれる城壁で囲まれた都市国家が各地に形成されました。</p>
+
+                    <!-- 画像プレースホルダー（提供画像） -->
+                    <div class="img-wrapper">
+                        <img src="image_a793de.png" alt="">
+                        <div class="img-caption">図1：黄河流域と長江流域における古代文明の分布と主な土器</div>
+                    </div>
+
+                    <h3>2. 殷・周の政治と社会</h3>
+                    <p>多数の邑（都市国家）を従え、広大な地域を支配する強力な連合体の盟主が登場します。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">前16世紀頃〜：殷（いん）</div>
+                            <div class="timeline-content">
+                                <p>中国最古の確認されている王朝。自らは「商」と称した。<strong>大邑商</strong>を盟主とする都市国家の連合体であり、中心となる遺跡は河南省安陽市の<strong><span class="important-word">殷墟</span>（いんきょ）</strong>。</p>
+                                <ul>
+                                    <li><strong><span class="important-word">神権政治</span></strong>（祭政一致）：王が亀の甲羅や動物の骨を使った占いによって神の意思を聞き、それに基づいて政治や軍事を決定した。</li>
+                                    <li><strong><span class="important-word">甲骨文字</span></strong>：占いの結果を刻んだ文字。これが現在の<strong>漢字の原型</strong>となった。</li>
+                                    <li><strong><span class="important-word">青銅器</span></strong>：複雑で神秘的な文様を持つ祭祀用の青銅器が作られた。また、王の死に際しては奴隷などを共に葬る大規模な<strong>殉葬</strong>（じゅんそう）が行われた。</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">前11世紀〜：西周（せいしゅう）</div>
+                            <div class="timeline-content">
+                                <p>渭水（いすい）流域の<strong><span class="important-word">鎬京</span>（こうけい）</strong>を都として成立。周の武王が、暴君とされた殷の紂王を討ち倒した（牧野の戦い）。</p>
+                                <ul>
+                                    <li><strong><span class="important-word">封建制度</span></strong>：王が王族や功臣に封土（領地）を与え、世襲の<strong>諸侯</strong>として地方の統治を任せる制度。王や諸侯の下には、<strong><span class="important-word">卿・大夫・士</span></strong>（けい・たいふ・し）と呼ばれる世襲の家臣団がいた。</li>
+                                    <li><strong><span class="important-word">宗法</span>（そうほう）</strong>：周の封建制度は、ヨーロッパのような主君と家臣の「契約」に基づくものではなく、本家と分家の関係という<strong>血縁集団（氏族・宗族）の秩序</strong>に基づくものであった。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="image-gallery">
+                        <div class="img-wrapper">
+                            <img src="" alt="">
+                            <div class="img-caption">図2：殷墟から出土した甲骨文字と青銅器</div>
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="" alt="">
+                            <div class="img-caption">図3：血縁関係に基づく周の封建制度</div>
+                        </div>
+                    </div>
+
+                    <h3>3. 春秋・戦国時代の社会変容（激動の時代）</h3>
+                    <p>周王の権威が衰え、諸侯が自立して領土を奪い合う「下剋上」の乱世となりますが、一方で社会や経済は大きく飛躍しました。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">前770年〜：春秋時代</div>
+                            <div class="timeline-content">
+                                <p>異民族（犬戎）の侵入により鎬京を追われた周が、東の<strong><span class="important-word">洛邑</span>（らくゆう）</strong>へ遷都して始まる（これ以降を東周とよぶ）。<br>
+                                有力な諸侯は「<strong><span class="important-word">覇者</span></strong>」（春秋の五覇：斉の桓公、晋の文公など）とよばれ、「<strong><span class="important-word">尊王攘夷</span></strong>」（名目上の周王の権威を尊重し、異民族を打ち払う）をスローガンに掲げて覇権を争った。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">前403年〜：戦国時代</div>
+                            <div class="timeline-content">
+                                <p>大国であった「晋」が、家臣の下剋上によって<strong><span class="important-word">韓・魏・趙</span>の3国に分裂</strong>した出来事を機に戦国時代が始まる。各国はもはや周王の権威を無視して自ら「王」を称し、生き残りをかけて実力主義による富国強兵に努めた。<br>
+                                生き残った7つの強国を<strong><span class="important-word">戦国の七雄</span></strong>（秦、楚、斉、燕、趙、魏、韓）という。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>【社会と経済の大きな変化】</h4>
+                    <ul>
+                        <li><strong>農業生産力の飛躍</strong>：<strong><span class="important-word">鉄製農具</span></strong>の普及と、<strong><span class="important-word">牛耕</span></strong>（牛に犂を引かせる農法）の開始。さらに各国の治水・灌漑事業が進んだことで、農業生産力が飛躍的に向上した。（※青銅器は祭器や武器が中心であり、農具にはあまり使われなかった点に注意）</li>
+                        <li><strong>氏族制の崩壊</strong>：農業の発展により、大家族（氏族共同体）に頼らなくても農業が営めるようになり、<strong>小家族の自立</strong>が進んだ。</li>
+                        <li><strong>商工業の発達と青銅貨幣</strong>：農業生産の余剰が生まれ、商工業が発達。各地で様々な形状の青銅貨幣が流通した。
+                            <ul>
+                                <li><strong><span class="important-word">刀銭</span>（刀貨）</strong>：小刀の形。主に<strong>斉・燕</strong>などで使用。</li>
+                                <li><strong><span class="important-word">布銭</span>（布貨）</strong>：農具の形。主に<strong>韓・魏・趙</strong>などで使用。</li>
+                                <li><strong>円銭（環銭）</strong>：秦・魏など。 <strong>蟻鼻銭（ぎびせん）</strong>：楚。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="">
+                        <div class="img-caption">図4：戦国の七雄の勢力図と青銅貨幣の分布</div>
+                    </div>
+
+                    <h3>4. 諸子百家（思想の開花）</h3>
+                    <p>実力主義の乱世において、各国の君主は有能な人材を求めました。これに応えて登場した様々な思想家や学派を<strong>諸子百家</strong>といいます。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">学派</th>
+                                <th class="col-short">主な人物</th>
+                                <th class="col-text">思想の特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short" rowspan="3"><strong><span class="important-word">儒家</span></strong></td>
+                                <td class="col-short"><strong>孔子</strong></td>
+                                <td class="col-text">家族道徳の根本である「仁」（内面の道徳・愛）や「礼」（外面的規範）を強調し、道徳による政治（徳治主義）を説いた。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">孟子</span></strong></td>
+                                <td class="col-text">人間の本性は善であるという<strong><span class="important-word">性善説</span></strong>を唱え、徳治主義に基づく王道政治や、君主が不徳であれば天命が改まるという<strong>易姓革命</strong>を主張した。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">荀子</span></strong>（じゅんし）</td>
+                                <td class="col-text">人間の本性は悪であるという<strong><span class="important-word">性悪説</span></strong>を唱え、人間は外から規制されるべきだとして「礼治主義」（社会秩序の重視）を説いた。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">法家</span></strong></td>
+                                <td class="col-short"><strong>商鞅</strong>（しょうおう）<br>韓非、李斯</td>
+                                <td class="col-text">荀子の性悪説を進展させ、君主の定める「法」と信賞必罰による厳格な統治を主張。秦の富国強兵と天下統一に大きく貢献した。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">道家</span></strong></td>
+                                <td class="col-short">老子、荘子</td>
+                                <td class="col-text">儒家の人為的な道徳を批判し、万物の根源である「道」に従い、あるがままに生きる「<strong><span class="important-word">無為自然</span></strong>」を説いた。のちの道教の源流となる。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">墨家</span></strong></td>
+                                <td class="col-short">墨子</td>
+                                <td class="col-text">儒家の家族中心の愛（差別愛）を批判し、普遍的で無差別の愛である「<strong><span class="important-word">兼愛</span></strong>」と、侵略戦争を否定する「<strong><span class="important-word">非攻</span></strong>」を唱えた。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">縦横家</span></strong></td>
+                                <td class="col-short">蘇秦、張儀</td>
+                                <td class="col-text">外交の駆け引きを説く戦略家。蘇秦は強国・秦に6国が同盟して対抗する<strong>合従策</strong>を、張儀は秦と各国が個別に同盟を結ぶ<strong>連衡策</strong>を説いた。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="">
+                        <div class="img-caption">図5：諸子百家の相関図と各学派の特徴</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 中国の古代文明と出土品について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            黄河文明において、前半に栄えた仰韶文化は、素焼きに幾何学模様などを描いた 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="saitou">彩陶（彩文土器）</option>
+                                <option value="kokutou">黒陶（黒色磨研土器）</option>
+                            </select> 
+                            を特徴とする。一方、後半の竜山文化では、ろくろを使用した製作技術が向上し、薄手で黒色の 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="kokutou">黒陶（黒色磨研土器）</option>
+                                <option value="saitou">彩陶（彩文土器）</option>
+                            </select> 
+                            が広まった。また、アワやキビの栽培を基礎とした黄河文明に対し、南部の長江文明は高温多湿な環境を活かした 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="rice">稲作</option>
+                                <option value="wheat">麦作</option>
+                            </select> 
+                            を中心に発達し、河姆渡遺跡などが知られている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 殷と周の歴史について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            殷の時代には、王が亀の甲羅や動物の骨を使った占いを利用して政治を行う 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="theocracy">神権政治（祭政一致）</option>
+                                <option value="democracy">民主政治</option>
+                            </select> 
+                            が行われており、その占いの結果を刻んだものが現在の漢字の原型となった 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="oracle_bone">甲骨文字</option>
+                                <option value="cuneiform">楔形文字</option>
+                            </select> 
+                            である。その後、殷を倒して渭水流域の 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="houkei">鎬京</option>
+                                <option value="rakuyuu">洛邑</option>
+                            </select> 
+                            に都を置いた周は、一族や功臣に領地を与えて世襲の諸侯とする 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="feudalism">封建制度</option>
+                                <option value="centralization">郡県制</option>
+                            </select> 
+                            によって地方を統治した。この制度は、宗族とよばれる血縁集団の秩序である宗法に基づいていた。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 正誤問題 -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 春秋・戦国時代の社会と諸子百家について。この時代には、農業生産力を飛躍的に高めた「鉄製農具」や牛耕が広く普及した。また、思想界では、人間の本性を悪とする『性悪説』を唱え、厳格な法による統治を主張した孟子の思想が、のちに秦の富国強兵に大きな影響を与えた。</div>
+                        <div class="tf-buttons" id="q3-opts">
+                            <button class="tf-btn" onclick="selectTF('q3', true)">〇 (正しい)</button>
+                            <button class="tf-btn" onclick="selectTF('q3', false)">× (誤り)</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkTF('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryTF('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB (Floating Action Buttons) -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB (上へ戻る・暗記モード) 制御 ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'saitou', 'q1-b': 'kokutou', 'q1-c': 'rice' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>黄河文明の「彩陶（仰韶文化）」→「黒陶（竜山文化）」の順番と、南の長江文明の「稲作」の組み合わせは、古代中国史の基本事項です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>前半の仰韶文化は「彩陶」、後半の竜山文化はろくろを使った「黒陶」です。南の長江文明は「稲作」が中心でした。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'theocracy', 'q2-b': 'oracle_bone', 'q2-c': 'houkei', 'q2-d': 'feudalism' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>殷の「神権政治」と「甲骨文字」、そして周の鎬京（こうけい）を都とした、血縁に基づく「封建制度」は試験で非常によく問われるキーワードです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>殷は占いによる「神権政治」で、結果を「甲骨文字」に刻みました。周は鎬京を都とし、一族に土地を与える「封建制度」を行いました。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+
+        // --- クイズロジック (正誤問題) ---
+        let tfUserAnswers = {};
+        const tfQuizzes = {
+            'q3': { 
+                correct: false, 
+                explanation: '前半の「鉄製農具や牛耕の普及」は正しいですが、後半の思想と人物の組み合わせが<strong>誤り</strong>です。性悪説を唱えたのは<strong>荀子（じゅんし）</strong>であり、<strong>孟子</strong>は性善説を唱えました。また、荀子の性悪説を発展させて法による厳格な統治を主張し、秦の富国強兵に貢献したのは商鞅や李斯などの<strong>法家</strong>です。'
+            }
+        };
+
+        function selectTF(qId, val) {
+            tfUserAnswers[qId] = val;
+            const container = document.getElementById(`${qId}-opts`);
+            const buttons = container.querySelectorAll('.tf-btn');
+            buttons[0].className = `tf-btn ${val === true ? 'selected-true' : ''}`;
+            buttons[1].className = `tf-btn ${val === false ? 'selected-false' : ''}`;
+            
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+        }
+
+        function checkTF(qId) {
+            const userVal = tfUserAnswers[qId];
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            if (userVal === undefined) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択です。</strong>「〇」か「×」を選んでからチェックしてください。';
+                return;
+            }
+
+            const quizData = tfQuizzes[qId];
+            if (userVal === quizData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>正解！</strong><br>${quizData.explanation}`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>不正解...</strong><br>${quizData.explanation}`;
+            }
+            feedback.style.display = 'block';
+
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryTF(qId) {
+            delete tfUserAnswers[qId];
+            
+            const buttons = document.getElementById(`${qId}-opts`).querySelectorAll('.tf-btn');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'tf-btn';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
