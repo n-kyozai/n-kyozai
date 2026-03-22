@@ -330,17 +330,41 @@
             font-weight: bold;
         }
 
-        /* 画像を横に並べるためのギャラリー設定 */
+        /* 画像を横に並べるためのギャラリー設定（Flexbox） */
         .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-            gap: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
             margin: 24px 0;
             width: 100%;
         }
         .image-gallery .img-wrapper {
-            max-width: 100%; /* グリッド内ではセルの幅に合わせる */
+            flex: 0 1 auto; /* 無理に幅を広げず、画像本来のサイズに合わせることで複数枚の自動配列を可能に */
+            width: auto; /* img-wrapperのデフォルトの width: 100% を解除 */
+            max-width: 100%; /* デスクトップの2列制限を解除 */
             margin: 0;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 95%; /* スマホでも左右に少し余白を持たせる */
+            }
+            .img-wrapper img {
+                max-height: 45vh; /* スマホでは縦長の制限を少し強めに */
+            }
+            /* スマホでは横並びを解除し確実に縦並びにする */
+            .image-gallery {
+                flex-direction: column;
+                align-items: center;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 auto;
+                width: 100%;
+                max-width: 100%;
+            }
         }
 
         /* --- 基礎問題 UI --- */
@@ -448,7 +472,7 @@
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
 
             <div class="nav-category">専門科目</div>
-            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>世界史</a>
+            <a href="/n-kyozai/politics/index.html" class="nav-item active"><i data-lucide="book-open"></i>世界史</a>
         </nav>
     </aside>
 
@@ -489,29 +513,20 @@
                             </div>
                         </div>
 
-                        <div class="timeline-item">
-                            <div class="timeline-date">前209年〜：陳勝・呉広の乱と秦の滅亡</div>
-                            <div class="timeline-content">
-                                <p>始皇帝の死後、厳しい法治や大規模な土木工事（万里の長城、阿房宮など）の負担に耐えかねた農民が反乱を起こしました。これが中国史上初の農民反乱である<strong><span class="important-word">陳勝・呉広の乱</span></strong>です。この反乱で掲げられた「<strong>王侯将相（おうこうしょうしょう）いずくんぞ種（しゅ）あらんや</strong>（王や将軍になるのに血筋は関係ない）」という言葉は、実力主義の時代を象徴しています。これを機に各地で反乱が起き、秦はわずか15年で滅亡しました。</p>
-                            </div>
+                    <!-- 画像プレースホルダーをギャラリー化 -->
+                    <div class="image-gallery">
+                        <div class="img-wrapper">
+                            <img src="2026-03-21_22h52_48.png" alt="秦・漢の領域">
                         </div>
-                    </div>
-
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="2026-03-21_22h52_48.png" alt="秦・漢の領域">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-5.jpg" alt="万里の長城">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-7.jpg" alt="始皇帝の統一政策">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-6.jpg" alt="秦・漢と周辺地域の動き">
+                        <div class="img-wrapper">
+                            <img src="sp-wh-5.jpg" alt="万里の長城">
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="sp-wh-7.jpg" alt="始皇帝の統一政策">
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="sp-wh-6.jpg" alt="秦・漢と周辺地域の動き">
+                        </div>
                     </div>
 
                     <h3>2. 前漢の成立と武帝の最盛期</h3>
@@ -548,17 +563,17 @@
                         </table>
                     </div>
 
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-10.jpg" alt="漢の統治機構">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-8.jpg" alt="封建制・郡県制・郡国制の違い">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-9.jpg" alt="郡国制（漢代初期）">
+                    <!-- 画像プレースホルダーをギャラリー化 -->
+                    <div class="image-gallery">
+                        <div class="img-wrapper">
+                            <img src="sp-wh-10.jpg" alt="漢の統治機構">
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="sp-wh-8.jpg" alt="封建制・郡県制・郡国制の違い">
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="sp-wh-9.jpg" alt="郡国制（漢代初期）">
+                        </div>
                     </div>
 
                     <h3>3. 新の建国と後漢の成立</h3>
@@ -584,13 +599,14 @@
                         </div>
                     </div>
 
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-11.jpg" alt="冊封体制と印綬">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-12.jpg" alt="『後漢書』東夷伝">
+                    <!-- 画像プレースホルダーをギャラリー化 -->
+                    <div class="image-gallery">
+                        <div class="img-wrapper">
+                            <img src="sp-wh-11.jpg" alt="冊封体制と印綬">
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="sp-wh-12.jpg" alt="『後漢書』東夷伝">
+                        </div>
                     </div>
 
                     <h3>4. 漢代の文化</h3>
@@ -621,169 +637,21 @@
                             </tr>
                         </table>
                     </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-13.jpg" alt="製紙法の改良">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-14.jpg" alt="製紙法の伝播">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-15.jpg" alt="漢代の文化">
-                    </div>
-                    <!-- 画像プレースホルダー -->
-                    <div class="img-wrapper">
-                        <img src="sp-wh-16.jpg" alt="宦官">
-                    </div>
 
-                </div>
-            </section>
-
-            <!-- 【基礎問題セクション】 -->
-            <section class="section-box">
-                <div class="section-header">
-                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
-                </div>
-                <div class="quiz-container">
-                    
-                    <!-- 第1問: 穴埋め -->
-                    <div class="quiz-block" id="q1">
-                        <div class="quiz-question">Q1. 秦の政策について、空欄を埋めなさい。</div>
-                        <div class="fill-in-blank">
-                            中国を初めて統一した秦の始皇帝は、法家の 
-                            <select class="blank-select" id="q1-a">
-                                <option value="">---</option>
-                                <option value="lishi">李斯</option>
-                                <option value="zhangqian">張騫</option>
-                            </select> 
-                            を丞相に登用し、全国を直轄地として官僚を派遣する 
-                            <select class="blank-select" id="q1-b">
-                                <option value="">---</option>
-                                <option value="gunken">郡県制</option>
-                                <option value="houken">封建制</option>
-                            </select> 
-                            を施行して強力な中央集権体制を築いた。また、貨幣として 
-                            <select class="blank-select" id="q1-c">
-                                <option value="">---</option>
-                                <option value="banryou">半両銭</option>
-                                <option value="tousen">刀銭</option>
-                            </select> 
-                            を全国に普及させ、思想統制のため実用書以外の書物を焼き、儒学者を弾圧する 
-                            <select class="blank-select" id="q1-d">
-                                <option value="">---</option>
-                                <option value="funsho">焚書・坑儒</option>
-                                <option value="koukin">黄巾の乱</option>
-                            </select> 
-                            を行った。しかし、過酷な統治に反発した農民による中国史上初の反乱である 
-                            <select class="blank-select" id="q1-e">
-                                <option value="">---</option>
-                                <option value="chinshou">陳勝・呉広の乱</option>
-                                <option value="sekibi">赤眉の乱</option>
-                            </select> 
-                            を機に、秦はわずか15年で滅亡した。
+                    <!-- 画像プレースホルダーをギャラリー化 -->
+                    <div class="image-gallery">
+                        <div class="img-wrapper">
+                            <img src="sp-wh-13.jpg" alt="製紙法の改良">
                         </div>
-                        <div class="action-buttons">
-                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
-                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        <div class="img-wrapper">
+                            <img src="sp-wh-14.jpg" alt="製紙法の伝播">
                         </div>
-                        <div id="q1-feedback" class="feedback"></div>
-                    </div>
-
-                    <!-- 第2問: 穴埋め -->
-                    <div class="quiz-block" id="q2">
-                        <div class="quiz-question">Q2. 漢の歴史と政策について、空欄を埋めなさい。</div>
-                        <div class="fill-in-blank">
-                            長安を都として前漢を建国した高祖（劉邦）は、郡県制と封建制を併用する 
-                            <select class="blank-select" id="q2-a">
-                                <option value="">---</option>
-                                <option value="gunkoku">郡国制</option>
-                                <option value="gunken">郡県制</option>
-                            </select> 
-                            を採用した。しかし、中央集権化に反発した諸侯が起こした 
-                            <select class="blank-select" id="q2-b">
-                                <option value="">---</option>
-                                <option value="gosho">呉楚七国の乱</option>
-                                <option value="sekibi">赤眉の乱</option>
-                            </select> 
-                            を鎮圧したことで、実質的な郡県制が確立した。最盛期を迎えた第7代の武帝は、地方長官の推薦で人材を登用する 
-                            <select class="blank-select" id="q2-c">
-                                <option value="">---</option>
-                                <option value="kyoukyo">郷挙里選</option>
-                                <option value="kakyo">科挙</option>
-                            </select> 
-                            を実施し、財政難を補うために塩・鉄・酒の 
-                            <select class="blank-select" id="q2-d">
-                                <option value="">---</option>
-                                <option value="senbai">専売</option>
-                                <option value="jiyuu">自由貿易</option>
-                            </select> 
-                            を行った。また、匈奴を挟み撃ちにするため、大月氏へ 
-                            <select class="blank-select" id="q2-e">
-                                <option value="">---</option>
-                                <option value="chouken">張騫</option>
-                                <option value="shibasen">司馬遷</option>
-                            </select> 
-                            を派遣した。
+                        <div class="img-wrapper">
+                            <img src="sp-wh-15.jpg" alt="漢代の文化">
                         </div>
-                        <div class="action-buttons">
-                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
-                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        <div class="img-wrapper">
+                            <img src="sp-wh-16.jpg" alt="宦官">
                         </div>
-                        <div id="q2-feedback" class="feedback"></div>
-                    </div>
-
-                    <!-- 第3問: 穴埋め -->
-                    <div class="quiz-block" id="q3">
-                        <div class="quiz-question">Q3. 新・後漢の歴史と文化について、空欄を埋めなさい。</div>
-                        <div class="fill-in-blank">
-                            外戚の王莽が建てた「新」は、農民反乱である 
-                            <select class="blank-select" id="q3-a">
-                                <option value="">---</option>
-                                <option value="sekibi">赤眉の乱</option>
-                                <option value="koukin">黄巾の乱</option>
-                            </select> 
-                            によって滅亡した。その後、光武帝が洛陽を都として後漢を建てた。文化面では、前漢の武帝の時代に董仲舒の建白により 
-                            <select class="blank-select" id="q3-b">
-                                <option value="">---</option>
-                                <option value="jukyou">儒教</option>
-                                <option value="bukkyou">仏教</option>
-                                <option value="doukyou">道教</option>
-                            </select> 
-                            が官学化され、これを教授するための五経博士が置かれた。また、歴史書の分野では、前漢の司馬遷が紀伝体で記述した『 
-                            <select class="blank-select" id="q3-c">
-                                <option value="">---</option>
-                                <option value="shiki">史記</option>
-                                <option value="kansho">漢書</option>
-                            </select> 
-                            』が有名である。さらに後漢の時代には、宦官の 
-                            <select class="blank-select" id="q3-d">
-                                <option value="">---</option>
-                                <option value="sairin">蔡倫</option>
-                                <option value="hanko">班固</option>
-                            </select> 
-                            によって製紙法が改良され、紙が広く普及するきっかけとなった。
-                        </div>
-                        <div class="action-buttons">
-                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
-                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
-                        </div>
-                        <div id="q3-feedback" class="feedback"></div>
-                    </div>
-
-                    <!-- 第4問: 正誤問題 -->
-                    <div class="quiz-block" id="q4">
-                        <div class="quiz-question">Q4. 後漢の末期には、外戚や宦官による政治の腐敗に対し、官僚や知識人たちが激しく批判して弾圧される「党錮の禁」が起きた。その後、太平道を率いる張角を中心とした農民反乱である「黄巾の乱」が起こり、漢王朝は事実上崩壊して三国時代へと突入した。</div>
-                        <div class="tf-buttons" id="q4-opts">
-                            <button class="tf-btn" onclick="selectTF('q4', true)">〇 (正しい)</button>
-                            <button class="tf-btn" onclick="selectTF('q4', false)">× (誤り)</button>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="check-btn" id="q4-check-btn" onclick="checkTF('q4')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
-                            <button class="retry-btn" id="q4-retry-btn" onclick="retryTF('q4')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
-                        </div>
-                        <div id="q4-feedback" class="feedback"></div>
                     </div>
 
                 </div>
