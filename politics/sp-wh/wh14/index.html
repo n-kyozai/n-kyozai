@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国史④（隋・唐帝国） - アジア諸地域の展開 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em; /* 文字サイズを本文と統一 */
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px; /* ボーダー位置調整 */
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px; /* スマホでの縦長化防止 */
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 強化版：画像のレスポンシブ対応（はみ出し・縦長化防止・一括適用） --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%; /* デスクトップでは一回り小さく表示 */
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;  /* コンテナの幅を決して超えない */
+            max-height: 60vh; /* 縦長画像が画面を占領しすぎないよう高さを制限 */
+            width: auto;
+            height: auto;
+            object-fit: contain; /* アスペクト比を維持して綺麗に収める */
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像を横に並べるためのギャラリー設定（Flexbox） */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px; /* 基本幅。余白があれば広がるが max-width で制限 */
+            max-width: calc(50% - 12px); /* デスクトップでは2枚横並びに制限 */
+            margin: 0;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 95%; /* スマホでも左右に少し余白を持たせる */
+            }
+            .img-wrapper img {
+                max-height: 45vh; /* スマホでは縦長の制限を少し強めに */
+            }
+            /* スマホでは横並びを解除し縦並びにする */
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">世界史</a> ＞ 第3章 アジア諸地域の展開
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                中国史④（隋・唐帝国）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>魏晋南北朝の長い分裂状態に終止符を打ち、再び中国を統一したのが「隋」です。隋は短命に終わりますが、その諸制度を引き継いだ「唐」が長期政権を築き、東アジア全体に大きな影響を与える「東アジア文化圏」を形成しました。</p>
+
+                    <h3>1. 隋の統一と滅亡（581年〜618年）</h3>
+                    <p>北朝から出た<strong><span class="important-word">楊堅</span></strong>（文帝）が589年に南朝の陳を滅ぼして中国を統一しました。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">初代：文帝（楊堅）</div>
+                            <div class="timeline-content">
+                                <ul>
+                                    <li><strong><span class="important-word">科挙</span></strong>（かきょ）の開始：家柄による官吏登用（九品中正）を廃止し、学科試験による実力主義の官僚登用制度を導入しました。当初の目的は「<strong>門閥貴族の抑制</strong>」でした。</li>
+                                    <li><strong>制度の整備</strong>：中央官制（三省六部）、律令格式（法体系）、地方制度（郡を廃止して<strong>州県制</strong>とする）などを整備しました。</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">第2代：煬帝（ようだい）</div>
+                            <div class="timeline-content">
+                                <p>大規模な土木事業と外征を行いましたが、民衆の反発を招き滅亡しました。</p>
+                                <ul>
+                                    <li><strong><span class="important-word">大運河</span></strong>の建設：経済の中心となった<strong>江南</strong>の物資（米など）を、政治の中心である<strong>華北</strong>（長安・洛陽など）へ輸送するための大動脈を完成させました。</li>
+                                    <li><strong><span class="important-word">高句麗遠征</span></strong>：3度にわたる高句麗（朝鮮半島北部）への遠征を行いましたがすべて失敗し、各地で反乱が続発して隋は滅亡しました。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="">
+                        <div class="img-caption">図1：大運河のルートと、隋・唐の中央官制（三省六部）</div>
+                    </div>
+
+                    <h3>2. 唐の建国と繁栄（618年〜907年）</h3>
+                    <p>隋の反乱の中から台頭した李淵（高祖）が建国し、その子である太宗の時代に基礎が固まりました。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">皇帝・出来事</th>
+                                <th class="col-text">主な政策と特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short">第2代 <strong><span class="important-word">太宗</span></strong><br>（李世民）</td>
+                                <td class="col-text">実質的な建国者。律令体制を整備し、周辺諸国を服属させて唐の基礎を固めました。彼の治世は「<strong><span class="important-word">貞観の治</span></strong>（じょうがんのち）」とよばれ、理想の政治と讃えられました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">第3代 高宗</td>
+                                <td class="col-text">西突厥、百済、高句麗を滅ぼし、唐代の<strong>最大版図</strong>を実現しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">則天武后</span></strong><br>（武則天）</td>
+                                <td class="col-text">高宗の皇后でのちに中国史上<strong>唯一の女帝</strong>となりました。国号を一時的に「周」に改め（武周革命）、門閥貴族を遠ざけて科挙出身の官僚を重用しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short">第6代 <strong><span class="important-word">玄宗</span></strong></td>
+                                <td class="col-text">
+                                    治世の前半は「<strong><span class="important-word">開元の治</span></strong>」とよばれる政治安定期でした。しかし晩年は<strong>楊貴妃</strong>を寵愛して政治が乱れました。<br>
+                                    また、751年の<strong><span class="important-word">タラス河畔の戦い</span></strong>でアッバース朝（イスラーム帝国）に大敗し、これを機に中国の<strong>製紙法</strong>が西方へ伝わりました。
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="">
+                        <div class="img-caption">図2：唐の最大領域と周辺民族への対応（都護府と節度使）</div>
+                    </div>
+
+                    <h3>3. 律令体制の崩壊と社会の変化</h3>
+                    <p>唐を支えていた均田制や府兵制は次第に行き詰まり、税制と兵制の根本的な転換を余儀なくされました。</p>
+
+                    <h4>① 初期・中期の制度（原則）</h4>
+                    <ul>
+                        <li><strong><span class="important-word">均田制</span></strong>：成年男子に土地を均等に支給する制度。</li>
+                        <li><strong><span class="important-word">租庸調制</span></strong>：均田制で土地を与えられた農民に対し、穀物（租）・労役や布（庸）・特産物（調）を納めさせる税制。（※貧富の差に関係なく一律の課税）</li>
+                        <li><strong>府兵制</strong>：均田農民から兵役を徴発する制度。</li>
+                    </ul>
+
+                    <h4>② 制度の崩壊と転換</h4>
+                    <p>税や兵役の重負担から<strong>農民の逃亡</strong>が相次ぎ、均田制は崩壊しました。農民がいなくなったため、兵制は傭兵を雇う<strong>募兵制</strong>へ移行し、辺境防衛のために置かれた<strong><span class="important-word">節度使</span></strong>（せっとし）に大きな軍事力が与えられました。</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">755年〜：安史の乱</div>
+                            <div class="timeline-content">
+                                <p>強大な力を持った節度使の<strong><span class="important-word">安禄山</span></strong>（あんろくざん）と史思明らが起こした大反乱。政府軍だけでは鎮圧できず、遊牧民<strong><span class="important-word">ウイグル</span></strong>の援助を得てようやく平定しましたが、唐の衰退が決定的となりました。これ以降、各地の節度使は地方軍閥（<strong>藩鎮</strong>）として独立化していきます。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">780年：<span class="important-word">両税法</span>の施行</div>
+                            <div class="timeline-content">
+                                <p>崩壊した租庸調制に代わり、宰相・楊炎の献策により施行された新しい税制です。現住地において、<strong>夏と秋の年2回</strong>、<strong><span class="important-word">資産に応じて課税</span></strong>する仕組みです。（※貧富の差や土地の私有を実質的に公認した画期的な制度です）</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">875年〜：黄巣（こうそう）の乱から唐の滅亡</div>
+                            <div class="timeline-content">
+                                <p>財政難の政府が「塩の専売」を強化したことに反発し、塩の密売商人であった黄巣が起こした大農民反乱。最終的に、唐は907年に節度使の<strong>朱全忠</strong>（しゅぜんちゅう）によって滅ぼされました。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>4. 東アジアの国際関係と唐代の文化</h3>
+                    <p>唐の時代、中国は周辺諸国に官爵を与えて主従関係を結ぶ<strong><span class="important-word">冊封体制</span></strong>（さくほうたいせい）を築き、漢字・儒教・仏教・律令などを共有する「東アジア文化圏」が形成されました。（例：日本の遣唐使、渤海、新羅など）</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">分野</th>
+                                <th class="col-text">特徴と代表的な人物・事項</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>宗教<br>（国際性と外来宗教）</strong></td>
+                                <td class="col-text">
+                                    国際的な都市・長安には多くの外国人が訪れました。<br>
+                                    ・<strong>三夷教</strong>（さんいきょう）：西域から伝わった<strong>祆教</strong>（ゾロアスター教）、マニ教、<strong>景教</strong>（ネストリウス派キリスト教）。<br>
+                                    ・<strong>回教</strong>（イスラーム教）：海路でアラブ人（大食）などがもたらした。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>仏教<br>（インドへの求法）</strong></td>
+                                <td class="col-text">
+                                    ・<strong><span class="important-word">玄奘</span></strong>（げんじょう）：往復とも<strong>陸路</strong>でインド（ヴァルダナ朝）へ赴き、『<strong><span class="important-word">大唐西域記</span></strong>』を著した。<br>
+                                    ・<strong><span class="important-word">義浄</span></strong>（ぎじょう）：往復とも<strong>海路</strong>でインドへ赴き、帰路に立ち寄ったシュリーヴィジャヤ王国で『<strong><span class="important-word">南海寄帰内法伝</span></strong>』を著した。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>文学・芸術</strong></td>
+                                <td class="col-text">
+                                    ・<strong>唐詩</strong>：科挙で詩作が重視されたこともあり、<strong><span class="important-word">李白</span></strong>（詩仙）、<strong><span class="important-word">杜甫</span></strong>（詩聖）、白居易などが活躍した。<br>
+                                    ・<strong>古文復興</strong>：唐代後半、<strong><span class="important-word">韓愈</span></strong>（かんゆ）や柳宗元が、貴族的な四六駢儷体を批判し、力強い漢文（古文）への復帰を唱えた。<br>
+                                    ・<strong>唐三彩</strong>：シルクロードを通じた東西交流を象徴する、色鮮やかな陶器。ラクダや人物をかたどったものが多い。
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="image-gallery">
+                        <div class="img-wrapper">
+                            <img src="" alt="">
+                            <div class="img-caption">図3：中国を中心とする「冊封体制」の概念図</div>
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="" alt="">
+                            <div class="img-caption">図4：東西交流の象徴である「唐三彩」</div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 隋と唐の建国初期について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            中国を再統一した隋の文帝（楊堅）は、門閥貴族を抑制するために学科試験による官僚登用制度である 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="kakyo">科挙</option>
+                                <option value="kyoukyo">郷挙里選</option>
+                            </select> 
+                            を開始した。しかし、第2代の煬帝が 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="daiunga">大運河</option>
+                                <option value="choujou">万里の長城</option>
+                            </select> 
+                            の建設や高句麗遠征などの過酷な事業を行ったため滅亡した。その後建国された唐は、第2代の太宗（李世民）の治世に基礎が固まり、この時代は「 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="jougan">貞観の治</option>
+                                <option value="kaigen">開元の治</option>
+                            </select> 
+                            」と讃えられた。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 唐代の制度と社会の変化について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            唐の初期は、農民に土地を与える 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="kinden">均田制</option>
+                                <option value="shouden">占田法</option>
+                            </select> 
+                            と、それに基づく租庸調制や府兵制によって維持されていた。しかし、農民の逃亡によりこれらの制度が崩壊すると、兵制は傭兵を雇う募兵制へ移行し、辺境防衛のために 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="settoshi">節度使</option>
+                                <option value="togofu">都護府</option>
+                            </select> 
+                            が置かれた。755年には彼らが反乱を起こす 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="anshi">安史の乱</option>
+                                <option value="kousou">黄巣の乱</option>
+                            </select> 
+                            が発生した。また、税制面でも780年に宰相楊炎の献策により、夏と秋の年2回、資産に応じて課税する 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="ryouzei">両税法</option>
+                                <option value="ichijou">一条鞭法</option>
+                            </select> 
+                            が導入された。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 唐代の文化と仏教僧について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            唐の時代にはインドへ赴いて仏典を持ち帰る僧が活躍した。往復とも陸路を用いてインドへ向かった 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="genjou">玄奘</option>
+                                <option value="gijou">義浄</option>
+                                <option value="hokken">法顕</option>
+                            </select> 
+                            は、『大唐西域記』を著した。一方、往復とも海路を用いてインドへ向かった 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="gijou">義浄</option>
+                                <option value="genjou">玄奘</option>
+                                <option value="hokken">法顕</option>
+                            </select> 
+                            は、帰路に滞在したシュリーヴィジャヤ王国で『南海寄帰内法伝』を著した。また、文学の分野では、唐代後半に 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="kanyu">韓愈</option>
+                                <option value="rihaku">李白</option>
+                            </select> 
+                            らが、貴族的な四六駢儷体を批判して、力強い漢文の復興を唱える古文復興運動を行った。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'kakyo', 'q1-b': 'daiunga', 'q1-c': 'jougan' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>隋の「科挙」の開始と「大運河」の建設、そして唐の太宗による「貞観の治」は、この時代の基礎知識として確実に覚えておきましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>隋の文帝は「科挙」を開始し、煬帝は「大運河」を建設しました。唐の太宗（李世民）の治世が「貞観の治」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'kinden', 'q2-b': 'settoshi', 'q2-c': 'anshi', 'q2-d': 'ryouzei' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>唐の制度の移り変わりは最重要ポイントです。均田制の崩壊 → 節度使の台頭と安史の乱 → 両税法の施行という流れをセットで理解しておきましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>農民に土地を与えるのが「均田制」。辺境防衛の軍事長官が「節度使」で、彼らが起こしたのが「安史の乱」です。その後導入された新しい税制が「両税法」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'genjou', 'q3-b': 'gijou', 'q3-c': 'kanyu' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>陸路で『大唐西域記』を著したのが玄奘、海路で『南海寄帰内法伝』を著したのが義浄です。ルートと著書の区別は頻出です。また、韓愈・柳宗元の「古文復興運動」も押さえておきましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>陸路＝玄奘（大唐西域記）、海路＝義浄（南海寄帰内法伝）の組み合わせを正確に覚えましょう。古文復興を唱えたのは韓愈や柳宗元です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
