@@ -328,17 +328,41 @@
             font-weight: bold;
         }
 
-        /* 画像を横に並べるためのギャラリー設定 */
+        /* 画像を横に並べるためのギャラリー設定（Flexbox） */
         .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-            gap: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
             margin: 24px 0;
             width: 100%;
         }
         .image-gallery .img-wrapper {
-            max-width: 100%; /* グリッド内ではコンテナに合わせる */
+            flex: 0 1 auto; /* 無理に幅を広げず、画像本来のサイズに合わせることで複数枚の自動配列を可能に */
+            width: auto; /* img-wrapperのデフォルトの width: 100% を解除 */
+            max-width: 100%; /* デスクトップの2列制限を解除 */
             margin: 0;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 95%; /* スマホでも左右に少し余白を持たせる */
+            }
+            .img-wrapper img {
+                max-height: 45vh; /* スマホでは縦長の制限を少し強めに */
+            }
+            /* スマホでは横並びを解除し確実に縦並びにする */
+            .image-gallery {
+                flex-direction: column;
+                align-items: center;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 auto;
+                width: 100%;
+                max-width: 100%;
+            }
         }
 
         /* --- 基礎問題 UI --- */
@@ -551,6 +575,7 @@
                             <div class="img-caption">図3：血縁関係に基づく周の封建制度</div>
                         </div>
                     </div>
+                    
 
                     <h3>3. 春秋・戦国時代の社会変容（激動の時代）</h3>
                     <p>周王の権威が衰え、諸侯が自立して領土を奪い合う「下剋上」の乱世となりますが、一方で社会や経済は大きく飛躍しました。</p>
@@ -585,7 +610,7 @@
                             </ul>
                         </li>
                     </ul>
-
+                    <div class="image-gallery">
                     <div class="img-wrapper">
                         <img src="2026-03-20_15h19_18.png" alt="">
                         <div class="img-caption">図4：戦国の七雄の勢力図</div>
@@ -593,6 +618,7 @@
                     <div class="img-wrapper">
                         <img src="2026-03-20_15h19_44.png" alt="">
                         <div class="img-caption">図4：青銅貨幣の分布</div>
+                    </div>
                     </div>
 
                     <h3>4. 諸子百家（思想の開花）</h3>
@@ -640,14 +666,18 @@
                             </tr>
                         </table>
                     </div>
-
+                    <div class="image-gallery">
+                    <div class="img-wrapper">
+                        <img src="" alt="">
+                        <div class="img-caption">図5：諸子百家の相関図と各学派の特徴</div>
+                    </div>
                     <div class="img-wrapper">
                         <img src="sp-wh-3.jpg" alt="">
                         <div class="img-caption">図5：諸子百家</div>
                     </div>
                     <div class="img-wrapper">
                         <img src="sp-wh-4.jpg" alt="">
-                        
+                    </div>
                     </div>
 
                 </div>
