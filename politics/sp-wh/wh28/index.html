@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アジア史（朝鮮史） - アジアの巨大帝国と諸地域 - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">世界史</a> ＞ 第5章 アジアの巨大帝国と諸地域
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                アジア史（朝鮮史）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>朝鮮半島の歴史は、常に隣接する中国大陸の巨大帝国からの強い影響を受けてきました。古代の漢による支配から始まり、高句麗の台頭、そして近世における日本との関係や清の侵攻、さらには明清交代がもたらした思想的な衝撃まで、朝鮮史の大きな流れを整理します。</p>
+
+                    <h3>1. 古代の朝鮮半島（衛氏朝鮮から三国時代へ）</h3>
+                    <p>紀元前2世紀、中国の燕から亡命した衛満が建国したのが<strong>衛氏朝鮮</strong>です。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">前108年：漢の武帝による征服</div>
+                            <div class="timeline-content">
+                                <p>前漢の<strong><span class="important-word">武帝</span></strong>が衛氏朝鮮を滅ぼし、この地に<strong><span class="important-word">朝鮮4郡</span></strong>（<strong><span class="important-word">楽浪郡</span></strong>、真番郡、臨屯郡、玄菟郡）を設置して直接支配を行いました。（※のちに楽浪郡の南部は分割されて<strong>帯方郡</strong>となります。）</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">313年：<span class="important-word">高句麗</span>の台頭</div>
+                            <div class="timeline-content">
+                                <p>ツングース系の貊族（はくぞく）が建てた<strong><span class="important-word">高句麗</span></strong>（都：丸都城）が、楽浪郡を滅ぼして半島北部を支配しました。<br>
+                                ・全盛期：4〜5世紀の<strong><span class="important-word">広開土王（好太王）</span></strong>の時代。彼の業績を記した巨大な碑文が残されています。<br>
+                                ・7世紀初めには、中国を統一した<strong>隋の煬帝</strong>の遠征軍を再三にわたって撃退しました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">南朝鮮の三韓</div>
+                            <div class="timeline-content">
+                                <p>半島南部には韓族による多数の小国家群があり、<strong><span class="important-word">馬韓・辰韓・弁韓</span></strong>（三韓）と総称される国家連合を形成していました。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="" alt="">
+                        <div class="img-caption">図1：古代朝鮮半島の勢力図と漢の郡設置</div>
+                    </div>
+
+                    <h3>2. 朝鮮王朝（李氏朝鮮）と周辺国との関係</h3>
+                    <p>1392年に李成桂が建国した朝鮮王朝は、江戸時代の日本とは友好関係を築きましたが、北方の女真（満洲）からは激しい圧迫を受けました。</p>
+
+                    <h4>【日本との関係（江戸幕府）】</h4>
+                    <ul>
+                        <li><strong><span class="important-word">朝鮮通信使</span></strong>：豊臣秀吉の朝鮮出兵で悪化した関係を修復した後、1607年から徳川将軍の代替わりごとに慶賀使節として派遣されました（計12回）。</li>
+                        <li><strong><span class="important-word">倭館</span>（わかん）</strong>：日本からの使節や商人は、釜山に設けられた居留地である倭館に滞在を制限され、そこから先への立ち入りは認められませんでした。</li>
+                    </ul>
+
+                    <h4>【女真（清）の圧迫と服属】</h4>
+                    <p>17世紀、毛皮や薬用人参の交易で力をつけた女真族（アイシン）が台頭します。</p>
+                    <ul>
+                        <li><strong><span class="important-word">丙子胡乱</span>（へいしこらん / 1636年）</strong>：女真が国号を「清」と改め、皇帝となった<strong><span class="important-word">ホンタイジ</span></strong>が朝鮮に服属を迫りました。明を宗主国と仰ぐ朝鮮はこれを拒否したため、清軍が侵攻し、朝鮮国王を武力でねじ伏せて屈服（土下座）させました。</li>
+                    </ul>
+
+                    <h3>3. 明清交代の衝撃と「小中華思想」</h3>
+                    <p>朝鮮王朝の国家理念の根本は<strong><span class="important-word">朱子学</span></strong>であり、その世界観である「<strong>華夷の別</strong>（中華と野蛮人の区別）」を重んじていました。それゆえ、朝鮮は明を「中華」として深く尊敬し、女真（清）を「夷狄（野蛮人）」として見下していました。</p>
+
+                    <p>しかし、1644年に明が滅亡し、夷狄であるはずの清が中国全土を支配するようになります（明清交代）。朱子学の世界観ではあってはならないこの事態は、朝鮮の知識人に計り知れない衝撃を与えました。</p>
+
+                    <ul>
+                        <li><strong><span class="important-word">小中華思想</span></strong>：明が滅亡した今、中華の正統な文化と道徳を受け継いでいるのは世界で我々（朝鮮）だけである、という強烈な自負心です。</li>
+                        <li><strong>面従腹背の態度</strong>：武力で屈服させられたため、表面上は清に朝貢して臣下の礼をとりましたが、腹の中では清を「夷狄」と蔑み続けるという、屈折した関係が長く続きました。</li>
+                    </ul>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 古代朝鮮史について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            紀元前108年、前漢の 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="butei">武帝</option>
+                                <option value="koutei">高帝</option>
+                            </select> 
+                            は衛氏朝鮮を滅ぼし、この地に 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="rakurou">楽浪郡</option>
+                                <option value="taihou">帯方郡</option>
+                            </select> 
+                            などの朝鮮4郡を設置した。313年、この郡を滅ぼして半島北部を支配したのが、貊族の 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="koukuri">高句麗</option>
+                                <option value="kudara">百済</option>
+                            </select> 
+                            である。その全盛期を築いた4〜5世紀の 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="koukaido">広開土王（好太王）</option>
+                                <option value="buretsu">武烈王</option>
+                            </select> 
+                            は、巨大な碑文を残したことで知られる。一方、半島南部には韓族による多数の国が分立しており、これらは馬韓・辰韓・弁韓の総称である 
+                            <select class="blank-select" id="q1-e">
+                                <option value="">---</option>
+                                <option value="sankan">三韓</option>
+                                <option value="sangoku">三国</option>
+                            </select> 
+                            と呼ばれた。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 日本との関係と清の侵攻について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            朝鮮王朝は江戸幕府と友好関係を保ち、将軍の代替わりごとに 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="tsushinshi">朝鮮通信使</option>
+                                <option value="kenzuishi">遣隋使</option>
+                            </select> 
+                            を派遣した。また、日本からの使節や商人の滞在は釜山に設けられた 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="wakan">倭館</option>
+                                <option value="shoukan">商館</option>
+                            </select> 
+                            に制限された。17世紀、国号を清と改めた 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="hongtaiji">ホンタイジ</option>
+                                <option value="nurhaci">ヌルハチ</option>
+                            </select> 
+                            は、明を宗主国とする朝鮮に服属を要求し、1636年に武力で屈服させた。この清の侵攻事件を 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="heishi">丙子胡乱</option>
+                                <option value="koujutsu">庚戌の変</option>
+                            </select> 
+                            と呼ぶ。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 思想と明清交代の衝撃について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            朝鮮王朝の思想的な絆は 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="shushigaku">朱子学</option>
+                                <option value="youmeigaku">陽明学</option>
+                            </select> 
+                            であり、その世界観である「 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="kainobetsu">華夷の別</option>
+                                <option value="sonnoujoui">尊王攘夷</option>
+                            </select> 
+                            」に従い、明を中華、女真を夷狄としていた。しかし、1644年に明が滅亡して清が中国を支配すると、朝鮮の知識人は大きな衝撃を受けた。彼らは、野蛮な清に代わり、自分たちこそが中華の正統な文化を受け継いでいるという強烈な自負心、すなわち 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="shouchuuka">小中華思想</option>
+                                <option value="taichuuka">大中華思想</option>
+                            </select> 
+                            を抱くようになり、清に対しては表面上従いながらも内面では反発するという面従腹背の態度をとった。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'butei', 'q1-b': 'rakurou', 'q1-c': 'koukuri', 'q1-d': 'koukaido', 'q1-e': 'sankan' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>漢の武帝による楽浪郡などの設置、それを滅ぼした高句麗、そして広開土王（好太王）の業績は、古代朝鮮史の最重要ポイントです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>前漢の皇帝は「武帝」で、設置した代表的な郡が「楽浪郡」。これを滅ぼしたのが「高句麗」で、全盛期が「広開土王（好太王）」。南の小国連合は「三韓」と呼ばれました。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'tsushinshi', 'q2-b': 'wakan', 'q2-c': 'hongtaiji', 'q2-d': 'heishi' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>江戸幕府との交流（朝鮮通信使、倭館）と、清のホンタイジによる武力侵攻（丙子胡乱）という対照的な外交関係が正しく理解できています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>日本からの慶賀使節は「朝鮮通信使」。釜山の居留地は「倭館」。清の皇帝は「ホンタイジ」で、彼が起こした侵攻が「丙子胡乱」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'shushigaku', 'q3-b': 'kainobetsu', 'q3-c': 'shouchuuka' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>朱子学の「華夷の別」を重んじていたからこそ、夷狄である清が中国を支配した明清交代が衝撃となり、「小中華思想」が生まれたという思想的背景は非常によく出題されます。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>朝鮮が重んじた学問は「朱子学」で、その世界観が「華夷の別」。明滅亡後に抱いた強い自負心が「小中華思想」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
