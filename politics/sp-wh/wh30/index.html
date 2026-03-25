@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近代ヨーロッパ史（ルネサンスと宗教改革） - 近代ヨーロッパ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-ge/index.html">世界史</a> ＞ 第6章 近代ヨーロッパ
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                近代ヨーロッパ史（ルネサンスと宗教改革）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>14世紀から16世紀にかけて、ヨーロッパでは中世の価値観を大きく揺るがす二つの運動が起こりました。一つは、古代ギリシア・ローマの人間中心の文化を復興させようとした「<strong>ルネサンス</strong>」、もう一つは、腐敗したカトリック教会のあり方を問い直し、キリスト教世界を二分することになった「<strong>宗教改革</strong>」です。</p>
+
+                    <h3>1. ルネサンスの始まりと精神</h3>
+                    <p>ルネサンス期に描かれたボッティチェリの「ヴィーナスの誕生」という絵画があります。ヴィーナス（アフロディテ）とは、キリスト教が成立する以前の古代ギリシア神話に登場する「異教の神」であり、しかも女性の裸体が美しく描かれています。中世の厳格なカトリック教会の価値観からすれば、これは許しがたい表現でした。</p>
+
+                    <ul>
+                        <li><strong><span class="important-word">人文主義（ヒューマニズム）</span></strong>：神の威光や教会の権威に縛られるのではなく、人間のありのままの姿や感情（愛や欲望など）を肯定し、古代ギリシア・ローマの古典文化を模範とする精神です。</li>
+                        <li><strong>発祥の地</strong>：14世紀の北イタリア、特に毛織物業や金融業で栄え、メディチ家がパトロン（後援者）となった<strong><span class="important-word">フィレンツェ</span></strong>が中心となりました。</li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="ボッティチェリ『ヴィーナスの誕生』">
+                        <div class="img-caption">図1：異教の神と裸体の美しさを描いた『ヴィーナスの誕生』（ルネサンス精神の象徴）</div>
+                    </div>
+
+                    <h3>2. イタリア・ルネサンスの先駆者たち（14〜15世紀）</h3>
+                    <p>初期のイタリア・ルネサンスを牽引した文学者や芸術家たちを押さえましょう。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">人物</th>
+                                <th class="col-text">業績・代表作と特徴</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">ダンテ</span></strong><br>（14C）</td>
+                                <td class="col-text">教皇派（ゲルフ）として政争に敗れ追放された。『<strong><span class="important-word">神曲</span></strong>』を著し、地獄・煉獄・天国を巡る旅を描いた。この作品はラテン語ではなく<strong>トスカナ語（地方の俗語）</strong>で書かれ、のちの現代イタリア語の基礎となった。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">ジョット</span></strong><br>（14C）</td>
+                                <td class="col-text">近代イタリア絵画の祖。「聖フランチェスコの生涯」などのフレスコ画を残し、平面的だった中世絵画から写実的で立体的な表現への道を拓いた。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">ペトラルカ</span></strong><br>（14C）</td>
+                                <td class="col-text">古代ローマの古典を収集し、人文主義（ヒューマニズム）を提唱した。『<strong><span class="important-word">叙情詩集</span></strong>』において、生身の人間である人妻ラウラへの愛を歌い上げた。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">ボッカチオ</span></strong><br>（14C）</td>
+                                <td class="col-text">ペスト（黒死病）から逃れた男女10人が語り合う物語『<strong><span class="important-word">デカメロン</span></strong>（十日物語）』を著した。人間の欲望や教会の腐敗を風刺的に描いた。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>3. 宗教改革の始まり（ルターの挑戦）</h3>
+                    <p>16世紀初め、神聖ローマ帝国（ドイツ）において、カトリック教会に対する大規模な反乱が始まりました。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1517年：<span class="important-word">九十五ヵ条の論題</span></div>
+                            <div class="timeline-content">
+                                <p>教皇<strong><span class="important-word">レオ10世</span></strong>は、サン・ピエトロ大聖堂の改築費用を集めるため、買えば罪が赦されるという<strong><span class="important-word">贖宥状（免罪符）</span></strong>をドイツで販売しました。これに対し、ヴィッテンベルク大学の神学教授<strong><span class="important-word">マルティン・ルター</span></strong>が「魂の救済は免罪符を買うことではなく、信仰によってのみ得られる（<strong><span class="important-word">福音信仰</span></strong>）」と批判し、九十五ヵ条の論題を発表しました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1524〜25年：<span class="important-word">ドイツ農民戦争</span></div>
+                            <div class="timeline-content">
+                                <p>ルターの「万人の平等の自由」という教えに影響を受け、<strong><span class="important-word">トマス・ミュンツァー</span></strong>らが指導して農民が反乱を起こしました。しかし、諸侯の支持を必要としたルターは最終的に農民を弾圧する側に回り、ミュンツァーは処刑されました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1555年：<span class="important-word">アウクスブルクの和議</span></div>
+                            <div class="timeline-content">
+                                <p>カトリック（旧教派）とルター派（新教派＝プロテスタント）の長きにわたる争いの結果、結ばれた和議です。これにより、<strong>諸侯（領主）にカトリックかルター派かを選ぶ権利</strong>が認められました（※個人の信仰の自由はまだ認められていません）。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>4. カルヴァンの宗教改革と新教派の広がり</h3>
+                    <p>ルターに続き、スイスで新たな宗教改革が始まります。その教えは西ヨーロッパ各地の商工業者を中心に爆発的に広がりました。</p>
+
+                    <ul>
+                        <li><strong><span class="important-word">ジャン・カルヴァン</span></strong>（仏出身）：スイスの<strong><span class="important-word">ジュネーヴ</span></strong>に招かれ、厳格な神政政治（神の掟に基づく政治）を行いました。主著『キリスト教綱要』。</li>
+                        <li><strong>予定説</strong>：魂が救われるか地獄に落ちるかは、神によってあらかじめ決められており（予定されており）、人間の善行や教会の儀式では変えられないという教えです。</li>
+                        <li><strong>営利の肯定</strong>：カルヴァンは、自分の職業を神から与えられた天職（召命）と考え、一生懸命働いて得た富（蓄財）を神の恩恵として肯定しました。この教えは、当時台頭しつつあった<strong>新興の商工業者（ブルジョワジー）</strong>に熱烈に支持され、資本主義の発展を後押ししました。</li>
+                    </ul>
+
+                    <h4>【各地におけるカルヴァン派の呼称】</h4>
+                    <p>カルヴァンの教えを受け入れた新教徒たちは、国によって様々な名称で呼ばれ、各地の歴史（宗教戦争や独立戦争）に深く関わっていきます。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">国・地域</th>
+                                <th class="col-text">カルヴァン派の呼称とその意味</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>フランス</strong></td>
+                                <td class="col-text"><strong><span class="important-word">ユグノー</span></strong>（「同盟者」の意。のちに凄惨なユグノー戦争を引き起こす。）</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>オランダ</strong></td>
+                                <td class="col-text"><strong><span class="important-word">ゴイセン</span></strong>（「乞食」の意。スペインに対するオランダ独立戦争の原動力となる。）</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>イングランド</strong></td>
+                                <td class="col-text"><strong>ピューリタン（清教徒）</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>スコットランド</strong></td>
+                                <td class="col-text"><strong>プレスビテリアン（長老派）</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="" alt="宗教改革と新教派の分布図">
+                        <div class="img-caption">図2：16世紀ヨーロッパにおけるカトリックと新教派（ルター派・カルヴァン派）の分布</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. イタリア・ルネサンスの文学者について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            14世紀のフィレンツェで活躍した 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="dante">ダンテ</option>
+                                <option value="boccaccio">ボッカチオ</option>
+                            </select> 
+                            は、地獄・煉獄・天国を巡る大叙事詩『神曲』をトスカナ語で著した。また、古代ローマの古典を収集し『叙情詩集』を著したのは 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="petrarca">ペトラルカ</option>
+                                <option value="giotto">ジョット</option>
+                            </select> 
+                            であり、ペストの災厄から逃れた男女の物語『デカメロン』を著したのは 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="boccaccio">ボッカチオ</option>
+                                <option value="dante">ダンテ</option>
+                            </select> 
+                            である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. ルターの宗教改革について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1517年、教皇 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="leo10">レオ10世</option>
+                                <option value="gregory7">グレゴリウス7世</option>
+                            </select> 
+                            による贖宥状（免罪符）の販売を批判し、マルティン・ルターが 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="95kajo">九十五ヵ条の論題</option>
+                                <option value="shingakutaizen">神学大全</option>
+                            </select> 
+                            を発表した。ルターの影響を受け、トマス・ミュンツァーらが指導した 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="doitsunoumin">ドイツ農民戦争</option>
+                                <option value="yuguno">ユグノー戦争</option>
+                            </select> 
+                            が勃発したが、最終的に鎮圧された。その後、旧教と新教の争いを経て、1555年に 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="augsburg">アウクスブルクの和議</option>
+                                <option value="worms">ヴォルムスの和議</option>
+                            </select> 
+                            が結ばれ、諸侯に宗派を選ぶ権利が認められた。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. カルヴァンの宗教改革について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ジャン・カルヴァンはスイスの 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="geneva">ジュネーヴ</option>
+                                <option value="zurich">チューリヒ</option>
+                            </select> 
+                            で厳格な宗教改革を行った。彼の教えは商工業者に支持され、各地に広がった。カルヴァン派の信徒は、フランスでは 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="huguenot">ユグノー</option>
+                                <option value="geuzen">ゴイセン</option>
+                            </select> 
+                            と呼ばれ、オランダでは 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="geuzen">ゴイセン</option>
+                                <option value="puritan">ピューリタン</option>
+                            </select> 
+                            と呼ばれて、それぞれの国の歴史に大きな影響を与えた。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'dante', 'q1-b': 'petrarca', 'q1-c': 'boccaccio' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ダンテ（神曲）、ペトラルカ（叙情詩集）、ボッカチオ（デカメロン）のルネサンス初期の文学者3人の代表作はセットで必ず覚えましょう。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>『神曲』は「ダンテ」。古典収集と『叙情詩集』は「ペトラルカ」。『デカメロン』は「ボッカチオ」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'leo10', 'q2-b': '95kajo', 'q2-c': 'doitsunoumin', 'q2-d': 'augsburg' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>レオ10世の免罪符販売に対する「九十五ヵ条の論題」から始まり、ミュンツァーのドイツ農民戦争、そしてアウクスブルクの和議に至るルターの宗教改革のプロセスが理解できています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>免罪符を売った教皇は「レオ10世」。ルターが発表したのは「九十五ヵ条の論題」。ミュンツァーが指導したのは「ドイツ農民戦争」。1555年の和約は「アウクスブルクの和議」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'geneva', 'q3-b': 'huguenot', 'q3-c': 'geuzen' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>カルヴァンが活動したジュネーヴと、各国の新教徒の呼称（フランス＝ユグノー、オランダ＝ゴイセン）は非常によく出題されます。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>カルヴァンが改革を行ったのは「ジュネーヴ」。フランスの信徒は「ユグノー」、オランダの信徒は「ゴイセン」と呼ばれました。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
