@@ -2,230 +2,404 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- 【編集箇所 1】ページタイトル -->
-    <title>001. 統治形態 - 政治・経済講座</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>001 統治形態 - 政治・経済 - 教員採用試験対策</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- デザインルール --- */
         :root {
-            --primary-color: #334155; /* Slate 700 */
-            --accent-color: #0f766e;  /* Teal 700 (政治・経済用に緑系に設定) */
-            --accent-dark: #115e59;   /* Teal 800 */
-            --accent-light: #f0fdfa;  /* Teal 50 */
-            --bg-color: #f8fafc;      /* Slate 50 */
-            --sidebar-bg: #ffffff;
-            --sidebar-width: 220px;
-            --text-color: #1e293b;
-            --border-color: #e2e8f0;
-            --card-padding: 32px;
-            
-            /* 穴埋めスタイル */
-            --cloze-bg: #e2e8f0;
-            --cloze-active-bg: #fff1f2;
-            --cloze-active-text: #be123c;
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 政治・経済用アクセント（SkyBlue） */
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
-        /* 全体のフォントサイズ調整 */
-        html { font-size: 92.5%; }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
+            line-height: 1.6;
             display: flex;
             min-height: 100vh;
+            width: 100%;
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
         /* --- サイドバー --- */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--sidebar-bg);
+            background-color: white;
             height: 100vh;
             position: fixed;
             left: 0; top: 0;
-            border-right: 1px solid var(--border-color);
+            border-right: 1px solid #e2e8f0;
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .sidebar-header {
-            padding: 20px; font-size: 1rem; font-weight: 800;
-            color: var(--primary-color); border-bottom: 1px solid var(--border-color);
-            display: flex; align-items: center; gap: 10px;
-            background: #fff;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .nav-menu { padding: 12px 0; flex: 1; }
-        
-        .nav-category { 
-            padding: 12px 20px 4px; 
-            font-size: 0.7rem; 
-            color: #94a3b8; 
-            font-weight: 700; 
-            text-transform: uppercase; 
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
             letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
         }
-        
         .nav-item {
-            display: flex; align-items: center; padding: 10px 20px;
-            color: #475569; text-decoration: none; font-size: 0.9rem; font-weight: 500;
-            transition: all 0.2s; cursor: pointer; border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
         }
-        .nav-item:hover { background-color: var(--bg-color); color: var(--text-color); border-left-color: #cbd5e1; }
-        .nav-item i { margin-right: 10px; width: 18px; height: 18px; color: #64748b; }
-        .nav-item:hover i { color: var(--primary-color); }
-        .nav-item.active { background-color: var(--accent-light); color: var(--accent-color); border-left-color: var(--accent-color); }
-        .nav-item.active i { color: var(--accent-color); }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
 
         /* --- メインコンテンツ --- */
         .main-content {
             flex: 1;
+            min-width: 0;
             margin-left: var(--sidebar-width);
-            padding: 32px;
-            width: 100%;
-            min-width: 0; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             transition: margin-left 0.3s ease;
+            position: relative;
         }
 
-        .container { 
-            max-width: 820px; /* 読みやすさを重視した幅 */
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 32px;
+        }
+        .breadcrumb {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* デスクトップ：画面を広く使う */
+        .container {
+            width: 100%; 
+            max-width: 1000px;
             margin: 0 auto; 
+            padding: 32px; 
+            flex: 1;
         }
 
-        /* パンくずリスト */
-        .breadcrumb { font-size: 0.8rem; color: #94a3b8; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-        .breadcrumb a { color: #64748b; text-decoration: none; transition: color 0.2s; }
-        .breadcrumb a:hover { color: var(--accent-color); text-decoration: underline; }
-        .breadcrumb span { font-weight: bold; color: var(--primary-color); cursor: default; }
-        .breadcrumb i { margin: 0 4px; color: #cbd5e1; width: 14px; height: 14px; }
-
-        /* ページタイトル */
-        h1.main-title {
-            font-size: 1.8rem; color: var(--primary-color);
-            font-weight: 800; margin-bottom: 32px;
-            display: flex; align-items: center; gap: 12px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 16px;
-        }
-        h1.main-title i { color: var(--accent-color); width: 32px; height: 32px; }
-
-        /* モバイルトグル */
-        .mobile-toggle-btn {
-            display: none; position: fixed; 
-            top: 10px; left: 10px; z-index: 2000;
-            width: 40px; height: 40px; 
-            background: white; border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
-            border: 1px solid #e2e8f0; 
-            cursor: pointer;
-            align-items: center; justify-content: center; 
-            color: #475569;
-        }
-        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900; display: none; backdrop-filter: blur(2px); }
-        .overlay.active { display: block; }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); width: 220px; }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; padding-top: 60px; }
-            .mobile-toggle-btn { display: flex; }
-            :root { --card-padding: 20px; }
-        }
-
-        /* --- コンテンツスタイル --- */
-        
-        /* コンテンツカード */
-        .card {
-            background: #fff; border-radius: 16px; 
-            padding: var(--card-padding);
-            margin-bottom: 32px; 
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        /* 画像エリアスタイル（縦長画像対応） */
-        .top-image-container {
-            text-align: center; /* 画像を中央揃え */
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
             margin-bottom: 32px;
-            background-color: #f1f5f9; /* 画像がない場合の背景色（任意） */
-            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            animation: fadeIn 0.4s ease-in-out;
         }
-        
-        .top-image {
-            max-width: 100%;
-            height: auto;
-            max-height: 800px; /* PCで縦長になりすぎないよう制限 */
-            display: inline-block;
-            vertical-align: bottom;
+        .section-header {
+            background: #f8fafc;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* 穴埋め本文 */
-        .text-section p { text-align: justify; margin-bottom: 1.2em; line-height: 1.8; }
-        .text-section p:last-child { margin-bottom: 0; }
-        
-        .cloze {
-            display: inline-block;
-            min-width: 2.5em;
+        /* --- 要点整理コンテンツ --- */
+        .summary-content {
+            padding: 24px;
+            font-size: 0.95rem; 
+        }
+        .concept-card {
+            background: #f8fafc;
+            border-left: 4px solid var(--accent-color);
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 0 8px 8px 0;
+        }
+        .concept-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+        .concept-card p { margin-bottom: 0; }
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
             padding: 0 4px;
-            margin: 0 2px;
-            background-color: var(--cloze-bg);
-            color: transparent;
-            border-radius: 4px;
-            border-bottom: 2px solid #cbd5e1;
-            cursor: pointer;
-            transition: all 0.15s ease-out;
-            user-select: none;
-            font-weight: 600;
-            vertical-align: baseline;
-        }
-        .cloze:active { transform: scale(0.98); }
-        .cloze.revealed {
-            background-color: var(--cloze-active-bg);
-            color: var(--cloze-active-text);
-            border-bottom-color: var(--cloze-active-text);
+            border-radius: 3px;
         }
 
-        /* ツールバー */
-        .toolbar {
-            display: flex; justify-content: flex-end; margin-bottom: 12px;
+        /* --- 問題演習 UI --- */
+        .quiz-container { padding: 24px; }
+        
+        .quiz-block { 
+            display: none; /* 初期非表示。JSで制御 */
+            animation: fadeIn 0.3s ease-in-out;
         }
-        .toggle-btn {
-            background: var(--primary-color); color: white; border: none;
-            padding: 8px 16px; border-radius: 20px; cursor: pointer;
-            font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .quiz-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-bottom: 8px;
             font-weight: bold;
         }
+        .quiz-question { 
+            font-size: 1.05rem; 
+            font-weight: bold; 
+            margin-bottom: 16px; 
+            color: var(--primary-color); 
+        }
+
+        /* 穴埋め */
+        .fill-in-blank { line-height: 2.2; font-size: 1rem; padding: 16px; background: #f8fafc; border-radius: 8px; }
+        select.blank-select {
+            padding: 4px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.95rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 2px 6px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 2px 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        /* 選択肢ボタン（正誤・四択） */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .options-grid.two-cols {
+            flex-direction: row;
+        }
+        .option-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-align: left;
+            transition: all 0.2s;
+            color: var(--text-color);
+            line-height: 1.4;
+        }
+        .options-grid.two-cols .option-btn { text-align: center; font-weight: bold; }
         
-        /* ルビの微調整 */
-        rt { font-size: 0.6em; }
+        .option-btn:hover:not(:disabled) {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+        .option-btn.selected {
+            border-color: var(--accent-color);
+            background: #e0f2fe;
+            color: #0284c7;
+            font-weight: bold;
+        }
+        .option-btn.correct-highlight {
+            border-color: var(--correct-color);
+            background: #ecfdf5;
+            color: #065f46;
+        }
+        .option-btn.incorrect-highlight {
+            border-color: var(--incorrect-color);
+            background: #fef2f2;
+            color: #991b1b;
+        }
+        .option-btn:disabled { cursor: default; }
 
-        /* --- テキスト装飾用クラス（追加） --- */
-        .text-red { color: #dc2626; font-weight: bold; }  /* 赤文字・太字 */
-        .text-blue { color: #2563eb; font-weight: bold; } /* 青文字・太字 */
-        .text-bold { font-weight: bold; }                 /* 太字のみ */
+        /* アクションボタン */
+        .action-buttons { display: flex; gap: 12px; margin-top: 20px; }
+        .check-btn {
+            color: white; border: none; padding: 10px 32px; border-radius: 8px;
+            cursor: pointer; font-weight: bold; font-size: 1rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--accent-color);
+        }
+        .check-btn:hover { background: #0284c7; }
+        
+        .next-btn { background: #3b82f6; }
+        .next-btn:hover { background: #2563eb; }
 
+        .skip-btn {
+            background: none; border: none; color: #94a3b8; cursor: pointer;
+            font-size: 0.85rem; display: flex; align-items: center; gap: 4px;
+            transition: color 0.2s; font-weight: bold;
+        }
+        .skip-btn:hover { color: var(--primary-color); }
+
+        /* フィードバックと解説 */
+        .feedback {
+            margin-top: 16px; padding: 14px 20px; border-radius: 8px;
+            font-size: 1rem; display: none; line-height: 1.6;
+            animation: fadeIn 0.3s;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        .toggle-exp-btn {
+            background: transparent; color: var(--accent-color);
+            border: 1px solid var(--accent-color); padding: 8px 16px;
+            border-radius: 6px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 16px; transition: all 0.2s;
+        }
+        .toggle-exp-btn:hover { background: #e0f2fe; }
+        
+        .explanation-box {
+            margin-top: 16px; padding: 20px; background: #f8fafc;
+            border-left: 4px solid var(--accent-color); border-radius: 4px;
+            font-size: 0.95rem; color: #475569; display: none;
+            animation: fadeIn 0.3s; line-height: 1.7;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- モバイル対応（操作性向上・文字サイズ調整） --- */
+        @media (max-width: 768px) {
+            body { font-size: 14px; }
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            
+            .page-header { padding: 16px 20px 16px 60px; }
+            .page-title { font-size: 1.25rem; }
+            
+            .container { padding: 16px; }
+            .section-box { margin-bottom: 24px; }
+            .section-header { padding: 12px 16px; font-size: 1rem; }
+            .summary-content, .quiz-container { padding: 16px; }
+            
+            .quiz-question { font-size: 1rem; }
+            .fill-in-blank { font-size: 0.9rem; padding: 12px; }
+            select.blank-select { padding: 6px 10px; font-size: 1rem; /* タップしやすく */ }
+            
+            .options-grid.two-cols { flex-direction: column; } /* モバイルでは正誤ボタンも縦並び */
+            .option-btn { padding: 14px; font-size: 0.95rem; }
+            
+            .action-buttons { flex-direction: column; width: 100%; margin-top: 16px; }
+            .check-btn { width: 100%; justify-content: center; padding: 12px; font-size: 1rem; }
+            
+            .toggle-exp-btn { width: 100%; justify-content: center; padding: 10px; }
+            .explanation-box { padding: 16px; font-size: 0.9rem; }
+        }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn i { width: 24px; height: 24px; }
+        
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 20px; text-align: center; color: #94a3b8; font-size: 0.75rem;
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
 
-    <!-- モバイルトグルボタン -->
-    <button class="mobile-toggle-btn" id="menuToggle"><i data-lucide="menu"></i></button>
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
     <div class="overlay" id="overlay"></div>
 
     <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
-        <nav class="nav-menu">
-            <!-- 【編集箇所 2】サイドバーのリンクは適宜調整してください -->
+       <nav class="nav-menu">
             <div class="nav-category">MAIN</div>
             <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
@@ -233,108 +407,700 @@
             <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
             <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
             <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
-            
+
             <div class="nav-category">専門科目</div>
-            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>政治・経済</a>
+            <!-- 専門科目の active クラスを削除 -->
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
         </nav>
     </aside>
 
-    <!-- メインコンテンツ -->
     <main class="main-content">
-        <div class="container">
-            <!-- パンくずリスト -->
+        <div class="page-header">
             <div class="breadcrumb">
-                <a href="/n-kyozai/index.html">ホーム</a> 
-                <i data-lucide="chevron-right"></i>
-                <a href="/n-kyozai/politics/index.html">専門科目</a> 
-                <i data-lucide="chevron-right"></i>
-                <a href="/n-kyozai/politics/index.html">政治・経済</a> 
-                <i data-lucide="chevron-right"></i>
-                <!-- 【編集箇所 3】現在の章タイトル -->
-                <span>001 統治形態</span>
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-pe/index.html">政治・経済</a> ＞ 第1章 政治分野
             </div>
+            <h1 class="page-title">
+                <i data-lucide="scale" style="color: var(--accent-color);"></i>
+                001 統治形態
+            </h1>
+        </div>
 
-            <!-- 【編集箇所 4】メインタイトル -->
-            <h1 class="main-title"><i data-lucide="landmark"></i> 001. 統治形態</h1>
+        <div class="container">
+            
+            <!-- 【要点整理セクション】 -->
+            <section class="section-box" id="summary-section">
+                <div class="section-header">
+                    <i data-lucide="list-checks"></i> 統治形態のポイント整理
+                </div>
+                <div class="summary-content">
+                    <p style="margin-bottom: 16px;">問題演習の前に、3つの統治形態の違いを整理しておきましょう。</p>
+                    
+                    <div class="concept-card">
+                        <h4>人の支配</h4>
+                        <p>為政者（トップ）の意志が法であり、トップを縛るものが何もない原則。法律は権力者の「道具」として扱われます。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>法の支配</h4>
+                        <p>為政者の上に法をおき、すべての国家活動が法を基準に営まれるという原則。<strong>法が権力を縛り</strong>、国民の権利を守ります。<strong>イギリス</strong>で発展しました。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>形式的 法治主義</h4>
+                        <p>為政者が政治を行ううえで「形式的にでも法にのっとっておけばよい」とする原則。<strong>ドイツ</strong>で発展しました。法の内容や合理性は問われないため、独裁を正当化する危険性を孕んでいます。</p>
+                    </div>
 
-            <!-- 画像セクション -->
-            <section class="top-image-container">
-                <!-- 【編集箇所 5】画像パスを設定してください -->
-                <img src="2026-02-21_00h18_16.png" alt="解説画像" class="top-image">
+                    <!-- 問題演習へ進むボタン -->
+                    <div class="action-buttons" style="justify-content: center; margin-top: 32px;">
+                        <button class="check-btn" onclick="startQuiz('all')" style="font-size: 1.1rem; padding: 14px 40px;">
+                            <i data-lucide="play-circle"></i> 問題演習へ進む
+                        </button>
+                    </div>
+                </div>
             </section>
 
-            <!-- 本文セクション -->
-            <div class="toolbar">
-                <button class="toggle-btn" onclick="toggleAllClozes()">
-                    <i data-lucide="eye" size="16"></i> 解答表示切替
-                </button>
-            </div>
+            <!-- 【問題演習セクション】（初期は非表示） -->
+            <section class="section-box" id="quiz-section" style="display: none;">
+                <div class="section-header" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="edit-3"></i> 問題演習 
+                        <span id="quiz-progress" style="font-size: 0.9rem; color: #64748b; font-weight: normal; margin-left: 8px;">(1 / 10)</span>
+                    </div>
+                    <!-- スキップボタン -->
+                    <button class="skip-btn" onclick="skipToResult()">
+                        <i data-lucide="skip-forward" style="width: 16px; height: 16px;"></i> 結果へスキップ
+                    </button>
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 次の文章の空欄を正しく埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="hito">人の支配</option>
+                                <option value="hou">法の支配</option>
+                                <option value="houchi">法治主義</option>
+                            </select> 
+                            とは、特定の個人やグループが権力を持ち、その人たちの意志や判断によって社会が運営されることである。一方、
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="hito">人の支配</option>
+                                <option value="hou">法の支配</option>
+                                <option value="houchi">法治主義</option>
+                            </select> 
+                            とは、すべての国家活動が法を基準に営まれるという考え方である。これにより、権力の濫用を防ぐことができる。
+                            これらと異なる 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="hito">人の支配</option>
+                                <option value="hou">法の支配</option>
+                                <option value="houchi">法治主義</option>
+                            </select> 
+                            では、法の内容の正当性は問われないため、法の運用が必ずしも公正でない場合もある。この概念は「形式的」なものといわれ、1933年にドイツ議会で成立した全権委任法が一例である。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q1-exp-btn" style="display:none;" onclick="toggleExplanation('q1')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q1-exp-box">
+                            <strong>【解説】</strong><br>
+                            ・<strong>人の支配</strong>：王や独裁者が自分の考えで国を治める場合がこれに当たります。<br>
+                            ・<strong>法の支配</strong>：イギリスで発達した考え方で、国家権力そのものを法で縛り、国民の権利を守ることを目的とします。<br>
+                            ・<strong>法治主義</strong>：19世紀のドイツで発達しました。「議会が定めた法律に従って行政が行われればよい」とする形式的な考え方（形式的法治主義）であり、のちにナチス・ドイツの独裁（全権委任法）を許す要因となりました。
+                        </div>
+                    </div>
 
-            <section class="card text-section">
-                <!-- 【編集箇所 6】ここに本文を入力してください -->
-                <!--  ここに本文を入力します。重要な語句は<span class="cloze" onclick="reveal(this)">穴埋め</span>にすることができます。-->
-                <!--  赤文字にする場合： <span class="text-red">赤い文字</span> と記述します。 -->
-                <!--  青文字にする場合： <span class="text-blue">青い文字</span> と記述します。 -->
-                <!--  単に太字にする場合： <strong>混在</strong>と記述します。 -->
-                <!--  ルビ（ふりがな）を振る場合は、<ruby>漢<rt>かん</rt>字<rt>じ</rt></ruby>のように記述します。 -->
-                <!--   穴埋めの中にルビを入れることも可能です：<span class="cloze" onclick="reveal(this)"><ruby>答<rt>こた</rt></ruby>え</span> -->
-                
-              <p><span class="cloze" onclick="reveal(this)">人の支配</span>とは、特定の個人やグループが権力を持ち、その人たちの意思や判断によって社会が運営されることである。</p>
-              <p>王や独裁者が自分の考えで国を治める場合がこれに当たり、法律やルールはその人の意思に従って変わることがある。</p>  
-              <p><span class="cloze" onclick="reveal(this)">法の支配</span>とは、<span class="text-red">すべての国家活動が法を基準に営まれる</span>という考え方である。</p>
-              <p>これにより、権力の濫用を防ぎ、公平で公正な社会を実現することができる。</p>
-              <p>この<span class="cloze" onclick="reveal(this)">法の支配</span>の概念と異なる<span class="cloze" onclick="reveal(this)">法治主義</span>では、<span class="text-red">法の内容の正当性は問われないため、法の運用が必ずしも公正でない場合もある。</span></p>
-              <p>この概念は「<strong>形式的</strong><span class="cloze" onclick="reveal(this)">法治主義</span>」といわれ、1933年にドイツ議会で成立した<strong>全権委任法</strong>が一例である。
-              <p>全権委任法では、ワイマール憲法に拘束されず、立法権などを行政に全権委任することで議会を形骸化させ、ファシズム・全体主義的独裁を成立させた。</p>
-              
+                    <!-- 第2問: 正誤問題 -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 「法の支配」の原則は、19世紀のドイツで発達し、議会が制定した法律であればその内容のいかんにかかわらず行政を拘束するという考え方である。</div>
+                        <div class="options-grid two-cols">
+                            <button class="option-btn" data-val="true" onclick="selectOption('q2', 'true', this)">正しい</button>
+                            <button class="option-btn" data-val="false" onclick="selectOption('q2', 'false', this)">誤り</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkChoice('q2', 'false')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q2-exp-btn" style="display:none;" onclick="toggleExplanation('q2')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q2-exp-box">
+                            <strong>【解説】</strong><br>
+                            設問の内容は「法の支配」ではなく、ドイツで発達した<strong>「形式的法治主義」</strong>の説明です。<br>
+                            「法の支配」は<strong>イギリス</strong>で発達し、法の内容そのものが基本的人権を尊重する正当なものでなければならない（実質的要件）とする考え方です。
+                        </div>
+                    </div>
 
+                    <!-- 第3問: 正誤問題 -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 1933年にドイツで成立した全権委任法は、立法権などを行政に全権委任するものであり、ワイマール憲法下における「形式的法治主義」の弱点を突いて独裁体制を合法化する結果となった。</div>
+                        <div class="options-grid two-cols">
+                            <button class="option-btn" data-val="true" onclick="selectOption('q3', 'true', this)">正しい</button>
+                            <button class="option-btn" data-val="false" onclick="selectOption('q3', 'false', this)">誤り</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkChoice('q3', 'true')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q3-exp-btn" style="display:none;" onclick="toggleExplanation('q3')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q3-exp-box">
+                            <strong>【解説】</strong><br>
+                            設問の通りです。ヒトラー率いるナチス党は、議会で多数派を形成し、合法的・形式的な手続きに則って「全権委任法」を成立させました。法の内容（正当性）を問わない「形式的法治主義」のもとでは、こうした独裁をも「合法」として防げなかったという歴史的教訓があります。
+                        </div>
+                    </div>
+
+                    <!-- 第4問: 四択問題 -->
+                    <div class="quiz-block" id="q4">
+                        <div class="quiz-question">Q4. 次のうち、「法の支配」の原則に最も合致する説明はどれか。</div>
+                        <div class="options-grid">
+                            <button class="option-btn" data-val="1" onclick="selectOption('q4', '1', this)">1. 優れた指導者が、自らの高い道徳的判断に基づいて国家を統治すること。</button>
+                            <button class="option-btn" data-val="2" onclick="selectOption('q4', '2', this)">2. 議会で制定された法律であれば、その内容が人権を制限するものであっても国民は絶対に従わなければならない。</button>
+                            <button class="option-btn" data-val="3" onclick="selectOption('q4', '3', this)">3. 権力者の恣意的な支配を排除し、国家権力そのものも法によって拘束されなければならない。</button>
+                            <button class="option-btn" data-val="4" onclick="selectOption('q4', '4', this)">4. 行政権の行使は、裁判所の審査を受けず、行政府の自由な裁量に委ねられるべきである。</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q4-check-btn" onclick="checkChoice('q4', '3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q4-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q4-exp-btn" style="display:none;" onclick="toggleExplanation('q4')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q4-exp-box">
+                            <strong>【解説】</strong><br>
+                            正解は <strong>3</strong> です。<br>
+                            ・1 は「人の支配」の説明です。<br>
+                            ・2 は「形式的法治主義」の極端な解釈に当たります。<br>
+                            ・3 はまさに「法の支配」の核心であり、権力者も法の下にある（法の優位）ことを示しています。<br>
+                            ・4 法の支配のもとでは、行政権の行使も違法でないか裁判所によって審査される対象となります。
+                        </div>
+                    </div>
+
+                    <!-- 第5問: 四択問題 -->
+                    <div class="quiz-block" id="q5">
+                        <div class="quiz-question">Q5. 「法の支配」と「法治主義」の違いに関する説明として、最も適当なものを一つ選びなさい。</div>
+                        <div class="options-grid">
+                            <button class="option-btn" data-val="1" onclick="selectOption('q5', '1', this)">1. 法の支配はドイツで生まれ、法治主義はイギリスで生まれた概念である。</button>
+                            <button class="option-btn" data-val="2" onclick="selectOption('q5', '2', this)">2. 法の支配は法の内容の正当性を重視するが、形式的法治主義は法の手続きが適法であれば内容を問わない。</button>
+                            <button class="option-btn" data-val="3" onclick="selectOption('q5', '3', this)">3. 法治主義のもとでは議会は存在せず、君主が独裁的に法を制定する。</button>
+                            <button class="option-btn" data-val="4" onclick="selectOption('q5', '4', this)">4. 法の支配は、裁判所に対する行政権の優越を認める考え方である。</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q5-check-btn" onclick="checkChoice('q5', '2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q5-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q5-exp-btn" style="display:none;" onclick="toggleExplanation('q5')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q5-exp-box">
+                            <strong>【解説】</strong><br>
+                            正解は <strong>2</strong> です。<br>
+                            「法の支配」は法の内容が人権を保障する正当なものでなければならない（実質的要件）としますが、「形式的法治主義」は議会が定めた手続きさえ踏んでいれば法の内容を問わない点に決定的な違いがあります。法の支配はイギリス、法治主義はドイツで発達しました。
+                        </div>
+                    </div>
+
+                    <!-- 第6問: 正誤問題 -->
+                    <div class="quiz-block" id="q6">
+                        <div class="quiz-question">Q6. 13世紀のイギリスの法学者ブラクトンは、「国王といえども神と法の下にある」と述べた。この言葉は後にエドワード・コークによって引用され、法の支配の基本理念として確立していった。</div>
+                        <div class="options-grid two-cols">
+                            <button class="option-btn" data-val="true" onclick="selectOption('q6', 'true', this)">正しい</button>
+                            <button class="option-btn" data-val="false" onclick="selectOption('q6', 'false', this)">誤り</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q6-check-btn" onclick="checkChoice('q6', 'true')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q6-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q6-exp-btn" style="display:none;" onclick="toggleExplanation('q6')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q6-exp-box">
+                            <strong>【解説】</strong><br>
+                            正しい。ブラクトンの言葉を、17世紀の裁判官エドワード・コークが国王ジェームズ1世に対して引用し、法の支配（コモン・ローの優位）を主張したエピソードは政治・経済の歴史において非常に重要です。
+                        </div>
+                    </div>
+
+                    <!-- 第7問: 四択問題 -->
+                    <div class="quiz-block" id="q7">
+                        <div class="quiz-question">Q7. 「人の支配」の典型例として最も適当なものを次の中から選びなさい。</div>
+                        <div class="options-grid">
+                            <button class="option-btn" data-val="1" onclick="selectOption('q7', '1', this)">1. 国民の代表からなる議会が制定した法律に基づいて行政が行われる体制。</button>
+                            <button class="option-btn" data-val="2" onclick="selectOption('q7', '2', this)">2. 絶対王政期において、君主が自らの意思を法として国家を統治した体制。</button>
+                            <button class="option-btn" data-val="3" onclick="selectOption('q7', '3', this)">3. 憲法によって国家権力が制限され、国民の人権が保障されている体制。</button>
+                            <button class="option-btn" data-val="4" onclick="selectOption('q7', '4', this)">4. 独立した裁判所が、法律が憲法に違反していないかを審査する体制。</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q7-check-btn" onclick="checkChoice('q7', '2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q7-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q7-exp-btn" style="display:none;" onclick="toggleExplanation('q7')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q7-exp-box">
+                            <strong>【解説】</strong><br>
+                            正解は <strong>2</strong> です。<br>
+                            人の支配とは、特定の権力者（君主や独裁者）の恣意的な意思が法に優越する政治体制のことです。絶対王政はその典型です。他の選択肢はすべて法の支配や立憲主義に関連する説明です。
+                        </div>
+                    </div>
+
+                    <!-- 第8問: 正誤問題 -->
+                    <div class="quiz-block" id="q8">
+                        <div class="quiz-question">Q8. 「法の支配」の原則を確保するためには、権力者の恣意的な行動をチェックする独立した裁判所の存在が不可欠であり、現代の多くの国では違憲審査制などがその役割を担っている。</div>
+                        <div class="options-grid two-cols">
+                            <button class="option-btn" data-val="true" onclick="selectOption('q8', 'true', this)">正しい</button>
+                            <button class="option-btn" data-val="false" onclick="selectOption('q8', 'false', this)">誤り</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q8-check-btn" onclick="checkChoice('q8', 'true')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q8-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q8-exp-btn" style="display:none;" onclick="toggleExplanation('q8')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q8-exp-box">
+                            <strong>【解説】</strong><br>
+                            正しい。法の支配を実質的に機能させるためには、法律や行政処分が最高法規である憲法に違反していないかを審査し、権力の濫用を防ぐ裁判所の役割（違憲審査権）が極めて重要になります。
+                        </div>
+                    </div>
+
+                    <!-- 第9問: 穴埋め -->
+                    <div class="quiz-block" id="q9">
+                        <div class="quiz-question">Q9. イギリスにおける「法の支配」の歴史的展開に関する空欄を正しく埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1215年に制定された 
+                            <select class="blank-select" id="q9-a">
+                                <option value="">---</option>
+                                <option value="magna">マグナ・カルタ（大憲章）</option>
+                                <option value="meiyo">名誉革命</option>
+                                <option value="kenri">権利章典</option>
+                                <option value="furansu">フランス人権宣言</option>
+                            </select> 
+                            は、国王の権力を制限し、貴族の特権を確認したものであり、法の支配の起源の一つとされる。その後、17世紀の 
+                            <select class="blank-select" id="q9-b">
+                                <option value="">---</option>
+                                <option value="magna">マグナ・カルタ（大憲章）</option>
+                                <option value="meiyo">名誉革命</option>
+                                <option value="kenri">権利章典</option>
+                                <option value="furansu">フランス人権宣言</option>
+                            </select> 
+                            を経て制定された 
+                            <select class="blank-select" id="q9-c">
+                                <option value="">---</option>
+                                <option value="magna">マグナ・カルタ（大憲章）</option>
+                                <option value="meiyo">名誉革命</option>
+                                <option value="kenri">権利章典</option>
+                                <option value="furansu">フランス人権宣言</option>
+                            </select> 
+                            により、議会主権と法の支配が最終的に確立された。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q9-check-btn" onclick="checkBlank('q9')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q9-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q9-exp-btn" style="display:none;" onclick="toggleExplanation('q9')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q9-exp-box">
+                            <strong>【解説】</strong><br>
+                            ・<strong>マグナ・カルタ（1215年）</strong>：国王ジョンに対して、貴族たちが課税の制限や不当な逮捕の禁止などを認めさせた歴史的文書。<br>
+                            ・<strong>名誉革命（1688年）と権利章典（1689年）</strong>：国王の専制を排除し、「国王は君臨すれども統治せず」という議会中心の政治体制と法の支配を確固たるものにしました。
+                        </div>
+                    </div>
+
+                    <!-- 第10問: 四択問題 -->
+                    <div class="quiz-block" id="q10">
+                        <div class="quiz-question">Q10. 形式的法治主義の限界と、その後の展開に関する記述として最も適当なものを一つ選びなさい。</div>
+                        <div class="options-grid">
+                            <button class="option-btn" data-val="1" onclick="selectOption('q10', '1', this)">1. 形式的法治主義は権力の濫用を完全に防ぐことができるため、現代のすべての民主国家でそのまま採用されている。</button>
+                            <button class="option-btn" data-val="2" onclick="selectOption('q10', '2', this)">2. ワイマール憲法下のドイツでは、形式的法治主義が徹底されていたため、ナチスの独裁を防ぐことができた。</button>
+                            <button class="option-btn" data-val="3" onclick="selectOption('q10', '3', this)">3. 第二次世界大戦後、形式的法治主義の反省から、ドイツ基本法（ボン基本法）では法の内容も正義に合致しなければならないとする実質的法治主義が採用された。</button>
+                            <button class="option-btn" data-val="4" onclick="selectOption('q10', '4', this)">4. 形式的法治主義はアメリカの独立戦争に大きな影響を与え、合衆国憲法の基本原理となった。</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q10-check-btn" onclick="checkChoice('q10', '3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                        </div>
+                        <div id="q10-feedback" class="feedback"></div>
+                        <button class="toggle-exp-btn" id="q10-exp-btn" style="display:none;" onclick="toggleExplanation('q10')">
+                            解説を見る <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="explanation-box" id="q10-exp-box">
+                            <strong>【解説】</strong><br>
+                            正解は <strong>3</strong> です。<br>
+                            ヒトラーの独裁を「合法的に」許してしまった形式的法治主義の深い反省から、戦後の西ドイツは「ボン基本法（現在のドイツ基本法）」を制定し、法律の内容そのものが基本的人権を侵してはならないとする「実質的法治主義（法の支配とほぼ同義）」へと転換しました。
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【結果セクション】（全問終了後に表示） -->
+            <section class="section-box" id="result-section" style="display: none;">
+                <div class="section-header" style="justify-content: center; background: var(--primary-color); color: white; border-bottom: none;">
+                    <i data-lucide="award"></i> 演習結果
+                </div>
+                <div style="padding: 40px 24px; text-align: center;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: var(--primary-color);">お疲れ様でした！</h2>
+                    <div id="score-display" style="font-size: 2.2rem; color: var(--accent-color); font-weight: bold; margin-bottom: 32px;"></div>
+                    
+                    <div class="action-buttons" style="justify-content: center; flex-wrap: wrap; gap: 16px;">
+                        <button class="check-btn" id="review-btn" onclick="startQuiz('review')" style="background: var(--incorrect-color); display: none;">
+                            <i data-lucide="rotate-ccw"></i> 間違えた問題のみ演習
+                        </button>
+                        <button class="check-btn" onclick="location.reload()" style="background: #64748b;">
+                            <i data-lucide="refresh-cw"></i> 最初からやり直す
+                        </button>
+                    </div>
+                </div>
             </section>
 
         </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
     </main>
 
     <script>
-        // DOM要素の取得
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
-        // モバイルメニューのトグル
         const toggleSidebar = () => {
-            if (sidebar && overlay) {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            }
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
         };
 
-        if (menuToggle) {
-            menuToggle.addEventListener('click', toggleSidebar);
-            overlay.addEventListener('click', toggleSidebar);
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 穴埋め機能
-        window.reveal = function(element) {
-            element.classList.toggle('revealed');
-        }
+        // ==========================================
+        // SPA風 クイズ進行ロジック
+        // ==========================================
+        const allQuestionIds = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
+        let currentQuizList = [];
+        let currentQuestionIndex = 0;
+        let results = {}; // { 'q1': true/false }
+        let userAnswers = {}; // 選択した値の記録
 
-        window.toggleAllClozes = function() {
-            const clozes = document.querySelectorAll('.cloze');
-            const anyHidden = Array.from(clozes).some(c => !c.classList.contains('revealed'));
-            clozes.forEach(c => anyHidden ? c.classList.add('revealed') : c.classList.remove('revealed'));
-        }
+        // クイズ開始処理（通常 or 復習）
+        function startQuiz(mode) {
+            document.getElementById('summary-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
 
-        // 初期化実行
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lucideアイコンの初期化
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            } else {
-                setTimeout(() => {
-                    if (typeof lucide !== 'undefined') lucide.createIcons();
-                }, 1000);
+            if (mode === 'all') {
+                currentQuizList = [...allQuestionIds];
+                results = {};
+                resetQuizForms(allQuestionIds);
+            } else if (mode === 'review') {
+                // 不正解だった問題だけをリスト化
+                currentQuizList = Object.keys(results).filter(id => !results[id]);
+                resetQuizForms(currentQuizList); // 復習対象のみリセット
             }
-        });
 
+            if(currentQuizList.length === 0) {
+                showResult(); // 万が一空の場合は結果へ
+                return;
+            }
+
+            currentQuestionIndex = 0;
+            showQuestion(currentQuestionIndex);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // フォーム（UI）の初期化
+        function resetQuizForms(targetIds) {
+            targetIds.forEach(id => {
+                const container = document.getElementById(id);
+                if(!container) return;
+
+                // フィードバックと解説の非表示
+                const feedback = document.getElementById(`${id}-feedback`);
+                if(feedback) {
+                    feedback.style.display = 'none';
+                    feedback.className = 'feedback';
+                }
+                const expBox = document.getElementById(`${id}-exp-box`);
+                if(expBox) expBox.style.display = 'none';
+                
+                const expBtn = document.getElementById(`${id}-exp-btn`);
+                if(expBtn) {
+                    expBtn.style.display = 'none';
+                    expBtn.innerHTML = '解説を見る <i data-lucide="chevron-down"></i>';
+                }
+
+                const checkBtn = document.getElementById(`${id}-check-btn`);
+                if(checkBtn) checkBtn.style.display = 'inline-flex';
+
+                const nextBtnContainer = document.getElementById(`${id}-next-container`);
+                if(nextBtnContainer) nextBtnContainer.style.display = 'none';
+
+                // 選択肢のリセット
+                container.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected', 'correct-highlight', 'incorrect-highlight');
+                    btn.disabled = false;
+                });
+                
+                userAnswers[id] = null;
+
+                // 穴埋めのリセット
+                container.querySelectorAll('.blank-select').forEach(sel => {
+                    sel.style.display = 'inline-block';
+                    sel.value = '';
+                });
+                container.querySelectorAll('.blank-result-display').forEach(span => span.remove());
+            });
+            lucide.createIcons();
+        }
+
+        // 1問表示する処理
+        function showQuestion(index) {
+            allQuestionIds.forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            
+            let targetId = currentQuizList[index];
+            if(targetId) {
+                document.getElementById(targetId).style.display = 'block';
+            }
+
+            // プログレスバー（テキスト）の更新
+            const progressEl = document.getElementById('quiz-progress');
+            if(progressEl) {
+                progressEl.innerText = `(${index + 1} / ${currentQuizList.length})`;
+            }
+        }
+
+        // 次の問題へ
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizList.length) {
+                showQuestion(currentQuestionIndex);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                showResult();
+            }
+        }
+
+        // 「次へ」または「結果を見る」ボタンの動的生成/表示
+        function showNextButton(qId) {
+            let container = document.getElementById(`${qId}-next-container`);
+            const isLast = (currentQuestionIndex === currentQuizList.length - 1);
+            const btnText = isLast ? '結果を見る <i data-lucide="arrow-right"></i>' : '次の問題へ <i data-lucide="arrow-right"></i>';
+
+            if(!container) {
+                container = document.createElement('div');
+                container.id = `${qId}-next-container`;
+                container.className = 'action-buttons';
+                container.style.marginTop = '16px';
+                
+                const btn = document.createElement('button');
+                btn.className = 'check-btn next-btn';
+                btn.onclick = nextQuestion;
+                btn.innerHTML = btnText;
+                container.appendChild(btn);
+                
+                document.getElementById(qId).appendChild(container);
+            } else {
+                container.style.display = 'flex';
+                container.querySelector('button').innerHTML = btnText;
+            }
+            lucide.createIcons();
+        }
+
+        // 結果画面へスキップ
+        function skipToResult() {
+            // 未解答の問題はすべて不正解扱いとする
+            currentQuizList.forEach(id => {
+                if (results[id] === undefined) {
+                    results[id] = false;
+                }
+            });
+            showResult();
+        }
+
+        // 結果画面の表示
+        function showResult() {
+            document.getElementById('quiz-section').style.display = 'none';
+            const resultSection = document.getElementById('result-section');
+            resultSection.style.display = 'block';
+
+            // 全問題（allQuestionIds）に対する正解数を計算
+            let correctCount = Object.values(results).filter(v => v === true).length;
+            let wrongCount = allQuestionIds.length - correctCount;
+
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.innerHTML = `${allQuestionIds.length}問中 <strong>${correctCount}</strong>問正解！`;
+
+            const reviewBtn = document.getElementById('review-btn');
+            if (wrongCount > 0) {
+                reviewBtn.style.display = 'inline-flex';
+            } else {
+                reviewBtn.style.display = 'none';
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // ==========================================
+        // 各問題の判定ロジック
+        // ==========================================
+        const blankAnswers = {
+            'q1': { 'q1-a': 'hito', 'q1-b': 'hou', 'q1-c': 'houchi' },
+            'q9': { 'q9-a': 'magna', 'q9-b': 'meiyo', 'q9-c': 'kenri' }
+        };
+
+        function checkBlank(qId) {
+            const answers = blankAnswers[qId];
+            const selectIds = Object.keys(answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            const checkBtn = document.getElementById(`${qId}-check-btn`);
+            const expBtn = document.getElementById(`${qId}-exp-btn`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false; break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未選択があります。</strong>すべての空欄を選択してください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            // 正誤を記録
+            results[qId] = isAllCorrect;
+
+            checkBtn.style.display = 'none';
+            expBtn.style.display = 'inline-flex';
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<strong>正解！</strong>用語の区別がしっかりできています。';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '<strong>不正解...</strong>赤字が正しい答えです。用語の定義を確認しましょう。';
+            }
+            feedback.style.display = 'block';
+
+            // 次へ進むボタンを表示
+            showNextButton(qId);
+        }
+
+        function selectOption(qId, val, btnElement) {
+            if(document.getElementById(`${qId}-check-btn`).style.display === 'none') return;
+            userAnswers[qId] = val;
+            const container = document.getElementById(qId);
+            container.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            btnElement.classList.add('selected');
+        }
+
+        function checkChoice(qId, correctVal) {
+            if(!userAnswers[qId]) {
+                const feedback = document.getElementById(`${qId}-feedback`);
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>選択肢を選んでください。</strong>';
+                return;
+            }
+
+            const container = document.getElementById(qId);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            const expBtn = document.getElementById(`${qId}-exp-btn`);
+            const checkBtn = document.getElementById(`${qId}-check-btn`);
+            
+            const userVal = userAnswers[qId];
+            const isCorrect = (userVal === correctVal);
+            
+            // 正誤を記録
+            results[qId] = isCorrect;
+
+            container.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = true; 
+                if(btn.dataset.val === correctVal) {
+                    btn.classList.add('correct-highlight');
+                } else if (btn.dataset.val === userVal && !isCorrect) {
+                    btn.classList.add('incorrect-highlight');
+                }
+            });
+            
+            checkBtn.style.display = 'none';
+            expBtn.style.display = 'inline-flex';
+            
+            if(isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<strong>正解！</strong>';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '<strong>不正解...</strong>';
+            }
+            feedback.style.display = 'block';
+
+            // 次へ進むボタンを表示
+            showNextButton(qId);
+        }
+
+        function toggleExplanation(qId) {
+            const expBox = document.getElementById(`${qId}-exp-box`);
+            const expBtn = document.getElementById(`${qId}-exp-btn`);
+            
+            if(expBox.style.display === 'none' || expBox.style.display === '') {
+                expBox.style.display = 'block';
+                expBtn.innerHTML = '解説を閉じる <i data-lucide="chevron-up"></i>';
+            } else {
+                expBox.style.display = 'none';
+                expBtn.innerHTML = '解説を見る <i data-lucide="chevron-down"></i>';
+            }
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>
