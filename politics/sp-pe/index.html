@@ -27,7 +27,7 @@
             min-height: 100vh;
         }
 
-        /* --- サイドバー（継承） --- */
+        /* --- サイドバー --- */
         .sidebar {
             width: var(--sidebar-width);
             background-color: white;
@@ -140,57 +140,78 @@
             flex: 1;
         }
 
-        /* --- アコーディオン・目次スタイル --- */
-        .chapter-details {
+        /* --- タブ切り替えスタイル --- */
+        .tabs-header {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        .tabs-header::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+        .tab-button {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #64748b;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tab-button:hover {
+            color: var(--accent-color);
+            background-color: #f8fafc;
+        }
+        .tab-button.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- フルオープン表示用の章スタイル --- */
+        .chapter-container {
             background: white;
             border-radius: 10px;
             box-shadow: var(--shadow);
             border: 1px solid #e2e8f0;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
             overflow: hidden;
         }
 
-        .chapter-summary {
+        .chapter-header {
             padding: 16px 20px;
             font-weight: bold;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             color: var(--primary-color);
-            background-color: #f8fafc;
-            cursor: pointer;
+            background-color: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
-            list-style: none; /* デフォルトの三角を消す */
-            transition: background-color 0.2s;
         }
 
-        .chapter-summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .chapter-summary:hover {
-            background-color: #f1f5f9;
-        }
-
-        .chapter-summary .icon-wrapper {
+        .chapter-header .icon-wrapper {
             margin-right: 12px;
             color: var(--accent-color);
             display: flex;
             align-items: center;
-        }
-        
-        .chapter-summary .chevron {
-            margin-left: auto;
-            color: #94a3b8;
-            transition: transform 0.3s ease;
-        }
-
-        details[open] .chapter-summary {
-            border-bottom: 1px solid #e2e8f0;
-            background-color: #ffffff;
-        }
-
-        details[open] .chevron {
-            transform: rotate(180deg);
         }
 
         .chapter-content {
@@ -201,6 +222,7 @@
             background-color: white;
         }
 
+        /* --- リンクカードスタイル --- */
         .lesson-link {
             display: flex;
             align-items: center;
@@ -294,6 +316,7 @@
             .page-header { padding-left: 60px; }
             .container { padding: 16px; width: 100%; }
             .chapter-content { grid-template-columns: 1fr; }
+            .tab-button { padding: 12px 16px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -308,7 +331,7 @@
     <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
-       <nav class="nav-menu">
+        <nav class="nav-menu">
             <div class="nav-category">MAIN</div>
             <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
@@ -333,7 +356,7 @@
 
         <div class="container">
             <div id="syllabus-container">
-                <!-- JavaScriptでここに目次データを動的生成します -->
+                <!-- JavaScriptでここにタブと目次データを動的生成します -->
             </div>
         </div>
 
@@ -347,10 +370,17 @@
         // 【ページの公開手順】
         // ページを作成し、リンクをクリック可能にするには、
         // 以下の配列 `publishedLessons` にそのページの連番(pe1なら 1)を半角数字で追加してください。
-        // （例：1番、2番、5番を公開する場合 -> const publishedLessons = [1, 2, 5];）
-        // 現在は空 [] のため、全てクリック不可のデフォルト状態になっています。
         // ==========================================
         const publishedLessons = [1];
+
+        // 全10章を4つのタブに分類する設定
+        // chapters配列には syllabusData のインデックス（0から始まる）を指定します
+        const tabConfig = [
+            { id: 'tab-politics-economy', name: '政治・経済', chapters: [0, 1] },
+            { id: 'tab-international', name: '国際', chapters: [2, 3] },
+            { id: 'tab-society', name: '社会・環境など', chapters: [4, 5, 6, 7] },
+            { id: 'tab-history-ethics', name: '歴史・倫理', chapters: [8, 9] }
+        ];
 
         // 画像から抽出した目次データ
         const syllabusData = [
@@ -433,34 +463,70 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('syllabus-container');
+            
+            // タブヘッダーの生成
+            const tabsHeader = document.createElement('div');
+            tabsHeader.className = 'tabs-header';
+            
+            // タブコンテンツ用コンテナの生成
+            const tabsContentContainer = document.createElement('div');
+            tabsContentContainer.className = 'tabs-content-container';
+
+            // 各タブエリアの要素を保持する辞書
+            const tabElements = {};
+
+            // タブUIの構築
+            tabConfig.forEach((tab, index) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-button ${index === 0 ? 'active' : ''}`;
+                btn.textContent = tab.name;
+                btn.dataset.target = tab.id;
+                btn.addEventListener('click', () => switchTab(tab.id));
+                tabsHeader.appendChild(btn);
+
+                const contentArea = document.createElement('div');
+                contentArea.className = `tab-content ${index === 0 ? 'active' : ''}`;
+                contentArea.id = tab.id;
+                tabsContentContainer.appendChild(contentArea);
+                
+                tabElements[tab.id] = contentArea;
+            });
+
+            container.appendChild(tabsHeader);
+            container.appendChild(tabsContentContainer);
+
             let globalCounter = 1; // 連番（pe1, pe2...）用カウンター
 
+            // データの展開
             syllabusData.forEach((chapterData, index) => {
-                // アコーディオン要素の作成
-                const details = document.createElement('details');
-                details.className = 'chapter-details';
-                if (index === 0) details.open = true; // 第1章だけ初期状態で開いておく
+                // 現在の章がどのタブに属するか探す
+                const targetTabConfig = tabConfig.find(t => t.chapters.includes(index));
+                if (!targetTabConfig) return;
 
-                // 見出し（章タイトル）の作成
-                const summary = document.createElement('summary');
-                summary.className = 'chapter-summary';
-                summary.innerHTML = `
+                const targetContentArea = tabElements[targetTabConfig.id];
+
+                // フルオープンの章コンテナを作成
+                const chapterContainer = document.createElement('div');
+                chapterContainer.className = 'chapter-container';
+
+                // 見出し（章タイトル）
+                const chapterHeader = document.createElement('div');
+                chapterHeader.className = 'chapter-header';
+                chapterHeader.innerHTML = `
                     <div class="icon-wrapper"><i data-lucide="bookmark"></i></div>
                     ${chapterData.chapter}
-                    <i data-lucide="chevron-down" class="chevron"></i>
                 `;
-                details.appendChild(summary);
+                chapterContainer.appendChild(chapterHeader);
 
-                // コンテンツ部分（リンクカードのグリッド）の作成
+                // コンテンツ部分（リンクカードのグリッド）
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'chapter-content';
 
-                chapterData.items.forEach((itemTitle, itemIndex) => {
-                    const globalNumStr = String(globalCounter).padStart(3, '0'); // 全体を通した連番(001, 002...)
-                    const linkHref = `/n-kyozai/politics/sp-pe/pe${globalCounter}`; // 連番の遷移先パス
-                    const isPublished = publishedLessons.includes(globalCounter); // 公開設定の判定
+                chapterData.items.forEach((itemTitle) => {
+                    const globalNumStr = String(globalCounter).padStart(3, '0');
+                    const linkHref = `/n-kyozai/politics/sp-pe/pe${globalCounter}`;
+                    const isPublished = publishedLessons.includes(globalCounter);
                     
-                    // 公開済なら <a> タグ、未公開なら <div> タグとして生成
                     const linkEl = document.createElement(isPublished ? 'a' : 'div');
                     if (isPublished) linkEl.href = linkHref;
                     
@@ -476,15 +542,25 @@
                     globalCounter++; // 連番をカウントアップ
                 });
 
-                details.appendChild(contentDiv);
-                container.appendChild(details);
+                chapterContainer.appendChild(contentDiv);
+                targetContentArea.appendChild(chapterContainer);
             });
 
             // 生成したDOMに対してアイコンをレンダリング
             lucide.createIcons();
         });
 
-        // サイドバー制御（既存の動作）
+        // タブ切り替え関数
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.target === tabId);
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === tabId);
+            });
+        }
+
+        // サイドバー制御（モバイル用）
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
