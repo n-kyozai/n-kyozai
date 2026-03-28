@@ -140,7 +140,7 @@
             flex: 1;
         }
 
-        /* --- アコーディオン・目次スタイル --- */
+        /* --- フルオープン・目次スタイル --- */
         .chapter-details {
             background: white;
             border-radius: 10px;
@@ -155,20 +155,10 @@
             font-weight: bold;
             font-size: 1.05rem;
             color: var(--primary-color);
-            background-color: #f8fafc;
-            cursor: pointer;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
-            list-style: none; /* デフォルトの三角を消す */
-            transition: background-color 0.2s;
-        }
-
-        .chapter-summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .chapter-summary:hover {
-            background-color: #f1f5f9;
         }
 
         .chapter-summary .icon-wrapper {
@@ -176,21 +166,6 @@
             color: var(--accent-color);
             display: flex;
             align-items: center;
-        }
-        
-        .chapter-summary .chevron {
-            margin-left: auto;
-            color: #94a3b8;
-            transition: transform 0.3s ease;
-        }
-
-        details[open] .chapter-summary {
-            border-bottom: 1px solid #e2e8f0;
-            background-color: #ffffff;
-        }
-
-        details[open] .chevron {
-            transform: rotate(180deg);
         }
 
         .chapter-content {
@@ -544,20 +519,18 @@
             let globalCounter = 1; // 連番（jh1, jh2...）用カウンター
 
             syllabusData.forEach((chapterData, index) => {
-                // アコーディオン要素の作成
-                const details = document.createElement('details');
-                details.className = 'chapter-details';
-                if (index === 0) details.open = true; // 第1章だけ初期状態で開いておく
+                // コンテナ要素の作成（detailsから通常のdivに変更）
+                const chapterDiv = document.createElement('div');
+                chapterDiv.className = 'chapter-details';
 
-                // 見出し（章タイトル）の作成
-                const summary = document.createElement('summary');
+                // 見出し（章タイトル）の作成（summaryから通常のdivに変更）
+                const summary = document.createElement('div');
                 summary.className = 'chapter-summary';
                 summary.innerHTML = `
                     <div class="icon-wrapper"><i data-lucide="bookmark"></i></div>
                     ${chapterData.chapter}
-                    <i data-lucide="chevron-down" class="chevron"></i>
                 `;
-                details.appendChild(summary);
+                chapterDiv.appendChild(summary);
 
                 // コンテンツ部分（リンクカードのグリッド）の作成
                 const contentDiv = document.createElement('div');
@@ -584,8 +557,8 @@
                     globalCounter++; // 連番をカウントアップ
                 });
 
-                details.appendChild(contentDiv);
-                container.appendChild(details);
+                chapterDiv.appendChild(contentDiv);
+                container.appendChild(chapterDiv);
             });
 
             // 生成したDOMに対してアイコンをレンダリング
