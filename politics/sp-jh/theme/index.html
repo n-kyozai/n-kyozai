@@ -25,6 +25,7 @@
             line-height: 1.5;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden; /* モバイルでの横揺れ防止 */
         }
 
         /* --- サイドバー（継承） --- */
@@ -116,6 +117,7 @@
             display: flex;
             flex-direction: column;
             transition: margin-left 0.3s ease;
+            min-width: 0; /* 子要素のはみ出しを防止 */
         }
 
         .page-header {
@@ -128,6 +130,8 @@
             font-size: 0.7rem;
             color: #94a3b8;
             margin-bottom: 8px;
+            white-space: normal; /* 折り返しを許可 */
+            overflow-wrap: break-word; /* 長い単語でも折り返す */
         }
         .breadcrumb a { color: #94a3b8; text-decoration: none; }
         .breadcrumb a:hover { text-decoration: underline; }
@@ -140,7 +144,7 @@
             flex: 1;
         }
 
-        /* --- アコーディオン・目次スタイル --- */
+        /* --- 目次スタイル --- */
         .chapter-details {
             background: white;
             border-radius: 10px;
@@ -155,20 +159,10 @@
             font-weight: bold;
             font-size: 1.05rem;
             color: var(--primary-color);
-            background-color: #f8fafc;
-            cursor: pointer;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
-            list-style: none; /* デフォルトの三角を消す */
-            transition: background-color 0.2s;
-        }
-
-        .chapter-summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .chapter-summary:hover {
-            background-color: #f1f5f9;
         }
 
         .chapter-summary .icon-wrapper {
@@ -176,21 +170,6 @@
             color: var(--accent-color);
             display: flex;
             align-items: center;
-        }
-        
-        .chapter-summary .chevron {
-            margin-left: auto;
-            color: #94a3b8;
-            transition: transform 0.3s ease;
-        }
-
-        details[open] .chapter-summary {
-            border-bottom: 1px solid #e2e8f0;
-            background-color: #ffffff;
-        }
-
-        details[open] .chevron {
-            transform: rotate(180deg);
         }
 
         .chapter-content {
@@ -286,12 +265,13 @@
             margin-top: auto;
         }
 
+        /* --- レスポンシブ --- */
         @media (max-width: 768px) {
             .mobile-toggle-btn { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .page-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; } /* 横幅の見切れ対応 */
+            .page-header { padding: 16px 16px 16px 60px; } /* トグルボタン分の余白対応 */
             .container { padding: 16px; width: 100%; }
             .chapter-content { grid-template-columns: 1fr; }
         }
@@ -403,19 +383,17 @@
             const container = document.getElementById('syllabus-container');
             let globalCounter = 1; // 連番（th1, th2...）用カウンター
 
-            syllabusData.forEach((chapterData, index) => {
-                // アコーディオン要素の作成
-                const details = document.createElement('details');
+            syllabusData.forEach((chapterData) => {
+                // コンテナ要素の作成（detailsからdivへ変更）
+                const details = document.createElement('div');
                 details.className = 'chapter-details';
-                if (index === 0) details.open = true; // 第1章だけ初期状態で開いておく
 
-                // 見出し（章タイトル）の作成
-                const summary = document.createElement('summary');
+                // 見出し（章タイトル）の作成（summaryからdivへ変更）
+                const summary = document.createElement('div');
                 summary.className = 'chapter-summary';
                 summary.innerHTML = `
                     <div class="icon-wrapper"><i data-lucide="bookmark"></i></div>
                     ${chapterData.chapter}
-                    <i data-lucide="chevron-down" class="chevron"></i>
                 `;
                 details.appendChild(summary);
 
@@ -424,7 +402,6 @@
                 contentDiv.className = 'chapter-content';
 
                 chapterData.items.forEach((itemTitle) => {
-                    // ★ 変更点: itemIndex ベースではなく globalCounter を使って通し番号を作成
                     const displayNum = String(globalCounter).padStart(3, '0'); // 全体を通した連番(001, 002...)
                     const linkHref = `/n-kyozai/politics/sp-jh/theme/th${globalCounter}`; // 連番の遷移先パス
                     const isPublished = publishedLessons.includes(globalCounter); // 公開設定の判定
