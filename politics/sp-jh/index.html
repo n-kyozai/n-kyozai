@@ -226,7 +226,6 @@
             color: var(--accent-color);
         }
 
-        /* --- 未公開リンク用のスタイル --- */
         .lesson-link.disabled {
             opacity: 0.7;
             cursor: default;
@@ -251,10 +250,11 @@
             color: #94a3b8;
         }
 
-        /* --- カテゴリリンク（テーマ史・文化史への導線） --- */
+        /* --- カテゴリリンク（テーマ史・文化史・復習コンテンツ） --- */
         .category-links {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* デスクトップ版では3つを横一列に並べる */
+            grid-template-columns: repeat(3, 1fr);
             gap: 16px;
             margin-bottom: 32px;
         }
@@ -303,6 +303,50 @@
             line-height: 1.4;
         }
 
+        /* --- タブUIのスタイル --- */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: -2px; /* ボーダーを重ねる */
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         footer {
             background-color: white;
             border-top: 1px solid #e2e8f0;
@@ -313,6 +357,14 @@
             margin-top: auto;
         }
 
+        /* --- レスポンシブ対応 --- */
+        @media (max-width: 1024px) {
+            .category-links {
+                /* タブレットサイズなどでは柔軟なグリッドに変更 */
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
             .mobile-toggle-btn { display: flex; }
             .sidebar { transform: translateX(-100%); }
@@ -321,6 +373,7 @@
             .page-header { padding-left: 60px; }
             .container { padding: 16px; width: 100%; }
             .chapter-content { grid-template-columns: 1fr; }
+            .category-links { grid-template-columns: 1fr; } /* モバイルは1列 */
         }
     </style>
 </head>
@@ -335,7 +388,7 @@
     <!-- サイドバー -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
-       <nav class="nav-menu">
+        <nav class="nav-menu">
             <div class="nav-category">MAIN</div>
             <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
             
@@ -351,7 +404,6 @@
 
     <main class="main-content">
         <div class="page-header">
-            <!-- パンくずリスト階層設定 -->
             <div class="breadcrumb">
                 <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ 日本史
             </div>
@@ -359,13 +411,13 @@
         </div>
 
         <div class="container">
-            <!-- 追加：下層（テーマ史・文化史）へのリンクカード -->
+            <!-- 追加：下層へのリンクカード（3列レイアウト） -->
             <div class="category-links">
                 <a href="/n-kyozai/politics/sp-jh/theme/index.html" class="category-card">
                     <div class="icon-box"><i data-lucide="layers"></i></div>
                     <div>
                         <h3>テーマ史</h3>
-                        <p>政治・外交史、社会・経済史、土地制度史などを横断的に学びます。</p>
+                        <p>政治・外交史、社会・経済史などを横断的に学びます。</p>
                     </div>
                 </a>
                 <a href="/n-kyozai/politics/sp-jh/culture/index.html" class="category-card">
@@ -375,16 +427,31 @@
                         <p>各時代の文化の特徴や、仏教・思想史などを体系的に学びます。</p>
                     </div>
                 </a>
+                <!-- 新規追加：復習用学習コンテンツ -->
+                <a href="/n-kyozai/politics/sp-jh/review/index.html" class="category-card">
+                    <div class="icon-box"><i data-lucide="check-circle"></i></div>
+                    <div>
+                        <h3>復習用学習コンテンツ</h3>
+                        <p>一問一答や過去問演習など、知識の定着を図るためのコンテンツです。</p>
+                    </div>
+                </a>
             </div>
 
-            <!-- 通史の見出しを追加 -->
-            <h2 style="font-size: 1.1rem; color: var(--primary-color); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+            <!-- 通史の見出し -->
+            <h2 style="font-size: 1.1rem; color: var(--primary-color); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                 <i data-lucide="book" style="width: 20px; height: 20px; color: var(--accent-color);"></i>通史
             </h2>
 
-            <div id="syllabus-container">
-                <!-- JavaScriptでここに目次データを動的生成します -->
+            <!-- タブUIの追加 -->
+            <div class="tabs">
+                <button class="tab-btn active" data-target="tab-ancient">原始〜近世</button>
+                <button class="tab-btn" data-target="tab-modern">近現代</button>
             </div>
+
+            <!-- タブコンテンツエリア（JSで動的に振り分け） -->
+            <div id="tab-ancient" class="tab-content active"></div>
+            <div id="tab-modern" class="tab-content"></div>
+            
         </div>
 
         <footer>
@@ -393,137 +460,38 @@
     </main>
 
     <script>
-        // ==========================================
-        // 【ページの公開手順】
-        // ページを作成し、リンクをクリック可能にするには、
-        // 以下の配列 `publishedLessons` にそのページの連番(jh1なら 1)を半角数字で追加してください。
-        // （例：1番、2番、5番を公開する場合 -> const publishedLessons = [1, 2, 5];）
-        // 現在は空 [] のため、全てクリック不可のデフォルト状態になっています。
-        // ==========================================
         const publishedLessons = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51];
 
-        // 画像から抽出＋追加した目次データ
         const syllabusData = [
-            {
-                chapter: "第1章 日本文化のあけぼの",
-                items: [
-                    "文化の始まり", "農耕社会の成立"
-                ]
-            },
-            {
-                chapter: "第2章 古墳とヤマト政権",
-                items: [
-                    "古墳文化の展開", "飛鳥の朝廷"
-                ]
-            },
-            {
-                chapter: "第3章 律令国家の形成",
-                items: [
-                    "律令国家への道", "平城京の時代", "律令国家の文化", "律令国家の変容"
-                ]
-            },
-            {
-                chapter: "第4章 貴族政治の展開",
-                items: [
-                    "摂関政治", "国風文化", "地方政治の展開と武士"
-                ]
-            },
-            {
-                chapter: "第5章 院政と武士の躍進",
-                items: [
-                    "院政の始まり", "院政と平氏政権"
-                ]
-            },
-            {
-                chapter: "第6章 武家政権の成立",
-                items: [
-                    "鎌倉幕府の成立", "武士の社会", "モンゴル襲来と幕府の衰退", "鎌倉文化"
-                ]
-            },
-            {
-                chapter: "第7章 武家社会の成長",
-                items: [
-                    "室町幕府の成立", "幕府の衰退と庶民の台頭", "室町文化", "戦国大名の登場"
-                ]
-            },
-            {
-                chapter: "第8章 近世の幕開け",
-                items: [
-                    "織豊政権", "桃山文化"
-                ]
-            },
-            {
-                chapter: "第9章 幕藩体制の成立と展開",
-                items: [
-                    "幕藩体制の成立", "幕藩社会の構造", "幕政の安定", "経済の発展", "元禄文化"
-                ]
-            },
-            {
-                chapter: "第10章 幕藩体制の動揺",
-                items: [
-                    "幕政の改革", "宝暦・天明期の文化", "幕府の衰退と近代への道", "化政文化"
-                ]
-            },
-            {
-                chapter: "第11章 近世から近代へ",
-                items: [
-                    "開国と幕末の動乱", "幕府の滅亡と新政府の発足"
-                ]
-            },
-            {
-                chapter: "第12章 近代国家の成立",
-                items: [
-                    "明治維新と富国強兵", "立憲国家の成立"
-                ]
-            },
-            {
-                chapter: "第13章 近代国家の展開",
-                items: [
-                    "日清・日露戦争と国際関係", "第一次世界大戦と日本", "ワシントン体制"
-                ]
-            },
-            {
-                chapter: "第14章 近代の産業と生活",
-                items: [
-                    "近代産業の発展", "近代文化の発達", "市民生活の変容と大衆文化"
-                ]
-            },
-            {
-                chapter: "第15章 恐慌と第二次世界大戦",
-                items: [
-                    "恐慌の時代", "軍部の台頭", "第二次世界大戦"
-                ]
-            },
-            {
-                chapter: "第16章 占領下の日本",
-                items: [
-                    "占領と改革", "冷戦の開始と講和"
-                ]
-            },
-            {
-                chapter: "第17章 高度成長の時代",
-                items: [
-                    "55年体制", "経済復興から高度経済成長へ"
-                ]
-            },
-            {
-                chapter: "第18章 激動する世界と日本",
-                items: [
-                    "経済大国への道", "冷戦の終結と日本社会の変容"
-                ]
-            }
+            { chapter: "第1章 日本文化のあけぼの", items: ["文化の始まり", "農耕社会の成立"] },
+            { chapter: "第2章 古墳とヤマト政権", items: ["古墳文化の展開", "飛鳥の朝廷"] },
+            { chapter: "第3章 律令国家の形成", items: ["律令国家への道", "平城京の時代", "律令国家の文化", "律令国家の変容"] },
+            { chapter: "第4章 貴族政治の展開", items: ["摂関政治", "国風文化", "地方政治の展開と武士"] },
+            { chapter: "第5章 院政と武士の躍進", items: ["院政の始まり", "院政と平氏政権"] },
+            { chapter: "第6章 武家政権の成立", items: ["鎌倉幕府の成立", "武士の社会", "モンゴル襲来と幕府の衰退", "鎌倉文化"] },
+            { chapter: "第7章 武家社会の成長", items: ["室町幕府の成立", "幕府の衰退と庶民の台頭", "室町文化", "戦国大名の登場"] },
+            { chapter: "第8章 近世の幕開け", items: ["織豊政権", "桃山文化"] },
+            { chapter: "第9章 幕藩体制の成立と展開", items: ["幕藩体制の成立", "幕藩社会の構造", "幕政の安定", "経済の発展", "元禄文化"] },
+            { chapter: "第10章 幕藩体制の動揺", items: ["幕政の改革", "宝暦・天明期の文化", "幕府の衰退と近代への道", "化政文化"] },
+            { chapter: "第11章 近世から近代へ", items: ["開国と幕末の動乱", "幕府の滅亡と新政府の発足"] },
+            { chapter: "第12章 近代国家の成立", items: ["明治維新と富国強兵", "立憲国家の成立"] },
+            { chapter: "第13章 近代国家の展開", items: ["日清・日露戦争と国際関係", "第一次世界大戦と日本", "ワシントン体制"] },
+            { chapter: "第14章 近代の産業と生活", items: ["近代産業の発展", "近代文化の発達", "市民生活の変容と大衆文化"] },
+            { chapter: "第15章 恐慌と第二次世界大戦", items: ["恐慌の時代", "軍部の台頭", "第二次世界大戦"] },
+            { chapter: "第16章 占領下の日本", items: ["占領と改革", "冷戦の開始と講和"] },
+            { chapter: "第17章 高度成長の時代", items: ["55年体制", "経済復興から高度経済成長へ"] },
+            { chapter: "第18章 激動する世界と日本", items: ["経済大国への道", "冷戦の終結と日本社会の変容"] }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('syllabus-container');
-            let globalCounter = 1; // 連番（jh1, jh2...）用カウンター
+            const containerAncient = document.getElementById('tab-ancient');
+            const containerModern = document.getElementById('tab-modern');
+            let globalCounter = 1;
 
             syllabusData.forEach((chapterData, index) => {
-                // コンテナ要素の作成（detailsから通常のdivに変更）
                 const chapterDiv = document.createElement('div');
                 chapterDiv.className = 'chapter-details';
 
-                // 見出し（章タイトル）の作成（summaryから通常のdivに変更）
                 const summary = document.createElement('div');
                 summary.className = 'chapter-summary';
                 summary.innerHTML = `
@@ -532,16 +500,14 @@
                 `;
                 chapterDiv.appendChild(summary);
 
-                // コンテンツ部分（リンクカードのグリッド）の作成
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'chapter-content';
 
-                chapterData.items.forEach((itemTitle, itemIndex) => {
-                    const globalNumStr = String(globalCounter).padStart(3, '0'); // 全体を通した連番(001, 002...)
-                    const linkHref = `/n-kyozai/politics/sp-jh/jh${globalCounter}`; // 連番の遷移先パス
-                    const isPublished = publishedLessons.includes(globalCounter); // 公開設定の判定
+                chapterData.items.forEach((itemTitle) => {
+                    const globalNumStr = String(globalCounter).padStart(3, '0');
+                    const linkHref = `/n-kyozai/politics/sp-jh/jh${globalCounter}`;
+                    const isPublished = publishedLessons.includes(globalCounter);
                     
-                    // 公開済なら <a> タグ、未公開なら <div> タグとして生成
                     const linkEl = document.createElement(isPublished ? 'a' : 'div');
                     if (isPublished) linkEl.href = linkHref;
                     
@@ -554,18 +520,39 @@
                     `;
                     
                     contentDiv.appendChild(linkEl);
-                    globalCounter++; // 連番をカウントアップ
+                    globalCounter++;
                 });
 
                 chapterDiv.appendChild(contentDiv);
-                container.appendChild(chapterDiv);
+
+                // 第1〜11章（インデックス0〜10）までは「原始〜近世」タブに、第12章以降は「近現代」タブに振り分け
+                if (index <= 10) {
+                    containerAncient.appendChild(chapterDiv);
+                } else {
+                    containerModern.appendChild(chapterDiv);
+                }
             });
 
-            // 生成したDOMに対してアイコンをレンダリング
             lucide.createIcons();
+
+            // タブ切り替えロジック
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 全てのタブとコンテンツからactiveクラスを外す
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // クリックされたタブと対応するコンテンツをアクティブにする
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.target).classList.add('active');
+                });
+            });
         });
 
-        // サイドバー制御（既存の動作）
+        // サイドバー制御
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
