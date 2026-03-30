@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>復習用学習コンテンツ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* 専門科目用アクセントカラー（SkyBlue） */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        /* --- タブUIのスタイル --- */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            overflow-x: auto; /* モバイルでタブが多い場合にスクロール */
+            white-space: nowrap;
+            /* スクロールバーを見えにくくする */
+            scrollbar-width: none;
+        }
+        .tabs::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: -2px; /* ボーダーを重ねる */
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- コンテンツリストスタイル --- */
+        .chapter-details {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .chapter-summary {
+            padding: 16px 20px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .chapter-summary .icon-wrapper {
+            margin-right: 12px;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .chapter-content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+            background-color: white;
+        }
+
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.2s;
+            background-color: #ffffff;
+        }
+
+        .lesson-link:hover {
+            border-color: var(--accent-color);
+            background-color: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .lesson-num {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            background: #e0f2fe;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            width: 44px; /* 番号の幅を固定 */
+            text-align: center;
+        }
+
+        .lesson-title {
+            flex: 1;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .lesson-arrow {
+            width: 16px;
+            height: 16px;
+            color: #cbd5e1;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .lesson-link:hover .lesson-arrow {
+            color: var(--accent-color);
+        }
+
+        /* --- 未公開リンク用のスタイル --- */
+        .lesson-link.disabled {
+            opacity: 0.7;
+            cursor: default;
+            background-color: #f8fafc;
+            border-style: dashed;
+            border-color: #cbd5e1;
+        }
+        
+        .lesson-link.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        .lesson-link.disabled .lesson-num {
+            background: #e2e8f0;
+            color: #94a3b8;
+        }
+
+        .lesson-link.disabled .lesson-title {
+            color: #94a3b8;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        /* --- レスポンシブ --- */
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+            .chapter-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <!-- パンくずリスト階層設定 -->
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-jh/index.html">日本史</a> ＞ 復習用学習コンテンツ
+            </div>
+            <h1 style="font-size: 1.4rem; color: var(--primary-color);">復習用学習コンテンツ</h1>
+        </div>
+
+        <div class="container">
+
+            <!-- タブUI -->
+            <div class="tabs" id="tabContainer">
+                <!-- JSで動的に生成します -->
+            </div>
+
+            <!-- コンテンツ表示エリア -->
+            <div id="contentContainer">
+                <!-- JSで動的に生成します -->
+            </div>
+            
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        // ==========================================
+        // 【ページの公開手順】
+        // 以下の配列 `publishedLessons` に公開したい項目の番号（1〜100）を半角数字で追加してください。
+        // 現在は「042」のみ公開状態に設定しています。
+        // ==========================================
+        const publishedLessons = [42];
+
+        // 画像の目次データ（100項目）
+        const reviewData = [
+            {
+                categoryId: 'tab-ancient',
+                categoryName: '原始・古代',
+                items: [
+                    { id: 1, title: '旧石器・縄文・弥生時代' },
+                    { id: 2, title: '邪馬台国連合' },
+                    { id: 3, title: 'ヤマト政権' },
+                    { id: 4, title: '推古朝の政治' },
+                    { id: 5, title: '飛鳥文化' },
+                    { id: 6, title: '大化改新〜天武・持統朝の政治' },
+                    { id: 7, title: '白鳳文化' },
+                    { id: 8, title: '律令制度' },
+                    { id: 9, title: '遣唐使' },
+                    { id: 10, title: '奈良時代政治史' },
+                    { id: 11, title: '奈良時代の仏教と美術' },
+                    { id: 12, title: '奈良時代の歴史書編纂と文芸' },
+                    { id: 13, title: '平安初期の政治' },
+                    { id: 14, title: '弘仁・貞観文化' },
+                    { id: 15, title: '摂関政治' },
+                    { id: 16, title: '国風文化' },
+                    { id: 17, title: '地方政治の転換' },
+                    { id: 18, title: '寄進地系荘園の成立' },
+                    { id: 19, title: '源氏の進出' }
+                ]
+            },
+            {
+                categoryId: 'tab-medieval',
+                categoryName: '中世',
+                items: [
+                    { id: 20, title: '院政と院政期の文化' },
+                    { id: 21, title: '平氏の台頭' },
+                    { id: 22, title: '鎌倉幕府の成立' },
+                    { id: 23, title: '鎌倉幕府と朝廷' },
+                    { id: 24, title: '執権政治の展開と武士の生活・土地支配' },
+                    { id: 25, title: 'モンゴル襲来とその後の政治' },
+                    { id: 26, title: '鎌倉期の産業' },
+                    { id: 27, title: '鎌倉期の宗教' },
+                    { id: 28, title: '鎌倉期の文芸・美術' },
+                    { id: 29, title: '鎌倉幕府の滅亡と室町幕府の成立' },
+                    { id: 30, title: '守護の権限強化' },
+                    { id: 31, title: '足利義満' },
+                    { id: 32, title: '東アジアとの交渉' },
+                    { id: 33, title: '室町幕府の衰退' },
+                    { id: 34, title: '室町時代の一揆' },
+                    { id: 35, title: '応仁の乱とその後の争乱' },
+                    { id: 36, title: '室町時代の産業' },
+                    { id: 37, title: '室町文化' },
+                    { id: 38, title: '戦国大名' }
+                ]
+            },
+            {
+                categoryId: 'tab-early-modern',
+                categoryName: '近世',
+                items: [
+                    { id: 39, title: 'ヨーロッパ人の来航・織田信長' },
+                    { id: 40, title: '豊臣秀吉' },
+                    { id: 41, title: '桃山文化' },
+                    { id: 42, title: '江戸幕府の成立' },
+                    { id: 43, title: '江戸幕府の機構' },
+                    { id: 44, title: '大名・朝廷・寺社統制' },
+                    { id: 45, title: '江戸時代の初期外交と鎖国' },
+                    { id: 46, title: '近世の身分社会' },
+                    { id: 47, title: '文治政治と正徳の治' },
+                    { id: 48, title: '農業・諸産業の発展' },
+                    { id: 49, title: '交通路の整備' },
+                    { id: 50, title: '近世の流通・貨幣' },
+                    { id: 51, title: '寛永・元禄文化' },
+                    { id: 52, title: '享保の改革' },
+                    { id: 53, title: '社会の変容' },
+                    { id: 54, title: '田沼時代と寛政の改革' },
+                    { id: 55, title: '列強の接近' },
+                    { id: 56, title: '天保の改革' },
+                    { id: 57, title: '江戸時代後期の藩政改革' },
+                    { id: 58, title: '江戸中・後期の文化' },
+                    { id: 59, title: '江戸時代の学問' }
+                ]
+            },
+            {
+                categoryId: 'tab-modern',
+                categoryName: '近代',
+                items: [
+                    { id: 60, title: '開国とその影響' },
+                    { id: 61, title: '江戸幕府の滅亡' },
+                    { id: 62, title: '明治新政府の成立' },
+                    { id: 63, title: '殖産興業と松方財政' },
+                    { id: 64, title: '文明開化' },
+                    { id: 65, title: '明治初期の外交' },
+                    { id: 66, title: '自由民権運動' },
+                    { id: 67, title: '憲法制定と初期議会' },
+                    { id: 68, title: '条約改正' },
+                    { id: 69, title: '日清・日露戦争' },
+                    { id: 70, title: '韓国併合' },
+                    { id: 71, title: '産業革命' },
+                    { id: 72, title: '社会運動の発生' },
+                    { id: 73, title: '明治文化(1)' },
+                    { id: 74, title: '明治文化(2)' },
+                    { id: 75, title: '大正政変' },
+                    { id: 76, title: '第一次世界大戦と大戦景気' },
+                    { id: 77, title: 'ワシントン体制' },
+                    { id: 78, title: '大正デモクラシー' },
+                    { id: 79, title: '大衆文化の誕生' },
+                    { id: 80, title: '恐慌から景気回復へ' },
+                    { id: 81, title: '軍部・右翼の台頭' },
+                    { id: 82, title: '満州事変から日中戦争へ' },
+                    { id: 83, title: 'アジア・太平洋戦争（太平洋戦争）' }
+                ]
+            },
+            {
+                categoryId: 'tab-contemporary',
+                categoryName: '現代',
+                items: [
+                    { id: 84, title: '占領期の日本' },
+                    { id: 85, title: '占領政策の転換' },
+                    { id: 86, title: '講和とその後の日米関係' },
+                    { id: 87, title: '55年体制' },
+                    { id: 88, title: '高度経済成長' },
+                    { id: 89, title: '高度経済成長の終焉と55年体制の崩壊' },
+                    { id: 90, title: '戦後の文化' }
+                ]
+            },
+            {
+                categoryId: 'tab-theme',
+                categoryName: 'テーマ史',
+                items: [
+                    { id: 91, title: '日中交渉史' },
+                    { id: 92, title: '日朝交渉史' },
+                    { id: 93, title: '日米交渉史' },
+                    { id: 94, title: '日露交渉史' },
+                    { id: 95, title: '東北日本の歴史' },
+                    { id: 96, title: '琉球・沖縄の歴史' },
+                    { id: 97, title: '貨幣制度史' },
+                    { id: 98, title: '女性史' },
+                    { id: 99, title: '史書編纂史' },
+                    { id: 100, title: '災害と日本' }
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabContainer = document.getElementById('tabContainer');
+            const contentContainer = document.getElementById('contentContainer');
+
+            reviewData.forEach((category, index) => {
+                // 1. タブボタンの生成
+                const tabBtn = document.createElement('button');
+                tabBtn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+                tabBtn.setAttribute('data-target', category.categoryId);
+                tabBtn.textContent = category.categoryName;
+                tabContainer.appendChild(tabBtn);
+
+                // 2. タブコンテンツエリアの生成
+                const tabContent = document.createElement('div');
+                tabContent.id = category.categoryId;
+                tabContent.className = `tab-content ${index === 0 ? 'active' : ''}`;
+
+                // 章の詳細コンテナ
+                const chapterDiv = document.createElement('div');
+                chapterDiv.className = 'chapter-details';
+
+                // 章タイトル（見出し）
+                const summary = document.createElement('div');
+                summary.className = 'chapter-summary';
+                summary.innerHTML = `
+                    <div class="icon-wrapper"><i data-lucide="check-circle"></i></div>
+                    ${category.categoryName}の日本
+                `;
+                if(category.categoryName === 'テーマ史') {
+                     summary.innerHTML = `<div class="icon-wrapper"><i data-lucide="check-circle"></i></div>${category.categoryName}`;
+                }
+                chapterDiv.appendChild(summary);
+
+                // リンク一覧のグリッド
+                const itemsGrid = document.createElement('div');
+                itemsGrid.className = 'chapter-content';
+
+                // 各項目のリンクを生成
+                category.items.forEach(item => {
+                    const numStr = String(item.id).padStart(3, '0');
+                    const isPublished = publishedLessons.includes(item.id);
+                    // リンク先のパス設定（例: /n-kyozai/politics/sp-jh/review/rev042.html を想定）
+                    const linkHref = `/n-kyozai/politics/sp-jh/review/rev${numStr}.html`;
+                    
+                    const linkEl = document.createElement(isPublished ? 'a' : 'div');
+                    if (isPublished) linkEl.href = linkHref;
+                    
+                    linkEl.className = 'lesson-link' + (isPublished ? '' : ' disabled');
+                    
+                    linkEl.innerHTML = `
+                        <span class="lesson-num">${numStr}</span>
+                        <span class="lesson-title">${item.title}</span>
+                        ${isPublished ? '<i data-lucide="chevron-right" class="lesson-arrow"></i>' : '<i data-lucide="lock" class="lesson-arrow" style="width:14px; height:14px; opacity: 0.5;"></i>'}
+                    `;
+                    
+                    itemsGrid.appendChild(linkEl);
+                });
+
+                chapterDiv.appendChild(itemsGrid);
+                tabContent.appendChild(chapterDiv);
+                contentContainer.appendChild(tabContent);
+            });
+
+            // アイコンの描画
+            lucide.createIcons();
+
+            // タブの切り替えロジック
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 全てのアクティブクラスを解除
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // クリックされたタブと対象コンテンツをアクティブに
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.target).classList.add('active');
+                });
+            });
+        });
+
+        // サイドバーのトグル制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
