@@ -157,11 +157,15 @@
         }
 
         /* --- テーブル用カスタムスタイル --- */
+        .table-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
         }
         
         .custom-table {
@@ -265,6 +269,11 @@
             color: #cbd5e1;
         }
 
+        /* カスタムスクロールバー（PCでは非表示） */
+        .custom-scrollbar-container {
+            display: none;
+        }
+
         footer {
             background-color: white;
             border-top: 1px solid #e2e8f0;
@@ -292,6 +301,50 @@
                 min-width: 500px; /* 画面幅を超えさせて表内スクロールを発生させる */
                 font-size: 0.75rem;
             }
+
+            /* モバイル用カスタムスクロールバー表示 */
+            .custom-scrollbar-container {
+                display: flex;
+                align-items: center;
+                background-color: #fdfdfd;
+                border-top: 1px solid #e2e8f0;
+                padding: 4px 12px;
+                gap: 10px;
+            }
+            .scroll-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+            }
+            .scroll-track {
+                flex: 1;
+                height: 8px;
+                position: relative;
+                background-color: #f1f5f9;
+                border-radius: 10px;
+            }
+            .scroll-thumb {
+                height: 100%;
+                background-color: #888888; /* 添付画像に近いグレー */
+                border-radius: 10px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 30%;
+            }
+            /* OS標準のスクロールバーを非表示にする */
+            .table-wrapper::-webkit-scrollbar {
+                display: none;
+            }
+            .table-wrapper {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
             /* 初期表示で見える列の幅を調整 */
             .custom-table th:nth-child(1),
             .custom-table td:nth-child(1) {
@@ -360,20 +413,34 @@
         <div class="container">
             <section class="section-box">
                 <!-- テスト一覧テーブル -->
-                <div class="table-wrapper">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 40%;">コンテンツ名</th>
-                                <th>ステータス</th>
-                                <th>更新日</th>
-                                <th>実施</th>
-                            </tr>
-                        </thead>
-                        <tbody id="test-list-body">
-                            <!-- ここにJavaScriptでリストが生成されます -->
-                        </tbody>
-                    </table>
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40%;">コンテンツ名</th>
+                                    <th>ステータス</th>
+                                    <th>更新日</th>
+                                    <th>実施</th>
+                                </tr>
+                            </thead>
+                            <tbody id="test-list-body">
+                                <!-- ここにJavaScriptでリストが生成されます -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- カスタムスクロールバー -->
+                    <div class="custom-scrollbar-container">
+                        <button class="scroll-btn" id="scrollLeftBtn" aria-label="左へスクロール">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#888" stroke="none"><polygon points="20 4 4 12 20 20"></polygon></svg>
+                        </button>
+                        <div class="scroll-track" id="scrollTrack">
+                            <div class="scroll-thumb" id="scrollThumb"></div>
+                        </div>
+                        <button class="scroll-btn" id="scrollRightBtn" aria-label="右へスクロール">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#888" stroke="none"><polygon points="4 4 20 12 4 20"></polygon></svg>
+                        </button>
+                    </div>
                 </div>
             </section>
         </div>
@@ -411,21 +478,21 @@
         const testsData = [
             { 
                 id: 1, 
-                name: "'26年度大分県 中高・高校 政治・経済", 
+                name: "'26大分県 中高・高校 政治・経済", 
                 status: "active", 
                 link: "./test01/index.html", 
                 updatedAt: "2026/04/30" 
             },
             { 
                 id: 2, 
-                name: "'26年度栃木県 中学公民", 
+                name: "'26栃木県 中学公民", 
                 status: "active", 
                 link: "./test02/index.html", 
                 updatedAt: "2026/04/30" 
             },
             { 
                 id: 3, 
-                name: "'26年度長野県 中学公民", 
+                name: "'26長野県 中学公民", 
                 status: "prep", 
                 link: "./test03/index.html", 
                 updatedAt: "2026/04/30" 
@@ -465,6 +532,60 @@
                 `;
 
                 tbody.appendChild(tr);
+            });
+            
+            // DOM更新後にスクロールバーを初期化・更新
+            setTimeout(updateScrollThumb, 100);
+        }
+
+        // --- カスタムスクロールバーの制御 ---
+        const tableWrapper = document.querySelector('.table-wrapper');
+        const scrollThumb = document.getElementById('scrollThumb');
+        const scrollTrack = document.getElementById('scrollTrack');
+        const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+        const scrollRightBtn = document.getElementById('scrollRightBtn');
+
+        function updateScrollThumb() {
+            if (!tableWrapper || !scrollThumb || !scrollTrack) return;
+            
+            const wrapperWidth = tableWrapper.clientWidth;
+            const scrollWidth = tableWrapper.scrollWidth;
+            
+            // スクロールが不要な場合
+            if (scrollWidth <= wrapperWidth) {
+                scrollThumb.style.width = '100%';
+                scrollThumb.style.left = '0px';
+                return;
+            }
+            
+            // つまみの幅を計算
+            const trackWidth = scrollTrack.clientWidth;
+            const thumbWidth = (wrapperWidth / scrollWidth) * trackWidth;
+            scrollThumb.style.width = `${Math.max(thumbWidth, 30)}px`; // 最小幅30px
+            
+            // つまみの位置を計算
+            const scrollLeft = tableWrapper.scrollLeft;
+            const maxScrollLeft = scrollWidth - wrapperWidth;
+            const maxThumbLeft = trackWidth - parseFloat(scrollThumb.style.width);
+            
+            const thumbLeft = (scrollLeft / maxScrollLeft) * maxThumbLeft;
+            scrollThumb.style.left = `${thumbLeft}px`;
+        }
+
+        if (tableWrapper) {
+            tableWrapper.addEventListener('scroll', updateScrollThumb);
+            window.addEventListener('resize', updateScrollThumb);
+        }
+
+        if (scrollLeftBtn) {
+            scrollLeftBtn.addEventListener('click', () => {
+                tableWrapper.scrollBy({ left: -150, behavior: 'smooth' });
+            });
+        }
+
+        if (scrollRightBtn) {
+            scrollRightBtn.addEventListener('click', () => {
+                tableWrapper.scrollBy({ left: 150, behavior: 'smooth' });
             });
         }
 
