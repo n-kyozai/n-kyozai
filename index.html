@@ -12,9 +12,7 @@
             --accent-color: #3498db;
             --bg-color: #f8fafc;
             --text-color: #334155;
-            --sidebar-width: 200px;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --header-height: 50px;
         }
 
         * {
@@ -32,92 +30,13 @@
             min-height: 100vh;
         }
 
-        /* --- サイドバー --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: white;
-            height: 100vh;
-            position: fixed;
-            left: 0; top: 0;
-            border-right: 1px solid #e2e8f0;
-            overflow-y: auto;
-            z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sidebar-header {
-            padding: 14px 16px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar-header { padding-left: 60px; }
-        }
-
-        .nav-menu { padding: 6px 0; }
-        .nav-category {
-            padding: 8px 16px 2px;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #94a3b8;
-            font-weight: 600;
-        }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 6px 16px;
-            color: #64748b;
-            text-decoration: none;
-            transition: all 0.2s;
-            font-size: 0.8rem;
-        }
-        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
-        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
-
-        /* --- モバイル用トグルボタン --- */
-        .mobile-toggle-btn {
-            display: none;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 2000;
-            width: 36px;
-            height: 36px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: none;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            cursor: pointer;
-            color: var(--primary-color);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.4);
-            z-index: 950;
-            backdrop-filter: blur(2px);
-        }
-        .overlay.active { display: block; }
-
         /* --- メインコンテンツ --- */
         .main-content {
             flex: 1;
-            margin-left: var(--sidebar-width);
+            width: 100%;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: margin-left 0.3s ease;
         }
 
         .banner-container {
@@ -257,10 +176,6 @@
         }
 
         @media (max-width: 768px) {
-            .mobile-toggle-btn { display: flex; }
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; }
             .banner-container { height: 140px; }
             .container { padding: 16px; width: 100%; }
             .sections-wrapper { grid-template-columns: 1fr; gap: 15px; }
@@ -270,28 +185,6 @@
     </style>
 </head>
 <body>
-
-    <button class="mobile-toggle-btn" id="menuToggle">
-        <i data-lucide="menu"></i>
-    </button>
-
-    <div class="overlay" id="overlay"></div>
-
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
-        <nav class="nav-menu">
-            <div class="nav-category">MAIN</div>
-            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
-            
-            <div class="nav-category">教養・指導要領</div>
-            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
-            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
-            <a href="/n-kyozai/guidelines/index.html" class="nav-item"><i data-lucide="file-text"></i>指導要領</a>
-
-            <div class="nav-category">専門科目</div>
-            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
-        </nav>
-    </aside>
 
     <main class="main-content">
         <div class="banner-container">
@@ -306,7 +199,7 @@
                 <a href="/n-kyozai/general/index.html" class="cat-btn">一般教養</a>
                 <a href="/n-kyozai/pedagogy/index.html" class="cat-btn">教職教養</a>
                 <a href="/n-kyozai/politics/index.html" class="cat-btn">専門科目</a>
-                <a href="/n-kyozai/guidelines/index.html" class="cat-btn">指導要領</a>
+                <a href="/n-kyozai/past-exams/index.html" class="cat-btn">過去問演習</a>
             </div>
 
             <div class="sections-wrapper">
@@ -396,21 +289,6 @@
             }
         }
 
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-
-        const toggleSidebar = () => {
-            const isActive = sidebar.classList.contains('active');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
-            lucide.createIcons();
-            document.body.style.overflow = isActive ? '' : 'hidden';
-        };
-
-        menuToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
         window.onload = fetchSheetData;
     </script>
 </body>
