@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>教採演習 公民</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ヘッダーやアクセントのカラー */
+        .header-bg { background-color: #005b82; }
+        
+        /* タイマー枠の固定 */
+        .timer-box {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 記述式の入力欄スタイル (今回は使われませんが念のため残します) */
+        .blank-input {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 6px 12px;
+            width: 100%;
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* 選択式のセレクトボックススタイル */
+        .blank-select {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 6px 32px 6px 12px;
+            width: 100%;
+            max-width: 120px; /* 数字選択用に幅を狭く調整 */
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .blank-select:focus {
+            border-color: #005b82;
+            box-shadow: 0 0 0 2px rgba(0, 91, 130, 0.2);
+        }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="header-bg text-white p-3 flex justify-between items-center">
+            <span class="font-bold text-base">問題リスト</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2">
+            <!-- JSでリストを生成 -->
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="flex-1 py-4 md:py-8 px-2 md:px-8 max-w-5xl mx-auto w-full">
+        
+        <!-- ================= スタート画面 ================= -->
+        <section id="start-screen" class="w-full mx-auto">
+            
+            <div class="bg-white border border-gray-300 w-full mb-6 text-sm md:text-base flex flex-col shadow-sm rounded overflow-hidden">
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">テスト名</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5 font-medium">教採演習 公民</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">テスト範囲</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5 leading-relaxed">中学校 公民</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出典</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5 text-gray-700 font-bold">2026年度 栃木県</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出題数</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">全 10 問</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">満点</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">10点</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">問題表示区分</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">一問題表示</div>
+                </div>
+                <div class="flex">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">問題出題形式</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">ランダム</div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4 mt-8">
+                <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow-md transition active:scale-95 text-lg flex items-center justify-center">
+                    戻る
+                </a>
+                <button id="start-btn" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-12 rounded shadow-md transition active:scale-95 text-lg">
+                    テスト開始
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= テスト画面 ================= -->
+        <section id="test-screen" class="hidden flex-col md:flex-row gap-3 lg:gap-6 items-start w-full">
+            
+            <!-- デスクトップ用 左サイドバー -->
+            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-40 shrink-0 max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-4">
+                <!-- JSでサイドバーのボタンを生成 -->
+            </div>
+
+            <!-- 右側 メインエリア -->
+            <div class="flex-1 w-full flex flex-col min-w-0">
+                
+                <!-- ヘッダーバー -->
+                <div class="bg-[#e2e8f0] p-2 rounded border border-gray-300 mb-3 flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <!-- モバイル用メニューボタン -->
+                        <button id="menu-btn" class="md:hidden p-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition" aria-label="メニューを開く">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <span class="font-bold text-gray-700 text-sm md:text-base ml-1 truncate">教採演習 公民</span>
+                    </div>
+                </div>
+
+                <!-- 問題枠 -->
+                <div class="bg-white rounded border border-gray-300 shadow-sm flex flex-col mb-4">
+                    <!-- タイトル -->
+                    <div class="bg-[#e0f2fe] p-2.5 md:p-3 border-b border-gray-300">
+                        <h2 id="question-number-title" class="text-sm md:text-base font-bold text-gray-800">
+                            【問題 1】<span class="text-xs font-normal ml-2 text-gray-600">（1点）</span>
+                        </h2>
+                    </div>
+                    <!-- 問題文と解答欄 -->
+                    <div class="p-4 flex flex-col gap-4">
+                        <!-- 問題文 (選択肢込み) -->
+                        <div id="question-body" class="text-sm md:text-base text-gray-800 leading-normal min-h-[60px] whitespace-pre-wrap break-words">
+                            <!-- JSで生成 -->
+                        </div>
+                        
+                        <!-- 解答エリア (グレー枠) -->
+                        <div class="bg-[#f8fafc] border border-gray-200 rounded p-3 flex flex-wrap items-center gap-3">
+                            <p id="input-instruction" class="text-sm text-gray-700 font-medium m-0">正しい選択肢の番号：</p>
+                            <div id="input-area" class="flex-1">
+                                <!-- JSで input/select を挿入 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- フッターナビゲーション -->
+                <div class="flex justify-between items-center mt-1">
+                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
+                        前へ
+                    </button>
+                    <div class="flex items-center gap-4">
+                        <span id="question-progress" class="text-gray-600 font-bold text-sm">1 / 10</span>
+                        <button id="next-btn" class="bg-[#005b82] hover:bg-[#00476b] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition text-sm md:text-base">
+                            次へ
+                        </button>
+                        <button id="submit-confirm-btn" class="bg-[#a17f1a] hover:bg-[#856814] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition hidden text-sm md:text-base">
+                            提出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 確認モーダル ================= -->
+        <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center backdrop-blur-sm p-4">
+            <div class="bg-white rounded p-6 md:p-8 max-w-sm w-full shadow-2xl text-center border border-gray-200">
+                <p class="text-base md:text-lg font-bold text-gray-800 mb-6">テストを提出して採点しますか？</p>
+                <div class="flex justify-center gap-3 md:gap-4">
+                    <button id="modal-cancel-btn" class="bg-[#cbd5e1] hover:bg-[#94a3b8] text-gray-800 font-bold py-2 px-6 rounded transition">
+                        いいえ
+                    </button>
+                    <button id="modal-submit-btn" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-gray-900 font-bold py-2 px-6 rounded transition">
+                        はい
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 結果画面 ================= -->
+        <section id="result-screen" class="hidden">
+            <div class="bg-white rounded shadow-sm p-6 text-center mb-6 border border-gray-200">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">テスト結果</h2>
+                <div class="text-4xl md:text-5xl font-bold text-[#005b82] mb-3" id="score-display">
+                    -- / --
+                </div>
+            </div>
+
+            <div class="bg-white rounded shadow-sm p-4 mb-6 border border-gray-200">
+                <h3 class="font-bold text-base md:text-lg border-b border-gray-300 pb-2 mb-4">詳細</h3>
+                <div id="result-details" class="flex flex-col gap-4">
+                    <!-- JSで結果詳細を生成 -->
+                </div>
+            </div>
+
+            <div class="flex justify-center pb-8">
+                <button onclick="location.reload();" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-8 rounded shadow transition">
+                    もう一度挑戦する
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- データ定義 (PDF「260430教採演習01」の内容・正誤判定＋選択式へ統合) ---
+        const baseQuestions = [
+            {
+                title: "地方自治（二元代表制）",
+                text: "「二元代表制」の説明として最も適切なものを、次の1～4のうちから一つ選べ。\n\n1. 国政において、衆議院と参議院の二つの議院で国会を構成する制度。\n2. 地方自治において、首長と地方議員を住民がそれぞれ直接選挙で選出する制度。\n3. 国の行政権が内閣に属し、内閣が国会に対して連帯して責任を負う制度。\n4. 地方自治において、住民が直接、条例の制定や改廃を請求できる制度。",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "二元代表制は憲法によって定められた制度です。首長と議員のいずれも任期は4年とされており、議会は首長に対する不信任決議権を、首長は議会の解散権を持っています。"
+            },
+            {
+                title: "地方自治（直接請求権）",
+                text: "地方自治における直接請求権のうち、条例の制定・改廃の請求（イニシアティブ）に関する記述として正しいものを、次の1～4のうちから一つ選べ。\n\n1. 請求先は選挙管理委員会である。\n2. 請求先は監査委員である。\n3. 請求先は議会である。\n4. 請求先は首長である。",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "条例の制定・改廃の請求先は「首長」です。選挙管理委員会は、議会の解散や首長・議員の解職（リコール）の請求先となります。"
+            },
+            {
+                title: "金融政策",
+                text: "日本銀行が一般の銀行から国債などを買うことによって、市場に資金を供給する政策を何というか。最も適切なものを次の1～4のうちから一つ選べ。\n\n1. 売りオペレーション\n2. 買いオペレーション\n3. 預金準備率操作\n4. 公定歩合操作",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "日本銀行が国債などを「買う」ことで資金を供給するのは「買いオペレーション（買いオペ）」です。「売りオペ」は資金を吸収し、景気の過熱を抑えるために行われます。"
+            },
+            {
+                title: "租税の仕組み",
+                text: "所得税のように、所得金額が大きくなるにつれて高い税率が適用される制度を何というか。最も適切なものを次の1～4のうちから一つ選べ。\n\n1. 比例課税制度\n2. 逆進課税制度\n3. 累進課税制度\n4. 定額課税制度",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "所得税には累進課税制度が適用されており、高所得者から多く税を徴収することで所得の再分配機能の役割を果たしています。"
+            },
+            {
+                title: "公債と財政",
+                text: "国債などの公債を大量に発行し続けた場合の影響として「財政の硬直化」がある。これに関する説明として最も適切なものを次の1～4のうちから一つ選べ。\n\n1. 将来世代の税負担が軽減されること。\n2. 景気の自動安定化装置が機能しなくなること。\n3. 予算の中で公債費の占める割合が大きくなり、他の政策に資金が回せなくなること。\n4. プライマリーバランスが黒字化すること。",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "発行された公債の償還（返済）は将来世代の負担になります。また、予算の中で公債費（元本返済と利払い）の占める割合が大きくなり、他の政策に資金が回せなくなることを財政の硬直化といいます。"
+            },
+            {
+                title: "財政政策",
+                text: "政府が景気安定化のために意図的に行う、公共事業の拡大や減税などの裁量的な財政政策を何というか。最も適切なものを次の1～4のうちから一つ選べ。\n\n1. フィスカル・ポリシー\n2. ビルト・イン・スタビライザー\n3. ポリシー・ミックス\n4. プライマリー・バランス",
+                correctAnswer: "1",
+                options: ["1", "2", "3", "4"],
+                explanation: "政府が景気安定化のために意図的に行う裁量的な財政政策は「フィスカル・ポリシー」です。「ビルト・イン・スタビライザー（自動安定化装置）」は、累進課税制度や雇用保険など、景気変動を自動的に安定させる仕組みのことです。"
+            },
+            {
+                title: "司法の独立",
+                text: "裁判官の独立について定めた日本国憲法第76条第3項の記述として、[　]に当てはまる語句を次の1～4のうちから一つ選べ。\n\n「すべて裁判官は、その[　]に従ひ独立してその職権を行ひ、この憲法及び法律にのみ拘束される」\n\n1. 信念\n2. 良心\n3. 道徳\n4. 思想",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "日本国憲法第76条第3項の規定です。ここでの「良心」とは、個人的な主観的良心ではなく、裁判官としての客観的な良心であると通説では解釈されています。"
+            },
+            {
+                title: "裁判所の種類",
+                text: "罰金以下の刑に当たる刑事事件や、訴訟の目的となる金額が少ない民事事件などを扱う裁判所として最も適切なものを、次の1～4のうちから一つ選べ。\n\n1. 地方裁判所\n2. 高等裁判所\n3. 簡易裁判所\n4. 家庭裁判所",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "それらを扱うのは「簡易裁判所」です。家庭裁判所は、家庭に関する事件（離婚や相続など）の審判・調停や、少年事件の審判を行います。"
+            },
+            {
+                title: "新しい人権",
+                text: "私生活をみだりに公開されない権利として、「宴のあと」事件の裁判で日本で初めて認められた権利は何か。最も適切なものを次の1～4のうちから一つ選べ。\n\n1. 知る権利\n2. アクセス権\n3. 忘れられる権利\n4. プライバシーの権利",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "「宴のあと」事件は、日本で初めて「プライバシーの権利（私生活をみだりに公開されない権利）」が認められた事件です。「忘れられる権利」は、インターネット上の自己に不都合な情報の削除を求める新しい人権です。"
+            },
+            {
+                title: "国際人権条約",
+                text: "1989年に国連総会で採択され、1990年に発効した、子どもに対するあらゆる差別を撤廃し、その権利を保障するための条約はどれか。次の1～4のうちから一つ選べ。\n\n1. 世界人権宣言\n2. 国際人権規約\n3. 女子差別撤廃条約\n4. 子どもの権利条約",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "子どもの権利条約は1989年に採択されました。その他の採択年は、世界人権宣言(1948年)、国際人権規約(1966年)、女子差別撤廃条約(1979年)です。"
+            }
+        ];
+
+        // --- グローバル変数 ---
+        let parsedQuestions = [];     
+        let userAnswers = [];         
+        let currentQuestionIndex = 0; 
+
+        // --- DOM要素 ---
+        const screens = {
+            start: document.getElementById('start-screen'),
+            test: document.getElementById('test-screen'),
+            result: document.getElementById('result-screen')
+        };
+        const els = {
+            menuBtn: document.getElementById('menu-btn'),
+            drawerOverlay: document.getElementById('drawer-overlay'),
+            drawerMenu: document.getElementById('drawer-menu'),
+            drawerList: document.getElementById('drawer-list'),
+            closeMenuBtn: document.getElementById('close-menu-btn'),
+            
+            desktopSidebar: document.getElementById('desktop-sidebar'),
+            qNumberTitle: document.getElementById('question-number-title'),
+            qBody: document.getElementById('question-body'),
+            inputArea: document.getElementById('input-area'),
+            qProgress: document.getElementById('question-progress'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            submitConfirmBtn: document.getElementById('submit-confirm-btn'),
+            
+            submitModal: document.getElementById('submit-modal'),
+            modalCancelBtn: document.getElementById('modal-cancel-btn'),
+            modalSubmitBtn: document.getElementById('modal-submit-btn'),
+            
+            scoreDisplay: document.getElementById('score-display'),
+            resultDetails: document.getElementById('result-details')
+        };
+
+        // --- 初期化 ---
+        function initApp() {
+            // イベントリスナー登録
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            els.prevBtn.addEventListener('click', () => navigateQuestion(-1));
+            els.nextBtn.addEventListener('click', () => navigateQuestion(1));
+            
+            els.submitConfirmBtn.addEventListener('click', () => {
+                els.submitModal.classList.remove('hidden');
+            });
+            els.modalCancelBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+            });
+            els.modalSubmitBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+                finishTest();
+            });
+            
+            els.menuBtn.addEventListener('click', openDrawer);
+            els.closeMenuBtn.addEventListener('click', closeDrawer);
+            els.drawerOverlay.addEventListener('click', closeDrawer);
+        }
+
+        // --- テスト開始処理 ---
+        function startTest() {
+            generateQuestions();
+
+            screens.start.classList.add('hidden');
+            screens.test.classList.remove('hidden');
+            screens.test.classList.add('flex');
+
+            currentQuestionIndex = 0;
+            renderQuestion(currentQuestionIndex);
+            updateNavigations();
+        }
+
+        // --- 問題データの生成 (全問ランダム) ---
+        function generateQuestions() {
+            parsedQuestions = [];
+            userAnswers = [];
+
+            // 問題をランダムにシャッフル
+            const shuffledData = [...baseQuestions].sort(() => Math.random() - 0.5);
+
+            shuffledData.forEach((q) => {
+                parsedQuestions.push({
+                    title: q.title,
+                    text: q.text,
+                    correctAnswer: q.correctAnswer,
+                    options: q.options,
+                    explanation: q.explanation
+                });
+                userAnswers.push(""); 
+            });
+        }
+
+        // --- 問題の描画 ---
+        function renderQuestion(index) {
+            const q = parsedQuestions[index];
+            
+            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="text-xs ml-2 font-normal text-gray-700">（1点）</span>`;
+            
+            // XSS対策を先に行い、その後に改行を反映
+            let displayText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            displayText = displayText.replace(/\n/g, '<br>');
+
+            els.qBody.innerHTML = displayText;
+            els.qProgress.textContent = `${index + 1} / ${parsedQuestions.length}`;
+
+            // 解答枠の生成 (セレクトボックス強制)
+            els.inputArea.innerHTML = '';
+            
+            const select = document.createElement('select');
+            select.className = 'blank-select';
+            
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "-"; // 省スペース化
+            select.appendChild(defaultOption);
+
+            q.options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if (userAnswers[index] === opt) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', (e) => {
+                userAnswers[index] = e.target.value;
+                updateNavigations();
+            });
+            els.inputArea.appendChild(select);
+
+            // ボタンの表示制御
+            els.prevBtn.disabled = index === 0;
+            if (index === parsedQuestions.length - 1) {
+                els.nextBtn.classList.add('hidden');
+                els.submitConfirmBtn.classList.remove('hidden');
+            } else {
+                els.nextBtn.classList.remove('hidden');
+                els.submitConfirmBtn.classList.add('hidden');
+            }
+        }
+
+        function navigateQuestion(step) {
+            const newIndex = currentQuestionIndex + step;
+            if (newIndex >= 0 && newIndex < parsedQuestions.length) {
+                currentQuestionIndex = newIndex;
+                renderQuestion(currentQuestionIndex);
+                updateNavigations(); 
+            }
+        }
+
+        // --- UIの更新 ---
+        function updateNavigations() {
+            updateSidebarList();
+            updateDrawerList();
+        }
+
+        function updateSidebarList() {
+            els.desktopSidebar.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const button = document.createElement('button');
+                const isActive = idx === currentQuestionIndex;
+                
+                let baseClass = "text-center px-2 py-2 rounded font-medium transition border text-sm shadow-sm ";
+                if (isActive) {
+                    baseClass += "bg-[#bfdbfe] text-black border-[#93c5fd]"; 
+                } else {
+                    baseClass += "bg-[#e2e8f0] text-gray-700 border-[#cbd5e1] hover:bg-[#cbd5e1]";
+                }
+                
+                button.className = baseClass;
+                button.innerHTML = `【問${idx + 1}】`;
+                
+                button.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    updateNavigations();
+                });
+                
+                els.desktopSidebar.appendChild(button);
+            });
+        }
+
+        function updateDrawerList() {
+            els.drawerList.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const li = document.createElement('li');
+                const isActive = idx === currentQuestionIndex;
+                
+                li.className = `p-3 mb-1 rounded cursor-pointer transition text-sm ${isActive ? 'bg-[#bfdbfe] font-bold text-black border border-[#93c5fd]' : 'bg-[#e2e8f0] border border-[#cbd5e1] hover:bg-[#cbd5e1] text-gray-700'}`;
+                li.innerHTML = `<div class="text-center">【問題${idx + 1}】</div>`;
+                
+                li.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    closeDrawer(); 
+                    updateNavigations();
+                });
+                
+                els.drawerList.appendChild(li);
+            });
+        }
+
+        function openDrawer() {
+            els.drawerMenu.classList.remove('-translate-x-full');
+            els.drawerOverlay.classList.remove('hidden');
+        }
+
+        function closeDrawer() {
+            els.drawerMenu.classList.add('-translate-x-full');
+            els.drawerOverlay.classList.add('hidden');
+        }
+
+        // --- テスト終了・採点処理 ---
+        function finishTest() {
+            let correctCount = 0;
+            els.resultDetails.innerHTML = '';
+
+            parsedQuestions.forEach((q, idx) => {
+                const userAnswer = userAnswers[idx];
+                const isCorrect = userAnswer === q.correctAnswer;
+                if (isCorrect) correctCount++;
+
+                const resultCard = document.createElement('div');
+                resultCard.className = `p-3 md:p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'} shadow-sm`;
+                
+                const icon = isCorrect 
+                    ? `<span class="text-green-600 font-bold text-sm md:text-base">○ 正解</span>` 
+                    : `<span class="text-red-600 font-bold text-sm md:text-base">× 不正解</span>`;
+
+                // 正解を埋め込んだテキストを生成 (HOLEを使わなくなったため単に問題文を表示)
+                let correctHtmlText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;"); // XSS対策
+                correctHtmlText = correctHtmlText.replace(/\n/g, '<br>');
+
+                // 解説エリアの生成（解説が存在する場合）
+                const explanationHtml = q.explanation 
+                    ? `<div class="mt-3 p-2.5 bg-white border border-gray-200 rounded text-xs md:text-sm text-gray-700 leading-relaxed">
+                        <span class="font-bold text-gray-600 block mb-1">【解説】</span>
+                        ${q.explanation.replace(/\n/g, '<br>')}
+                       </div>` 
+                    : '';
+
+                resultCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2 border-b border-gray-200 pb-2">
+                        <h4 class="font-bold text-gray-800 text-sm md:text-base">問 ${idx + 1}: <span class="text-xs md:text-sm font-normal text-gray-600">${q.title}</span></h4>
+                        ${icon}
+                    </div>
+                    <div class="text-xs md:text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2 whitespace-pre-wrap break-words">
+                        ${correctHtmlText}
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs md:text-sm mt-2">
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
+                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">あなたの解答</span>
+                            <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'} text-base md:text-lg">${userAnswer || '未解答'}</span>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
+                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">正解</span>
+                            <span class="font-bold text-blue-700 text-base md:text-lg">${q.correctAnswer}</span>
+                        </div>
+                    </div>
+                    ${explanationHtml}
+                `;
+                els.resultDetails.appendChild(resultCard);
+            });
+
+            els.scoreDisplay.textContent = `${correctCount} / ${parsedQuestions.length}`;
+            
+            screens.test.classList.add('hidden');
+            screens.test.classList.remove('flex');
+            screens.result.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>
