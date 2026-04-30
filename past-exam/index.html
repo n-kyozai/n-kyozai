@@ -1,1 +1,425 @@
+<!-- Canvas: ON, Preview: ON -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>過去問演習 - 教員採用試験対策まとめ</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #059669; /* 教職教養と同じアクセントカラー */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --header-height: 50px;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- サイドバー --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header { padding-left: 60px; }
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #ecfdf5;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグルボタン --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px;
+        }
+
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .container {
+            width: 95%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 0;
+            flex: 1;
+        }
+
+        /* セクション */
+        .section-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        /* --- テーブル用カスタムスタイル --- */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        .custom-table th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: normal;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        
+        .custom-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            vertical-align: middle;
+        }
+        
+        .custom-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .custom-table tbody tr:hover {
+            background-color: #f8fafc;
+            transition: background-color 0.2s ease;
+        }
+        
+        .custom-table td.text-left {
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        /* ステータスバッジ */
+        .status-badge {
+            display: inline-block;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .status-active { background-color: #a0c832; } /* テスト受付中（黄緑） */
+        .status-prep { background-color: #4bc0c8; }   /* テスト準備中（水色） */
+
+        /* リンクスタイル */
+        .content-link {
+            color: #2563eb;
+            text-decoration: underline;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .content-link:hover { color: #1d4ed8; }
+        .content-link.disabled {
+            color: #94a3b8;
+            text-decoration: underline;
+            cursor: not-allowed;
+        }
+
+        /* アクションボタン */
+        .btn-action {
+            display: inline-block;
+            border: 1px solid #94a3b8;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 6px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-action:hover { 
+            background-color: #e2e8f0; 
+            color: #1e293b;
+        }
+        .btn-disabled {
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            color: #cbd5e1;
+            cursor: not-allowed;
+        }
+        .btn-disabled:hover {
+            background-color: #f8fafc;
+            color: #cbd5e1;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-header { padding-left: 60px; }
+            .container { padding: 16px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <!-- 過去問演習からアクティブを削除 -->
+            <a href="/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="../index.html">ホーム</a> ＞ 過去問演習
+            </div>
+            <h1 style="font-size: 1.25rem; color: var(--primary-color);">教採過去問演習</h1>
+        </div>
+
+        <div class="container">
+            <section class="section-box">
+                <!-- テスト一覧テーブル -->
+                <div class="table-wrapper">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">コンテンツ名</th>
+                                <th>ステータス</th>
+                                <th>更新日</th>
+                                <th>実施</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test-list-body">
+                            <!-- ここにJavaScriptでリストが生成されます -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // サイドバー制御
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        /**
+         * 【データ定義】
+         * ここにコンテンツを手動で追加・編集してください。
+         * status は "active" (受付中) または "prep" (準備中) を指定します。
+         */
+        const testsData = [
+            { 
+                id: 1, 
+                name: "2026/04/28 教採演習", 
+                status: "active", 
+                link: "./test01/index.html", 
+                updatedAt: "2026/04/28" 
+            },
+            // 今後追加する際の見本（コメントアウト状態）
+            /*
+            { 
+                id: 2, 
+                name: "2026/05/10 教採演習", 
+                status: "prep", 
+                link: "./test02/index.html", 
+                updatedAt: "-" 
+            }
+            */
+        ];
+
+        // テーブル描画ロジック
+        const tbody = document.getElementById('test-list-body');
+
+        function renderTable() {
+            tbody.innerHTML = ''; 
+
+            testsData.forEach(test => {
+                const tr = document.createElement('tr');
+
+                // ステータスに応じた処理の分岐
+                const isActive = test.status === "active";
+                const statusLabel = isActive ? "テスト受付中" : "テスト準備中";
+                const statusClass = isActive ? "status-active" : "status-prep";
+                
+                // リンクとボタンの生成
+                const linkHtml = isActive 
+                    ? `<a href="${test.link}" class="content-link">${test.name}</a>` 
+                    : `<span class="content-link disabled">${test.name}</span>`;
+
+                const btnHtml = isActive
+                    ? `<a href="${test.link}" class="btn-action">テスト実施</a>`
+                    : `<button disabled class="btn-action btn-disabled">テスト実施</button>`;
+
+                tr.innerHTML = `
+                    <td class="text-left">${linkHtml}</td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${statusLabel}</span>
+                    </td>
+                    <td style="color: #64748b;">${test.updatedAt}</td>
+                    <td>${btnHtml}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ページ読み込み時の初期描画
+        renderTable();
+    </script>
+</body>
+</html>
