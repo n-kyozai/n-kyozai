@@ -178,14 +178,22 @@
             font-weight: normal;
             padding: 12px;
             border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0; /* 追加: 縦線 */
             white-space: nowrap;
         }
         
         .custom-table td {
             padding: 14px 12px;
             border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0; /* 追加: 縦線 */
             color: #334155;
             vertical-align: middle;
+        }
+        
+        /* 表の右端の縦線は消す */
+        .custom-table th:last-child,
+        .custom-table td:last-child {
+            border-right: none;
         }
         
         .custom-table tbody tr:last-child td {
@@ -274,6 +282,31 @@
             .main-content { margin-left: 0; }
             .page-header { padding-left: 60px; }
             .container { padding: 16px; width: 100%; }
+
+            /* モバイル版テーブル自動調整 */
+            .custom-table {
+                min-width: 100%; /* 横スクロールせず画面幅に収める */
+                font-size: 0.75rem;
+            }
+            .custom-table th,
+            .custom-table td {
+                padding: 10px 4px;
+            }
+            .custom-table td.text-left {
+                padding-left: 8px;
+            }
+            /* ステータス、更新日、実施列は極力折り返さない */
+            .custom-table td:not(.text-left) {
+                white-space: nowrap;
+            }
+            .status-badge {
+                padding: 4px 6px;
+                font-size: 0.65rem;
+            }
+            .btn-action {
+                padding: 6px 10px;
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -365,19 +398,25 @@
         const testsData = [
             { 
                 id: 1, 
-                name: "2026/04/28 教採演習", 
+                name: "'26年度大分県 中高・高校 政治・経済", 
                 status: "active", 
                 link: "./test01/index.html", 
-                updatedAt: "2026/04/28" 
+                updatedAt: "2026/04/30" 
             },
             { 
                 id: 2, 
-                name: "2026/04/30 教採演習", 
+                name: "'26年度栃木県 中学公民", 
                 status: "active", 
                 link: "./test02/index.html", 
                 updatedAt: "2026/04/30" 
+            },
+            { 
+                id: 3, 
+                name: "'26年度長野県 中学公民", 
+                status: "prep", 
+                link: "./test03/index.html", 
+                updatedAt: "2026/0-/--" 
             }
-            
         ];
 
         // テーブル描画ロジック
