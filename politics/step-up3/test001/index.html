@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>民主政治の基本原理 - ステップアップ問題集３</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- グローバル（専門科目ページ共通）のスタイル --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9; /* SkyBlue */
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .global-sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* モバイル用トグル（グローバルサイドバー用） */
+        .global-mobile-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2000;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: var(--primary-color);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .global-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950;
+            backdrop-filter: blur(2px);
+        }
+        .global-overlay.active { display: block; }
+
+        /* --- 演習UI専用のスタイル --- */
+        .header-bg { background-color: #0ea5e9; }
+        .header-hover { background-color: #0284c7; }
+        
+        .blank-select {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 6px 32px 6px 12px;
+            width: 100%;
+            max-width: 120px;
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .blank-select:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .global-mobile-btn { display: flex; }
+            .global-sidebar { transform: translateX(-100%); }
+            .global-sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-wrapper { margin-left: 0 !important; }
+            .page-header-container { padding-left: 60px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- グローバルモバイルトグル -->
+    <button class="global-mobile-btn" id="globalMenuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="global-overlay" id="globalOverlay"></div>
+
+    <!-- グローバルサイドバー -->
+    <aside class="global-sidebar" id="globalSidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+        <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <a href="/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <!-- メインラッパー -->
+    <main class="main-wrapper flex-1 flex flex-col min-h-screen transition-all duration-300" style="margin-left: 200px;">
+        
+        <!-- 専門科目ページ ヘッダー部分 -->
+        <div class="page-header-container bg-white border-b border-slate-200 py-4 px-6">
+            <div class="text-xs text-slate-400 mb-1">
+                <a href="../../index.html" class="hover:underline text-slate-400">ホーム</a> ＞ <a href="../index.html" class="hover:underline text-slate-400">専門科目</a> ＞ <a href="./index.html" class="hover:underline text-slate-400">ステップアップ問題集３</a> ＞ 民主政治の基本原理
+            </div>
+            <h1 class="text-xl font-bold text-[#2c3e50] flex items-center gap-2">
+                <i data-lucide="file-text" class="w-5 h-5 text-[#0ea5e9]"></i>民主政治の基本原理
+            </h1>
+            <p class="text-xs text-slate-500 mt-1 pl-7">東京アカデミー</p>
+        </div>
+
+        <!-- 演習UI (コンテナ内へ埋め込み) -->
+        <div class="flex-1 w-full max-w-5xl mx-auto p-4 md:p-6 relative">
+
+            <!-- ドロワーメニュー用オーバーレイ (テスト内モバイル用) -->
+            <div id="quiz-drawer-overlay" class="hidden absolute inset-0 bg-black bg-opacity-50 z-40 transition-opacity rounded"></div>
+
+            <!-- ドロワーメニュー本体 (テスト内モバイル用) -->
+            <nav id="quiz-drawer-menu" class="absolute inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden rounded-l">
+                <div class="header-bg text-white p-3 flex justify-between items-center rounded-tl">
+                    <span class="font-bold text-base">問題リスト</span>
+                    <button id="quiz-close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <ul id="quiz-drawer-list" class="flex-1 overflow-y-auto p-2">
+                    <!-- JSでリストを生成 -->
+                </ul>
+            </nav>
+
+            <!-- ================= スタート画面 ================= -->
+            <section id="start-screen" class="w-full mx-auto">
+                <div class="bg-white border border-gray-300 w-full mb-6 text-sm md:text-base flex flex-col shadow-sm rounded overflow-hidden">
+                    <div class="flex border-b border-gray-300">
+                        <div class="w-1/3 md:w-1/4 header-bg text-white p-2.5 font-bold flex items-center">テスト名</div>
+                        <div class="w-2/3 md:w-3/4 p-2.5 font-medium">ステップアップ問題集３（公民）</div>
+                    </div>
+                    <div class="flex border-b border-gray-300">
+                        <div class="w-1/3 md:w-1/4 header-bg text-white p-2.5 font-bold flex items-center">テスト範囲</div>
+                        <div class="w-2/3 md:w-3/4 p-2.5 leading-relaxed">第4編 公民：民主政治の基本原理</div>
+                    </div>
+                    <div class="flex border-b border-gray-300">
+                        <div class="w-1/3 md:w-1/4 header-bg text-white p-2.5 font-bold flex items-center">出典</div>
+                        <div class="w-2/3 md:w-3/4 p-2.5 text-gray-700 font-bold">東京アカデミー</div>
+                    </div>
+                    <div class="flex border-b border-gray-300">
+                        <div class="w-1/3 md:w-1/4 header-bg text-white p-2.5 font-bold flex items-center">出題数</div>
+                        <div class="w-2/3 md:w-3/4 p-2.5">全 10 問</div>
+                    </div>
+                    <div class="flex border-b border-gray-300">
+                        <div class="w-1/3 md:w-1/4 header-bg text-white p-2.5 font-bold flex items-center">満点</div>
+                        <div class="w-2/3 md:w-3/4 p-2.5">10点</div>
+                    </div>
+                    <div class="flex border-b border-gray-300">
+                        <div class="w-1/3 md:w-1/4 header-bg text-white p-2.5 font-bold flex items-center">問題表示区分</div>
+                        <div class="w-2/3 md:w-3/4 p-2.5">一問題表示</div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-1/3 md:w-1/4 header-bg text-white p-2.5 font-bold flex items-center">問題出題形式</div>
+                        <div class="w-2/3 md:w-3/4 p-2.5">ランダム</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 mt-8">
+                    <a href="https://n-kyozai.github.io/n-kyozai/politics/step-up3/index.html" class="bg-slate-400 hover:bg-slate-500 text-white font-bold py-3 px-8 rounded shadow-md transition active:scale-95 text-lg flex items-center justify-center">
+                        戻る
+                    </a>
+                    <button id="start-btn" class="header-bg header-hover text-white font-bold py-3 px-12 rounded shadow-md transition active:scale-95 text-lg">
+                        テスト開始
+                    </button>
+                </div>
+            </section>
+
+            <!-- ================= テスト画面 ================= -->
+            <section id="test-screen" class="hidden flex-col md:flex-row gap-3 lg:gap-6 items-start w-full">
+                
+                <!-- デスクトップ用 左サイドバー -->
+                <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-32 shrink-0 max-h-[calc(100vh-12rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-4">
+                    <!-- JSでサイドバーのボタンを生成 -->
+                </div>
+
+                <!-- 右側 メインエリア -->
+                <div class="flex-1 w-full flex flex-col min-w-0">
+                    
+                    <!-- ヘッダーバー -->
+                    <div class="bg-slate-100 p-2 rounded border border-gray-300 mb-3 flex justify-between items-center shadow-sm">
+                        <div class="flex items-center gap-2">
+                            <button id="quiz-menu-btn" class="md:hidden p-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center gap-1 text-xs font-bold" aria-label="問題一覧">
+                                <i data-lucide="list" class="w-4 h-4"></i> 問題
+                            </button>
+                            <span class="font-bold text-gray-700 text-sm md:text-base ml-1 truncate">民主政治の基本原理</span>
+                        </div>
+                        <button id="font-size-btn" class="text-gray-600 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-2.5 py-1 rounded text-sm font-medium transition" aria-label="文字サイズ変更">
+                            ぁあ
+                        </button>
+                    </div>
+
+                    <!-- 問題枠 -->
+                    <div class="bg-white rounded border border-gray-300 shadow-sm flex flex-col mb-4">
+                        <!-- タイトル -->
+                        <div class="bg-sky-50 p-2.5 md:p-3 border-b border-gray-300">
+                            <h2 id="question-number-title" class="text-sm md:text-base font-bold text-gray-800">
+                                【問題 1】<span class="text-xs font-normal ml-2 text-gray-600">（1点）</span>
+                            </h2>
+                        </div>
+                        <!-- 問題文と解答欄 -->
+                        <div class="p-4 flex flex-col gap-4">
+                            <div id="question-body" class="text-sm md:text-base text-gray-800 leading-normal min-h-[60px] whitespace-pre-wrap break-words">
+                                <!-- JSで生成 -->
+                            </div>
+                            
+                            <div class="bg-slate-50 border border-gray-200 rounded p-3 flex flex-wrap items-center gap-3">
+                                <p id="input-instruction" class="text-sm text-gray-700 font-medium m-0 flex items-center gap-1">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#0ea5e9]"></i> 正しい選択肢の番号：
+                                </p>
+                                <div id="input-area" class="flex-1">
+                                    <!-- JSで input/select を挿入 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- フッターナビゲーション -->
+                    <div class="flex justify-between items-center mt-1">
+                        <button id="prev-btn" class="bg-slate-400 hover:bg-slate-500 text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
+                            前へ
+                        </button>
+                        <div class="flex items-center gap-4">
+                            <span id="question-progress" class="text-gray-600 font-bold text-sm">1 / 10</span>
+                            <button id="next-btn" class="header-bg header-hover text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition text-sm md:text-base">
+                                次へ
+                            </button>
+                            <button id="submit-confirm-btn" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition hidden text-sm md:text-base">
+                                提出
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 確認モーダル ================= -->
+            <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-[60] flex justify-center items-center backdrop-blur-sm p-4">
+                <div class="bg-white rounded p-6 md:p-8 max-w-sm w-full shadow-2xl text-center border border-gray-200">
+                    <p class="text-base md:text-lg font-bold text-gray-800 mb-6">テストを提出して採点しますか？</p>
+                    <div class="flex justify-center gap-3 md:gap-4">
+                        <button id="modal-cancel-btn" class="bg-slate-300 hover:bg-slate-400 text-gray-800 font-bold py-2 px-6 rounded transition">
+                            いいえ
+                        </button>
+                        <button id="modal-submit-btn" class="header-bg header-hover text-white font-bold py-2 px-6 rounded transition">
+                            はい
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= 結果画面 ================= -->
+            <section id="result-screen" class="hidden pb-8">
+                <div class="bg-white rounded shadow-sm p-6 text-center mb-6 border border-gray-200">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">テスト結果</h2>
+                    <div class="text-4xl md:text-5xl font-bold text-[#0ea5e9] mb-3" id="score-display">
+                        -- / --
+                    </div>
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-4 mb-6 border border-gray-200">
+                    <h3 class="font-bold text-base md:text-lg border-b border-gray-300 pb-2 mb-4 flex items-center gap-2">
+                        <i data-lucide="book-open-check" class="w-5 h-5 text-slate-500"></i>詳細
+                    </h3>
+                    <div id="result-details" class="flex flex-col gap-4">
+                        <!-- JSで結果詳細を生成 -->
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <button onclick="location.reload();" class="header-bg header-hover text-white font-bold py-3 px-8 rounded shadow transition flex items-center gap-2">
+                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i> もう一度挑戦する
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- フッター -->
+        <footer class="bg-white border-t border-slate-200 p-4 text-center text-xs text-slate-400 mt-auto">
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- グローバルサイドバー制御 ---
+        const globalMenuToggle = document.getElementById('globalMenuToggle');
+        const globalSidebar = document.getElementById('globalSidebar');
+        const globalOverlay = document.getElementById('globalOverlay');
+
+        const toggleGlobalSidebar = () => {
+            const isActive = globalSidebar.classList.contains('active');
+            globalSidebar.classList.toggle('active');
+            globalOverlay.classList.toggle('active');
+            globalMenuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(globalMenuToggle) globalMenuToggle.addEventListener('click', toggleGlobalSidebar);
+        if(globalOverlay) globalOverlay.addEventListener('click', toggleGlobalSidebar);
+
+
+        // --- PDFから抽出した演習問題 (全10問) ---
+        const baseQuestions = [
+            {
+                title: "歴史的文書の制定順",
+                text: "次の歴史的文書を、制定された年代の古い順に並べたものとして正しいものを1つ選べ。\n\nア. アメリカ独立宣言\nイ. ワイマール憲法\nウ. マグナ・カルタ\nエ. フランス人権宣言\n\n1. ウ→ア→エ→イ\n2. ウ→エ→ア→イ\n3. ア→ウ→エ→イ\n4. ア→エ→ウ→イ",
+                correctAnswer: "1",
+                options: ["1", "2", "3", "4"],
+                explanation: "マグナ・カルタ(1215年) → アメリカ独立宣言(1776年) → フランス人権宣言(1789年) → ワイマール憲法(1919年) の順です。"
+            },
+            {
+                title: "法の支配の歴史",
+                text: "13世紀のイギリスの法学者で、「国王といえども神と法の下にあるべきである」と述べ、「法の支配」の原則の基礎を築いた人物は誰か。最も適切なものを1つ選べ。\n\n1. モンテスキュー\n2. ブラクトン\n3. ルソー\n4. ロック",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "ブラクトンは13世紀のイギリスの法学者・裁判官であり、「国王といえども神と法の下にあるべきである」という言葉で法の支配の基本理念を表現しました。"
+            },
+            {
+                title: "マグナ・カルタ（大憲章）",
+                text: "1215年に制定された「マグナ・カルタ（大憲章）」に関する記述として、最も適切なものを1つ選べ。\n\n1. イギリスのジョン王に対する貴族の要求であり、「適法な手続なくして逮捕・監禁されず」といった人身の自由が明記されている。\n2. フランス革命の際に採択され、自由・平等・博愛の精神を世界に示した。\n3. アメリカの独立に伴い制定され、天賦人権の思想を成文化した。\n4. 世界で初めて社会権を保障し、生存権の規定を設けた。",
+                correctAnswer: "1",
+                options: ["1", "2", "3", "4"],
+                explanation: "マグナ・カルタ（1215年）は、イギリスのジョン王の専制に対し貴族が要求したもので、法の支配の出発点とされ、不当な逮捕・監禁の禁止（人身の自由）などが定められました。"
+            },
+            {
+                title: "アメリカ独立宣言",
+                text: "1776年の「アメリカ独立宣言」に関する説明として、正しいものを1つ選べ。\n\n1. イギリスの権利章典を模範として制定され、議会の優越を確立した。\n2. ルソーの社会契約論に影響を受け、王権神授説を肯定した。\n3. ロックの自然権思想を基礎とし、政府に対する国民の「抵抗権」があることを明示した。\n4. 世界で初めて労働者の団結権やストライキ権を保障した。",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "アメリカ独立宣言（1776年）は、ロックの自然権思想（生命・自由・幸福の追求）を基礎とし、政府がその目的を破壊する場合には、国民には政府を変更・廃止する「抵抗権」があることを明示しました。"
+            },
+            {
+                title: "フランス人権宣言",
+                text: "1789年の「フランス人権宣言」における「所有権」の扱いについて、最も適切なものを1つ選べ。\n\n1. 所有権は国に属し、個人による財産の所有を禁止した。\n2. 所有権は「不可侵かつ神聖の権利」であるとして、絶対的な財産権を保障した。\n3. 所有権は公共の福祉のために制限されるべきであると明記した。\n4. 所有権の保障よりも、労働者の生存権の保障を優先した。",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "フランス人権宣言（1789年）第17条では、所有権を「不可侵かつ神聖の権利」と定めています。これに対し、後に制定されたワイマール憲法では所有権への制限（公共の福祉への適合）が規定されました。"
+            },
+            {
+                title: "ワイマール憲法",
+                text: "1919年に制定されたドイツの「ワイマール憲法」に関する記述として、誤っているものを1つ選べ。\n\n1. 「すべての人に人たるに値する生活を保障する」として、世界で初めて生存権（社会権）を明記した。\n2. フランス人権宣言とは異なり、「経済的自由」や「所有権」に対して公共の福祉による制限を設けた。\n3. 国民主権を徹底し、男女平等の普通選挙権を認めた。\n4. 行政の効率化のため、議会を廃止して大統領への権力集中を規定した。",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "ワイマール憲法は民主的な共和制を規定しており、議会を廃止したわけではありません。世界初の社会権保障や、所有権の公共性に基づく制限を規定したことで有名です。"
+            },
+            {
+                title: "法の支配と法治主義",
+                text: "「法の支配」と「法治主義」の違いに関する説明として、最も適切なものを1つ選べ。\n\n1. 「法の支配」はドイツで発達し、議会が制定した法律に基づく行政を重視する。\n2. 「法治主義」はイギリスで発達し、法の内容が正しいかという実質を重視する。\n3. 「法の支配」では、法の内容が個人の人権を侵害していないかという実質が問われるのに対し、「法治主義」は行政が法律に基づいているかという形式を重視する傾向があった。\n4. 両者は全く同じ概念であり、国や時代による意味の違いは存在しない。",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "「法の支配」はイギリスで発達し、権力者も法に拘束されるという実質的内容（人権保障）を重視します。一方、「法治主義」は19世紀ドイツで発達し、権力行使が議会の制定した法律に基づいているかという形式（形式的法治主義）が重視されました。"
+            },
+            {
+                title: "イギリスの議院内閣制の歴史",
+                text: "イギリスの議院内閣制の成立に関する記述として、正しいものを1つ選べ。\n\n1. 18世紀にウォルポールが初代首相となり、「国王は君臨すれども統治せず」という原則のもと、責任内閣制が確立していった。\n2. マグナ・カルタの制定と同時に、内閣が議会に対して連帯して責任を負う制度が完成した。\n3. イギリスの内閣は、下院ではなく上院（貴族院）の信任に基づいて成立する。\n4. イギリスには成文憲法が存在するため、議院内閣制の仕組みもすべて一つの憲法典に詳細に規定されている。",
+                correctAnswer: "1",
+                options: ["1", "2", "3", "4"],
+                explanation: "イギリスでは18世紀前半、ウォルポールのもとで内閣が議会（下院）の信任に基づいて成立し、議会に対して責任を負うという「責任内閣制」の慣行が確立しました。"
+            },
+            {
+                title: "シャドー・キャビネット",
+                text: "イギリスの政治制度における「シャドー・キャビネット（影の内閣）」の説明として、最も適切なものを1つ選べ。\n\n1. 国王が公式な内閣とは別に、秘密裏に組織する諮問機関のことである。\n2. 野党が政権交代に備え、政策の立案や政府の追及を行うためにあらかじめ組織しておく擬似的な内閣のことである。\n3. 与党内の非主流派が、現政権を批判するために党内に作る対抗組織のことである。\n4. 上院（貴族院）の議員のみで構成され、下院（庶民院）の決定に拒否権を発動する機関である。",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "シャドー・キャビネット（影の内閣）とは、イギリスなどの議院内閣制において、最大野党が政権交代に備えてあらかじめ大臣候補を指名して構成する組織のことです。"
+            },
+            {
+                title: "イギリスの議会（下院と上院）",
+                text: "イギリスの議会制度に関する記述として、最も適切なものを1つ選べ。\n\n1. 上院（貴族院）は国民の選挙で選ばれた議員で構成され、下院（庶民院）よりも強い権限を持つ。\n2. 下院（庶民院）が可決した法案を上院（貴族院）が否決した場合、その法案は直ちに廃案となる。\n3. 「下院の優越」の原則があり、下院（庶民院）は上院（貴族院）に対して強い権限（予算の先議権など）を持っている。\n4. 内閣不信任決議は、上院（貴族院）と下院（庶民院）の合同会議でのみ可決することができる。",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "イギリス議会では「下院の優越」が確立しています。下院（庶民院）は国民の選挙で選ばれ、予算の先議権や内閣不信任決議権などを持ち、上院（貴族院）よりも強い権限を持っています。"
+            }
+        ];
+
+        // --- 演習UI制御用の変数と要素 ---
+        let parsedQuestions = [];      
+        let userAnswers = [];          
+        let currentQuestionIndex = 0; 
+        let currentFontSizeLevel = 0;
+        const fontSizeClasses = ['text-sm md:text-base', 'text-xs md:text-sm', 'text-[11px] md:text-xs', 'text-base md:text-lg'];
+
+        const screens = {
+            start: document.getElementById('start-screen'),
+            test: document.getElementById('test-screen'),
+            result: document.getElementById('result-screen')
+        };
+        const els = {
+            quizMenuBtn: document.getElementById('quiz-menu-btn'),
+            quizDrawerOverlay: document.getElementById('quiz-drawer-overlay'),
+            quizDrawerMenu: document.getElementById('quiz-drawer-menu'),
+            quizDrawerList: document.getElementById('quiz-drawer-list'),
+            quizCloseMenuBtn: document.getElementById('quiz-close-menu-btn'),
+            fontSizeBtn: document.getElementById('font-size-btn'),
+            
+            desktopSidebar: document.getElementById('desktop-sidebar'),
+            qNumberTitle: document.getElementById('question-number-title'),
+            qBody: document.getElementById('question-body'),
+            inputArea: document.getElementById('input-area'),
+            qProgress: document.getElementById('question-progress'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            submitConfirmBtn: document.getElementById('submit-confirm-btn'),
+            
+            submitModal: document.getElementById('submit-modal'),
+            modalCancelBtn: document.getElementById('modal-cancel-btn'),
+            modalSubmitBtn: document.getElementById('modal-submit-btn'),
+            
+            scoreDisplay: document.getElementById('score-display'),
+            resultDetails: document.getElementById('result-details')
+        };
+
+        // --- 初期化 ---
+        function initApp() {
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            els.prevBtn.addEventListener('click', () => navigateQuestion(-1));
+            els.nextBtn.addEventListener('click', () => navigateQuestion(1));
+            
+            els.submitConfirmBtn.addEventListener('click', () => {
+                els.submitModal.classList.remove('hidden');
+            });
+            els.modalCancelBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+            });
+            els.modalSubmitBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+                finishTest();
+            });
+            
+            els.quizMenuBtn.addEventListener('click', openQuizDrawer);
+            els.quizCloseMenuBtn.addEventListener('click', closeQuizDrawer);
+            els.quizDrawerOverlay.addEventListener('click', closeQuizDrawer);
+            
+            els.fontSizeBtn.addEventListener('click', () => {
+                currentFontSizeLevel = (currentFontSizeLevel + 1) % fontSizeClasses.length;
+                applyFontSize();
+            });
+        }
+
+        // --- フォントサイズ適用 ---
+        function applyFontSize() {
+            const baseClasses = "text-gray-800 leading-normal min-h-[60px] whitespace-pre-wrap break-words";
+            els.qBody.className = `${fontSizeClasses[currentFontSizeLevel]} ${baseClasses}`;
+        }
+
+        // --- テスト開始処理 ---
+        function startTest() {
+            generateQuestions();
+            screens.start.classList.add('hidden');
+            screens.test.classList.remove('hidden');
+            screens.test.classList.add('flex');
+            currentQuestionIndex = 0;
+            renderQuestion(currentQuestionIndex);
+            updateNavigations();
+        }
+
+        // --- 問題データの生成 ---
+        function generateQuestions() {
+            parsedQuestions = [];
+            userAnswers = [];
+            // ランダム出題
+            const shuffledData = [...baseQuestions].sort(() => Math.random() - 0.5);
+            shuffledData.forEach((q) => {
+                parsedQuestions.push({
+                    title: q.title, text: q.text, correctAnswer: q.correctAnswer,
+                    options: q.options, explanation: q.explanation
+                });
+                userAnswers.push(""); 
+            });
+        }
+
+        // --- 問題の描画 ---
+        function renderQuestion(index) {
+            const q = parsedQuestions[index];
+            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="text-xs ml-2 font-normal text-gray-600">（1点）</span>`;
+            
+            let displayText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            displayText = displayText.replace(/\n/g, '<br>');
+            els.qBody.innerHTML = displayText;
+            els.qProgress.textContent = `${index + 1} / ${parsedQuestions.length}`;
+
+            els.inputArea.innerHTML = '';
+            const select = document.createElement('select');
+            select.className = 'blank-select';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = ""; defaultOption.textContent = "-"; 
+            select.appendChild(defaultOption);
+
+            q.options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt; option.textContent = opt;
+                if (userAnswers[index] === opt) option.selected = true;
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', (e) => {
+                userAnswers[index] = e.target.value;
+                updateNavigations();
+            });
+            els.inputArea.appendChild(select);
+
+            els.prevBtn.disabled = index === 0;
+            if (index === parsedQuestions.length - 1) {
+                els.nextBtn.classList.add('hidden');
+                els.submitConfirmBtn.classList.remove('hidden');
+            } else {
+                els.nextBtn.classList.remove('hidden');
+                els.submitConfirmBtn.classList.add('hidden');
+            }
+        }
+
+        function navigateQuestion(step) {
+            const newIndex = currentQuestionIndex + step;
+            if (newIndex >= 0 && newIndex < parsedQuestions.length) {
+                currentQuestionIndex = newIndex;
+                renderQuestion(currentQuestionIndex);
+                updateNavigations(); 
+            }
+        }
+
+        // --- UIの更新 ---
+        function updateNavigations() {
+            updateSidebarList();
+            updateDrawerList();
+        }
+
+        function updateSidebarList() {
+            els.desktopSidebar.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const button = document.createElement('button');
+                const isActive = idx === currentQuestionIndex;
+                let baseClass = "text-center px-2 py-2 rounded font-medium transition border text-sm shadow-sm ";
+                if (isActive) {
+                    baseClass += "bg-[#bae6fd] text-black border-[#7dd3fc]"; 
+                } else {
+                    baseClass += "bg-[#e2e8f0] text-gray-700 border-[#cbd5e1] hover:bg-[#cbd5e1]";
+                }
+                button.className = baseClass;
+                button.innerHTML = `【問${idx + 1}】`;
+                button.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    updateNavigations();
+                });
+                els.desktopSidebar.appendChild(button);
+            });
+        }
+
+        function updateDrawerList() {
+            els.quizDrawerList.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const li = document.createElement('li');
+                const isActive = idx === currentQuestionIndex;
+                li.className = `p-3 mb-1 rounded cursor-pointer transition text-sm ${isActive ? 'bg-[#bae6fd] font-bold text-black border border-[#7dd3fc]' : 'bg-[#e2e8f0] border border-[#cbd5e1] hover:bg-[#cbd5e1] text-gray-700'}`;
+                li.innerHTML = `<div class="text-center">【問題${idx + 1}】</div>`;
+                li.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    closeQuizDrawer(); 
+                    updateNavigations();
+                });
+                els.quizDrawerList.appendChild(li);
+            });
+        }
+
+        function openQuizDrawer() {
+            els.quizDrawerMenu.classList.remove('-translate-x-full');
+            els.quizDrawerOverlay.classList.remove('hidden');
+        }
+
+        function closeQuizDrawer() {
+            els.quizDrawerMenu.classList.add('-translate-x-full');
+            els.quizDrawerOverlay.classList.add('hidden');
+        }
+
+        // --- テスト終了・採点処理 ---
+        function finishTest() {
+            let correctCount = 0;
+            els.resultDetails.innerHTML = '';
+
+            parsedQuestions.forEach((q, idx) => {
+                const userAnswer = userAnswers[idx];
+                const isCorrect = userAnswer === q.correctAnswer;
+                if (isCorrect) correctCount++;
+
+                const resultCard = document.createElement('div');
+                resultCard.className = `p-3 md:p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'} shadow-sm`;
+                
+                const icon = isCorrect 
+                    ? `<span class="text-green-600 font-bold text-sm md:text-base"><i data-lucide="check-circle" class="w-4 h-4 inline mb-0.5"></i> 正解</span>` 
+                    : `<span class="text-red-600 font-bold text-sm md:text-base"><i data-lucide="x-circle" class="w-4 h-4 inline mb-0.5"></i> 不正解</span>`;
+
+                let correctHtmlText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                correctHtmlText = correctHtmlText.replace(/\n/g, '<br>');
+
+                const explanationHtml = q.explanation 
+                    ? `<div class="mt-3 p-2.5 bg-white border border-gray-200 rounded text-xs md:text-sm text-gray-700 leading-relaxed"><span class="font-bold text-gray-600 block mb-1">【解説】</span>${q.explanation.replace(/\n/g, '<br>')}</div>` 
+                    : '';
+
+                resultCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2 border-b border-gray-200 pb-2">
+                        <h4 class="font-bold text-gray-800 text-sm md:text-base">問 ${idx + 1}: <span class="text-xs md:text-sm font-normal text-gray-600">${q.title}</span></h4>
+                        ${icon}
+                    </div>
+                    <div class="text-xs md:text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2 whitespace-pre-wrap break-words">${correctHtmlText}</div>
+                    <div class="grid grid-cols-2 gap-2 text-xs md:text-sm mt-2">
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
+                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">あなたの解答</span>
+                            <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'} text-base md:text-lg">${userAnswer || '未解答'}</span>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
+                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">正解</span>
+                            <span class="font-bold text-blue-700 text-base md:text-lg">${q.correctAnswer}</span>
+                        </div>
+                    </div>
+                    ${explanationHtml}
+                `;
+                els.resultDetails.appendChild(resultCard);
+            });
+
+            els.scoreDisplay.textContent = `${correctCount} / ${parsedQuestions.length}`;
+            
+            screens.test.classList.add('hidden');
+            screens.test.classList.remove('flex');
+            screens.result.classList.remove('hidden');
+            lucide.createIcons();
+            
+            // トップへスクロール
+            window.scrollTo(0, 0);
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
