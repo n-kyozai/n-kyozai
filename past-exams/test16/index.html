@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>教採演習 中学校学習指導要領（総則）ver.3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ヘッダーやアクセントのカラー */
+        .header-bg { background-color: #005b82; }
+        
+        /* タイマー枠の固定 */
+        .timer-box {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 選択式のセレクトボックススタイル */
+        .blank-select {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 6px 32px 6px 12px;
+            width: 100%;
+            max-width: 120px; /* 数字選択用に幅を狭く調整 */
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .blank-select:focus {
+            border-color: #005b82;
+            box-shadow: 0 0 0 2px rgba(0, 91, 130, 0.2);
+        }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="header-bg text-white p-3 flex justify-between items-center">
+            <span class="font-bold text-base">問題リスト</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2">
+            <!-- JSでリストを生成 -->
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="flex-1 py-4 md:py-8 px-2 md:px-8 max-w-5xl mx-auto w-full">
+        
+        <!-- ================= スタート画面 ================= -->
+        <section id="start-screen" class="w-full mx-auto">
+            
+            <div class="bg-white border border-gray-300 w-full mb-6 text-sm md:text-base flex flex-col shadow-sm rounded overflow-hidden">
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">テスト名</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5 font-medium">教採演習 中学校学習指導要領ver.3</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">テスト範囲</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5 leading-relaxed">総則</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出典</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5 text-gray-700 font-bold">平成29年告示 中学校学習指導要領</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出題数</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5" id="total-q-count">全 -- 問</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">満点</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5" id="total-score">-- 点</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">問題表示区分</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">一問題表示</div>
+                </div>
+                <div class="flex">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">問題出題形式</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">ランダム</div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4 mt-8">
+                <button id="start-btn" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-12 rounded shadow-md transition active:scale-95 text-lg">
+                    テスト開始
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= テスト画面 ================= -->
+        <section id="test-screen" class="hidden flex-col md:flex-row gap-3 lg:gap-6 items-start w-full">
+            
+            <!-- デスクトップ用 左サイドバー -->
+            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-40 shrink-0 max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-4">
+                <!-- JSでサイドバーのボタンを生成 -->
+            </div>
+
+            <!-- 右側 メインエリア -->
+            <div class="flex-1 w-full flex flex-col min-w-0">
+                
+                <!-- ヘッダーバー -->
+                <div class="bg-[#e2e8f0] p-2 rounded border border-gray-300 mb-3 flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <!-- モバイル用メニューボタン -->
+                        <button id="menu-btn" class="md:hidden p-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition" aria-label="メニューを開く">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <span class="font-bold text-gray-700 text-sm md:text-base ml-1 truncate">教採演習ver.3</span>
+                    </div>
+                    <!-- フォントサイズ変更ボタン -->
+                    <button id="font-size-btn" class="text-gray-600 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-2.5 py-1 rounded text-sm font-medium transition" aria-label="文字サイズ変更">
+                        ぁあ
+                    </button>
+                </div>
+
+                <!-- 問題枠 -->
+                <div class="bg-white rounded border border-gray-300 shadow-sm flex flex-col mb-4">
+                    <!-- タイトル -->
+                    <div class="bg-[#e0f2fe] p-2.5 md:p-3 border-b border-gray-300">
+                        <h2 id="question-number-title" class="text-sm md:text-base font-bold text-gray-800">
+                            【問題 1】<span class="text-xs font-normal ml-2 text-gray-600">（1点）</span>
+                        </h2>
+                    </div>
+                    <!-- 問題文と解答欄 -->
+                    <div class="p-4 flex flex-col gap-4">
+                        <!-- 問題文 (選択肢込み) -->
+                        <div id="question-body" class="text-sm md:text-base text-gray-800 leading-normal min-h-[60px] whitespace-pre-wrap break-words">
+                            <!-- JSで生成 -->
+                        </div>
+                        
+                        <!-- 解答エリア (グレー枠) -->
+                        <div class="bg-[#f8fafc] border border-gray-200 rounded p-3 flex flex-wrap items-center gap-3">
+                            <p id="input-instruction" class="text-sm text-gray-700 font-medium m-0">正しい選択肢の番号：</p>
+                            <div id="input-area" class="flex-1">
+                                <!-- JSで input/select を挿入 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- フッターナビゲーション -->
+                <div class="flex justify-between items-center mt-1">
+                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
+                        前へ
+                    </button>
+                    <div class="flex items-center gap-4">
+                        <span id="question-progress" class="text-gray-600 font-bold text-sm">1 / 20</span>
+                        <button id="next-btn" class="bg-[#005b82] hover:bg-[#00476b] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition text-sm md:text-base">
+                            次へ
+                        </button>
+                        <button id="submit-confirm-btn" class="bg-[#a17f1a] hover:bg-[#856814] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition hidden text-sm md:text-base">
+                            提出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 確認モーダル ================= -->
+        <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center backdrop-blur-sm p-4">
+            <div class="bg-white rounded p-6 md:p-8 max-w-sm w-full shadow-2xl text-center border border-gray-200">
+                <p class="text-base md:text-lg font-bold text-gray-800 mb-6">テストを提出して採点しますか？</p>
+                <div class="flex justify-center gap-3 md:gap-4">
+                    <button id="modal-cancel-btn" class="bg-[#cbd5e1] hover:bg-[#94a3b8] text-gray-800 font-bold py-2 px-6 rounded transition">
+                        いいえ
+                    </button>
+                    <button id="modal-submit-btn" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-gray-900 font-bold py-2 px-6 rounded transition">
+                        はい
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 結果画面 ================= -->
+        <section id="result-screen" class="hidden">
+            <div class="bg-white rounded shadow-sm p-6 text-center mb-6 border border-gray-200">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">テスト結果</h2>
+                <div class="text-4xl md:text-5xl font-bold text-[#005b82] mb-3" id="score-display">
+                    -- / --
+                </div>
+            </div>
+
+            <div class="bg-white rounded shadow-sm p-4 mb-6 border border-gray-200">
+                <h3 class="font-bold text-base md:text-lg border-b border-gray-300 pb-2 mb-4">詳細</h3>
+                <div id="result-details" class="flex flex-col gap-4">
+                    <!-- JSで結果詳細を生成 -->
+                </div>
+            </div>
+
+            <div class="flex justify-center pb-8">
+                <button onclick="location.reload();" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-8 rounded shadow transition">
+                    もう一度挑戦する
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- データ定義 (全20問) ---
+        const baseQuestions = [
+            {
+                title: "教育基本法第2条 第4号",
+                text: "同法第2条に掲げる次の目標を達成するよう行われなければならない。\n4 生命を尊び、（　ア　）を大切にし、環境の保全に寄与する態度を養うこと。\n\n1. 文化\n2. 資源\n3. 平和\n4. 自然",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "前文より。教育基本法第2条第4号には「生命を尊び、自然を大切にし、環境の保全に寄与する態度を養うこと」と規定されています。"
+            },
+            {
+                title: "教育基本法第2条 第5号",
+                text: "同法第2条に掲げる次の目標を達成するよう行われなければならない。\n5 伝統と文化を尊重し、それらをはぐくんできた我が国と郷土を愛するとともに、他国を尊重し、（　ア　）の平和と発展に寄与する態度を養うこと。\n\n1. 地域社会\n2. 国際社会\n3. 人類社会\n4. 地球環境",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "前文より。教育基本法第2条第5号には「他国を尊重し、国際社会の平和と発展に寄与する態度を養うこと」と規定されています。"
+            },
+            {
+                title: "学習指導要領が果たす役割",
+                text: "学習指導要領とは、こうした理念の実現に向けて必要となる教育課程の基準を大綱的に定めるものである。学習指導要領が果たす役割の一つは、公の性質を有する学校における（　ア　）を全国的に（　イ　）することである。\n\n1. ア: 教育条件　イ: 維持\n2. ア: 教育水準　イ: 確保\n3. ア: 学力水準　イ: 保障\n4. ア: 教育水準　イ: 向上",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "前文より。学習指導要領は「公の性質を有する学校における教育水準を全国的に確保すること」が役割の一つとされています。"
+            },
+            {
+                title: "学校間のつながり",
+                text: "（　ア　）の教育及び小学校教育の基礎の上に、高等学校以降の教育や（　イ　）にわたる学習とのつながりを見通しながら、生徒の学習の在り方を展望していくために広く活用されるものとなることを期待して、ここに中学校学習指導要領を定める。\n\n1. ア: 幼児期　イ: 生涯\n2. ア: 家庭　イ: 社会\n3. ア: 幼児期　イ: 生徒\n4. ア: 義務教育　イ: 生涯",
+                correctAnswer: "1",
+                options: ["1", "2", "3", "4"],
+                explanation: "前文の結びより。「幼児期の教育及び小学校教育の基礎の上に、高等学校以降の教育や生涯にわたる学習とのつながりを見通しながら」と記述されています。"
+            },
+            {
+                title: "内容等の取扱い（順序）",
+                text: "第2章以下に示す各教科、道徳科及び特別活動の内容に掲げる事項の順序は、特に示す場合を除き、（　ア　）を示すものではないので、学校においては、その取扱いについて適切な工夫を加えるものとする。\n\n1. 難易度\n2. 指導の順序\n3. 重要度\n4. 優先順位",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第2の3(1)ウより。学習指導要領に示された内容の順序は「指導の順序を示すものではない」とされています。"
+            },
+            {
+                title: "複式学級等における特例",
+                text: "学校において2以上の学年の生徒で編制する学級について特に必要がある場合には、各教科の目標の達成に支障のない範囲内で、各教科の目標及び内容について（　ア　）の順序によらないことができる。\n\n1. 単元別\n2. 領域別\n3. 学期別\n4. 学年別",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第2の3(1)エより。複式学級等において特に必要がある場合、各教科の目標及び内容について「学年別の順序」によらないことができます。"
+            },
+            {
+                title: "総合的な学習の時間と学校行事の代替",
+                text: "総合的な学習の時間における学習活動により、特別活動の（　ア　）に掲げる各行事の実施と同様の成果が期待できる場合においては、総合的な学習の時間における学習活動をもって相当する特別活動の（　ア　）に掲げる各行事の実施に替えることができる。\n\n1. 生徒会活動\n2. 学級活動\n3. 学校行事\n4. ボランティア活動",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第2の3(2)エより。同様の成果が期待できる場合、総合的な学習の時間の学習活動をもって特別活動の「学校行事」に替えることができます。"
+            },
+            {
+                title: "中等教育学校等における接続",
+                text: "教育課程の編成に当たっては、次の事項に配慮しながら、学校段階間の接続を図るものとする。(略)特に、中等教育学校、連携型中学校及び併設型中学校においては、（　ア　）を見通した計画的かつ継続的な教育課程を編成すること。\n\n1. 義務教育9年間\n2. 中等教育6年間\n3. 高等教育への接続\n4. 中高一貫教育",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第2の4(2)より。義務教育学校では「義務教育9年間」、中等教育学校等では「中等教育6年間」を見通した教育課程を編成します。"
+            },
+            {
+                title: "学びに向かう過程の重視",
+                text: "生徒が各教科等の特質に応じた見方・考え方を働かせながら、知識を相互に関連付けてより深く理解したり、（　ア　）を精査して考えを形成したり、問題を見いだして解決策を考えたり、思いや考えを基に（　イ　）したりすることに向かう過程を重視した学習の充実を図ること。\n\n1. ア: 知識　イ: 発信\n2. ア: 知識　イ: 協働\n3. ア: 情報　イ: 発信\n4. ア: 情報　イ: 創造",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第3の1(1)より。「情報を精査して考えを形成したり、問題を見いだして解決策を考えたり、思いや考えを基に創造したりすることに向かう過程」を重視します。"
+            },
+            {
+                title: "読書活動の充実",
+                text: "言語能力の育成を図るため、各学校において必要な言語環境を整えるとともに、国語科を要としつつ各教科等の特質に応じて、生徒の言語活動を充実すること。あわせて、(7) に示すとおり（　ア　）を充実すること。\n\n1. 表現活動\n2. 読書活動\n3. 話し合い活動\n4. 探究活動",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第3の1(2)より。言語能力の育成と言語活動の充実に「あわせて」、読書活動を充実することが求められています。"
+            },
+            {
+                title: "教材・教具の活用",
+                text: "情報活用能力の育成を図るため、(中略)各種の統計資料や新聞、視聴覚教材や教育機器などの（　ア　）の適切な活用を図ること。\n\n1. ICT機器\n2. 情報手段\n3. 教材・教具\n4. デジタル教材",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第3の1(3)より。コンピュータや情報通信ネットワークなどの「情報手段」だけでなく、統計資料や新聞などの「教材・教具」の適切な活用も図ります。"
+            },
+            {
+                title: "学習評価の考え方",
+                text: "学習評価の実施に当たっては、次の事項に配慮するものとする。(1) 生徒のよい点や（　ア　）などを積極的に評価し、学習したことの意義や価値を実感できるようにすること。\n\n1. 努力の過程\n2. 進歩の状況\n3. 協力する態度\n4. 学力の定着度",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第3の2(1)より。評価の実施にあたっては「生徒のよい点や進歩の状況などを積極的に評価し」と記載されています。"
+            },
+            {
+                title: "特別支援学級における教育課程の特例",
+                text: "特別支援学級において実施する特別の教育課程については、(中略)生徒の障害の程度や学級の実態等を考慮の上、各教科の目標や内容を（　ア　）の教科の目標や内容に替えたり、各教科を、知的障害者である生徒に対する教育を行う特別支援学校の各教科に替えたりするなどして、実態に応じた教育課程を編成すること。\n\n1. 小学部\n2. 特別支援学校\n3. 下学年\n4. 前学年",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第4の2(1)イ(イ)より。障害の程度等により、各教科の目標や内容を「下学年」のものに替えることができる特例が示されています。"
+            },
+            {
+                title: "不登校生徒に対する特別の教育課程",
+                text: "（　ア　）中学校を欠席し引き続き欠席すると認められる生徒を対象として、文部科学大臣が認める特別の教育課程を編成する場合には、生徒の実態に配慮した教育課程を編成するとともに、個別学習やグループ別学習など指導方法や指導体制の工夫改善に努めるものとする。\n\n1. 30日以上\n2. 相当の期間\n3. 長期間\n4. 1学期以上",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第4の2(3)イより。「相当の期間中学校を欠席し引き続き欠席すると認められる生徒」を対象とする場合の記述です（いわゆる不登校特例校に関する事項）。"
+            },
+            {
+                title: "学校評価とカリキュラム・マネジメント",
+                text: "各学校が行う学校評価については、教育課程の編成、実施、改善が教育活動や学校運営の中核となることを踏まえ、（　ア　）と関連付けながら実施するよう留意するものとする。\n\n1. 教員評価\n2. 学校運営協議会\n3. カリキュラム・マネジメント\n4. スクール・マネジメント",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第5の1アより。学校評価は「カリキュラム・マネジメントと関連付けながら実施するよう留意する」とされています。"
+            },
+            {
+                title: "部活動の運営体制",
+                text: "部活動については、(中略)学校や地域の実態に応じ、地域の人々の協力、社会教育施設や社会教育関係団体等の各種団体との連携などの運営上の工夫を行い、（　ア　）な運営体制が整えられるようにするものとする。\n\n1. 効率的\n2. 合理的\n3. 協働的\n4. 持続可能",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第5の1ウより。地域の協力や各種団体との連携を行い、「持続可能な運営体制」が整えられるようにすることが求められています。"
+            },
+            {
+                title: "道徳教育の指導内容の重点化（国際理解）",
+                text: "指導内容の重点化を図ること。その際、(中略)伝統と文化を尊重し、それらを育んできた我が国と郷土を愛するとともに、他国を尊重すること、（　ア　）に生きる日本人としての（　イ　）を身に付けることに留意すること。\n\n1. ア: グローバル社会　イ: 自覚\n2. ア: 国際社会　イ: 自覚\n3. ア: グローバル社会　イ: 誇り\n4. ア: 国際社会　イ: 誇り",
+                correctAnswer: "2",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第6の2より。「国際社会に生きる日本人としての自覚を身に付けることに留意すること」と規定されています。"
+            },
+            {
+                title: "道徳教育の日常生活への活用",
+                text: "道徳教育の指導内容が、生徒の日常生活に生かされるようにすること。その際、（　ア　）や安全の確保等にも資することとなるよう留意すること。\n\n1. 不登校の未然防止\n2. 基本的生活習慣の確立\n3. いじめの防止\n4. 豊かな人間関係の構築",
+                correctAnswer: "3",
+                options: ["1", "2", "3", "4"],
+                explanation: "総則第6の3より。道徳教育の内容が日常生活に生かされるよう工夫し、その際「いじめの防止」や安全の確保等にも資するよう留意します。"
+            },
+            {
+                title: "社会科の目標 (考察力・判断力)",
+                text: "社会的事象の意味や意義、特色や相互の関連を（　ア　）に考察したり、社会に見られる課題の解決に向けて選択・判断したりする力、思考・判断したことを説明したり、それらを基に議論したりする力を養う。\n\n1. 批判的・論理的\n2. 客観的・科学的\n3. 主体的・協働的\n4. 多面的・多角的",
+                correctAnswer: "4",
+                options: ["1", "2", "3", "4"],
+                explanation: "社会科の目標(2)より。「社会的事象の意味や意義、特色や相互の関連を多面的・多角的に考察したり…」と規定されています。"
+            },
+            {
+                title: "社会科の目標 (態度と愛情)",
+                text: "社会的事象について、よりよい社会の実現を視野に課題を主体的に解決しようとする態度を養うとともに、多面的・多角的な考察や深い理解を通して涵(かん)養される我が国の（　ア　）に対する愛情、国民主権を担う公民として、自覚と誇りをもって国家・社会の形成に参画しようとする態度を養う。\n\n1. 国土や歴史\n2. 伝統や文化\n3. 自然や環境\n4. 政治や経済",
+                correctAnswer: "1",
+                options: ["1", "2", "3", "4"],
+                explanation: "社会科の目標(3)より。「我が国の国土や歴史に対する愛情」を涵養することが示されています。"
+            }
+        ];
+
+        // --- グローバル変数 ---
+        let parsedQuestions = [];      
+        let userAnswers = [];          
+        let currentQuestionIndex = 0; 
+        let currentFontSizeLevel = 0; // 0: 標準, 1: 小, 2: 極小, 3: 大
+        const fontSizeClasses = ['text-sm md:text-base', 'text-xs md:text-sm', 'text-[11px] md:text-xs', 'text-base md:text-lg'];
+
+        // --- DOM要素 ---
+        const screens = {
+            start: document.getElementById('start-screen'),
+            test: document.getElementById('test-screen'),
+            result: document.getElementById('result-screen')
+        };
+        const els = {
+            menuBtn: document.getElementById('menu-btn'),
+            drawerOverlay: document.getElementById('drawer-overlay'),
+            drawerMenu: document.getElementById('drawer-menu'),
+            drawerList: document.getElementById('drawer-list'),
+            closeMenuBtn: document.getElementById('close-menu-btn'),
+            fontSizeBtn: document.getElementById('font-size-btn'),
+            
+            desktopSidebar: document.getElementById('desktop-sidebar'),
+            qNumberTitle: document.getElementById('question-number-title'),
+            qBody: document.getElementById('question-body'),
+            inputArea: document.getElementById('input-area'),
+            qProgress: document.getElementById('question-progress'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            submitConfirmBtn: document.getElementById('submit-confirm-btn'),
+            
+            submitModal: document.getElementById('submit-modal'),
+            modalCancelBtn: document.getElementById('modal-cancel-btn'),
+            modalSubmitBtn: document.getElementById('modal-submit-btn'),
+            
+            scoreDisplay: document.getElementById('score-display'),
+            resultDetails: document.getElementById('result-details'),
+            
+            totalQCount: document.getElementById('total-q-count'),
+            totalScore: document.getElementById('total-score')
+        };
+
+        // --- 初期化 ---
+        function initApp() {
+            // 問題数表示の更新
+            els.totalQCount.textContent = `全 ${baseQuestions.length} 問`;
+            els.totalScore.textContent = `${baseQuestions.length} 点`;
+
+            // イベントリスナー登録
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            els.prevBtn.addEventListener('click', () => navigateQuestion(-1));
+            els.nextBtn.addEventListener('click', () => navigateQuestion(1));
+            
+            els.submitConfirmBtn.addEventListener('click', () => {
+                els.submitModal.classList.remove('hidden');
+            });
+            els.modalCancelBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+            });
+            els.modalSubmitBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+                finishTest();
+            });
+            
+            els.menuBtn.addEventListener('click', openDrawer);
+            els.closeMenuBtn.addEventListener('click', closeDrawer);
+            els.drawerOverlay.addEventListener('click', closeDrawer);
+
+            els.fontSizeBtn.addEventListener('click', () => {
+                currentFontSizeLevel = (currentFontSizeLevel + 1) % fontSizeClasses.length;
+                applyFontSize();
+            });
+        }
+
+        // --- フォントサイズ適用 ---
+        function applyFontSize() {
+            const baseClasses = "text-gray-800 leading-normal min-h-[60px] whitespace-pre-wrap break-words";
+            els.qBody.className = `${fontSizeClasses[currentFontSizeLevel]} ${baseClasses}`;
+        }
+
+        // --- テスト開始処理 ---
+        function startTest() {
+            generateQuestions();
+
+            screens.start.classList.add('hidden');
+            screens.test.classList.remove('hidden');
+            screens.test.classList.add('flex');
+
+            currentQuestionIndex = 0;
+            renderQuestion(currentQuestionIndex);
+            updateNavigations();
+        }
+
+        // --- 問題データの生成 (全問ランダム) ---
+        function generateQuestions() {
+            parsedQuestions = [];
+            userAnswers = [];
+
+            // 問題をランダムにシャッフル
+            const shuffledData = [...baseQuestions].sort(() => Math.random() - 0.5);
+
+            shuffledData.forEach((q) => {
+                parsedQuestions.push({
+                    title: q.title,
+                    text: q.text,
+                    correctAnswer: q.correctAnswer,
+                    options: q.options,
+                    explanation: q.explanation
+                });
+                userAnswers.push(""); 
+            });
+        }
+
+        // --- 問題の描画 ---
+        function renderQuestion(index) {
+            const q = parsedQuestions[index];
+            
+            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="text-xs ml-2 font-normal text-gray-700">（1点）</span>`;
+            
+            // XSS対策を先に行い、その後に改行を反映
+            let displayText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            displayText = displayText.replace(/\n/g, '<br>');
+
+            els.qBody.innerHTML = displayText;
+            applyFontSize(); // 問題切り替え時にも現在のフォントサイズを適用
+            
+            els.qProgress.textContent = `${index + 1} / ${parsedQuestions.length}`;
+
+            // 解答枠の生成 (セレクトボックス強制)
+            els.inputArea.innerHTML = '';
+            
+            const select = document.createElement('select');
+            select.className = 'blank-select';
+            
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "-"; 
+            select.appendChild(defaultOption);
+
+            q.options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if (userAnswers[index] === opt) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', (e) => {
+                userAnswers[index] = e.target.value;
+                updateNavigations();
+            });
+            els.inputArea.appendChild(select);
+
+            // ボタンの表示制御
+            els.prevBtn.disabled = index === 0;
+            if (index === parsedQuestions.length - 1) {
+                els.nextBtn.classList.add('hidden');
+                els.submitConfirmBtn.classList.remove('hidden');
+            } else {
+                els.nextBtn.classList.remove('hidden');
+                els.submitConfirmBtn.classList.add('hidden');
+            }
+        }
+
+        function navigateQuestion(step) {
+            const newIndex = currentQuestionIndex + step;
+            if (newIndex >= 0 && newIndex < parsedQuestions.length) {
+                currentQuestionIndex = newIndex;
+                renderQuestion(currentQuestionIndex);
+                updateNavigations(); 
+            }
+        }
+
+        // --- UIの更新 ---
+        function updateNavigations() {
+            updateSidebarList();
+            updateDrawerList();
+        }
+
+        function updateSidebarList() {
+            els.desktopSidebar.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const button = document.createElement('button');
+                const isActive = idx === currentQuestionIndex;
+                
+                let baseClass = "text-center px-2 py-2 rounded font-medium transition border text-sm shadow-sm ";
+                if (isActive) {
+                    baseClass += "bg-[#bfdbfe] text-black border-[#93c5fd]"; 
+                } else {
+                    baseClass += "bg-[#e2e8f0] text-gray-700 border-[#cbd5e1] hover:bg-[#cbd5e1]";
+                }
+                
+                button.className = baseClass;
+                button.innerHTML = `【問${idx + 1}】`;
+                
+                button.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    updateNavigations();
+                });
+                
+                els.desktopSidebar.appendChild(button);
+            });
+        }
+
+        function updateDrawerList() {
+            els.drawerList.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const li = document.createElement('li');
+                const isActive = idx === currentQuestionIndex;
+                
+                li.className = `p-3 mb-1 rounded cursor-pointer transition text-sm ${isActive ? 'bg-[#bfdbfe] font-bold text-black border border-[#93c5fd]' : 'bg-[#e2e8f0] border border-[#cbd5e1] hover:bg-[#cbd5e1] text-gray-700'}`;
+                li.innerHTML = `<div class="text-center">【問題${idx + 1}】</div>`;
+                
+                li.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    closeDrawer(); 
+                    updateNavigations();
+                });
+                
+                els.drawerList.appendChild(li);
+            });
+        }
+
+        function openDrawer() {
+            els.drawerMenu.classList.remove('-translate-x-full');
+            els.drawerOverlay.classList.remove('hidden');
+        }
+
+        function closeDrawer() {
+            els.drawerMenu.classList.add('-translate-x-full');
+            els.drawerOverlay.classList.add('hidden');
+        }
+
+        // --- テスト終了・採点処理 ---
+        function finishTest() {
+            let correctCount = 0;
+            els.resultDetails.innerHTML = '';
+
+            parsedQuestions.forEach((q, idx) => {
+                const userAnswer = userAnswers[idx];
+                const isCorrect = userAnswer === q.correctAnswer;
+                if (isCorrect) correctCount++;
+
+                const resultCard = document.createElement('div');
+                resultCard.className = `p-3 md:p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'} shadow-sm`;
+                
+                const icon = isCorrect 
+                    ? `<span class="text-green-600 font-bold text-sm md:text-base">○ 正解</span>` 
+                    : `<span class="text-red-600 font-bold text-sm md:text-base">× 不正解</span>`;
+
+                let correctHtmlText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;"); // XSS対策
+                correctHtmlText = correctHtmlText.replace(/\n/g, '<br>');
+
+                const explanationHtml = q.explanation 
+                    ? `<div class="mt-3 p-2.5 bg-white border border-gray-200 rounded text-xs md:text-sm text-gray-700 leading-relaxed"><span class="font-bold text-gray-600 block mb-1">【解説】</span>${q.explanation.replace(/\n/g, '<br>')}</div>` 
+                    : '';
+
+                resultCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2 border-b border-gray-200 pb-2">
+                        <h4 class="font-bold text-gray-800 text-sm md:text-base">問 ${idx + 1}: <span class="text-xs md:text-sm font-normal text-gray-600">${q.title}</span></h4>
+                        ${icon}
+                    </div>
+                    <div class="text-xs md:text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2 whitespace-pre-wrap break-words">${correctHtmlText}</div>
+                    <div class="grid grid-cols-2 gap-2 text-xs md:text-sm mt-2">
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
+                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">あなたの解答</span>
+                            <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'} text-base md:text-lg">${userAnswer || '未解答'}</span>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
+                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">正解</span>
+                            <span class="font-bold text-blue-700 text-base md:text-lg">${q.correctAnswer}</span>
+                        </div>
+                    </div>
+                    ${explanationHtml}
+                `;
+                els.resultDetails.appendChild(resultCard);
+            });
+
+            els.scoreDisplay.textContent = `${correctCount} / ${parsedQuestions.length}`;
+            
+            screens.test.classList.add('hidden');
+            screens.test.classList.remove('flex');
+            screens.result.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>
