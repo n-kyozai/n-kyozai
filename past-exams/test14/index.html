@@ -3,39 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>教採演習 中学校学習指導要領（総則）全網羅版</title>
+    <title>教採演習 中学校学習指導要領 総則抜粋（まとまり穴埋め編）</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ヘッダーやアクセントのカラー */
         .header-bg { background-color: #005b82; }
-        
-        /* タイマー枠の固定 */
-        .timer-box {
-            font-variant-numeric: tabular-nums;
-        }
 
-        /* 選択式のセレクトボックススタイル */
-        .blank-select {
+        /* 選択式のセレクトボックススタイル (インライン用) */
+        .inline-blank-select {
+            display: inline-block;
             border: 1px solid #cbd5e1;
-            background-color: #fff;
-            padding: 6px 32px 6px 12px;
-            width: 100%;
-            max-width: 120px; /* 数字選択用に幅を狭く調整 */
+            background-color: #f8fafc;
+            padding: 4px 28px 4px 8px;
+            margin: 0 4px;
+            max-width: 200px;
             border-radius: 4px;
             outline: none;
-            font-size: 1rem;
-            color: #333;
+            font-size: 0.95em;
+            color: #0f172a;
             cursor: pointer;
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 8px center;
-            background-size: 16px;
-            transition: border-color 0.2s;
+            background-position: right 6px center;
+            background-size: 14px;
+            transition: all 0.2s;
+            vertical-align: middle;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .blank-select:focus {
+        .inline-blank-select:focus {
             border-color: #005b82;
+            background-color: #fff;
             box-shadow: 0 0 0 2px rgba(0, 91, 130, 0.2);
+        }
+        .inline-blank-select.answered {
+            background-color: #e0f2fe;
+            border-color: #7dd3fc;
         }
 
         /* サイドバー用カスタムスクロールバー */
@@ -87,31 +90,60 @@
                 </div>
                 <div class="flex border-b border-gray-300">
                     <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">テスト範囲</div>
-                    <div class="w-2/3 md:w-3/4 p-2.5 leading-relaxed">総則・（全網羅版）</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5 leading-relaxed">総則抜粋（段落別・まとまり表示編）</div>
                 </div>
-                <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出典</div>
-                    <div class="w-2/3 md:w-3/4 p-2.5 text-gray-700 font-bold">平成29年告示 中学校学習指導要領</div>
+                
+                <!-- 出題形式の選択 -->
+                <div class="flex border-b border-gray-300 bg-gray-50">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出題形式</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">
+                        <select id="mode-select" class="border border-gray-300 rounded p-1.5 focus:outline-none focus:border-[#005b82] bg-white w-full max-w-xs">
+                            <option value="sequential">章・項目順に出題（全問通し）</option>
+                            <option value="specific" selected>指定した章・項目のみ出題</option>
+                            <option value="random">ランダム出題</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="flex border-b border-gray-300">
+
+                <!-- 出題項目の選択 (指定項目のみ出題時表示) -->
+                <div id="section-select-container" class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出題項目</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">
+                        <select id="section-select" class="border border-gray-300 rounded p-1.5 focus:outline-none focus:border-[#005b82] bg-white w-full max-w-xs">
+                            <!-- JSで動的に追加 -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 出題数の選択 (ランダム時のみ表示) -->
+                <div id="count-select-container" class="flex border-b border-gray-300 hidden">
                     <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出題数</div>
-                    <div class="w-2/3 md:w-3/4 p-2.5" id="total-q-count">全 -- 問</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">
+                        <select id="count-select" class="border border-gray-300 rounded p-1.5 focus:outline-none focus:border-[#005b82] bg-white">
+                            <option value="5" selected>5問</option>
+                            <option value="10">10問</option>
+                            <option value="15">15問</option>
+                            <option value="all">全問</option>
+                        </select>
+                        <span class="text-sm text-gray-500 ml-2">※全21小問から抽出</span>
+                    </div>
                 </div>
+
                 <div class="flex border-b border-gray-300">
                     <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">満点</div>
-                    <div class="w-2/3 md:w-3/4 p-2.5" id="total-score">-- 点</div>
-                </div>
-                <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">問題表示区分</div>
-                    <div class="w-2/3 md:w-3/4 p-2.5">一問題表示</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5" id="total-score">21点</div>
                 </div>
                 <div class="flex">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">問題出題形式</div>
-                    <div class="w-2/3 md:w-3/4 p-2.5">ランダム</div>
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-2.5 font-bold flex items-center">出題・採点形式</div>
+                    <div class="w-2/3 md:w-3/4 p-2.5">一問複数空欄 / ラスト一括採点</div>
                 </div>
             </div>
 
             <div class="flex justify-center gap-4 mt-8">
+                <!-- 戻るボタンの配置 -->
+                <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow-md transition active:scale-95 text-lg flex items-center justify-center">
+                    戻る
+                </a>
                 <button id="start-btn" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-12 rounded shadow-md transition active:scale-95 text-lg">
                     テスト開始
                 </button>
@@ -122,7 +154,7 @@
         <section id="test-screen" class="hidden flex-col md:flex-row gap-3 lg:gap-6 items-start w-full">
             
             <!-- デスクトップ用 左サイドバー -->
-            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-40 shrink-0 max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-4">
+            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-48 shrink-0 max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-4">
                 <!-- JSでサイドバーのボタンを生成 -->
             </div>
 
@@ -130,7 +162,7 @@
             <div class="flex-1 w-full flex flex-col min-w-0">
                 
                 <!-- ヘッダーバー -->
-                <div class="bg-[#e2e8f0] p-2 rounded border border-gray-300 mb-3 flex justify-between items-center shadow-sm">
+                <div class="bg-[#e2e8f0] p-2 rounded border border-gray-300 mb-4 flex justify-between items-center shadow-sm sticky top-0 z-10">
                     <div class="flex items-center gap-2">
                         <!-- モバイル用メニューボタン -->
                         <button id="menu-btn" class="md:hidden p-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition" aria-label="メニューを開く">
@@ -138,7 +170,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <span class="font-bold text-gray-700 text-sm md:text-base ml-1 truncate">教採演習 中学校学習指導要領</span>
+                        <span id="header-section-title" class="font-bold text-[#005b82] text-sm md:text-base ml-1 truncate">【問題 1】前文</span>
                     </div>
                     <!-- フォントサイズ変更ボタン -->
                     <button id="font-size-btn" class="text-gray-600 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-2.5 py-1 rounded text-sm font-medium transition" aria-label="文字サイズ変更">
@@ -146,43 +178,23 @@
                     </button>
                 </div>
 
-                <!-- 問題枠 -->
-                <div class="bg-white rounded border border-gray-300 shadow-sm flex flex-col mb-4">
-                    <!-- タイトル -->
-                    <div class="bg-[#e0f2fe] p-2.5 md:p-3 border-b border-gray-300">
-                        <h2 id="question-number-title" class="text-sm md:text-base font-bold text-gray-800">
-                            【問題 1】<span class="text-xs font-normal ml-2 text-gray-600">（1点）</span>
-                        </h2>
-                    </div>
-                    <!-- 問題文と解答欄 -->
-                    <div class="p-4 flex flex-col gap-4">
-                        <!-- 問題文 (選択肢込み) -->
-                        <div id="question-body" class="text-sm md:text-base text-gray-800 leading-normal min-h-[60px] whitespace-pre-wrap break-words">
-                            <!-- JSで生成 -->
-                        </div>
-                        
-                        <!-- 解答エリア (グレー枠) -->
-                        <div class="bg-[#f8fafc] border border-gray-200 rounded p-3 flex flex-wrap items-center gap-3">
-                            <p id="input-instruction" class="text-sm text-gray-700 font-medium m-0">正しい選択肢の番号：</p>
-                            <div id="input-area" class="flex-1">
-                                <!-- JSで input/select を挿入 -->
-                            </div>
-                        </div>
-                    </div>
+                <!-- 小問リストが展開されるコンテナ -->
+                <div id="questions-container" class="flex flex-col gap-0 pb-4">
+                    <!-- JSで小問（パネル）を生成 -->
                 </div>
 
                 <!-- フッターナビゲーション -->
-                <div class="flex justify-between items-center mt-1">
-                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
-                        前へ
+                <div class="flex justify-between items-center mt-2 border-t border-gray-300 pt-4">
+                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-6 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
+                        前の大問へ
                     </button>
                     <div class="flex items-center gap-4">
-                        <span id="question-progress" class="text-gray-600 font-bold text-sm">1 / 30</span>
-                        <button id="next-btn" class="bg-[#005b82] hover:bg-[#00476b] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition text-sm md:text-base">
-                            次へ
+                        <span id="section-progress" class="text-gray-600 font-bold text-sm">1 / 6</span>
+                        <button id="next-btn" class="bg-[#005b82] hover:bg-[#00476b] text-white font-bold py-2 px-6 rounded shadow-sm transition text-sm md:text-base">
+                            次の大問へ
                         </button>
-                        <button id="submit-confirm-btn" class="bg-[#a17f1a] hover:bg-[#856814] text-white font-bold py-2 px-4 md:px-8 rounded shadow-sm transition hidden text-sm md:text-base">
-                            提出
+                        <button id="submit-confirm-btn" class="bg-[#a17f1a] hover:bg-[#856814] text-white font-bold py-2 px-8 rounded shadow-sm transition hidden text-sm md:text-base">
+                            一括採点
                         </button>
                     </div>
                 </div>
@@ -192,7 +204,7 @@
         <!-- ================= 確認モーダル ================= -->
         <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center backdrop-blur-sm p-4">
             <div class="bg-white rounded p-6 md:p-8 max-w-sm w-full shadow-2xl text-center border border-gray-200">
-                <p class="text-base md:text-lg font-bold text-gray-800 mb-6">テストを提出して採点しますか？</p>
+                <p class="text-base md:text-lg font-bold text-gray-800 mb-6">すべての問題を提出して採点しますか？</p>
                 <div class="flex justify-center gap-3 md:gap-4">
                     <button id="modal-cancel-btn" class="bg-[#cbd5e1] hover:bg-[#94a3b8] text-gray-800 font-bold py-2 px-6 rounded transition">
                         いいえ
@@ -208,21 +220,22 @@
         <section id="result-screen" class="hidden">
             <div class="bg-white rounded shadow-sm p-6 text-center mb-6 border border-gray-200">
                 <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">テスト結果</h2>
+                <p class="text-sm text-gray-600 mb-2">※1つの小問内の空欄にすべて正解した場合のみ「1点」としています。</p>
                 <div class="text-4xl md:text-5xl font-bold text-[#005b82] mb-3" id="score-display">
                     -- / --
                 </div>
             </div>
 
             <div class="bg-white rounded shadow-sm p-4 mb-6 border border-gray-200">
-                <h3 class="font-bold text-base md:text-lg border-b border-gray-300 pb-2 mb-4">詳細</h3>
-                <div id="result-details" class="flex flex-col gap-4">
+                <h3 class="font-bold text-base md:text-lg border-b border-gray-300 pb-2 mb-4">詳細結果</h3>
+                <div id="result-details" class="flex flex-col gap-6">
                     <!-- JSで結果詳細を生成 -->
                 </div>
             </div>
 
             <div class="flex justify-center pb-8">
                 <button onclick="location.reload();" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-8 rounded shadow transition">
-                    もう一度挑戦する
+                    トップに戻る
                 </button>
             </div>
         </section>
@@ -230,225 +243,269 @@
     </main>
 
     <script>
-        // --- データ定義 (全30問) ---
-        const baseQuestions = [
+        // --- 問題データ構造 (大問 > 小問) ---
+        // テキスト内の {0}, {1} などがプルダウンに置換されます。
+        const masterData = [
             {
-                title: "教育の目的 (教育基本法第1条)",
-                text: "教育は、教育基本法第1条に定めるとおり、（　ア　）を目指し、平和で民主的な国家及び社会の形成者として必要な資質を備えた心身ともに健康な国民の育成を期すという目的のもと、同法第2条に掲げる次の目標を達成するよう行われなければならない。\n\n1. 人格の完成\n2. 真理の探究\n3. 個性の伸長\n4. 豊かな人間性",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "前文より。教育基本法第1条に定められている教育の目的は「人格の完成」です。"
+                sectionId: "1",
+                sectionTitle: "前文（教育基本法と教育課程の役割）",
+                questions: [
+                    {
+                        id: "1-1",
+                        text: "教育は、教育基本法第1条に定めるとおり、{0}を目指し、平和で民主的な国家及び社会の形成者として必要な資質を備えた心身ともに健康な国民の育成を期すという目的のもと、同法第2条に掲げる次の目標を達成するよう行われなければならない。\n1 {1}を身に付け、真理を求める態度を養い、{2}を培うとともに、健やかな身体を養うこと。",
+                        blanks: [
+                            { correctAnswer: "人格の完成", options: ["人格の完成", "個性の伸長", "真理の探究", "豊かな人間性"] },
+                            { correctAnswer: "幅広い知識と教養", options: ["幅広い知識と教養", "基礎的・基本的な知識", "確かな学力", "専門的な技能"] },
+                            { correctAnswer: "豊かな情操と道徳心", options: ["豊かな情操と道徳心", "道徳性と社会性", "規範意識", "自主及び自律の精神"] }
+                        ]
+                    },
+                    {
+                        id: "1-2",
+                        text: "2 個人の価値を尊重して、その能力を伸ばし、{0}を培い、自主及び自律の精神を養うとともに、職業及び生活との関連を重視し、{1}を重んずる態度を養うこと。\n3 正義と責任、男女の平等、自他の敬愛と協力を重んずるとともに、{2}に基づき、主体的に社会の形成に参画し、その発展に寄与する態度を養うこと。",
+                        blanks: [
+                            { correctAnswer: "創造性", options: ["創造性", "協調性", "社会性", "倫理観"] },
+                            { correctAnswer: "勤労", options: ["勤労", "奉仕", "伝統", "公共"] },
+                            { correctAnswer: "公共の精神", options: ["公共の精神", "奉仕の精神", "連帯の精神", "個人の尊厳"] }
+                        ]
+                    },
+                    {
+                        id: "1-3",
+                        text: "4 {0}を尊び、自然を大切にし、環境の保全に寄与する態度を養うこと。\n5 伝統と文化を尊重し、それらをはぐくんできた我が国と郷土を愛するとともに、{1}し、国際社会の平和と発展に寄与する態度を養うこと。",
+                        blanks: [
+                            { correctAnswer: "生命", options: ["生命", "文化", "平和", "人権"] },
+                            { correctAnswer: "他国を尊重", options: ["他国を尊重", "多様性を尊重", "異文化を理解", "国際協調"] }
+                        ]
+                    },
+                    {
+                        id: "1-4",
+                        text: "これからの学校には、こうした教育の目的及び目標の達成を目指しつつ、一人一人の生徒が、自分のよさや可能性を認識するとともに、あらゆる他者を{0}として尊重し、多様な人々と協働しながら様々な社会的変化を乗り越え、豊かな人生を切り拓(ひら)き、{1}となることができるようにすることが求められる。このために必要な教育の在り方を具体化するのが、各学校において教育の内容等を組織的かつ計画的に組み立てた教育課程である。",
+                        blanks: [
+                            { correctAnswer: "価値のある存在", options: ["価値のある存在", "かけがえのない存在", "尊重すべき存在", "共に生きる存在"] },
+                            { correctAnswer: "持続可能な社会の創り手", options: ["持続可能な社会の創り手", "平和で民主的な社会の形成者", "グローバル人材", "自立した人間"] }
+                        ]
+                    },
+                    {
+                        id: "1-5",
+                        text: "教育課程を通して、これからの時代に求められる教育を実現していくためには、よりよい学校教育を通してよりよい社会を創るという理念を学校と社会とが共有し、それぞれの学校において、必要な学習内容をどのように学び、どのような資質・能力を身に付けられるようにするのかを教育課程において明確にしながら、社会との連携及び協働によりその実現を図っていくという、{0}の実現が重要となる。",
+                        blanks: [
+                            { correctAnswer: "社会に開かれた教育課程", options: ["社会に開かれた教育課程", "地域とともにある学校", "カリキュラム・マネジメント", "主体的・対話的で深い学び"] }
+                        ]
+                    },
+                    {
+                        id: "1-6",
+                        text: "学習指導要領とは、こうした理念の実現に向けて必要となる教育課程の基準を大綱的に定めるものである。学習指導要領が果たす役割の一つは、公の性質を有する学校における{0}を全国的に確保することである。(中略) 幼児期の教育及び小学校教育の基礎の上に、高等学校以降の教育や{1}とのつながりを見通しながら、生徒の学習の在り方を展望していくために広く活用されるものとなることを期待して、ここに中学校学習指導要領を定める。",
+                        blanks: [
+                            { correctAnswer: "教育水準", options: ["教育水準", "教育条件", "学力水準", "学習機会"] },
+                            { correctAnswer: "生涯にわたる学習", options: ["生涯にわたる学習", "実社会や実生活", "キャリア形成", "社会における実践"] }
+                        ]
+                    }
+                ]
             },
             {
-                title: "学習指導要領 前文",
-                text: "これからの学校には、(略)豊かな人生を切り拓き、（　ア　）となることができるようにすることが求められる。このために必要な教育の在り方を具体化するのが、各学校において教育の内容等を組織的かつ計画的に組み立てた教育課程である。\n教育課程を通して、これからの時代に求められる教育を実現していくためには、よりよい学校教育を通してよりよい社会を創るという理念を学校と社会とが共有し、(略)社会との連携及び協働によりその実現を図っていくという、（　イ　）の実現が重要となる。\n\n1. ア:平和で民主的な国家及び社会の形成者　イ:社会に開かれた教育課程\n2. ア:持続可能な社会の創り手　イ:カリキュラム・マネジメント\n3. ア:持続可能な社会の創り手　イ:社会に開かれた教育課程\n4. ア:平和で民主的な国家及び社会の形成者　イ:カリキュラム・マネジメント",
-                correctAnswer: "3",
-                options: ["1", "2", "3", "4"],
-                explanation: "前文より。生徒には「持続可能な社会の創り手」となることが求められ、そのために「社会に開かれた教育課程」の実現が重要であると明記されています。"
+                sectionId: "2",
+                sectionTitle: "第1 中学校教育の基本と教育課程の役割",
+                questions: [
+                    {
+                        id: "2-1",
+                        text: "1 各学校においては、教育基本法及び学校教育法その他の法令並びにこの章以下に示すところに従い、生徒の人間として調和のとれた育成を目指し、生徒の{0}や特性及び学校や{1}の実態を十分考慮して、適切な教育課程を編成するものとし、これらに掲げる目標を達成するよう教育を行うものとする。",
+                        blanks: [
+                            { correctAnswer: "心身の発達の段階", options: ["心身の発達の段階", "興味・関心", "学習の進度", "理解度"] },
+                            { correctAnswer: "地域", options: ["地域", "家庭", "保護者", "地域社会"] }
+                        ]
+                    },
+                    {
+                        id: "2-2",
+                        text: "2 (1) {0}を確実に習得させ、これらを活用して課題を解決するために必要な思考力,判断力,表現力等を育むとともに、主体的に学習に取り組む態度を養い、個性を生かし多様な人々との協働を促す教育の充実に努めること。その際、生徒の発達の段階を考慮して、生徒の言語活動など、学習の基盤をつくる活動を充実するとともに、家庭との連携を図りながら、生徒の{1}が確立するよう配慮すること。",
+                        blanks: [
+                            { correctAnswer: "基礎的・基本的な知識及び技能", options: ["基礎的・基本的な知識及び技能", "知識及び技能", "確かな学力", "豊かな知識"] },
+                            { correctAnswer: "学習習慣", options: ["学習習慣", "基本的生活習慣", "生活リズム", "学ぶ意欲"] }
+                        ]
+                    },
+                    {
+                        id: "2-3",
+                        text: "(2) 道徳教育や体験活動、多様な表現や鑑賞の活動等を通して、豊かな心や創造性の涵(かん)養を目指した教育の充実に努めること。学校における道徳教育は、特別の教科である道徳(以下「道徳科」という。)を{0}として学校の教育活動全体を通じて行うものであり、(中略) 道徳教育は、人間としての{1}を考え、主体的な判断の下に行動し、自立した人間として他者と共によりよく生きるための基盤となる{2}を養うことを目標とすること。道徳教育を進めるに当たっては、{3}と生命に対する畏敬の念を家庭,学校,その他社会における具体的な生活の中に生かし、(後略)",
+                        blanks: [
+                            { correctAnswer: "要", options: ["要", "中心", "基盤", "中核"] },
+                            { correctAnswer: "生き方", options: ["生き方", "在り方生き方", "本質", "尊厳"] },
+                            { correctAnswer: "道徳性", options: ["道徳性", "人間性", "規範意識", "倫理観"] },
+                            { correctAnswer: "人間尊重の精神", options: ["人間尊重の精神", "公共の精神", "個人の尊厳", "自律の精神"] }
+                        ]
+                    },
+                    {
+                        id: "2-4",
+                        text: "(3) 学校における体育・健康に関する指導を、生徒の発達の段階を考慮して、(中略) 特に、学校における{0}の推進並びに体力の向上に関する指導、安全に関する指導及び心身の健康の保持増進に関する指導については、それぞれの特質に応じて適切に行うよう努めること。また、家庭や地域社会との連携を図りながら、日常生活において適切な体育・健康に関する活動の実践を促し、{1}を通じて健康・安全で活力ある生活を送るための基礎が培われるよう配慮すること。",
+                        blanks: [
+                            { correctAnswer: "食育", options: ["食育", "健康教育", "防災教育", "キャリア教育"] },
+                            { correctAnswer: "生涯", options: ["生涯", "学校生活", "義務教育", "日常生活"] }
+                        ]
+                    },
+                    {
+                        id: "2-5",
+                        text: "3 豊かな創造性を備え持続可能な社会の創り手となることが期待される生徒に、生きる力を育むことを目指すに当たっては、学校教育全体並びに各教科等を通してどのような資質・能力の育成を目指すのかを明確にしながら、教育活動の充実を図るものとする。その際、生徒の発達の段階や特性等を踏まえつつ、次に掲げることが偏りなく実現できるようにするものとする。\n(1) {0}が習得されるようにすること。\n(2) 思考力,判断力,表現力等を育成すること。\n(3) {1}等を涵(かん)養すること。",
+                        blanks: [
+                            { correctAnswer: "知識及び技能", options: ["知識及び技能", "基礎的・基本的な知識及び技能", "確かな学力", "豊かな知識"] },
+                            { correctAnswer: "学びに向かう力,人間性", options: ["学びに向かう力,人間性", "豊かな情操と道徳心", "主体的に学習に取り組む態度", "人間としての生き方"] }
+                        ]
+                    },
+                    {
+                        id: "2-6",
+                        text: "4 各学校においては、生徒や学校、地域の実態を適切に把握し、教育の目的や目標の実現に必要な教育の内容等を{0}で組み立てていくこと、教育課程の実施状況を評価してその改善を図っていくこと、教育課程の実施に必要な人的又は物的な体制を確保するとともにその改善を図っていくことなどを通して、教育課程に基づき組織的かつ計画的に各学校の教育活動の質の向上を図っていくこと(以下「{1}」という。)に努めるものとする。",
+                        blanks: [
+                            { correctAnswer: "教科等横断的な視点", options: ["教科等横断的な視点", "総合的な視点", "系統的な視点", "発達段階に応じた視点"] },
+                            { correctAnswer: "カリキュラム・マネジメント", options: ["カリキュラム・マネジメント", "スクール・マネジメント", "学校評価", "社会に開かれた教育課程"] }
+                        ]
+                    }
+                ]
             },
             {
-                title: "第1 中学校教育の基本",
-                text: "各学校においては、教育基本法及び学校教育法その他の法令並びにこの章以下に示すところに従い、生徒の人間として調和のとれた育成を目指し、生徒の（　ア　）や特性及び学校や（　イ　）の実態を十分考慮して、適切な教育課程を編成するものとし、これらに掲げる目標を達成するよう教育を行うものとする。\n\n1. ア: 心身の発達の段階　イ: 地域\n2. ア: 興味・関心　イ: 地域\n3. ア: 心身の発達の段階　イ: 家庭\n4. ア: 興味・関心　イ: 家庭",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第1の1より。生徒の「心身の発達の段階」や特性、学校や「地域」の実態を十分考慮して教育課程を編成します。"
+                sectionId: "3",
+                sectionTitle: "第2 教育課程の編成",
+                questions: [
+                    {
+                        id: "3-1",
+                        text: "1 各学校の教育目標と教育課程の編成\n教育課程の編成に当たっては、学校教育全体や各教科等における指導を通して育成を目指す資質・能力を踏まえつつ、各学校の教育目標を明確にするとともに、教育課程の編成についての基本的な方針が{0}とも共有されるよう努めるものとする。",
+                        blanks: [
+                            { correctAnswer: "家庭や地域", options: ["家庭や地域", "教職員", "生徒及び保護者", "教育委員会"] }
+                        ]
+                    },
+                    {
+                        id: "3-2",
+                        text: "2 教科等横断的な視点に立った資質・能力の育成\n(1) 各学校においては、生徒の発達の段階を考慮し、言語能力、{0}(情報モラルを含む。)、問題発見・解決能力等の学習の基盤となる資質・能力を育成していくことができるよう、各教科等の特質を生かし、教科等横断的な視点から教育課程の編成を図るものとする。\n(2) 各学校においては、生徒や学校、地域の実態及び生徒の発達の段階を考慮し、豊かな人生の実現や災害等を乗り越えて次代の社会を形成することに向けた{1}に対応して求められる資質・能力を、教科等横断的な視点で育成していくことができるよう、各学校の{2}を生かした教育課程の編成を図るものとする。",
+                        blanks: [
+                            { correctAnswer: "情報活用能力", options: ["情報活用能力", "論理的思考力", "プログラミング的思考", "コミュニケーション能力"] },
+                            { correctAnswer: "現代的な諸課題", options: ["現代的な諸課題", "持続可能な社会の構築", "グローバル化", "少子高齢化"] },
+                            { correctAnswer: "特色", options: ["特色", "実態", "伝統", "環境"] }
+                        ]
+                    }
+                ]
             },
             {
-                title: "第1の2(1) 基礎的・基本的な知識及び技能",
-                text: "（　ア　）を確実に習得させ、これらを活用して課題を解決するために必要な（　イ　）等を育むとともに、主体的に学習に取り組む態度を養い、個性を生かし多様な人々との協働を促す教育の充実に努めること。\n\n1. ア: 基礎的・基本的な知識及び技能　イ: 思考力、判断力、表現力\n2. ア: 知識及び技能　イ: 思考力、判断力、表現力\n3. ア: 基礎的・基本的な知識及び技能　イ: 論理的思考力\n4. ア: 知識及び技能　イ: 論理的思考力",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第1の2(1)より。「基礎的・基本的な知識及び技能」を習得させ、「思考力、判断力、表現力」等を育むことが明記されています。"
+                sectionId: "4",
+                sectionTitle: "第3 教育課程の実施と学習評価",
+                questions: [
+                    {
+                        id: "4-1",
+                        text: "1 主体的・対話的で深い学びの実現に向けた授業改善\n(1) 単元や題材など内容や時間のまとまりを見通しながら、生徒の{0}の実現に向けた授業改善を行うこと。特に、各教科等において身に付けた知識及び技能を活用したり、思考力,判断力,表現力等や学びに向かう力、人間性等を発揮させたりして、学習の対象となる物事を捉え思考することにより、各教科等の特質に応じた物事を捉える視点や考え方(以下「{1}」という。)が鍛えられていくことに留意し、(中略) 思いや考えを基に{2}したりすることに向かう過程を重視した学習の充実を図ること。",
+                        blanks: [
+                            { correctAnswer: "主体的・対話的で深い学び", options: ["主体的・対話的で深い学び", "基礎的・基本的な知識の習得", "アクティブ・ラーニング", "問題解決的な学習"] },
+                            { correctAnswer: "見方・考え方", options: ["見方・考え方", "探究的な見方・考え方", "社会的な見方・考え方", "論理的な思考力"] },
+                            { correctAnswer: "創造", options: ["創造", "表現", "発表", "発信"] }
+                        ]
+                    },
+                    {
+                        id: "4-2",
+                        text: "(2) 言語能力の育成を図るため、各学校において必要な言語環境を整えるとともに、{0}を要としつつ各教科等の特質に応じて、生徒の言語活動を充実すること。あわせて、読書活動を充実すること。\n(3) 情報活用能力の育成を図るため、各学校において、{1}や情報通信ネットワークなどの情報手段を活用するために必要な環境を整え、これらを適切に活用した学習活動の充実を図ること。(中略)\n(4) 生徒が学習の{2}を立てたり学習したことを振り返ったりする活動を、計画的に取り入れるように工夫すること。",
+                        blanks: [
+                            { correctAnswer: "国語科", options: ["国語科", "総合的な学習の時間", "特別活動", "道徳科"] },
+                            { correctAnswer: "コンピュータ", options: ["コンピュータ", "タブレット端末", "ICT機器", "デジタル教材"] },
+                            { correctAnswer: "見通し", options: ["見通し", "予定", "計画", "目標"] }
+                        ]
+                    },
+                    {
+                        id: "4-3",
+                        text: "(5) 生徒が生命の有限性や自然の大切さ、主体的に挑戦してみることや多様な他者と協働することの重要性などを実感しながら理解することができるよう、各教科等の特質に応じた{0}を重視し、家庭や地域社会と連携しつつ体系的・継続的に実施できるよう工夫すること。\n(6) 生徒が自ら学習課題や学習活動を{1}機会を設けるなど、生徒の興味・関心を生かした自主的,自発的な学習が促されるよう工夫すること。\n(7) {2}を計画的に利用しその機能の活用を図り、生徒の主体的・対話的で深い学びの実現に向けた授業改善に生かすとともに、生徒の自主的,自発的な学習活動や読書活動を充実すること。",
+                        blanks: [
+                            { correctAnswer: "体験活動", options: ["体験活動", "探究活動", "言語活動", "グループ学習"] },
+                            { correctAnswer: "選択する", options: ["選択する", "探究する", "発見する", "創造する"] },
+                            { correctAnswer: "学校図書館", options: ["学校図書館", "地域図書館", "博物館", "ICT機器"] }
+                        ]
+                    },
+                    {
+                        id: "4-4",
+                        text: "2 学習評価の充実\n学習評価の実施に当たっては、次の事項に配慮するものとする。\n(1) 生徒の{0}などを積極的に評価し、学習したことの意義や価値を実感できるようにすること。また、各教科等の目標の実現に向けた学習状況を把握する観点から、(中略) 学習の{1}を評価し、指導の改善や学習意欲の向上を図り、資質・能力の育成に生かすようにすること。\n(2) 創意工夫の中で学習評価の{2}が高められるよう、組織的かつ計画的な取組を推進するとともに、学年や学校段階を越えて生徒の学習の成果が円滑に接続されるように工夫すること。",
+                        blanks: [
+                            { correctAnswer: "よい点や進歩の状況", options: ["よい点や進歩の状況", "努力の過程", "学習への意欲", "学力の定着度"] },
+                            { correctAnswer: "過程や成果", options: ["過程や成果", "定着度", "結果", "意欲や態度"] },
+                            { correctAnswer: "妥当性や信頼性", options: ["妥当性や信頼性", "公平性や客観性", "適格性や公正性", "効果や効率"] }
+                        ]
+                    }
+                ]
             },
             {
-                title: "第1の2(1) 学習の基盤と学習習慣",
-                text: "その際、生徒の発達の段階を考慮して、生徒の（　ア　）など、学習の基盤をつくる活動を充実するとともに、家庭との連携を図りながら、生徒の（　イ　）が確立するよう配慮すること。\n\n1. ア: 言語活動　イ: 基本的生活習慣\n2. ア: 体験活動　イ: 学習習慣\n3. ア: 言語活動　イ: 学習習慣\n4. ア: 探究活動　イ: 基本的生活習慣",
-                correctAnswer: "3",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第1の2(1)より。学習の基盤をつくる活動として「言語活動」を充実させ、家庭と連携して「学習習慣」が確立するよう配慮します。"
+                sectionId: "5",
+                sectionTitle: "第4 生徒の発達の支援",
+                questions: [
+                    {
+                        id: "5-1",
+                        text: "1 生徒の発達を支える指導の充実\n(1) 学習や生活の基盤として、教師と生徒との{0}及び生徒相互のよりよい人間関係を育てるため、日頃から{1}の充実を図ること。また、主に集団の場面で必要な指導や援助を行うガイダンスと、個々の生徒の多様な実態を踏まえ、(中略)カウンセリングの双方により、生徒の発達を支援すること。\n(2) 生徒が、自己の{2}を実感しながら、よりよい人間関係を形成し、有意義で充実した学校生活を送る中で、現在及び将来における自己実現を図っていくことができるよう、生徒理解を深め、学習指導と関連付けながら、生徒指導の充実を図ること。",
+                        blanks: [
+                            { correctAnswer: "信頼関係", options: ["信頼関係", "コミュニケーション", "相互理解", "連帯感"] },
+                            { correctAnswer: "学級経営", options: ["学級経営", "生徒指導", "特別活動", "道徳教育"] },
+                            { correctAnswer: "存在感", options: ["存在感", "有用感", "肯定感", "達成感"] }
+                        ]
+                    },
+                    {
+                        id: "5-2",
+                        text: "(3) 生徒が、学ぶことと自己の将来とのつながりを見通しながら、社会的・職業的自立に向けて必要な基盤となる資質・能力を身に付けていくことができるよう、{0}を要としつつ各教科等の特質に応じて、キャリア教育の充実を図ること。その中で、生徒が自らの生き方を考え主体的に進路を選択することができるよう、(中略)組織的かつ計画的な進路指導を行うこと。\n(4) 生徒が、基礎的・基本的な知識及び技能の習得も含め、学習内容を確実に身に付けることができるよう、生徒や学校の実態に応じ、{1}やグループ別学習、繰り返し学習、学習内容の習熟の程度に応じた学習、(中略) 指導方法や指導体制の工夫改善により、個に応じた指導の充実を図ること。",
+                        blanks: [
+                            { correctAnswer: "特別活動", options: ["特別活動", "総合的な学習の時間", "道徳科", "技術・家庭科"] },
+                            { correctAnswer: "個別学習", options: ["個別学習", "協働学習", "探究学習", "体験学習"] }
+                        ]
+                    },
+                    {
+                        id: "5-3",
+                        text: "2 特別な配慮を必要とする生徒への指導\n(1) 障害のある生徒などへの指導\nイ 特別支援学級において実施する特別の教育課程については、(中略) 障害による学習上又は生活上の困難を克服し自立を図るため、特別支援学校小学部・中学部学習指導要領第7章に示す{0}を取り入れること。\nウ 障害のある生徒に対して、{1}を行い、特別の教育課程を編成する場合には、(中略) 具体的な目標や内容を定め、指導を行うものとする。\nエ 障害のある生徒などについては、(中略) 長期的な視点で生徒への教育的支援を行うために、{2}を作成し活用することに努めるとともに、各教科等の指導に当たって、個々の生徒の実態を的確に把握し、{3}を作成し活用することに努めるものとする。",
+                        blanks: [
+                            { correctAnswer: "自立活動", options: ["自立活動", "生活単元学習", "日常生活の指導", "遊びの指導"] },
+                            { correctAnswer: "通級による指導", options: ["通級による指導", "取り出し指導", "ティーム・ティーチング", "個別指導"] },
+                            { correctAnswer: "個別の教育支援計画", options: ["個別の教育支援計画", "個別の指導計画", "特別支援計画", "自立支援計画"] },
+                            { correctAnswer: "個別の指導計画", options: ["個別の指導計画", "学習計画", "個別の教育支援計画", "支援連携計画"] }
+                        ]
+                    },
+                    {
+                        id: "5-4",
+                        text: "(3) 不登校生徒への配慮\nア 不登校生徒については、保護者や関係機関と連携を図り、心理や福祉の専門家の助言又は援助を得ながら、{0}を目指す観点から、個々の生徒の実態に応じた情報の提供その他の必要な支援を行うものとする。\nイ 相当の期間中学校を欠席し引き続き欠席すると認められる生徒を対象として、文部科学大臣が認める{1}を編成する場合には、生徒の実態に配慮した教育課程を編成するとともに、個別学習やグループ別学習など指導方法や指導体制の工夫改善に努めるものとする。",
+                        blanks: [
+                            { correctAnswer: "社会的自立", options: ["社会的自立", "学校復帰", "学力の保障", "集団への適応"] },
+                            { correctAnswer: "特別の教育課程", options: ["特別の教育課程", "個別の指導計画", "補充的な学習計画", "自立支援計画"] }
+                        ]
+                    }
+                ]
             },
             {
-                title: "第1の2(2) 道徳教育",
-                text: "学校における道徳教育は、特別の教科である道徳 (以下「道徳科」という。) を（　ア　）として学校の教育活動全体を通じて行うものであり、道徳科はもとより、各教科、総合的な学習の時間及び特別活動のそれぞれの特質に応じて、生徒の発達の段階を考慮して、適切な指導を行うこと。\n\n1. 中心\n2. 要\n3. 基盤\n4. 中核",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第1の2(2)より。学校における道徳教育は、道徳科を「要（かなめ）」として学校の教育活動全体を通じて行います。"
-            },
-            {
-                title: "第1の2(3) 体育・健康に関する指導",
-                text: "特に、学校における（　ア　）の推進並びに体力の向上に関する指導、安全に関する指導及び心身の健康の保持増進に関する指導については、保健体育科、技術・家庭科及び特別活動の時間はもとより、各教科、道徳科及び総合的な学習の時間などにおいてもそれぞれの特質に応じて適切に行うよう努めること。\n\n1. 食育\n2. 健康教育\n3. 防災教育\n4. キャリア教育",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第1の2(3)より。「食育の推進」並びに体力の向上、安全に関する指導等が明記されています。"
-            },
-            {
-                title: "第1の3 資質・能力の3つの柱",
-                text: "生きる力を育むことを目指すに当たっては、(略)どのような資質・能力の育成を目指すのかを明確にしながら、教育活動の充実を図るものとする。その際、生徒の発達の段階や特性等を踏まえつつ、次に掲げることが偏りなく実現できるようにするものとする。\n(1) （　ア　）が習得されるようにすること。\n(2) 思考力、判断力、表現力等を育成すること。\n(3) （　イ　）等を涵(かん)養すること。\n\n1. ア: 基礎的・基本的な知識及び技能　イ: 学びに向かう力、人間性\n2. ア: 知識及び技能　イ: 学びに向かう力、人間性\n3. ア: 基礎的・基本的な知識及び技能　イ: 豊かな情操と道徳心\n4. ア: 知識及び技能　イ: 豊かな情操と道徳心",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第1の3より。育成を目指す資質・能力の3つの柱は「(1)知識及び技能」「(2)思考力、判断力、表現力等」「(3)学びに向かう力、人間性等」です。"
-            },
-            {
-                title: "第1の4 カリキュラム・マネジメント",
-                text: "各学校においては、生徒や学校、地域の実態を適切に把握し、教育の目的や目標の実現に必要な教育の内容等を教科等横断的な視点で組み立てていくこと、教育課程の実施状況を評価してその改善を図っていくこと、教育課程の実施に必要な人的又は物的な体制を確保するとともにその改善を図っていくことなどを通して、教育課程に基づき組織的かつ計画的に各学校の教育活動の質の向上を図っていくこと（　ア　）に努めるものとする。\n\n1. スクール・マネジメント\n2. カリキュラム・マネジメント\n3. 学校評価\n4. 社会に開かれた教育課程",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第1の4より。教育活動の質を組織的・計画的に向上させる取組を「カリキュラム・マネジメント」といいます。"
-            },
-            {
-                title: "第2の1 教育課程の編成方針の共有",
-                text: "教育課程の編成に当たっては、(略)各学校の教育目標を明確にするとともに、教育課程の編成についての基本的な方針が（　ア　）や（　イ　）とも共有されるよう努めるものとする。その際、第4章総合的な学習の時間の第2の1に基づき定められる目標との関連を図るものとする。\n\n1. ア: 家庭　イ: 地域\n2. ア: 教職員　イ: 保護者\n3. ア: 生徒　イ: 保護者\n4. ア: 家庭　イ: 関係機関",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第2の1より。教育課程の編成方針は「家庭」や「地域」とも共有されるよう努めることが求められています。"
-            },
-            {
-                title: "第2の2(1) 学習の基盤となる資質・能力",
-                text: "各学校においては、生徒の発達の段階を考慮し、（　ア　）、（　イ　）(情報モラルを含む。)、問題発見・解決能力等の学習の基盤となる資質・能力を育成していくことができるよう、各教科等の特質を生かし、教科等横断的な視点から教育課程の編成を図るものとする。\n\n1. ア: 論理的思考力　イ: プログラミング的思考\n2. ア: 論理的思考力　イ: 情報活用能力\n3. ア: 言語能力　イ: プログラミング的思考\n4. ア: 言語能力　イ: 情報活用能力",
-                correctAnswer: "4",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第2の2(1)より。学習の基盤となる資質・能力として「言語能力」「情報活用能力」「問題発見・解決能力等」が示されています。"
-            },
-            {
-                title: "第2の2(2) 現代的な諸課題への対応",
-                text: "各学校においては、生徒や学校、地域の実態及び生徒の発達の段階を考慮し、（　ア　）や災害等を乗り越えて次代の社会を形成することに向けた現代的な諸課題に対応して求められる資質・能力を、教科等横断的な視点で育成していくことができるよう、各学校の特色を生かした教育課程の編成を図るものとする。\n\n1. 豊かな人生の実現\n2. 持続可能な社会の構築\n3. グローバル化\n4. 少子高齢化",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第2の2(2)より。「豊かな人生の実現」や災害等を乗り越えて次代の社会を形成することに向けた現代的な諸課題への対応が求められています。"
-            },
-            {
-                title: "第2の3(1) 内容等の取扱い（負担過重）",
-                text: "学校において特に必要がある場合には、第2章以下に示していない内容を加えて指導することができる。(略)ただし、これらの場合には、第2章以下に示す各教科、道徳科及び特別活動の目標や内容の趣旨を逸脱したり、生徒の（　ア　）となったりすることのないようにしなければならない。\n\n1. 負担過重\n2. 学習意欲の低下\n3. 混乱\n4. 発達の阻害",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第2の3(1)イより。内容を追加して指導する場合は、生徒の「負担過重」とならないように配慮する必要があります。"
-            },
-            {
-                title: "第2の3(2) 授業時数の取扱い",
-                text: "各教科等の授業は、年間（　ア　）週以上にわたって行うよう計画し、週当たりの授業時数が生徒の負担過重にならないようにするものとする。\n\n1. 30\n2. 35\n3. 38\n4. 40",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第2の3(2)アより。各教科等の授業は、年間「35」週以上にわたって行うよう計画します。"
-            },
-            {
-                title: "第2の3(2) 短い時間の活用",
-                text: "各教科等の特質に応じ、（　ア　）程度の短い時間を活用して特定の教科等の指導を行う場合において、当該教科等を担当する教師が、(略)その指導内容の決定や指導の成果の把握と活用等を責任をもって行う体制が整備されているときは、その時間を当該教科等の年間授業時数に含めることができること。\n\n1. 5分から10分\n2. 10分から15分\n3. 15分から20分\n4. 20分から25分",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第2の3(2)ウ(イ)より。「10分から15分」程度の短い時間（いわゆるモジュール学習など）を年間授業時数に含めることができる条件が規定されています。"
-            },
-            {
-                title: "第2の4 学校段階間の接続",
-                text: "教育課程の編成に当たっては、次の事項に配慮しながら、学校段階間の接続を図るものとする。(略)特に、義務教育学校、小学校連携型中学校及び小学校併設型中学校においては、（　ア　）を見通した計画的かつ継続的な教育課程を編成すること。\n\n1. 義務教育9年間\n2. 中等教育6年間\n3. 小中連携の期間\n4. 基礎学力定着の期間",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第2の4(1)より。義務教育学校等においては「義務教育9年間」を見通した教育課程を編成します。ちなみに中等教育学校等では「中等教育6年間」を見通します。"
-            },
-            {
-                title: "第3の1 主体的・対話的で深い学び",
-                text: "単元や題材など内容や時間のまとまりを見通しながら、生徒の（　ア　）の実現に向けた授業改善を行うこと。特に、各教科等において身に付けた知識及び技能を活用したり、思考力、判断力、表現力等や学びに向かう力、人間性等を発揮させたりして、学習の対象となる物事を捉え思考することにより、各教科等の特質に応じた物事を捉える視点や考え方(以下「（　イ　）」という。)が鍛えられていくことに留意し、(略)学習の充実を図ること。\n\n1. ア: 主体的・対話的で深い学び　イ: 見方・考え方\n2. ア: 主体的・対話的で深い学び　イ: 論理的思考力\n3. ア: 基礎的・基本的な知識及び技能の習得　イ: 見方・考え方\n4. ア: 基礎的・基本的な知識及び技能の習得　イ: 論理的思考力",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第3の1(1)より。「主体的・対話的で深い学び」の実現と、各教科等の特質に応じた「見方・考え方」を働かせる過程が重視されています。"
-            },
-            {
-                title: "第3の1(2) 言語活動の充実",
-                text: "言語能力の育成を図るため、各学校において必要な言語環境を整えるとともに、（　ア　）を要としつつ各教科等の特質に応じて、生徒の言語活動を充実すること。\n\n1. 総合的な学習の時間\n2. 特別活動\n3. 国語科\n4. 道徳科",
-                correctAnswer: "3",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第3の1(2)より。言語能力の育成のため、「国語科」を要（かなめ）としつつ各教科等で言語活動を充実させます。"
-            },
-            {
-                title: "第3の1(3) 情報手段の活用",
-                text: "情報活用能力の育成を図るため、各学校において、（　ア　）や情報通信ネットワークなどの情報手段を活用するために必要な環境を整え、これらを適切に活用した学習活動の充実を図ること。\n\n1. タブレット端末\n2. コンピュータ\n3. ＩＣＴ機器\n4. デジタル教科書",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第3の1(3)より。「コンピュータ」や情報通信ネットワークなどの情報手段の活用が明記されています。"
-            },
-            {
-                title: "第3の1(5) 体験活動",
-                text: "生徒が生命の有限性や自然の大切さ、主体的に挑戦してみることや多様な他者と協働することの重要性などを実感しながら理解することができるよう、各教科等の特質に応じた（　ア　）を重視し、家庭や地域社会と連携しつつ体系的・継続的に実施できるよう工夫すること。\n\n1. 探究活動\n2. 言語活動\n3. 体験活動\n4. グループ学習",
-                correctAnswer: "3",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第3の1(5)より。生命や自然の大切さ、協働の重要性などを実感するため、「体験活動」を重視することが示されています。"
-            },
-            {
-                title: "第3の1(7) 施設の活用",
-                text: "（　ア　）を計画的に利用しその機能の活用を図り、生徒の主体的・対話的で深い学びの実現に向けた授業改善に生かすとともに、生徒の自主的、自発的な学習活動や読書活動を充実すること。\n\n1. 学校図書館\n2. 地域図書館\n3. 博物館\n4. 公民館",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第3の1(7)より。主体的・対話的で深い学びの実現のため、「学校図書館」の計画的な利用とその機能の活用を図ります。"
-            },
-            {
-                title: "第3の2 学習評価",
-                text: "各教科等の目標の実現に向けた学習状況を把握する観点から、単元や題材など内容や時間のまとまりを見通しながら評価の場面や方法を工夫して、学習の（　ア　）や成果を評価し、指導の改善や学習意欲の向上を図り、資質・能力の育成に生かすようにすること。\n\n1. 過程\n2. 意欲\n3. 態度\n4. 理解度",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第3の2(1)より。学習の「過程（プロセス）」や成果を評価し、指導の改善に生かすことが求められます。"
-            },
-            {
-                title: "第4の1(1) ガイダンスとカウンセリング",
-                text: "主に集団の場面で必要な指導や援助を行う（　ア　）と、個々の生徒の多様な実態を踏まえ、一人一人が抱える課題に個別に対応した指導を行う（　イ　）の双方により、生徒の発達を支援すること。\n\n1. ア: ガイダンス　イ: カウンセリング\n2. ア: 生徒指導　イ: 教育相談\n3. ア: カウンセリング　イ: ガイダンス\n4. ア: 特別活動　イ: 個別指導",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第4の1(1)より。集団への「ガイダンス」と個別への「カウンセリング」の双方が発達支援に重要です。"
-            },
-            {
-                title: "第4の1(3) キャリア教育",
-                text: "生徒が、学ぶことと自己の将来とのつながりを見通しながら、社会的・職業的自立に向けて必要な基盤となる資質・能力を身に付けていくことができるよう、（　ア　）を要としつつ各教科等の特質に応じて、キャリア教育の充実を図ること。\n\n1. 道徳科\n2. 総合的な学習の時間\n3. 特別活動\n4. 職場体験",
-                correctAnswer: "3",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第4の1(3)より。キャリア教育は「特別活動」を要（かなめ）としつつ充実を図ります。道徳教育の要は「道徳科」、言語活動の要は「国語科」です。"
-            },
-            {
-                title: "第4の1(4) 個に応じた指導",
-                text: "生徒が、基礎的・基本的な知識及び技能の習得も含め、学習内容を確実に身に付けることができるよう、生徒や学校の実態に応じ、（　ア　）やグループ別学習、繰り返し学習、学習内容の習熟の程度に応じた学習、生徒の興味・関心等に応じた課題学習、（　イ　）な学習や発展的な学習などの学習活動を取り入れること(略)\n\n1. ア: 個別学習　イ: 補充的\n2. ア: 協働学習　イ: 補充的\n3. ア: 探究学習　イ: 基礎的\n4. ア: 個別学習　イ: 基礎的",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第4の1(4)より。個に応じた指導として「個別学習」やグループ別学習、「補充的」な学習や発展的な学習を取り入れます。"
-            },
-            {
-                title: "第4の2(1) 特別な配慮を必要とする生徒への指導",
-                text: "障害のある生徒などについては、家庭、地域及び医療や福祉、保健、労働等の業務を行う関係機関との連携を図り、長期的な視点で生徒への教育的支援を行うために、（　ア　）を作成し活用することに努めるとともに、各教科等の指導に当たって、個々の生徒の実態を的確に把握し、（　イ　）を作成し活用することに努めるものとする。\n\n1. ア: 個別の指導計画　イ: 個別の教育支援計画\n2. ア: 個別の教育支援計画　イ: 個別の指導計画\n3. ア: 自立活動の計画　イ: 学習計画\n4. ア: 支援連携計画　イ: 指導計画",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第4の2(1)エより。長期的視点での支援には「個別の教育支援計画」、各教科等の指導には「個別の指導計画」を作成・活用します。"
-            },
-            {
-                title: "第4の2(3) 不登校生徒への配慮",
-                text: "不登校生徒については、保護者や関係機関と連携を図り、心理や福祉の専門家の助言又は援助を得ながら、（　ア　）を目指す観点から、個々の生徒の実態に応じた情報の提供その他の必要な支援を行うものとする。\n\n1. 学校復帰\n2. 社会的自立\n3. 学力の保障\n4. 集団への適応",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第4の2(3)アより。不登校生徒への支援は、単なる学校復帰ではなく「社会的自立」を目指す観点から行われます。"
-            },
-            {
-                title: "第5の1 学校運営と部活動",
-                text: "生徒の自主的、自発的な参加により行われる部活動については、(略)学校教育が目指す資質・能力の育成に資するものであり、（　ア　）の一環として、（　イ　）との関連が図られるよう留意すること。\n\n1. ア: 学校教育　イ: 教育課程\n2. ア: 社会教育　イ: 総合的な学習の時間\n3. ア: 学校教育　イ: 特別活動\n4. ア: 生涯学習　イ: 教育課程",
-                correctAnswer: "1",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第5の1ウより。部活動は「学校教育」の一環であり、「教育課程」との関連が図られるよう留意します。"
-            },
-            {
-                title: "第6 道徳教育に関する配慮事項",
-                text: "各学校においては、(略)道徳教育の全体計画を作成し、校長の方針の下に、道徳教育の推進を主に担当する教師(以下「（　ア　）」という。)を中心に、全教師が協力して道徳教育を展開すること。\n\n1. 道徳科担当教師\n2. 道徳教育推進教師\n3. 生徒指導主事\n4. 教務主任",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "総則第6の1より。道徳教育は校長の方針の下、「道徳教育推進教師」を中心に全教師が協力して展開します。"
-            },
-            {
-                title: "第2章社会 第1目標",
-                text: "（　ア　）を働かせ、課題を追究したり解決したりする活動を通して、広い視野に立ち、グローバル化する国際社会に主体的に生きる（　イ　）に必要な公民としての資質・能力の基礎を次のとおり育成することを目指す。\n\n1. ア: 多面的・多角的な見方や考え方　イ: 持続可能な社会の創り手\n2. ア: 社会的な見方・考え方　イ: 平和で民主的な国家及び社会の形成者\n3. ア: 多面的・多角的な見方や考え方　イ: 平和で民主的な国家及び社会の形成者\n4. ア: 社会的な見方・考え方　イ: 持続可能な社会の創り手",
-                correctAnswer: "2",
-                options: ["1", "2", "3", "4"],
-                explanation: "社会科目標より。「社会的な見方・考え方」を働かせ、「平和で民主的な国家及び社会の形成者」に必要な公民としての資質・能力の基礎を育成します。"
+                sectionId: "6",
+                sectionTitle: "第5・第6 学校運営上の留意事項・道徳",
+                questions: [
+                    {
+                        id: "6-1",
+                        text: "第5 学校運営上の留意事項\n1 教育課程の改善と学校評価、教育課程外の活動との連携等\nア 各学校においては、校長の方針の下に、{0}に基づき教職員が適切に役割を分担しつつ、相互に連携しながら、各学校の特色を生かしたカリキュラム・マネジメントを行うよう努めるものとする。\nウ 教育課程外の学校教育活動と教育課程の関連が図られるように留意するものとする。特に、生徒の自主的,自発的な参加により行われる部活動については、(中略) 学校教育の一環として、{1}との関連が図られるよう留意すること。その際、学校や地域の実態に応じ、地域の人々の協力等の工夫を行い、{2}な運営体制が整えられるようにするものとする。",
+                        blanks: [
+                            { correctAnswer: "校務分掌", options: ["校務分掌", "教育課程", "学校運営協議会", "職員会議"] },
+                            { correctAnswer: "教育課程", options: ["教育課程", "地域社会", "総合的な学習の時間", "特別活動"] },
+                            { correctAnswer: "持続可能", options: ["持続可能", "効率的", "合理的", "協働的"] }
+                        ]
+                    },
+                    {
+                        id: "6-2",
+                        text: "2 家庭や地域社会との連携及び協働と学校間の連携\nア 学校がその目的を達成するため、学校や地域の実態等に応じ、(中略) 家庭や地域社会との連携及び協働を深めること。また、高齢者や異年齢の子供など、地域における{0}交流の機会を設けること。\nイ 他の中学校や、幼稚園,認定こども園、保育所,小学校,高等学校,特別支援学校などとの間の連携や交流を図るとともに、障害のある幼児児童生徒との{1}の機会を設け、共に尊重し合いながら協働して生活していく態度を育むようにすること。",
+                        blanks: [
+                            { correctAnswer: "世代を越えた", options: ["世代を越えた", "異世代間の", "多文化との", "多様な他者との"] },
+                            { correctAnswer: "交流及び共同学習", options: ["交流及び共同学習", "インクルーシブ教育", "相互理解", "合同行事"] }
+                        ]
+                    },
+                    {
+                        id: "6-3",
+                        text: "第6 道徳教育に関する配慮事項\n1 (前略)道徳教育の全体計画の作成に当たっては、生徒や学校、地域の実態を考慮して、学校の道徳教育の{0}を設定するとともに、道徳科の指導方針、(中略)家庭や地域社会との連携の方法を示すこと。\n2 各学校においては、生徒の発達の段階や特性等を踏まえ、指導内容の重点化を図ること。その際、(中略) 規律ある生活をすること、{1}や自らの弱さを克服して気高く生きようとする心を育てること、法やきまりの意義に関する理解を深めること、(中略) 国際社会に生きる日本人としての自覚を身に付けることに留意すること。\n4 学校の道徳教育の全体計画や道徳教育に関する諸活動などの情報を積極的に{2}したり、(中略) 家庭や地域社会との共通理解を深め、相互の連携を図ること。",
+                        blanks: [
+                            { correctAnswer: "重点目標", options: ["重点目標", "努力目標", "評価基準", "年間計画"] },
+                            { correctAnswer: "生命を尊重する心", options: ["生命を尊重する心", "他者を思いやる心", "自然を愛護する心", "人権を尊重する心"] },
+                            { correctAnswer: "公表", options: ["公表", "周知", "発信", "開示"] }
+                        ]
+                    }
+                ]
             }
         ];
 
+        // 総問題数の計算 (21問)
+        const totalQuestionsCount = masterData.reduce((acc, section) => acc + section.questions.length, 0);
+
         // --- グローバル変数 ---
-        let parsedQuestions = [];      
-        let userAnswers = [];          
-        let currentQuestionIndex = 0; 
-        let currentFontSizeLevel = 0; // 0: 標準, 1: 小, 2: 極小, 3: 大
+        let activeSections = []; // 出題モードに応じたセクションの配列
+        let userAnswers = []; // activeSections に対応する回答状況配列 userAnswers[sectionIdx][qIdx][blankIdx]
+        let currentSectionIndex = 0; 
+        let currentMode = 'specific'; // 'sequential', 'specific', 'random'
+        let selectedRandomCount = 5; 
+        let currentFontSizeLevel = 0; 
         const fontSizeClasses = ['text-sm md:text-base', 'text-xs md:text-sm', 'text-[11px] md:text-xs', 'text-base md:text-lg'];
 
         // --- DOM要素 ---
@@ -458,6 +515,13 @@
             result: document.getElementById('result-screen')
         };
         const els = {
+            modeSelect: document.getElementById('mode-select'),
+            sectionSelectContainer: document.getElementById('section-select-container'),
+            sectionSelect: document.getElementById('section-select'),
+            countSelectContainer: document.getElementById('count-select-container'),
+            countSelect: document.getElementById('count-select'),
+            totalScore: document.getElementById('total-score'),
+            
             menuBtn: document.getElementById('menu-btn'),
             drawerOverlay: document.getElementById('drawer-overlay'),
             drawerMenu: document.getElementById('drawer-menu'),
@@ -466,10 +530,9 @@
             fontSizeBtn: document.getElementById('font-size-btn'),
             
             desktopSidebar: document.getElementById('desktop-sidebar'),
-            qNumberTitle: document.getElementById('question-number-title'),
-            qBody: document.getElementById('question-body'),
-            inputArea: document.getElementById('input-area'),
-            qProgress: document.getElementById('question-progress'),
+            headerSectionTitle: document.getElementById('header-section-title'),
+            questionsContainer: document.getElementById('questions-container'),
+            sectionProgress: document.getElementById('section-progress'),
             
             prevBtn: document.getElementById('prev-btn'),
             nextBtn: document.getElementById('next-btn'),
@@ -480,23 +543,57 @@
             modalSubmitBtn: document.getElementById('modal-submit-btn'),
             
             scoreDisplay: document.getElementById('score-display'),
-            resultDetails: document.getElementById('result-details'),
-            
-            totalQCount: document.getElementById('total-q-count'),
-            totalScore: document.getElementById('total-score')
+            resultDetails: document.getElementById('result-details')
         };
 
         // --- 初期化 ---
         function initApp() {
-            // 問題数表示の更新
-            els.totalQCount.textContent = `全 ${baseQuestions.length} 問`;
-            els.totalScore.textContent = `${baseQuestions.length} 点`;
+            // セクション選択プルダウンの初期化
+            els.sectionSelect.innerHTML = '';
+            masterData.forEach((sec, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `【大問${idx + 1}】 ${sec.sectionTitle}`;
+                els.sectionSelect.appendChild(opt);
+            });
+
+            // 出題形式プルダウンの処理
+            els.modeSelect.addEventListener('change', (e) => {
+                currentMode = e.target.value;
+                if (currentMode === 'random') {
+                    els.countSelectContainer.classList.remove('hidden');
+                    els.sectionSelectContainer.classList.add('hidden');
+                } else if (currentMode === 'specific') {
+                    els.countSelectContainer.classList.add('hidden');
+                    els.sectionSelectContainer.classList.remove('hidden');
+                } else {
+                    els.countSelectContainer.classList.add('hidden');
+                    els.sectionSelectContainer.classList.add('hidden');
+                }
+                updateTotalScore();
+            });
+
+            // 出題数プルダウンの処理
+            els.countSelect.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === 'all') {
+                    selectedRandomCount = totalQuestionsCount;
+                } else {
+                    selectedRandomCount = parseInt(val, 10);
+                }
+                updateTotalScore();
+            });
+
+            // セクション選択プルダウンの処理
+            els.sectionSelect.addEventListener('change', () => {
+                updateTotalScore();
+            });
 
             // イベントリスナー登録
             document.getElementById('start-btn').addEventListener('click', startTest);
             
-            els.prevBtn.addEventListener('click', () => navigateQuestion(-1));
-            els.nextBtn.addEventListener('click', () => navigateQuestion(1));
+            els.prevBtn.addEventListener('click', () => navigateSection(-1));
+            els.nextBtn.addEventListener('click', () => navigateSection(1));
             
             els.submitConfirmBtn.addEventListener('click', () => {
                 els.submitModal.classList.remove('hidden');
@@ -517,105 +614,210 @@
                 currentFontSizeLevel = (currentFontSizeLevel + 1) % fontSizeClasses.length;
                 applyFontSize();
             });
+
+            // 初期表示の満点を現在のモードに合わせる
+            updateTotalScore();
         }
 
-        // --- フォントサイズ適用 ---
+        function updateTotalScore() {
+            if (currentMode === 'random') {
+                els.totalScore.textContent = `${selectedRandomCount}点`;
+            } else if (currentMode === 'specific') {
+                const secIdx = parseInt(els.sectionSelect.value, 10);
+                const qCount = masterData[secIdx].questions.length;
+                els.totalScore.textContent = `${qCount}点`;
+            } else {
+                els.totalScore.textContent = `${totalQuestionsCount}点`;
+            }
+        }
+
+        // --- フォントサイズ適用 (コンテナ内の全問題文に適用) ---
         function applyFontSize() {
-            const baseClasses = "text-gray-800 leading-normal min-h-[60px] whitespace-pre-wrap break-words";
-            els.qBody.className = `${fontSizeClasses[currentFontSizeLevel]} ${baseClasses}`;
+            const bodies = document.querySelectorAll('.question-body-text');
+            const baseClasses = "text-gray-800 leading-loose break-words question-body-text";
+            bodies.forEach(body => {
+                body.className = `${fontSizeClasses[currentFontSizeLevel]} ${baseClasses}`;
+            });
         }
 
         // --- テスト開始処理 ---
         function startTest() {
-            generateQuestions();
+            generateTestStructure();
 
             screens.start.classList.add('hidden');
             screens.test.classList.remove('hidden');
             screens.test.classList.add('flex');
 
-            currentQuestionIndex = 0;
-            renderQuestion(currentQuestionIndex);
+            currentSectionIndex = 0;
+            renderSection(currentSectionIndex);
             updateNavigations();
         }
 
-        // --- 問題データの生成 (全問ランダム) ---
-        function generateQuestions() {
-            parsedQuestions = [];
+        // --- 問題データの生成 (モードに応じたactiveSectionsの構築) ---
+        function generateTestStructure() {
+            activeSections = [];
             userAnswers = [];
 
-            // 問題をランダムにシャッフル
-            const shuffledData = [...baseQuestions].sort(() => Math.random() - 0.5);
-
-            shuffledData.forEach((q) => {
-                parsedQuestions.push({
-                    title: q.title,
-                    text: q.text,
-                    correctAnswer: q.correctAnswer,
-                    options: q.options,
-                    explanation: q.explanation
+            if (currentMode === 'sequential') {
+                // 順番モード：masterDataをそのまま使う
+                activeSections = JSON.parse(JSON.stringify(masterData));
+            } else if (currentMode === 'specific') {
+                // 指定項目モード：選ばれたセクションのみを抽出
+                const secIdx = parseInt(els.sectionSelect.value, 10);
+                activeSections.push(JSON.parse(JSON.stringify(masterData[secIdx])));
+            } else if (currentMode === 'random') {
+                // ランダムモード：全小問から指定数を抽出し、1つのセクションにまとめる
+                let allQuestions = [];
+                masterData.forEach(sec => {
+                    allQuestions = allQuestions.concat(sec.questions);
                 });
-                userAnswers.push(""); 
+                
+                // シャッフルして抽出
+                allQuestions.sort(() => Math.random() - 0.5);
+                const targetQuestions = allQuestions.slice(0, selectedRandomCount);
+                
+                // 表示用のIDを振り直す
+                targetQuestions.forEach((q, idx) => {
+                    q.id = `R-${idx + 1}`;
+                });
+
+                activeSections.push({
+                    sectionId: "R",
+                    sectionTitle: `ランダム出題（${selectedRandomCount}問）`,
+                    questions: targetQuestions
+                });
+            }
+
+            // userAnswers 配列の初期化
+            activeSections.forEach((sec, sIdx) => {
+                userAnswers[sIdx] = [];
+                sec.questions.forEach((q, qIdx) => {
+                    userAnswers[sIdx][qIdx] = new Array(q.blanks.length).fill("");
+                });
             });
         }
 
-        // --- 問題の描画 ---
-        function renderQuestion(index) {
-            const q = parsedQuestions[index];
+        // --- セクションの描画 (縦に小問を並べる) ---
+        function renderSection(sectionIndex) {
+            const section = activeSections[sectionIndex];
             
-            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="text-xs ml-2 font-normal text-gray-700">（1点）</span>`;
+            // ヘッダータイトルの更新
+            let prefix = "";
+            if (currentMode === 'sequential') {
+                prefix = `【大問 ${sectionIndex + 1}】`;
+            } else if (currentMode === 'specific') {
+                prefix = `【選択項目】`;
+            }
+            els.headerSectionTitle.textContent = prefix + section.sectionTitle;
             
-            // XSS対策を先に行い、その後に改行を反映
-            let displayText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            displayText = displayText.replace(/\n/g, '<br>');
+            els.questionsContainer.innerHTML = ''; // クリア
 
-            els.qBody.innerHTML = displayText;
-            applyFontSize(); // 問題切り替え時にも現在のフォントサイズを適用
-            
-            els.qProgress.textContent = `${index + 1} / ${parsedQuestions.length}`;
+            // セクション内の各小問を生成
+            section.questions.forEach((q, qIdx) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'border border-gray-300 rounded mb-6 bg-white overflow-hidden shadow-sm';
+                
+                // 小問タイトル
+                const header = document.createElement('div');
+                header.className = 'bg-[#f8fafc] border-b border-gray-300 p-3 font-bold text-gray-800 text-sm md:text-base flex justify-between';
+                header.innerHTML = `<span>【問題 ${q.id}】</span><span class="text-xs font-normal text-gray-500">配点: 1点</span>`;
+                qDiv.appendChild(header);
 
-            // 解答枠の生成 (セレクトボックス強制)
-            els.inputArea.innerHTML = '';
-            
-            const select = document.createElement('select');
-            select.className = 'blank-select';
-            
-            const defaultOption = document.createElement('option');
-            defaultOption.value = "";
-            defaultOption.textContent = "-"; 
-            select.appendChild(defaultOption);
+                // 小問ボディ
+                const body = document.createElement('div');
+                body.className = 'p-4 md:p-6';
+                
+                const inst = document.createElement('p');
+                inst.className = 'text-sm text-gray-500 font-medium mb-3 border-l-4 border-[#005b82] pl-2';
+                inst.textContent = '文中の空欄に当てはまる最も適切な語句を選択してください。';
+                body.appendChild(inst);
 
-            q.options.forEach(opt => {
-                const option = document.createElement('option');
-                option.value = opt;
-                option.textContent = opt;
-                if (userAnswers[index] === opt) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
+                const textContainer = document.createElement('div');
+                textContainer.className = 'question-body-text text-gray-800 leading-loose break-words';
+                
+                // XSS対策とプレースホルダー置換
+                let safeText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const parts = safeText.split(/\{(\d+)\}/);
+
+                parts.forEach(part => {
+                    if (/^\d+$/.test(part)) {
+                        const blankIndex = parseInt(part, 10);
+                        const blankData = q.blanks[blankIndex];
+
+                        if (blankData) {
+                            const select = document.createElement('select');
+                            select.className = "inline-blank-select";
+                            
+                            const defaultOpt = document.createElement('option');
+                            defaultOpt.value = "";
+                            defaultOpt.textContent = "▼ 選択";
+                            defaultOpt.disabled = true;
+                            if (!userAnswers[sectionIndex][qIdx][blankIndex]) defaultOpt.selected = true;
+                            select.appendChild(defaultOpt);
+
+                            blankData.options.forEach(optText => {
+                                const opt = document.createElement('option');
+                                opt.value = optText;
+                                opt.textContent = optText;
+                                if (userAnswers[sectionIndex][qIdx][blankIndex] === optText) {
+                                    opt.selected = true;
+                                }
+                                select.appendChild(opt);
+                            });
+
+                            if (userAnswers[sectionIndex][qIdx][blankIndex]) {
+                                select.classList.add('answered');
+                            }
+
+                            select.addEventListener('change', (e) => {
+                                userAnswers[sectionIndex][qIdx][blankIndex] = e.target.value;
+                                if (e.target.value) {
+                                    select.classList.add('answered');
+                                } else {
+                                    select.classList.remove('answered');
+                                }
+                                updateNavigations();
+                            });
+
+                            textContainer.appendChild(select);
+                        }
+                    } else {
+                        if (part.length > 0) {
+                            const span = document.createElement('span');
+                            span.innerHTML = part.replace(/\n/g, '<br>');
+                            textContainer.appendChild(span);
+                        }
+                    }
+                });
+
+                body.appendChild(textContainer);
+                qDiv.appendChild(body);
+                els.questionsContainer.appendChild(qDiv);
             });
 
-            select.addEventListener('change', (e) => {
-                userAnswers[index] = e.target.value;
-                updateNavigations();
-            });
-            els.inputArea.appendChild(select);
+            applyFontSize();
+            
+            // 進捗とボタンの表示制御
+            els.sectionProgress.textContent = `${sectionIndex + 1} / ${activeSections.length}`;
 
-            // ボタンの表示制御
-            els.prevBtn.disabled = index === 0;
-            if (index === parsedQuestions.length - 1) {
+            els.prevBtn.disabled = sectionIndex === 0;
+            if (sectionIndex === activeSections.length - 1) {
                 els.nextBtn.classList.add('hidden');
                 els.submitConfirmBtn.classList.remove('hidden');
             } else {
                 els.nextBtn.classList.remove('hidden');
                 els.submitConfirmBtn.classList.add('hidden');
             }
+            
+            // スクロールをトップに戻す
+            window.scrollTo(0, 0);
         }
 
-        function navigateQuestion(step) {
-            const newIndex = currentQuestionIndex + step;
-            if (newIndex >= 0 && newIndex < parsedQuestions.length) {
-                currentQuestionIndex = newIndex;
-                renderQuestion(currentQuestionIndex);
+        function navigateSection(step) {
+            const newIndex = currentSectionIndex + step;
+            if (newIndex >= 0 && newIndex < activeSections.length) {
+                currentSectionIndex = newIndex;
+                renderSection(currentSectionIndex);
                 updateNavigations(); 
             }
         }
@@ -626,25 +828,43 @@
             updateDrawerList();
         }
 
+        // セクション内の「すべての小問のすべての空欄」が埋まっているかチェック
+        function isSectionFullyAnswered(sectionIndex) {
+            const sectionAnswers = userAnswers[sectionIndex];
+            return sectionAnswers.every(qAns => qAns.every(ans => ans !== ""));
+        }
+
         function updateSidebarList() {
             els.desktopSidebar.innerHTML = '';
-            parsedQuestions.forEach((q, idx) => {
+            activeSections.forEach((sec, idx) => {
                 const button = document.createElement('button');
-                const isActive = idx === currentQuestionIndex;
+                const isActive = idx === currentSectionIndex;
+                const isAnswered = isSectionFullyAnswered(idx);
                 
-                let baseClass = "text-center px-2 py-2 rounded font-medium transition border text-sm shadow-sm ";
+                let baseClass = "text-left px-3 py-3 rounded font-medium transition border text-sm shadow-sm relative w-full mb-2 ";
+                
                 if (isActive) {
                     baseClass += "bg-[#bfdbfe] text-black border-[#93c5fd]"; 
+                } else if (isAnswered) {
+                    baseClass += "bg-[#f1f5f9] text-gray-600 border-[#cbd5e1] border-l-4 border-l-[#005b82]";
                 } else {
-                    baseClass += "bg-[#e2e8f0] text-gray-700 border-[#cbd5e1] hover:bg-[#cbd5e1]";
+                    baseClass += "bg-white text-gray-700 border-[#cbd5e1] hover:bg-gray-50";
                 }
                 
                 button.className = baseClass;
-                button.innerHTML = `【問${idx + 1}】`;
+                let titleText = "";
+                if (currentMode === 'sequential') {
+                    titleText = `【大問${idx + 1}】<br><span class="text-xs font-normal">${sec.sectionTitle.substring(0, 10)}...</span>`;
+                } else if (currentMode === 'specific') {
+                    titleText = `【選択項目】<br><span class="text-xs font-normal">${sec.sectionTitle.substring(0, 10)}...</span>`;
+                } else {
+                    titleText = sec.sectionTitle;
+                }
+                button.innerHTML = titleText;
                 
                 button.addEventListener('click', () => {
-                    currentQuestionIndex = idx;
-                    renderQuestion(currentQuestionIndex);
+                    currentSectionIndex = idx;
+                    renderSection(currentSectionIndex);
                     updateNavigations();
                 });
                 
@@ -654,16 +874,34 @@
 
         function updateDrawerList() {
             els.drawerList.innerHTML = '';
-            parsedQuestions.forEach((q, idx) => {
+            activeSections.forEach((sec, idx) => {
                 const li = document.createElement('li');
-                const isActive = idx === currentQuestionIndex;
+                const isActive = idx === currentSectionIndex;
+                const isAnswered = isSectionFullyAnswered(idx);
                 
-                li.className = `p-3 mb-1 rounded cursor-pointer transition text-sm ${isActive ? 'bg-[#bfdbfe] font-bold text-black border border-[#93c5fd]' : 'bg-[#e2e8f0] border border-[#cbd5e1] hover:bg-[#cbd5e1] text-gray-700'}`;
-                li.innerHTML = `<div class="text-center">【問題${idx + 1}】</div>`;
+                let baseClass = "p-3 mb-2 rounded cursor-pointer transition text-sm border ";
+                if (isActive) {
+                    baseClass += "bg-[#bfdbfe] font-bold text-black border-[#93c5fd]";
+                } else if (isAnswered) {
+                    baseClass += "bg-[#f1f5f9] text-gray-600 border-[#cbd5e1] border-l-4 border-l-[#005b82]";
+                } else {
+                    baseClass += "bg-white text-gray-700 border-[#cbd5e1] hover:bg-gray-50";
+                }
+
+                li.className = baseClass;
+                let titleText = "";
+                if (currentMode === 'sequential') {
+                    titleText = `【大問${idx + 1}】 ${sec.sectionTitle.substring(0, 15)}...`;
+                } else if (currentMode === 'specific') {
+                    titleText = `【選択項目】 ${sec.sectionTitle.substring(0, 15)}...`;
+                } else {
+                    titleText = sec.sectionTitle;
+                }
+                li.innerHTML = titleText;
                 
                 li.addEventListener('click', () => {
-                    currentQuestionIndex = idx;
-                    renderQuestion(currentQuestionIndex);
+                    currentSectionIndex = idx;
+                    renderSection(currentSectionIndex);
                     closeDrawer(); 
                     updateNavigations();
                 });
@@ -684,54 +922,100 @@
 
         // --- テスト終了・採点処理 ---
         function finishTest() {
-            let correctCount = 0;
+            let totalCorrectCount = 0;
+            let totalQuestionCount = 0;
             els.resultDetails.innerHTML = '';
 
-            parsedQuestions.forEach((q, idx) => {
-                const userAnswer = userAnswers[idx];
-                const isCorrect = userAnswer === q.correctAnswer;
-                if (isCorrect) correctCount++;
-
-                const resultCard = document.createElement('div');
-                resultCard.className = `p-3 md:p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'} shadow-sm`;
+            activeSections.forEach((sec, sIdx) => {
+                // セクション見出しの作成
+                const secHeader = document.createElement('h3');
+                secHeader.className = 'font-bold text-[#005b82] text-base md:text-lg border-b border-[#005b82] pb-1 mt-4 mb-3';
                 
-                const icon = isCorrect 
-                    ? `<span class="text-green-600 font-bold text-sm md:text-base">○ 正解</span>` 
-                    : `<span class="text-red-600 font-bold text-sm md:text-base">× 不正解</span>`;
+                let titleText = "";
+                if (currentMode === 'sequential') {
+                    titleText = `【大問 ${sIdx + 1}】 ${sec.sectionTitle}`;
+                } else if (currentMode === 'specific') {
+                    titleText = `【選択項目】 ${sec.sectionTitle}`;
+                } else {
+                    titleText = '採点結果';
+                }
+                secHeader.textContent = titleText;
+                els.resultDetails.appendChild(secHeader);
 
-                let correctHtmlText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;"); // XSS対策
-                correctHtmlText = correctHtmlText.replace(/\n/g, '<br>');
+                sec.questions.forEach((q, qIdx) => {
+                    totalQuestionCount++;
+                    let isAllCorrect = true;
+                    const blanksHtml = [];
 
-                const explanationHtml = q.explanation 
-                    ? `<div class="mt-3 p-2.5 bg-white border border-gray-200 rounded text-xs md:text-sm text-gray-700 leading-relaxed"><span class="font-bold text-gray-600 block mb-1">【解説】</span>${q.explanation.replace(/\n/g, '<br>')}</div>` 
-                    : '';
+                    q.blanks.forEach((blank, bIdx) => {
+                        const userAnswer = userAnswers[sIdx][qIdx][bIdx];
+                        const isBlankCorrect = userAnswer === blank.correctAnswer;
+                        if (!isBlankCorrect) isAllCorrect = false;
 
-                resultCard.innerHTML = `
-                    <div class="flex justify-between items-center mb-2 border-b border-gray-200 pb-2">
-                        <h4 class="font-bold text-gray-800 text-sm md:text-base">問 ${idx + 1}: <span class="text-xs md:text-sm font-normal text-gray-600">${q.title}</span></h4>
-                        ${icon}
-                    </div>
-                    <div class="text-xs md:text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2 whitespace-pre-wrap break-words">${correctHtmlText}</div>
-                    <div class="grid grid-cols-2 gap-2 text-xs md:text-sm mt-2">
-                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
-                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">あなたの解答</span>
-                            <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'} text-base md:text-lg">${userAnswer || '未解答'}</span>
+                        const mark = isBlankCorrect 
+                            ? `<span class="text-green-600 font-bold">○</span>` 
+                            : `<span class="text-red-600 font-bold">×</span>`;
+                        
+                        const uAnsText = userAnswer ? userAnswer : '<span class="text-gray-400">未解答</span>';
+                        const answerStyle = isBlankCorrect ? 'text-green-700' : 'text-red-600';
+
+                        blanksHtml.push(`
+                            <div class="flex items-center gap-2 mb-1 pb-1 border-b border-gray-100 last:border-0 last:pb-0 last:mb-0">
+                                <div class="w-6 text-center">${mark}</div>
+                                <div class="text-[11px] md:text-xs text-gray-500 w-12 shrink-0">空欄${bIdx + 1}:</div>
+                                <div class="flex-1 flex flex-col md:flex-row md:items-center gap-1 md:gap-4 text-xs md:text-sm">
+                                    <div class="w-full md:w-1/2 break-words">あなたの解答: <span class="font-bold ${answerStyle}">${uAnsText}</span></div>
+                                    <div class="w-full md:w-1/2 break-words text-gray-600">正解: <span class="font-bold text-[#005b82]">${blank.correctAnswer}</span></div>
+                                </div>
+                            </div>
+                        `);
+                    });
+
+                    if (isAllCorrect) totalCorrectCount++;
+
+                    const resultCard = document.createElement('div');
+                    resultCard.className = `p-3 md:p-4 rounded border-l-4 ${isAllCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'} shadow-sm mb-4`;
+                    
+                    const icon = isAllCorrect 
+                        ? `<span class="text-green-600 font-bold text-sm md:text-base">1点 / 完全正解</span>` 
+                        : `<span class="text-red-600 font-bold text-sm md:text-base">0点 / 不正解</span>`;
+
+                    // 問題文の表示 (正解を埋め込んだ状態で見せる)
+                    let correctHtmlText = q.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    q.blanks.forEach((blank, bIdx) => {
+                        const regex = new RegExp(`\\{${bIdx}\\}`, 'g');
+                        correctHtmlText = correctHtmlText.replace(regex, `<span class="font-bold text-[#005b82] border-b border-[#005b82] mx-1">${blank.correctAnswer}</span>`);
+                    });
+                    correctHtmlText = correctHtmlText.replace(/\n/g, '<br>');
+
+                    const explanationHtml = q.explanation 
+                        ? `<div class="mt-3 p-2.5 bg-white border border-gray-200 rounded text-xs md:text-sm text-gray-700 leading-relaxed"><span class="font-bold text-gray-600 block mb-1">【解説】</span>${q.explanation.replace(/\n/g, '<br>')}</div>` 
+                        : '';
+
+                    resultCard.innerHTML = `
+                        <div class="flex justify-between items-center mb-2 border-b border-gray-200 pb-2">
+                            <h4 class="font-bold text-gray-800 text-sm md:text-base">問題 ${q.id}</h4>
+                            ${icon}
                         </div>
-                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm flex flex-col items-center justify-center">
-                            <span class="text-gray-500 block text-[10px] md:text-xs mb-1">正解</span>
-                            <span class="font-bold text-blue-700 text-base md:text-lg">${q.correctAnswer}</span>
+                        <div class="text-xs md:text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-3 leading-relaxed break-words">
+                            ${correctHtmlText}
                         </div>
-                    </div>
-                    ${explanationHtml}
-                `;
-                els.resultDetails.appendChild(resultCard);
+                        <div class="bg-white p-2 md:p-3 rounded border border-gray-200 shadow-sm">
+                            ${blanksHtml.join('')}
+                        </div>
+                        ${explanationHtml}
+                    `;
+                    els.resultDetails.appendChild(resultCard);
+                });
             });
 
-            els.scoreDisplay.textContent = `${correctCount} / ${parsedQuestions.length}`;
+            els.scoreDisplay.textContent = `${totalCorrectCount} / ${totalQuestionCount}`;
             
             screens.test.classList.add('hidden');
             screens.test.classList.remove('flex');
             screens.result.classList.remove('hidden');
+            
+            window.scrollTo(0, 0);
         }
 
         document.addEventListener('DOMContentLoaded', initApp);
