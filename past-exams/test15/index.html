@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>教採演習 中学校学習指導要領 総則抜粋（暗記ノート編）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ヘッダーやアクセントのカラー */
+        .header-bg { background-color: #005b82; }
+
+        /* 暗記テープのスタイル */
+        .mask-tape {
+            background-color: #9ca3af; /* 控えめなグレー（暗記テープ） */
+            color: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 2px 8px;
+            margin: 0 4px;
+            user-select: none;
+            transition: all 0.2s ease;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            line-height: 1.4;
+        }
+        .mask-tape.revealed {
+            background-color: #fef08a; /* 黄色マーカー風 */
+            color: #1f2937; /* 濃いグレーの文字色 */
+            box-shadow: none;
+        }
+        .mask-tape:not(.revealed):hover {
+            background-color: #d1d5db; /* ホバー時に少し明るく */
+        }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="header-bg text-white p-3 flex justify-between items-center">
+            <span class="font-bold text-base">目次</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2">
+            <!-- JSでリストを生成 -->
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="flex-1 py-4 md:py-6 px-2 md:px-6 max-w-6xl mx-auto w-full">
+        
+        <div class="flex flex-col md:flex-row gap-3 lg:gap-6 items-start w-full">
+            
+            <!-- デスクトップ用 左サイドバー (目次) -->
+            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-56 shrink-0 max-h-[calc(100vh-4rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-4">
+                <!-- JSでサイドバーのボタンを生成 -->
+            </div>
+
+            <!-- 右側 メインエリア -->
+            <div class="flex-1 w-full flex flex-col min-w-0">
+                
+                <!-- ヘッダーバー -->
+                <div class="bg-[#e2e8f0] p-2 md:p-3 rounded border border-gray-300 mb-4 flex justify-between items-center shadow-sm sticky top-0 z-10">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <!-- 戻るボタン -->
+                        <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="p-1.5 md:px-3 md:py-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center font-bold text-sm" aria-label="戻る">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            <span class="hidden md:inline">戻る</span>
+                        </a>
+
+                        <!-- モバイル用メニューボタン -->
+                        <button id="menu-btn" class="md:hidden p-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition" aria-label="メニューを開く">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        
+                        <span id="header-section-title" class="font-bold text-[#005b82] text-sm md:text-lg ml-1 truncate">前文</span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <!-- 一括表示/非表示ボタン -->
+                        <button id="toggle-all-btn" class="text-gray-600 hover:text-[#005b82] bg-white border border-gray-300 hover:bg-gray-50 p-1.5 md:px-2.5 rounded text-sm font-medium transition flex items-center gap-1" aria-label="すべて表示/隠す">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span class="hidden md:inline">すべて表示/隠す</span>
+                        </button>
+                        <!-- フォントサイズ変更ボタン -->
+                        <button id="font-size-btn" class="text-gray-600 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-2.5 py-1.5 rounded text-sm font-medium transition" aria-label="文字サイズ変更">
+                            ぁあ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ノートリストが展開されるコンテナ -->
+                <div id="notes-container" class="flex flex-col gap-4 pb-4">
+                    <!-- JSで段落を生成 -->
+                </div>
+
+                <!-- フッターナビゲーション -->
+                <div class="flex justify-between items-center mt-2 border-t border-gray-300 pt-4">
+                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-6 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
+                        前の項目へ
+                    </button>
+                    <div class="flex items-center gap-4">
+                        <span id="section-progress" class="text-gray-600 font-bold text-sm">1 / 6</span>
+                        <button id="next-btn" class="bg-[#005b82] hover:bg-[#00476b] text-white font-bold py-2 px-6 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
+                            次の項目へ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- 問題データ構造 ---
+        // テキスト内の {0}, {1} などが暗記テープに置換されます。
+        const masterData = [
+            {
+                sectionTitle: "前文（教育基本法と教育課程の役割）",
+                paragraphs: [
+                    {
+                        text: "教育は、教育基本法第1条に定めるとおり、{0}を目指し、平和で民主的な国家及び社会の形成者として必要な資質を備えた心身ともに健康な国民の育成を期すという目的のもと、同法第2条に掲げる次の目標を達成するよう行われなければならない。\n1 {1}を身に付け、真理を求める態度を養い、{2}を培うとともに、健やかな身体を養うこと。",
+                        blanks: ["人格の完成", "幅広い知識と教養", "豊かな情操と道徳心"]
+                    },
+                    {
+                        text: "2 個人の価値を尊重して、その能力を伸ばし、{0}を培い、自主及び自律の精神を養うとともに、職業及び生活との関連を重視し、{1}を重んずる態度を養うこと。\n3 正義と責任、男女の平等、自他の敬愛と協力を重んずるとともに、{2}に基づき、主体的に社会の形成に参画し、その発展に寄与する態度を養うこと。",
+                        blanks: ["創造性", "勤労", "公共の精神"]
+                    },
+                    {
+                        text: "4 {0}を尊び、自然を大切にし、環境の保全に寄与する態度を養うこと。\n5 伝統と文化を尊重し、それらをはぐくんできた我が国と郷土を愛するとともに、{1}し、国際社会の平和と発展に寄与する態度を養うこと。",
+                        blanks: ["生命", "他国を尊重"]
+                    },
+                    {
+                        text: "これからの学校には、こうした教育の目的及び目標の達成を目指しつつ、一人一人の生徒が、自分のよさや可能性を認識するとともに、あらゆる他者を{0}として尊重し、多様な人々と協働しながら様々な社会的変化を乗り越え、豊かな人生を切り拓(ひら)き、{1}となることができるようにすることが求められる。このために必要な教育の在り方を具体化するのが、各学校において教育の内容等を組織的かつ計画的に組み立てた教育課程である。",
+                        blanks: ["価値のある存在", "持続可能な社会の創り手"]
+                    },
+                    {
+                        text: "教育課程を通して、これからの時代に求められる教育を実現していくためには、よりよい学校教育を通してよりよい社会を創るという理念を学校と社会とが共有し、それぞれの学校において、必要な学習内容をどのように学び、どのような資質・能力を身に付けられるようにするのかを教育課程において明確にしながら、社会との連携及び協働によりその実現を図っていくという、{0}の実現が重要となる。",
+                        blanks: ["社会に開かれた教育課程"]
+                    },
+                    {
+                        text: "学習指導要領とは、こうした理念の実現に向けて必要となる教育課程の基準を大綱的に定めるものである。学習指導要領が果たす役割の一つは、公の性質を有する学校における{0}を全国的に確保することである。(中略) 幼児期の教育及び小学校教育の基礎の上に、高等学校以降の教育や{1}とのつながりを見通しながら、生徒の学習の在り方を展望していくために広く活用されるものとなることを期待して、ここに中学校学習指導要領を定める。",
+                        blanks: ["教育水準", "生涯にわたる学習"]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "第1 中学校教育の基本と教育課程の役割",
+                paragraphs: [
+                    {
+                        text: "1 各学校においては、教育基本法及び学校教育法その他の法令並びにこの章以下に示すところに従い、生徒の人間として調和のとれた育成を目指し、生徒の{0}や特性及び学校や{1}の実態を十分考慮して、適切な教育課程を編成するものとし、これらに掲げる目標を達成するよう教育を行うものとする。",
+                        blanks: ["心身の発達の段階", "地域"]
+                    },
+                    {
+                        text: "2 (1) {0}を確実に習得させ、これらを活用して課題を解決するために必要な思考力,判断力,表現力等を育むとともに、主体的に学習に取り組む態度を養い、個性を生かし多様な人々との協働を促す教育の充実に努めること。その際、生徒の発達の段階を考慮して、生徒の言語活動など、学習の基盤をつくる活動を充実するとともに、家庭との連携を図りながら、生徒の{1}が確立するよう配慮すること。",
+                        blanks: ["基礎的・基本的な知識及び技能", "学習習慣"]
+                    },
+                    {
+                        text: "(2) 道徳教育や体験活動、多様な表現や鑑賞の活動等を通して、豊かな心や創造性の涵(かん)養を目指した教育の充実に努めること。\n学校における道徳教育は、特別の教科である道徳(以下「道徳科」という。)を{0}として学校の教育活動全体を通じて行うものであり、(中略) 道徳教育は、人間としての{1}を考え、主体的な判断の下に行動し、自立した人間として他者と共によりよく生きるための基盤となる{2}を養うことを目標とすること。道徳教育を進めるに当たっては、{3}と生命に対する畏敬の念を家庭,学校,その他社会における具体的な生活の中に生かし、(後略)",
+                        blanks: ["要", "生き方", "道徳性", "人間尊重の精神"]
+                    },
+                    {
+                        text: "(3) 学校における体育・健康に関する指導を、生徒の発達の段階を考慮して、(中略) 特に、学校における{0}の推進並びに体力の向上に関する指導、安全に関する指導及び心身の健康の保持増進に関する指導については、それぞれの特質に応じて適切に行うよう努めること。また、家庭や地域社会との連携を図りながら、日常生活において適切な体育・健康に関する活動の実践を促し、{1}を通じて健康・安全で活力ある生活を送るための基礎が培われるよう配慮すること。",
+                        blanks: ["食育", "生涯"]
+                    },
+                    {
+                        text: "3 豊かな創造性を備え持続可能な社会の創り手となることが期待される生徒に、生きる力を育むことを目指すに当たっては、学校教育全体並びに各教科等を通してどのような資質・能力の育成を目指すのかを明確にしながら、教育活動の充実を図るものとする。その際、生徒の発達の段階や特性等を踏まえつつ、次に掲げることが偏りなく実現できるようにするものとする。\n(1) {0}が習得されるようにすること。\n(2) 思考力,判断力,表現力等を育成すること。\n(3) {1}等を涵(かん)養すること。",
+                        blanks: ["知識及び技能", "学びに向かう力,人間性"]
+                    },
+                    {
+                        text: "4 各学校においては、生徒や学校、地域の実態を適切に把握し、教育の目的や目標の実現に必要な教育の内容等を{0}で組み立てていくこと、教育課程の実施状況を評価してその改善を図っていくこと、教育課程の実施に必要な人的又は物的な体制を確保するとともにその改善を図っていくことなどを通して、教育課程に基づき組織的かつ計画的に各学校の教育活動の質の向上を図っていくこと(以下「{1}」という。)に努めるものとする。",
+                        blanks: ["教科等横断的な視点", "カリキュラム・マネジメント"]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "第2 教育課程の編成",
+                paragraphs: [
+                    {
+                        text: "1 各学校の教育目標と教育課程の編成\n教育課程の編成に当たっては、学校教育全体や各教科等における指導を通して育成を目指す資質・能力を踏まえつつ、各学校の教育目標を明確にするとともに、教育課程の編成についての基本的な方針が{0}とも共有されるよう努めるものとする。",
+                        blanks: ["家庭や地域"]
+                    },
+                    {
+                        text: "2 教科等横断的な視点に立った資質・能力の育成\n(1) 各学校においては、生徒の発達の段階を考慮し、言語能力、{0}(情報モラルを含む。)、問題発見・解決能力等の学習の基盤となる資質・能力を育成していくことができるよう、各教科等の特質を生かし、教科等横断的な視点から教育課程の編成を図るものとする。\n(2) 各学校においては、生徒や学校、地域の実態及び生徒の発達の段階を考慮し、豊かな人生の実現や災害等を乗り越えて次代の社会を形成することに向けた{1}に対応して求められる資質・能力を、教科等横断的な視点で育成していくことができるよう、各学校の{2}を生かした教育課程の編成を図るものとする。",
+                        blanks: ["情報活用能力", "現代的な諸課題", "特色"]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "第3 教育課程の実施と学習評価",
+                paragraphs: [
+                    {
+                        text: "1 主体的・対話的で深い学びの実現に向けた授業改善\n(1) 単元や題材など内容や時間のまとまりを見通しながら、生徒の{0}の実現に向けた授業改善を行うこと。特に、各教科等において身に付けた知識及び技能を活用したり、思考力,判断力,表現力等や学びに向かう力、人間性等を発揮させたりして、学習の対象となる物事を捉え思考することにより、各教科等の特質に応じた物事を捉える視点や考え方(以下「{1}」という。)が鍛えられていくことに留意し、(中略) 思いや考えを基に{2}したりすることに向かう過程を重視した学習の充実を図ること。",
+                        blanks: ["主体的・対話的で深い学び", "見方・考え方", "創造"]
+                    },
+                    {
+                        text: "(2) 言語能力の育成を図るため、各学校において必要な言語環境を整えるとともに、{0}を要としつつ各教科等の特質に応じて、生徒の言語活動を充実すること。あわせて、読書活動を充実すること。\n(3) 情報活用能力の育成を図るため、各学校において、{1}や情報通信ネットワークなどの情報手段を活用するために必要な環境を整え、これらを適切に活用した学習活動の充実を図ること。(中略)\n(4) 生徒が学習の{2}を立てたり学習したことを振り返ったりする活動を、計画的に取り入れるように工夫すること。",
+                        blanks: ["国語科", "コンピュータ", "見通し"]
+                    },
+                    {
+                        text: "(5) 生徒が生命の有限性や自然の大切さ、主体的に挑戦してみることや多様な他者と協働することの重要性などを実感しながら理解することができるよう、各教科等の特質に応じた{0}を重視し、家庭や地域社会と連携しつつ体系的・継続的に実施できるよう工夫すること。\n(6) 生徒が自ら学習課題や学習活動を{1}機会を設けるなど、生徒の興味・関心を生かした自主的,自発的な学習が促されるよう工夫すること。\n(7) {2}を計画的に利用しその機能の活用を図り、生徒の主体的・対話的で深い学びの実現に向けた授業改善に生かすとともに、生徒の自主的,自発的な学習活動や読書活動を充実すること。",
+                        blanks: ["体験活動", "選択する", "学校図書館"]
+                    },
+                    {
+                        text: "2 学習評価の充実\n学習評価の実施に当たっては、次の事項に配慮するものとする。\n(1) 生徒の{0}などを積極的に評価し、学習したことの意義や価値を実感できるようにすること。また、各教科等の目標の実現に向けた学習状況を把握する観点から、(中略) 学習の{1}を評価し、指導の改善や学習意欲の向上を図り、資質・能力の育成に生かすようにすること。\n(2) 創意工夫の中で学習評価の{2}が高められるよう、組織的かつ計画的な取組を推進するとともに、学年や学校段階を越えて生徒の学習の成果が円滑に接続されるように工夫すること。",
+                        blanks: ["よい点や進歩の状況", "過程や成果", "妥当性や信頼性"]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "第4 生徒の発達の支援",
+                paragraphs: [
+                    {
+                        text: "1 生徒の発達を支える指導の充実\n(1) 学習や生活の基盤として、教師と生徒との{0}及び生徒相互のよりよい人間関係を育てるため、日頃から{1}の充実を図ること。また、主に集団の場面で必要な指導や援助を行うガイダンスと、個々の生徒の多様な実態を踏まえ、(中略)カウンセリングの双方により、生徒の発達を支援すること。\n(2) 生徒が、自己の{2}を実感しながら、よりよい人間関係を形成し、有意義で充実した学校生活を送る中で、現在及び将来における自己実現を図っていくことができるよう、生徒理解を深め、学習指導と関連付けながら、生徒指導の充実を図ること。",
+                        blanks: ["信頼関係", "学級経営", "存在感"]
+                    },
+                    {
+                        text: "(3) 生徒が、学ぶことと自己の将来とのつながりを見通しながら、社会的・職業的自立に向けて必要な基盤となる資質・能力を身に付けていくことができるよう、{0}を要としつつ各教科等の特質に応じて、キャリア教育の充実を図ること。その中で、生徒が自らの生き方を考え主体的に進路を選択することができるよう、(中略)組織的かつ計画的な進路指導を行うこと。\n(4) 生徒が、基礎的・基本的な知識及び技能の習得も含め、学習内容を確実に身に付けることができるよう、生徒や学校の実態に応じ、{1}やグループ別学習、繰り返し学習、学習内容の習熟の程度に応じた学習、(中略) 指導方法や指導体制の工夫改善により、個に応じた指導の充実を図ること。",
+                        blanks: ["特別活動", "個別学習"]
+                    },
+                    {
+                        text: "2 特別な配慮を必要とする生徒への指導\n(1) 障害のある生徒などへの指導\nイ 特別支援学級において実施する特別の教育課程については、(中略) 障害による学習上又は生活上の困難を克服し自立を図るため、特別支援学校小学部・中学部学習指導要領第7章に示す{0}を取り入れること。\nウ 障害のある生徒に対して、{1}を行い、特別の教育課程を編成する場合には、(中略) 具体的な目標や内容を定め、指導を行うものとする。\nエ 障害のある生徒などについては、(中略) 長期的な視点で生徒への教育的支援を行うために、{2}を作成し活用することに努めるとともに、各教科等の指導に当たって、個々の生徒の実態を的確に把握し、{3}を作成し活用することに努めるものとする。",
+                        blanks: ["自立活動", "通級による指導", "個別の教育支援計画", "個別の指導計画"]
+                    },
+                    {
+                        text: "(3) 不登校生徒への配慮\nア 不登校生徒については、保護者や関係機関と連携を図り、心理や福祉の専門家の助言又は援助を得ながら、{0}を目指す観点から、個々の生徒の実態に応じた情報の提供その他の必要な支援を行うものとする。\nイ 相当の期間中学校を欠席し引き続き欠席すると認められる生徒を対象として、文部科学大臣が認める{1}を編成する場合には、生徒の実態に配慮した教育課程を編成するとともに、個別学習やグループ別学習など指導方法や指導体制の工夫改善に努めるものとする。",
+                        blanks: ["社会的自立", "特別の教育課程"]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "第5・第6 学校運営上の留意事項・道徳",
+                paragraphs: [
+                    {
+                        text: "第5 学校運営上の留意事項\n1 教育課程の改善と学校評価、教育課程外の活動との連携等\nア 各学校においては、校長の方針の下に、{0}に基づき教職員が適切に役割を分担しつつ、相互に連携しながら、各学校の特色を生かしたカリキュラム・マネジメントを行うよう努めるものとする。\nウ 教育課程外の学校教育活動と教育課程の関連が図られるように留意するものとする。特に、生徒の自主的,自発的な参加により行われる部活動については、(中略) 学校教育の一環として、{1}との関連が図られるよう留意すること。その際、学校や地域の実態に応じ、地域の人々の協力等の工夫を行い、{2}な運営体制が整えられるようにするものとする。",
+                        blanks: ["校務分掌", "教育課程", "持続可能"]
+                    },
+                    {
+                        text: "2 家庭や地域社会との連携及び協働と学校間の連携\nア 学校がその目的を達成するため、学校や地域の実態等に応じ、(中略) 家庭や地域社会との連携及び協働を深めること。また、高齢者や異年齢の子供など、地域における{0}交流の機会を設けること。\nイ 他の中学校や、幼稚園,認定こども園、保育所,小学校,高等学校,特別支援学校などとの間の連携や交流を図るとともに、障害のある幼児児童生徒との{1}の機会を設け、共に尊重し合いながら協働して生活していく態度を育むようにすること。",
+                        blanks: ["世代を越えた", "交流及び共同学習"]
+                    },
+                    {
+                        text: "第6 道徳教育に関する配慮事項\n1 (前略)道徳教育の全体計画の作成に当たっては、生徒や学校、地域の実態を考慮して、学校の道徳教育の{0}を設定するとともに、道徳科の指導方針、(中略)家庭や地域社会との連携の方法を示すこと。\n2 各学校においては、生徒の発達の段階や特性等を踏まえ、指導内容の重点化を図ること。その際、(中略) 規律ある生活をすること、{1}や自らの弱さを克服して気高く生きようとする心を育てること、法やきまりの意義に関する理解を深めること、(中略) 国際社会に生きる日本人としての自覚を身に付けることに留意すること。\n4 学校の道徳教育の全体計画や道徳教育に関する諸活動などの情報を積極的に{2}したり、(中略) 家庭や地域社会との共通理解を深め、相互の連携を図ること。",
+                        blanks: ["重点目標", "生命を尊重する心", "公表"]
+                    }
+                ]
+            }
+        ];
+
+        // --- グローバル変数 ---
+        let currentSectionIndex = 0; 
+        let currentFontSizeLevel = 3; // 初期状態を「普通」（インデックス3）に設定
+        let isAllRevealed = false; // 全体表示トグルの状態
+        const fontSizeClasses = [
+            'text-xs md:text-sm',     // 0: 小
+            'text-[11px] md:text-xs', // 1: 小小
+            'text-base md:text-lg',   // 2: 大
+            'text-sm md:text-base'    // 3: 普通
+        ];
+
+        // --- DOM要素 ---
+        const els = {
+            menuBtn: document.getElementById('menu-btn'),
+            drawerOverlay: document.getElementById('drawer-overlay'),
+            drawerMenu: document.getElementById('drawer-menu'),
+            drawerList: document.getElementById('drawer-list'),
+            closeMenuBtn: document.getElementById('close-menu-btn'),
+            fontSizeBtn: document.getElementById('font-size-btn'),
+            toggleAllBtn: document.getElementById('toggle-all-btn'),
+            
+            desktopSidebar: document.getElementById('desktop-sidebar'),
+            headerSectionTitle: document.getElementById('header-section-title'),
+            notesContainer: document.getElementById('notes-container'),
+            sectionProgress: document.getElementById('section-progress'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn')
+        };
+
+        // --- 初期化 ---
+        function initApp() {
+            // イベントリスナー登録
+            els.prevBtn.addEventListener('click', () => navigateSection(-1));
+            els.nextBtn.addEventListener('click', () => navigateSection(1));
+            
+            els.menuBtn.addEventListener('click', openDrawer);
+            els.closeMenuBtn.addEventListener('click', closeDrawer);
+            els.drawerOverlay.addEventListener('click', closeDrawer);
+
+            els.fontSizeBtn.addEventListener('click', () => {
+                currentFontSizeLevel = (currentFontSizeLevel + 1) % fontSizeClasses.length;
+                applyFontSize();
+            });
+
+            els.toggleAllBtn.addEventListener('click', toggleAllTapes);
+
+            // 初期レンダリング
+            renderSection(currentSectionIndex);
+            updateNavigations();
+        }
+
+        // --- 全テープ一括トグル ---
+        function toggleAllTapes() {
+            isAllRevealed = !isAllRevealed;
+            const tapes = document.querySelectorAll('.mask-tape');
+            tapes.forEach(tape => {
+                if (isAllRevealed) {
+                    tape.classList.add('revealed');
+                } else {
+                    tape.classList.remove('revealed');
+                }
+            });
+        }
+
+        // --- フォントサイズ適用 (コンテナ内の全問題文に適用) ---
+        function applyFontSize() {
+            const bodies = document.querySelectorAll('.note-body-text');
+            const baseClasses = "text-gray-800 leading-loose break-words note-body-text";
+            bodies.forEach(body => {
+                body.className = `${fontSizeClasses[currentFontSizeLevel]} ${baseClasses}`;
+            });
+        }
+
+        // --- セクションの描画 ---
+        function renderSection(sectionIndex) {
+            const section = masterData[sectionIndex];
+            
+            // ヘッダータイトルの更新
+            els.headerSectionTitle.textContent = section.sectionTitle;
+            els.notesContainer.innerHTML = ''; // クリア
+
+            // 全体表示状態をリセット
+            isAllRevealed = false;
+
+            // セクション内の各段落を生成
+            section.paragraphs.forEach((p) => {
+                const pDiv = document.createElement('div');
+                pDiv.className = 'bg-white border border-gray-200 rounded p-4 md:p-6 shadow-sm';
+                
+                const textContainer = document.createElement('div');
+                textContainer.className = 'note-body-text text-gray-800 leading-loose break-words';
+                
+                // XSS対策とプレースホルダー置換
+                let safeText = p.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                
+                p.blanks.forEach((correctAnswer, bIdx) => {
+                    const regex = new RegExp(`\\{${bIdx}\\}`, 'g');
+                    const tapeHtml = `<span class="mask-tape" onclick="this.classList.toggle('revealed')">${correctAnswer}</span>`;
+                    safeText = safeText.replace(regex, tapeHtml);
+                });
+
+                // 改行をbrに変換
+                safeText = safeText.replace(/\n/g, '<br>');
+                
+                textContainer.innerHTML = safeText;
+                pDiv.appendChild(textContainer);
+                els.notesContainer.appendChild(pDiv);
+            });
+
+            applyFontSize();
+            
+            // 進捗とボタンの表示制御
+            els.sectionProgress.textContent = `${sectionIndex + 1} / ${masterData.length}`;
+
+            els.prevBtn.disabled = sectionIndex === 0;
+            els.nextBtn.disabled = sectionIndex === masterData.length - 1;
+            
+            // スクロールをトップに戻す
+            window.scrollTo(0, 0);
+        }
+
+        function navigateSection(step) {
+            const newIndex = currentSectionIndex + step;
+            if (newIndex >= 0 && newIndex < masterData.length) {
+                currentSectionIndex = newIndex;
+                renderSection(currentSectionIndex);
+                updateNavigations(); 
+            }
+        }
+
+        // --- UIの更新 ---
+        function updateNavigations() {
+            updateSidebarList();
+            updateDrawerList();
+        }
+
+        function updateSidebarList() {
+            els.desktopSidebar.innerHTML = '';
+            masterData.forEach((sec, idx) => {
+                const button = document.createElement('button');
+                const isActive = idx === currentSectionIndex;
+                
+                let baseClass = "text-left px-3 py-3 rounded font-medium transition border text-sm shadow-sm w-full ";
+                
+                if (isActive) {
+                    baseClass += "bg-[#bfdbfe] text-[#005b82] border-[#93c5fd]"; 
+                } else {
+                    baseClass += "bg-white text-gray-700 border-[#cbd5e1] hover:bg-gray-50";
+                }
+                
+                button.className = baseClass;
+                button.innerHTML = sec.sectionTitle;
+                
+                button.addEventListener('click', () => {
+                    currentSectionIndex = idx;
+                    renderSection(currentSectionIndex);
+                    updateNavigations();
+                });
+                
+                els.desktopSidebar.appendChild(button);
+            });
+        }
+
+        function updateDrawerList() {
+            els.drawerList.innerHTML = '';
+            masterData.forEach((sec, idx) => {
+                const li = document.createElement('li');
+                const isActive = idx === currentSectionIndex;
+                
+                let baseClass = "p-3 mb-2 rounded cursor-pointer transition text-sm border ";
+                if (isActive) {
+                    baseClass += "bg-[#bfdbfe] font-bold text-[#005b82] border-[#93c5fd]";
+                } else {
+                    baseClass += "bg-white text-gray-700 border-[#cbd5e1] hover:bg-gray-50";
+                }
+
+                li.className = baseClass;
+                li.innerHTML = sec.sectionTitle;
+                
+                li.addEventListener('click', () => {
+                    currentSectionIndex = idx;
+                    renderSection(currentSectionIndex);
+                    closeDrawer(); 
+                    updateNavigations();
+                });
+                
+                els.drawerList.appendChild(li);
+            });
+        }
+
+        function openDrawer() {
+            els.drawerMenu.classList.remove('-translate-x-full');
+            els.drawerOverlay.classList.remove('hidden');
+        }
+
+        function closeDrawer() {
+            els.drawerMenu.classList.add('-translate-x-full');
+            els.drawerOverlay.classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>
