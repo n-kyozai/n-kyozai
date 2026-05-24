@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近代ヨーロッパ史（ナポレオン時代と世界の一体化） - 近代ヨーロッパ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <!-- 指導要領から過去問演習へ変更 -->
+            <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 第6章 近代ヨーロッパ
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                近代ヨーロッパ史（ナポレオン時代と世界の一体化）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>フランス革命の激動から台頭したのが、コルシカ島出身の天才軍人<strong>ナポレオン・ボナパルト</strong>です。彼は圧倒的な軍事力でヨーロッパ大陸を支配下に置き、革命の成果を「法典」として定着させ、大陸各地へ普及させました。しかし、その軍事帝国は周辺諸国の抵抗やナショナリズムの目覚めを招き、短期間で崩壊へと向かいました。一方、その混乱はカリブ海にも飛び火し、世界初の黒人共和国「ハイチ」の誕生へと繋がります。</p>
+
+                    <h3>1. ナポレオンの台頭と統領政府の樹立</h3>
+                    <p>平和な時代であれば、コルシカ島という「外地」から来た一人の有能な砲兵士官で終わったはずの男を、時代の中心へと押し上げたのは、フランス革命がもたらした激動と戦争でした。</p>
+
+                    <ul>
+                        <li><strong>軍事指導者としての成功</strong>：1795年、パリで発生した王党派の武装蜂起（ヴァンデミエールの反乱）を、大砲の散弾を用いた苛烈な戦術で鎮圧し、総裁政府の絶大な信頼を得ました。</li>
+                        <li><strong>第1回イタリア遠征（1796〜97年）</strong>：オーストリア軍を次々に破って第1回対仏大同盟を崩壊させました。
+                            <ul>
+                                <li>※このイタリア遠征において、ナポレオンは各地から莫大な美術品や金銀などの貴金属を略奪し、本国へ送りました。この略奪資金が、のちの国家財政安定化のための<strong>フランス銀行創設</strong>（1800年）の強力な資本的背景となりました。</li>
+                            </ul>
+                        </li>
+                        <li><strong>エジプト遠征（1798〜99年）</strong>：宿敵イギリスと植民地インドを結ぶ東西交易・連絡ルートを遮断することを目的に実行されました。
+                            <ul>
+                                <li>※ナポレオンは軍隊だけでなく、当時のオリエント熱（東洋への知的関心）を背景に、多数の科学者や歴史学者を同行させました。この際、ナイル川下流で発見されたのが『<strong><span class="important-word">ロゼッタ＝ストーン</span></strong>』です。後にフランスの学者<strong><span class="important-word">シャンポリオン</span></strong>がこれを解読し、古代エジプトの神聖文字（ヒエログリフ）が解明されることになりました。</li>
+                            </ul>
+                        </li>
+                        <li><strong><span class="important-word">ブリュメール18日のクーデタ</span>（1799年11月）</strong>：イギリスがロシア・オーストリアらと第2回対仏大同盟を結成してフランスに迫る中、ナポレオンはエジプトを脱出して単身帰国。弱体化した総裁政府を打倒し、自らが第一統領となる「<strong><span class="important-word">統領政府</span></strong>」を樹立して実権を掌握しました。ここにフランス革命は事実上終結しました。</li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="ダヴィド『サン・ベルナール山を越えるナポレオン』">
+                        <div class="img-caption">図1：劇的な宣伝画として描かれた、アルプスを越えイタリアへ向かうナポレオン（ダヴィド画）</div>
+                    </div>
+
+                    <h3>2. 内政の安定と皇帝即位（第1帝政）</h3>
+                    <p>権力を手にしたナポレオンは、社会の安定を強く望む有産市民や土地を手に入れた農民の支持を得るため、内政の近代化と社会秩序の和解を推し進めました。</p>
+
+                    <ul>
+                        <li><strong>カトリックとの和解</strong>：革命期に弾圧され、土地を没収されていたキリスト教会と妥協し、1801年に教皇ピウス7世との間で『<strong><span class="important-word">宗教協約（コンコルダート）</span></strong>』を結びました。カトリックを「フランス国民の多数派の宗教」と認めることで、国内の保守的なカトリック教徒の支持を確固たるものにしました。</li>
+                        <li><strong>アミアンの和約（1802年）</strong>：イギリスと講和を結び、第2回対仏大同盟を崩壊させました。これにより、一時的にヨーロッパに平和が訪れ、国民的熱狂を背景にナポレオンは「終身統領」に就任しました。</li>
+                        <li><strong>『<span class="important-word">ナポレオン法典</span>（フランス民法典）』の発布（1804年3月）</strong>：近代市民法の最高傑作と称される法典です。<strong>私有財産の不可侵</strong>（＝革命で土地を得た農民やブルジョワジーの財産を守ること）、法の前の平等、契約の自由、信仰の自由を明文化しました。これはのちにナポレオンの征服を通じてヨーロッパ全土へ普及し、大陸の封建社会を揺るがす契機となりました。</li>
+                        <li><strong>ナポレオン1世として即位（1804年12月）</strong>：圧倒的な国民投票（人民投票）による支持のもと、皇帝へと上り詰めました（<strong>第1帝政</strong>）。</li>
+                    </ul>
+
+                    <h3>3. 征服戦争の展開とヨーロッパ支配</h3>
+                    <p>ナポレオンの皇帝就任に対し、イギリスのピット首相は再び周辺諸国を糾合して<strong>第3回対仏大同盟</strong>を結成しました。ナポレオンはこれに対抗し、ヨーロッパの覇権をかけた大戦争を開始します。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">出来事・戦い</th>
+                                <th class="col-text">内容・歴史的インパクトと因果関係</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>トラファルガーの海戦</strong><br>（1805年10月）</td>
+                                <td class="col-text">フランス・スペイン連合艦隊が、イギリスのネルソン提督率いる海軍に大敗しました。これにより、ナポレオンはイギリス直接上陸作戦を断念せざるを得ず、<strong>制海権を失いました</strong>。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>アウステルリッツの戦い</strong><br>（11855年12月）</td>
+                                <td class="col-text">別名「三帝会戦」。ナポレオン自らが指揮し、オーストリア皇帝フランツ2世とロシア皇帝アレクサンドル1世の連合軍を劇的に撃破し、陸上での圧倒的優位を証明しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">ライン同盟</span>の結成</strong><br>（1806年）</td>
+                                <td class="col-text">ドイツの西南諸邦（バイエルンなど）をまとめ、自らを保護者とする同盟を組織させました。これにより、オーストリア皇帝フランツ2世は神聖ローマ皇帝位の辞退を余儀なくされ、962年から続いた<strong><span class="important-word">神聖ローマ帝国は名実ともに消滅</span></strong>しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">ティルジット条約</span></strong><br>（1807年）</td>
+                                <td class="col-text">プロイセンとロシアを屈服させて結んだ条約です。プロイセンの領土をほぼ半分に削り、そこから<strong>ウェストファリア王国</strong>や、ポーランドの事実上の衛星国である<strong>ワルシャワ大公国</strong>を建国しました。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="アウステルリッツの戦いまたはライン同盟の地図">
+                        <div class="img-caption">図2：ライン同盟の結成によって消滅した神聖ローマ帝国と、ナポレオンの覇権地図</div>
+                    </div>
+
+                    <h3>4. 帝国支配の限界と「諸民族の目覚め」</h3>
+                    <p>全ヨーロッパを制圧したナポレオンですが、その支配自体が、周辺諸国に近代的な「国民意識（ナショナリズム）」を誕生させ、自らの首を絞めることになりました。</p>
+
+                    <h4>① <span class="important-word">大陸封鎖令</span>（ベルリン勅令 / 1806年）</h4>
+                    <p>イギリスに打撃を与えるため、ヨーロッパ大陸諸国とイギリスとの貿易を全面的に禁止した勅令です。フランスの産業を保護し、大陸市場をフランス製品で独占する狙いがありました。<br>
+                    しかし、近代的な産業革命を進めていたイギリスの安価な製品が入らなくなったこと、また農産物の有力な輸出先（イギリス市場）を奪われた大陸諸国（特にロシアやプロイセンなど）は深刻な不況に陥り、フランスに対する不満が急激に蓄積しました。</p>
+
+                    <h4>② 各地でのナショナリズムの目覚めと反乱</h4>
+                    <ul>
+                        <li><strong>スペインの反乱（1808年〜）</strong>：ナポレオンが自らの兄ジョセフをスペイン王に据えたことに対し、カトリックの信仰を侵されたと感じたスペイン民衆が激しい暴動を起こしました。彼らは正規軍ではなく、山岳地帯に潜んで不意打ちをかける「<strong>ゲリラ</strong>（『小さな戦争』を意味するスペイン語が語源）」戦を展開し、フランス軍を泥沼の消耗戦に引きずり込みました。この惨状は、宮廷画家<strong>ゴヤ</strong>の絵画『<strong>1808年5月3日の処刑</strong>』に生々しく描かれています。</li>
+                        <li><strong>プロイセンの改革</strong>：ティルジット条約で屈辱的な敗北を喫したプロイセンでは、国の再建のために「上からの近代化」が急進的に進められました。
+                            <ul>
+                                <li><strong>シュタイン・ハルデンベルクの改革</strong>：緊縛されていた農奴を解放する<strong>農民解放</strong>や、都市自治の導入、軍制改革などを実施し、国家の基盤を強化しました。</li>
+                                <li><strong>フィヒテの『ドイツ国民に告ぐ』</strong>：哲学者フィヒテは、フランス占領下のベルリンで連続講演を行い、分裂していたドイツ人に強い愛国心と民族意識を呼びかけました。ナポレオンという共通の敵が、皮肉にも<strong>ドイツ・ナショナリズムを誕生</strong>させたのです。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h3>5. 帝国の崩壊（モスクワからセントヘレナへ）</h3>
+                    <p>大陸封鎖令の破綻から、ナポレオンの無敵の神話は崩れ去りました。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1812年：ロシア遠征と大敗（冬将軍）</div>
+                            <div class="timeline-content">
+                                <p>大陸封鎖令を破ってイギリスへの穀物輸出を再開したロシア（アレクサンドル1世）を懲罰するため、ナポレオンは60万を超える大軍でロシアに侵攻しました。<br>
+                                ロシア軍は正面衝突を避けて退却し、物資や建物を焼き払う「<strong>焦土作戦</strong>」を展開しました。モスクワに到達したナポレオンですが、街は放火され、食糧や防寒具の調達が不可能となりました。やむなく退却を開始したフランス軍を、ロシアの厳しい冬の寒さ（<strong>冬将軍</strong>）と、コサック兵による執拗な追撃が襲い、生きてフランスに生還できたのはわずか数万人という壊滅的な敗北を喫しました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1813年：ライプツィヒの戦い（諸国民戦争）</div>
+                            <div class="timeline-content">
+                                <p>ナポレオンの失墜を見たプロイセン、ロシア、オーストリア、イギリスなどの連合軍が一斉に立ち上がり、ライプツィヒでフランス軍を破りました。翌1814年には連合軍がパリに突入し、ナポレオンは退退を余儀なくされ、エルバ島へ流刑となりました。フランスではルイ18世が即位し、ブルボン家が復帰しました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1815年：百日天下と最後の戦い</div>
+                            <div class="timeline-content">
+                                <p>領土配分をめぐってウィーン会議が「会議は踊る、されど進まず」と難航している隙を突き、ナポレオンはエルバ島を脱出してパリに帰還。国民の熱狂的な歓迎を受けて一時的に皇帝に復位しました（<strong>百日天下</strong>）。<br>
+                                しかし、ベルギーの<strong><span class="important-word">ワーテルローの戦い</span></strong>において、イギリスのウェリントン将軍率いる連合軍に大敗し、今度は南大西洋の孤島<strong><span class="important-word">セントヘレナ島</span></strong>に流され、1821年にこの地で死去しました。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="" alt="ロシア遠征からの退却を描いた絵画">
+                        <div class="img-caption">図3：ロシアの過酷な「冬将軍」と焦土作戦によって壊滅したフランス軍の退却を描いた絵画</div>
+                    </div>
+
+                    <h3>6. フランス革命の世界的余波：ハイチ独立の達成</h3>
+                    <p>フランス革命が唱えた「人間は自由で平等である」という理念は、大西洋を越えてカリブ海の砂糖植民地<strong>サン＝ドマング</strong>（現ハイチ）にも甚大な影響を与え、史上類を見ない「奴隷たちの自己解放革命」を引き起こしました。</p>
+
+                    <h4>【激化する英仏抗争と奴隷制廃止（1794年）】</h4>
+                    <ul>
+                        <li><strong>サン＝ドマングの重要性</strong>：フランスにとって、世界の砂糖市場を独占し、巨万の富を生み出す最大の植民地でした。そこでは、少数の白人地主が多数の黒人奴隷を過酷に酷使していました。</li>
+                        <li><strong>奴隷たちの蜂起（1791年〜）</strong>：フランス革命の報に触れた黒人たちが、自由を求めて大反乱を起こしました。</li>
+                        <li><strong>周辺国の打算的な介入</strong>：フランス革命軍の壊滅をもくろむイギリスやスペインは、サン＝ドマングの保守的な白人地主層を支援して軍事介入しました。
+                            <ul>
+                                <li>※特にイギリスにとっては、フランスの植民地経済を破壊することに加え、自国の植民地である<strong>英領ジャマイカ</strong>へ奴隷反乱が波及するのを防ぐという安全保障上の冷徹な思惑（打算）がありました。</li>
+                            </ul>
+                        </li>
+                        <li><strong>カトクの逆転劇</strong>：追い詰められたフランスの革命政府（国民公会）は、イギリス・スペイン連合軍に対抗するため、現地で反乱を起こしていた黒人たちをフランス側に引き込む（味方につける）必要に迫られました。そのため、1794年、苦肉の策として<strong><span class="important-word">奴隷制廃止</span></strong>を宣言したのです。</li>
+                        <li><strong>「黒いジャコバン」の活躍</strong>：この宣言を受け、黒人の指導者<strong><span class="important-word">トゥサン＝ルヴェルチュール</span></strong>はフランス側に寝返り、卓越した軍事・政治的手腕でイギリス・スペイン軍を撃退し、島の実権を掌握しました。</li>
+                    </ul>
+
+                    <h4>【ナポレオンによる裏切りと独立達成（1804年）】</h4>
+                    <ul>
+                        <li><strong>ナポレオンによる奴隷制復活</strong>：1802年、統領政府を樹立したナポレオンは、植民地経済を再建し戦費を確保するため、<strong>奴隷制の復活</strong>を画策して軍隊を派遣しました。</li>
+                        <li><strong>トゥサンの死</strong>：トゥサン＝ルヴェルチュールはフランス軍の卑劣な罠にかかって逮捕され、フランス東部の寒冷な刑務所に投獄され、1803年に獄死しました。</li>
+                        <li><strong><span class="important-word">ハイチ</span>の独立達成（1804年）</strong>：リーダーを失ったものの、黒人たちは「再び奴隷に引き戻されてたまるか」と激しく抵抗し、熱帯の黄熱病にも助けられてフランス軍を撃退しました。1804年、先住民の言葉で「山がちの地」を意味する『<strong><span class="important-word">ハイチ</span></strong>』の名で独立を宣言し、<strong>世界初の黒人共和国、かつラテンアメリカ最初の独立国</strong>が誕生しました。</li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="ハイチ独立運動の指導者トゥサン・ルヴェルチュールの肖像">
+                        <div class="img-caption">図4：優れた知性と軍事・政治的才能で「黒いジャコバン」と讃えられたトゥサン＝ルヴェルチュール</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. ナポレオンの台頭と政策について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ナポレオンはイタリア遠征での略奪資金を背景に、1800年にフランス銀行を創設した。また、エジプト遠征の際には 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="rosetta">ロゼッタ＝ストーン</option>
+                                <option value="behistan">ベヒストゥン碑文</option>
+                            </select> 
+                            が発見され、のちにフランスの学者 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="champollion">シャンポリオン</option>
+                                <option value="rawlinson">ローリンソン</option>
+                            </select> 
+                            によってヒエログリフが解読された。1799年のクーデタで政権を握った彼は、1801年に教皇と 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="concordat">宗教協約（コンコルダート）</option>
+                                <option value="worms">ヴォルムス協約</option>
+                            </select> 
+                            を結んでキリスト教を復活させ、1804年には私有財産の不可侵などを定めた近代市民法の傑作である「 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="napoleon">ナポレオン法典</option>
+                                <option value="rights">権利の章典</option>
+                            </select> 
+                            」を発布した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 征服戦争と諸民族の目覚めについて、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1805年、ナポレオンはトラファルガーの海戦でイギリス海軍に敗れたものの、アウステルリッツの戦いでオーストリア・ロシア連合軍を破った。翌年、西南ドイツ諸邦を結ぶ 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="rhein">ライン同盟</option>
+                                <option value="lombardia">ロンバルディア同盟</option>
+                            </select> 
+                            を結成させ、これにより 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="shingei">神聖ローマ帝国</option>
+                                <option value="byzanz">ビザンツ帝国</option>
+                            </select> 
+                            は消滅した。彼はイギリスを経済的に孤立させるため 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="tairiku">大陸封鎖令（ベルリン勅令）</option>
+                                <option value="koukaihou">航海法</option>
+                            </select> 
+                            を出したが、これに対する不満から各国で反乱が起こった。敗れたプロイセンでは、シュタインやハルデンベルクによる農民解放などの内政改革が進められ、哲学者 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="fichte">フィヒテ</option>
+                                <option value="kant">カント</option>
+                            </select> 
+                            が『ドイツ国民に告ぐ』の講演を行って民族意識を刺激した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 帝国の没落とハイチの独立について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1812年、大陸封鎖令に違反したロシアを処分するための遠征に失敗したナポレオンは、翌年のライプツィヒの戦いに敗れ、エルバ島へ流された。1815年に脱出して一時復位（百日天下）したが、 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="waterloo">ワーテルローの戦い</option>
+                                <option value="trafalgar">トラファルガーの海戦</option>
+                            </select> 
+                            で大敗し、南大西洋の 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="helena">セントヘレナ島</option>
+                                <option value="elba">エルバ島</option>
+                            </select> 
+                            に流されて生涯を終えた。一方、カリブ海のフランス領サン＝ドマングでは、フランス革命の影響から黒人奴隷の反乱が勃発し、 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="toussaint">トゥサン＝ルヴェルチュール</option>
+                                <option value="gouge">オランプ・ド・グージュ</option>
+                            </select> 
+                            の指導のもとで戦いが進んだ。ナポレオンによる一時的な奴隷制復活と指導者の逮捕という試練を乗り越え、1804年、世界初の黒人共和国である「 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="haiti">ハイチ</option>
+                                <option value="jamaica">ジャマイカ</option>
+                            </select> 
+                            」が独立を達成した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'rosetta', 'q1-b': 'champollion', 'q1-c': 'concordat', 'q1-d': 'napoleon' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>エジプト遠征でのロゼッタ＝ストーンの発見とシャンポリオンによる解読、カトリック教会と和解したコンコルダート、そして近代市民法の模範となった「ナポレオン法典」の意義は極めて重要です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>エジプトで発見されたのは「ロゼッタ＝ストーン」。解読者は「シャンポリオン」。教皇との妥協は「宗教協約（コンコルダート）」。1804年の法典は「ナポレオン法典」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'rhein', 'q2-b': 'shingei', 'q2-c': 'tairiku', 'q2-d': 'fichte' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>「ライン同盟」の結成による「神省ローマ帝国」の消滅、イギリスへの経済制裁であった「大陸封鎖令」、そしてナポレオン支配に対して愛国心を呼びかけたプロイセンのフィヒテの役割がしっかり理解できています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>結成されたのは「ライン同盟」。それにより消滅したのは「神聖ローマ帝国」。イギリスへの貿易禁止令は「大陸封鎖令」。講演を行ったのは「フィヒテ」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'waterloo', 'q3-b': 'helena', 'q3-c': 'toussaint', 'q3-d': 'haiti' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ナポレオン最後の戦いとなったワーテルローの戦いとセントヘレナ島への配流、そしてカリブ海で展開された「黒いジャコバン」ことトゥサン＝ルヴェルチュールの闘争と、1804年のハイチ独立は世界史の最重要対比です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>最後の戦いは「ワーテルローの戦い」。流された孤島は「セントヘレナ島」。ハイチ独立の指導者は「トゥサン＝ルヴェルチュール」。世界初の黒人共和国は「ハイチ」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
