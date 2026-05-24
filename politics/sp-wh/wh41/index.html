@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近代ヨーロッパ史（ウィーン体制と自由主義） - 近代ヨーロッパ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <!-- 指導要領から過去問演習へ変更 -->
+            <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 第6章 近代ヨーロッパ
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                近代ヨーロッパ史（ウィーン体制と自由主義）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>ナポレオンが没落した1815年、ヨーロッパの支配者たちはオーストリアの首都ウィーンに集まり、革命前の保守的な君主社会へ戻そうとする「ウィーン体制」を構築しました。しかし、一度目覚めた民衆の自由と自立（ナショナリズム）の動きは止まらず、ギリシアやラテンアメリカの独立を契機にウィーン体制は揺らぎ始め、産業革命を経たイギリスでは国内の自由主義改革が一気に加速しました。</p>
+
+                    <h3>1. ウィーン会議と保守勢力の結集（1814〜15年）</h3>
+                    <p>ナポレオン戦争後の戦後処理と秩序再建をめぐり、オスマン帝国を除くヨーロッパ全土の代表がウィーンに集結しました。議長はオーストリア外相の<strong><span class="important-word">メッテルニヒ</span></strong>が務めました。</p>
+
+                    <ul>
+                        <li><strong><span class="important-word">正統主義</span>（タレーランの外交戦略）</strong>：フランス外相<strong><span class="important-word">タレーラン</span></strong>が提唱した「フランス革命前の主権と領土を正統とする」という基本原則です。これは一見理念的な保守主義ですが、実質的には<strong>「敗戦国フランスの領土をナポレオン以前の状態で維持し、戦勝国による領土割譲（分捕り）を防ぐ」という、タレーランの極めて老獪な外交防衛戦略</strong>でした。</li>
+                        <li><strong>勢力均衡（Balance of Power）</strong>：英・仏・普・墺・露の五大国のパワーバランスにより、特定の国が突出しない安定した秩序の維持が目指されました。</li>
+                        <li><strong>「会議は踊る、されど進まず」</strong>：各国の領土的な打算が対立し、交渉は難航。連日連夜の華やかな舞踏会や社交界の裏で、暗闘が繰り広げられた様子がこのように風刺されました。しかし、1815年6月、ナポレオンのエルバ島脱出（百日天下）に危機感を強めた各国は、一転して妥協し、<strong><span class="important-word">ウィーン議定書</span></strong>が調印されました。</li>
+                    </ul>
+
+                    <h4>【ウィーン議定書による領土再編の実態と各国の打算】</h4>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">国名</th>
+                                <th class="col-text">再編内容と戦略的背景</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>フランス・スペイン・ナポリ</strong></td>
+                                <td class="col-text">正統主義に基づき、旧支配者である<strong><span class="important-word">ブルボン朝</span></strong>が復活しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ロシア</strong></td>
+                                <td class="col-text">スウェーデンからフィンランドを獲得し、皇帝が<strong>ポーランド王国</strong>の国王を兼任。これにより、ポーランドは事実上ロシアの直轄領となりました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>イギリス</strong></td>
+                                <td class="col-text">オランダから<strong><span class="important-word">ケープ植民地</span></strong>（南アフリカ）と<strong><span class="important-word">セイロン島</span></strong>（スリランカ）を正式に獲得し、さらに地中海の要衝<strong>マルタ島</strong>も確保。これにより、インド・アジアへと至る世界規模の海上交易ルート（パクス・ブリタニカの生命線）を掌握しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>オランダ</strong></td>
+                                <td class="col-text">植民地をイギリスに奪われた代償として、南ネーデルラント（のちの<strong>ベルギー</strong>）を併合しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>プロイセン</strong></td>
+                                <td class="col-text">工業地帯である<strong>ラインラント</strong>などを獲得し、西へ大きく領土を拡大しました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ドイツ全体</strong></td>
+                                <td class="col-text">オーストリアを主導とする35の君主国と4つの自由市からなる「<strong><span class="important-word">ドイツ連邦</span></strong>」が成立しました。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p>※ウィーン体制を維持する同盟組織として、ロシア皇帝が提唱したキリスト教精神に基づく精神的盟約である<strong><span class="important-word">神聖同盟</span></strong>（英・ローマ教皇・オスマン帝国を除く各国が参加）と、軍事的な実効性を持つ<strong><span class="important-word">四国同盟</span></strong>（のちフランスが加わり五国同盟）が結成されました。</p>
+
+                    <h3>2. ウィーン体制への抵抗とナショナリズムの挫折</h3>
+                    <p>旧制度へ逆行しようとするメッテルニヒの抑圧に対し、各地の知識人や若者たちが反乱を起こしましたが、ことごとくオーストリア軍などの武力介入により押し潰されました。</p>
+
+                    <ul>
+                        <li><strong>ドイツ：<span class="important-word">ブルシェンシャフト</span>（ドイツ学生同盟）の運動（1817年）</strong>：統一と自由を求めて立ち上がりましたが、メッテルニヒ主導の<strong>カールスバートの決議</strong>（1819年）によって、大学への監視や言論弾圧が強化され、運動は壊滅しました。</li>
+                        <li><strong>イタリア：<span class="important-word">カルボナリ</span>（炭焼党）の乱（1820〜21年）</strong>：憲法制定を求めて南部のナポリや北部のピエモンテで蜂起しましたが、オーストリア軍の迅速な武力干渉により鎮圧されました。</li>
+                        <li><strong>ロシア：<span class="important-word">デカブリスト（十二月党）の乱</span>（1825年12月）</strong>：西欧を遠征して近代的な自由主義思想に触れた青年将校たちが、新皇帝ニコライ1世の即位の混乱に乗じて憲法制定と農奴制廃止を求め挙兵しましたが、ニコライ1世の圧倒的な火力によって無残に鎮圧されました。ニコライ1世はこれを機に、秘密警察（第三部）を創設し、ロシアの専制政治を極限まで強化しました。</li>
+                        <li><strong>スペイン：スペイン立憲革命（1820年）</strong>：憲法復活を求めて軍隊が蜂起し、国王に誓わせましたが、五国同盟（実質はフランス軍）の干渉によって鎮圧されました。</li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="sp-wh-43.jpg" alt="ウィーン体制下での抑圧と抵抗">
+                        <div class="img-caption">図1：抑圧者メッテルニヒと、これに抗った各国の初期の自由主義運動の挫折</div>
+                    </div>
+
+                    <h3>3. ウィーン体制の「綻び」とラテンアメリカの独立</h3>
+                    <p>頑強に見えたメッテルニヒの弾圧体制（ウィーン体制）ですが、1820年代に「ヨーロッパの外側」から大きな風穴が開けられることになります。</p>
+
+                    <h4>① <span class="important-word">ギリシア独立戦争</span>（1821〜29年）</h4>
+                    <p>オスマン帝国の支配下にあったギリシア（キリスト教国）が独立を求めて挙兵しました。
+                    当時、ヨーロッパの知識人の間では古代ギリシアへの憧憬（ロマン主義）が強く、イギリスの詩人<strong>バイロン</strong>（現地で病死）をはじめとする多くの文人が個人として義勇兵に参加しました。また、南下政策を狙うロシア、東地中海の利権を狙うイギリス・フランスが、オーストリアの反対を押し切って共同で軍事介入しました。1829年の<strong>アドリアノープル条約</strong>、1830年のロンドン会議を経て、ギリシアの独立が国際的に承認され、ウィーン体制の最初の大きな綻びとなりました。</p>
+
+                    <h4>② ラテンアメリカ諸国の独立</h4>
+                    <p>ナポレオン戦争によるイベリア本国（スペイン・ポルトガル）の混乱に乗じ、中南米の植民地で独立運動が激化しました。
+                    指導者として最も高名なのが、カスピ海からアンデス山脈までを駆け巡り「ラテンアメリカの解放者」と讃えられたクリオーリョ（現地生まれの白人）の<strong><span class="important-word">シモン＝ボリバル</span></strong>です。彼はコロンビア、ベネズエラ、そして<strong><span class="important-word">エクアドル</span></strong>（「赤道」の意味）を統合した「大コロンビア」を創設し、さらにペルーやボリビアを解放しました。南南部では、<strong>サン＝マルティン</strong>がチリやペルーの独立を指導しました。</p>
+
+                    <p><strong>【メッテルニヒの干渉が失敗した外交的理由】</strong><br>
+                    メッテルニヒは神聖同盟の力を用いて中南米の独立を武力で鎮圧しようと企てましたが、以下の2つの強国（英・米）の打算と介入によって、干渉は完全に阻まれました。</p>
+                    <ol>
+                        <li><strong>イギリス外相<span class="important-word">カニング</span>の打算（自由貿易の拡大）</strong>：イギリスにとって、スペインが支配していた広大な中南米市場は、自国の安価な工業製品を売りさばくための喉から手が出るほど欲しい市場（巨大な消費地）でした。スペインの独占的な支配を終わらせ、中南米を自由な市場（イギリスへの原料供給地かつ市場とする「自由貿易帝国主義」）にするため、カニングは中南米の独立を強力に支持し、フランス・オーストリアの干渉を牽制しました。</li>
+                        <li><strong>米大統領モンローの『<span class="important-word">モンロー宣言</span>』（1823年）</strong>：アメリカ合衆国大統領モンローは、ヨーロッパ諸国がアメリカ大陸の独立運動に干渉することを拒否し、同時にアメリカもヨーロッパの紛争に関与しないという「<strong>相互不介入</strong>」を宣言しました。この外交的シールドが、神聖同盟の軍事的介入を遮断しました。</li>
+                    </ol>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="sp-wh-44.jpg" alt="ラテンアメリカの独立とシモン・ボリバル">
+                        <div class="img-caption">図2：南米の解放者シモン＝ボリバルと、独立を支えた米国のモンロー宣言（1823年）</div>
+                    </div>
+
+                    <h3>4. イギリスの自由主義改革と産業資本家の勝利</h3>
+                    <p>産業革命を経て「世界の工場」となったイギリスでは、新興の産業資本家（ブルジョワジー）たちが、地主階級やカリブ海の奴隷プランテーションを牛耳る特権商人（西インド諸島派）などの古い特権層に挑み、国家の仕組みをドラスティックに塗り替えていきました。</p>
+
+                    <h4>【自由貿易政策の確立（重商主義の終焉）】</h4>
+                    <ul>
+                        <li><strong><span class="important-word">穀物法廃止</span>（1846年）</strong>：安価な外国産穀物の輸入を制限し、国内の地主階級の利益を守っていた「穀物法」を撤廃させました。運動を率いたのは、コブデンやブライトが組織した<strong>反穀物法同盟</strong>です。穀物法の廃止により、主食である小麦価格が下落。これにより<strong>労働者の生活費が下がり、結果として産業資本家は「労働者の賃金負担を低く抑える」ことが可能</strong>になりました。</li>
+                        <li><strong><span class="important-word">航海法廃止</span>（1849年）</strong>：1651年にクロムウェルが制定して以来、重商主義の象徴であった「航海法」が廃止され、イギリスは世界最大の<strong>自由貿易国家</strong>へと完全に舵を切りました。</li>
+                    </ul>
+
+                    <h4>【宗教的・政治的制限の撤廃】</h4>
+                    <ul>
+                        <li><strong>審査法の廃止（1828年）</strong>：カトリックを除く非国教徒（プロテスタント諸派）に対する公職就任の制限が撤廃されました。</li>
+                        <li><strong><span class="important-word">カトリック教徒解放法</span>（1829年）</strong>：アイルランドの政治活動家<strong><span class="important-word">オコンネル</span></strong>らの粘り強い抵抗闘争により、長年差別されてきたカトリック教徒への信仰の自由と公職就任が認められました。</li>
+                        <li><strong>第1次選挙法改正（1832年）</strong>：人口移動によって有権者がほとんどいなくなったにもかかわらず議席を維持していた「<strong><span class="important-word">腐敗選挙区</span></strong>」を廃止し、産業革命で急速に発展した工業都市（マンチェスターやバーミンガムなど）に議席を配分。<strong>産業資本家（有産市民）に選挙権が拡大</strong>されました。
+                            <ul>
+                                <li>※しかし、この改正でも労働者（無産階級）には選挙権が与えられず、怒った労働者たちはのちに、普通選挙権を求めて「人民憲章（ピープルズ・チャーター）」を掲げる<strong>チャーティスト運動</strong>を開始することになります。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p>こうして近代化を極めたイギリスは、1851年にロンドンで世界初の万国博覧会を開催。ガラスと鉄骨を組み合わせた近代建築の傑作「<strong><span class="important-word">水晶宮（クリスタル・パレス）</span></strong>」を建造し、その圧倒的な工業力と大帝国の繁栄を世界に誇示しました（<strong>ヴィクトリア朝</strong>の黄金期）。</p>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. ウィーン会議とヨーロッパ再編について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1815年、オーストリア外相メッテルニヒの主導で開かれたウィーン会議では、フランス外相タレーランが提唱した 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="seitou">正統主義</option>
+                                <option value="seiryoku">勢力均衡主義</option>
+                            </select> 
+                            が基本原則となった。ウィーン議定書により、フランス・スペインでは 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="bourbon">ブルボン朝</option>
+                                <option value="habsburg">ハプスブルク朝</option>
+                            </select> 
+                            が復活した。また、イギリスはオランダからインド航路の要衝である 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="ceylon">ケープ植民地やセイロン島</option>
+                                <option value="java">ジャワ島</option>
+                            </select> 
+                            を獲得した。この保守的なウィーン体制に対し、ドイツでは学生たちによる 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="burschen">ブルシェンシャフト（学生同盟）</option>
+                                <option value="carbonari">カルボナリ（炭焼党）</option>
+                            </select> 
+                            の運動が起こったが、カールスバートの決議により厳しく弾圧された。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. ラテンアメリカの独立と外交的要因について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            19世紀前半、中南米では「解放者」と称された 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="bolivar">シモン＝ボリバル</option>
+                                <option value="martin">サン＝マルティン</option>
+                            </select> 
+                            らの活躍により、コロンビアやエクアドル（赤道の意）などの国々が独立を達成した。メッテルニヒ率いる神聖同盟はこの独立を武力で鎮圧しようとしたが、中南米の市場開放を狙うイギリス外相 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="canning">カニング</option>
+                                <option value="pitt">ピット</option>
+                            </select> 
+                            の反対や、1823年にアメリカ大統領が発表した、ヨーロッパとの相互不介入を唱える「 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="monroe">モンロー宣言</option>
+                                <option value="jefferson">ジェファソン宣言</option>
+                            </select> 
+                            」によって阻まれ、ウィーン体制の動揺が決定的となった。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. イギリスの自由主義改革について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            イギリスでは産業資本家が力をつけ、自由貿易政策を推進した。1846年にはコブデンらの運動により 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="kokumotsu">穀物法</option>
+                                <option value="koukai">航海法</option>
+                            </select> 
+                            が廃止され、1849年には重商主義の象徴であった航海法も廃止された。宗教面では、オコンネルらの活躍により1829年に 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="catholic">カトリック教徒解放法</option>
+                                <option value="shinsa">審査法</option>
+                            </select> 
+                            が成立。また政治面では、1832年の第1次選挙法改正により「 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="fuhai">腐敗選挙区</option>
+                                <option value="shimin">制限選挙区</option>
+                            </select> 
+                            」が廃止され、産業資本家に選挙権が拡大された。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'seitou', 'q1-b': 'bourbon', 'q1-c': 'ceylon', 'q1-d': 'burschen' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>タレーランの提抗した「正統主義」（ブルボン朝復活）、イギリスの海上支配権を確立させたセイロン・ケープの獲得、およびドイツの「ブルシェンシャフト」の運動とその弾圧はウィーン体制を理解する上で必須事項です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>タレーランの原則は「正統主義」。復活した王朝は「ブルボン朝」。イギリスが獲得したのは「ケープ植民地やセイロン島」。ドイツの運動は「ブルシェンシャフト」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'bolivar', 'q2-b': 'canning', 'q2-c': 'monroe' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>シモン＝ボリバルの中南米解放、イギリス外相カニングによる「市場拡大のための独立支持」、アメリカ大統領モンローの「モンロー宣言（相互不介入）」の三位一体が、メッテルニヒの干渉を退け独立を決定づけました。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>南米北部の解放者は「シモン＝ボリバル」。自由貿易のために干渉を拒んだイギリス外相は「カニング」。1823年の不介入は「モンロー宣言」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'kokumotsu', 'q3-b': 'catholic', 'q3-c': 'fuhai' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>イギリス自由主義の頂点となった「穀物法廃止」、アイルランド問題から端を発した「カトリック教徒解放法」、および産業資本家の勝利となった「第1次選挙法改正」での「腐敗選挙区」の廃止は完璧です！',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>1846年に廃止されたのは「穀物法」。1829年に制定されたのは「カトリック教徒解放法」。廃止されたのは「腐敗選挙区」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
