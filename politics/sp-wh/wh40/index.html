@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近代ヨーロッパ史（産業革命と工業化） - 近代ヨーロッパ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <!-- 指導要領から過去問演習へ変更 -->
+            <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 第6章 近代ヨーロッパ
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                近代ヨーロッパ史（産業革命と工業化）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>18世紀後半のイギリスで始まった「<strong>産業革命</strong>」は、道具から機械への、そして工場制手工業（マニュファクチュア）から<strong>工場制機械工業</strong>への、人類史上最大の生産体制の変革です。この変革は世界的な覇権をオランダからイギリスへと移行させ、社会のあり方や人々の家族像をも一変させました。</p>
+
+                    <h3>1. 産業革命前夜のイギリス産業と「インド綿布の衝撃」</h3>
+                    <p>産業革命がおこる前、イギリスの伝統的な基盤産業は<strong>毛織物工業</strong>でした。中世にフランドル地方から織工たちが移住したことで技術が移転し、16世紀のテューダー朝期に主要産業となりました。この羊毛を生産するため、領主たちが農民を追い出して農地を牧草地にした動きを<strong><span class="important-word">第1次囲い込み（第1次エンクロージャー）</span></strong>と呼びます。</p>
+
+                    <h4>【産業革命前の2つの経営スタイル】</h4>
+                    <p>どちらも機械を使用しない、手工業（ハンドクラフト）の段階でした。</p>
+                    <ol>
+                        <li><strong><span class="important-word">問屋制家内工業</span></strong>：商人が農家などに道具や原料（羊毛など）を貸し付け、自宅で作業をさせ、できあがった製品を買い取って販売するシステム。</li>
+                        <li><strong><span class="important-word">マニュファクチュア（工場制手工業）</span></strong>：労働者（職人）を1か所の大きな仕事場（工場）に集め、手作業による<strong>分業と協業</strong>で効率的に生産するシステム。</li>
+                    </ol>
+
+                    <h4>【インド綿布の衝撃（WoolよりCotton！）】</h4>
+                    <p>17世紀、イギリス東インド会社がインド産の綿織物「<strong><span class="important-word">キャリコ（インド綿布）</span></strong>」を輸入し始めると、イギリス社会に壊滅的な衝撃が走りました。綿布は軽くて肌触りがよく、染色が容易で、何よりもファッショナブルで安価であったため、特に女性の間で爆発的な人気を博しました。</p>
+                    <p>危機感を募らせたイギリスの伝統的な毛織物業者たちは、議会に圧力をかけ、1700年と1721年に『<strong><span class="important-word">キャリコ禁止法</span></strong>』を制定させ、インド綿布の輸入を実質的に禁止しました。<br>
+                    しかし、人々の「綿布がほしい！」という強い欲求は抑えられませんでした。この「輸入できないなら、<strong>原料の原綿を輸入して、国内で機械を使って大量生産</strong>しよう」という強力な動機（輸入代替）こそが、イギリス綿工業における技術革新の出発点、すなわち<strong>産業革命の引き金</strong>となったのです。</p>
+
+                    <h3>2. 技術革新の連鎖（紡績と織布、そして蒸気機関へ）</h3>
+                    <p>綿布の国内生産が始まると、「糸を紡ぐ（紡績）」工程と「布を織る（織布）」工程の間で、激しい「技術革新の追いかけっこ（連鎖）」が発生しました。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">発明家と年</th>
+                                <th class="col-text">発明品の特徴と、歴史への影響</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ジョン＝ケイ</strong><br>（1733年）</td>
+                                <td class="col-text"><strong><span class="important-word">飛び杼（とびひ）</span></strong>：織布（織物）のスピードを劇的に向上させました。これにより、今度は「織るための糸が足りない！」という深刻な糸不足が発生し、紡績（糸紡ぎ）の機械化が促されました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ハーグリーヴズ</strong><br>（1764年頃）</td>
+                                <td class="col-text"><strong><span class="important-word">ジェニー紡績機</span></strong>：多軸の糸紡ぎ機（手動）。一度に何本もの糸を紡ぐことが可能になりましたが、糸が細く切れやすいという弱点がありました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>アークライト</strong><br>（1769年）</td>
+                                <td class="col-text"><strong><span class="important-word">水力紡績機</span></strong>：水力を動力源とした紡績機。太くて非常に丈夫な糸を紡ぐことに成功し、これを稼働させるための大型工場（ファクトリー）が川沿いに次々と建設されました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>クロンプトン</strong><br>（1779年）</td>
+                                <td class="col-text"><strong><span class="important-word">ミュール紡績機</span></strong>：ジェニー機と水力機の長所を組み合わせた機械。細くて非常に丈夫な高品質の糸を大量生産できるようになり、今度は「糸が余って、織るのが追いつかない！」という状態になりました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>カートライト</strong><br>（1785年）</td>
+                                <td class="col-text"><strong><span class="important-word">力織機（りきしょっき）</span></strong>：蒸気機関を動力とした自動織機。これにより、紡績と織布の両工程が機械化され、綿布の大量生産体制が完全に確立しました。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h4>【動力源・重工業の革命と交通革命】</h4>
+                    <ul>
+                        <li><strong><span class="important-word">ワットの蒸気機関改良</span>（1769年 / 1781年）</strong>：それまで鉱山の排水ポンプ用にすぎなかったニューコメンの蒸気機関を劇的に改良し、往復運動を回転運動に変えることに成功しました。これにより、工場は川沿い（水力）を離れ、石炭と労働力を確保しやすい<strong>都市（内陸部）に大工場を建設することが可能</strong>になりました。</li>
+                        <li><strong>製鉄業の発展</strong>：ダービー父子による<strong><span class="important-word">コークス製鉄法</span></strong>の開発により、木炭に依存せず、石炭を用いて安価で頑丈な鉄を大量に作ることが可能になり、機械や鉄道の材料を支えました。</li>
+                        <li><strong>交通革命（ロジスティクスの変革）</strong>：
+                            <ul>
+                                <li><strong><span class="important-word">スティーヴンソン</span></strong>：1814年に実用的な蒸気機関車を製作。1825年に世界初の商業鉄道（ストックトン・ダーリントン間）が開通し、1830年にはリヴァプール・マンチェスター間で本格的な旅客・物資輸送が開始されました。</li>
+                                <li><strong>フルトン</strong>（米）：1807年に世界初の蒸気船（クラーモント号）を実用化させました。</li>
+                                <li>これらに加え、内陸では大量輸送用の<strong>運河網</strong>が整備され、陸上ではマカダムによる舗装道路が急速に整備されました。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="スティーヴンソンの蒸気機関車（交通革命）">
+                        <div class="img-caption">図1：1830年に営業を開始したリヴァプール・マンチェスター鉄道（世界の輸送網の変革）</div>
+                    </div>
+
+                    <h3>3. 世界の覇権の移動（オランダからイギリスへ）</h3>
+                    <p>この工業化の進展は、18世紀末から19世紀初頭にかけてのナポレオン戦争とほぼ同時進行で生じました。そしてこの激動期に、世界の商業・金融の覇権が<strong>オランダからイギリスへと移行</strong>しました。</p>
+
+                    <ul>
+                        <li><strong>1772年のアムステルダム恐慌</strong>：オランダの金融センターであったアムステルダムで大恐慌が発生し、オランダの経済的地位が揺らぎ始めました。</li>
+                        <li><strong>フランス革命の影響（<span class="important-word">バタヴィア共和国</span>の成立）</strong>：1795年、革命軍に占領されたオランダに、フランスの傀儡政権である「バタヴィア共和国（1795〜1806年）」が成立しました。</li>
+                        <li><strong>イギリスによる植民地の奪取</strong>：オランダ国王はイギリスに亡命し、海外のオランダ植民地がフランスの手に渡るのを防ぐため、一時的にイギリスがこれらを接収することを認めました。イギリスはこれ幸いと、オランダの重要拠点であった<strong><span class="important-word">ケープ植民地</span>（南アフリカ）</strong>、<strong><span class="important-word">セイロン島</span>（スリランカ）</strong>、そしてジャワ島（インドネシア）などを占領しました。
+                            <ul>
+                                <li>※のちのウィーン会議（1815年）で「取りすぎである」と批判され、ジャワ島はオランダへ返還されましたが、ケープとセイロンはイギリス領として維持され、イギリス帝国（パクス・ブリタニカ）の貴重な拠点となりました。</li>
+                            </ul>
+                        </li>
+                        <li><strong>オランダ長崎出島への波及（<span class="important-word">フェートン号事件</span> / 1808年）</strong>：イギリス軍艦フェートン号が、オランダ商館の置かれていた長崎港に不法侵入し、人質をとって薪水を強要する事件が起こりました。これはまさに、欧州での英蘭（仏）の戦争が、極東の出島にまで波及した一体化の象徴です。</li>
+                        <li><strong><span class="important-word">オランダ東インド会社（VOC）の解散</span>（1799年）</strong>：17世紀に世界を席捲した巨大株式会社は、フランス占領下の財政難や特権廃止のあおりを受け、1799年12月31日をもって正式に解散し、その歴史に幕を閉じました。</li>
+                    </ul>
+
+                    <h3>4. 社会構造の激変とジェンダー分業（性別役割分業）の成立</h3>
+                    <p>産業革命は、経済の仕組みだけでなく、人間の日々の暮らしや「家族」のあり方を根底から変革しました。</p>
+
+                    <ul>
+                        <li><strong>社会問題の発生</strong>：農地を失った農民が都市に流入し（<strong>第2次囲い込み</strong>）、都市の過密化、スラム街の形成、炭鉱や工場での過酷な<strong>児童労働や女性労働</strong>が一般化しました。これに反発する労働者たちは、1810年代に機械を打ち壊す<strong><span class="important-word">ラダイト運動（機械破壊運動）</span></strong>を起こしました。のちにシャフツベリ卿らの努力により、労働条件を制限する<strong>工場法（1833年）</strong>が制定されました。</li>
+                        <li><strong>ジェンダー分業（性別役割分業）の成立</strong>：
+                            <ul>
+                                <li><strong>革命前の暮らし（共同労働）</strong>：農業や従来の家内工業においては、夫婦や家族は「同じ仕事場で、同じ時間を、共同で働く」のが一般的でした。労働と生活は一体でした。</li>
+                                <li><strong>工業化後の暮らし（男の世界の誕生）</strong>：生産の場が自宅から「工場やオフィス」へと完全に分離されました。特に中産階級（ホワイトカラー）を中心に、<strong>「夫は外に出て雇われて賃金を得て働く（公的領域＝男の世界）」</strong>、<strong>「妻は家庭を守り、家事と育児に専念する（私的領域＝主婦の誕生）」</strong>という、現代に繋がるジェンダーに基づく性別役割分業（Separate Spheres / 分離された領域）がこの時期に確立しました。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="" alt="産業革命期の工場労働">
+                        <div class="img-caption">図3：大工場での労働と、家族共同体の変容（近代的な「仕事」と「家庭」の分離）</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 産業革命前夜の綿工業と「インド綿布の衝撃」について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            産業革命前のイギリスの主要産業は毛織物工業であり、領主が農民を追い出して牧草地とした 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="enclosure">第1次囲い込み</option>
+                                <option value="enclosure2">第2次囲い込み</option>
+                            </select> 
+                            が行われた。17世紀、東インド会社がインドから輸入した綿織物である 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="calico">キャリコ（インド綿布）</option>
+                                <option value="silk">生糸</option>
+                            </select> 
+                            は大人気となり、毛織物業者らの圧力で輸入禁止令が出された。この結果、「国内で機械を使って綿布を大量生産しよう」という動機が生まれ、技術革新が促された。初期の経営スタイルとしては、職人を集めて手作業で分業を行う 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="manufacture">マニュファクチュア（工場制手工業）</option>
+                                <option value="tonya">問屋制家内工業</option>
+                            </select> 
+                            などが存在した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 綿工業の技術革新と重工業・交通の変革について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1733年、ジョン＝ケイが 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="tobihi">飛び杼</option>
+                                <option value="jenny">ジェニー紡績機</option>
+                            </select> 
+                            を発明して織布の速度を上げたため糸不足となり、アークライトの水力紡績機や、これらを組み合わせたクロンプトンの 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="mule">ミュール紡績機</option>
+                                <option value="rikishokki">力織機</option>
+                            </select> 
+                            などの紡績機が開発された。織布工程では、カートライトが蒸気動力を利用した 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="rikishokki">力織機</option>
+                                <option value="tobihi">飛び杼</option>
+                            </select> 
+                            を発明した。動力源としては、 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="watt">ワット</option>
+                                <option value="newcomen">ニューコメン</option>
+                            </select> 
+                            が蒸気機関を改良して工場を都市に置くことを可能にした。また、1825年には 
+                            <select class="blank-select" id="q2-e">
+                                <option value="">---</option>
+                                <option value="stephenson">スティーヴンソン</option>
+                                <option value="fulton">フルトン</option>
+                            </select> 
+                            の製作した蒸気機関車が世界で初めて実用化された。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 世界の覇権の移動と社会の変化について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ナポレオン戦争下、フランスの同盟国となったオランダに 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="batavia">バタヴィア共和国</option>
+                                <option value="belgium">ベルギー共和国</option>
+                            </select> 
+                            が成立すると、イギリスはオランダの植民地であったケープや 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="ceylon">セイロン島</option>
+                                <option value="java">ジャワ島</option>
+                            </select> 
+                            などを占領し、オランダ東インド会社（VOC）は1799年に解散した。1808年には日本の長崎でイギリス軍艦が乱入する 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="phaeton">フェートン号事件</option>
+                                <option value="liefde">リーフデ号事件</option>
+                            </select> 
+                            が発生した。工業化の進展により社会構造は変化し、それまでの家族共同労働から、生産労働が「男の世界（公的領域）」へと分離され、中産階級を中心に 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="gender">ジェンダーによる性別役割分業</option>
+                                <option value="slum">都市部の共同労働制</option>
+                            </select> 
+                            が確立していった。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'enclosure', 'q1-b': 'calico', 'q1-c': 'manufacture' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>第1次囲い込みによる毛織物の隆盛と、それを脅かした「キャリコ（インド綿布）の衝撃」、そして輸入禁止令が国内綿布の「マニュファクチュア（工場制手工業）」から機械工業への移行を促したという因果関係は完璧です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>16世紀の牧草地化は「第1次囲い込み」。インドから輸入された大人気の商品は「キャリコ（インド綿布）」。集約された手作業分業は「マニュファクチュア（工場制手工業）」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'tobihi', 'q2-b': 'mule', 'q2-c': 'rikishokki', 'q2-d': 'watt', 'q2-e': 'stephenson' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ジョン＝ケイの「飛び杼」から始まる糸不足、ジェニーや水力機の長所を合わせたクロンプトンの「ミュール紡績機」、そして織布を自動化させたカートライトの「力織機」、ワットによる蒸気機関改良とスティーヴンソンの蒸気機関車という技術革新の連鎖はバッチリです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>ジョン＝ケイの発明は「飛び杼」。長所を組み合わせたのは「ミュール紡績機」。カートライトの自動織機は「力織機」。蒸気機関を改良したのは「ワット」。最初の実用的な機関車を製作したのは「スティーヴンソン」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'batavia', 'q3-b': 'ceylon', 'q3-c': 'phaeton', 'q3-d': 'gender' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>オランダに設立された「バタヴィア共和国」、イギリスによるオランダ植民地「セイロン島」やケープの接収、日本で起きた「フェートン号事件」、そして生産と家庭が分離したことによる「ジェンダーによる性別役割分業」の確立の理解は完璧です！',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>オランダの革命政権は「バタヴィア共和国」。イギリスに奪われたインド洋の拠点島は「セイロン島（ケープも同様）」。長崎への英艦侵入は「フェートン号事件」。近代的な役割分業は「ジェンダーによる性別役割分業」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
