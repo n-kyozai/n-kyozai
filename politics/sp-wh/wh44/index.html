@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近代ヨーロッパ史（ロシアの改革と東方問題） - 近代ヨーロッパ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <!-- 指導要領から過去問演習へ変更 -->
+            <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 第6章 近代ヨーロッパ
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                近代ヨーロッパ史（ロシアの改革と東方問題）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>19世紀の国際政治において、最も激しく火花を散らしたのが、黒海・バルカン半島を舞台とする<strong>ロシアの南下政策</strong>と、それを阻止しようとするイギリス・フランスなどの西欧列強の対立でした。この一連の衝突を「<strong>東方問題（Eastern Question）</strong>」と呼びます。ロシアは外征での敗北を契機に、国内の立ち遅れを痛感して劇的な近代化改革（農奴解放）を試みますが、その不徹底さはかえって社会の先鋭化と激しいテロリズムの連鎖を招くことになりました。</p>
+
+                    <h3>1. 「東方問題」の基本構造とギリシア独立戦争</h3>
+                    <p>東方問題の核心は、衰退するオスマン帝国の領土をめぐる、大国間の地政学的な利害対立でした。</p>
+
+                    <ul>
+                        <li><strong>ロシアの野望（不凍港への執念）</strong>：ロシアは冬でも凍らない「不凍港」を求めて黒海から地中海へ出るため、バルカン半島の支配権や、<strong>ボスフォラス・ダーダネルス両海峡</strong>の通航権を執拗に要求しました。その際、オスマン帝国下のスラヴ系かつ<strong>ギリシア正教徒</strong>の民族運動を保護する「パン・スラヴ主義」を掲げました。</li>
+                        <li><strong>イギリス・フランスの対抗（現状維持・覇権保護）</strong>：
+                            <ul>
+                                <li><strong>イギリス</strong>：ロシアが地中海に進出してくると、自国の最も重要なインド航路（東地中海ルート）が脅かされるため、オスマン帝国の「領土保全（現状維持）」を強力に支持しました。</li>
+                                <li><strong>フランス</strong>：キリスト教徒の保護権や北アフリカ・エジプトへの影響力を維持するため、イギリスに同調してロシアの進出を牽制しました。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>【ギリシア独立戦争（1821〜29年）とロマン主義】</h4>
+                    <p>バルカン半島における東方問題の最初の本格的な幕開けとなったのが、ギリシアの独立闘争でした。</p>
+                    <ul>
+                        <li><strong>西欧知識人の支援とロマン主義</strong>：ヨーロッパの源流たるギリシアへの憧憬から、イギリスの詩人<strong>バイロン</strong>やフランスの画家ドラクロワらがこれを支援（ドラクロワは『キオス島の虐殺』を描く）。</li>
+                        <li><strong>大国の介入と結果</strong>：ロシア（ニコライ1世）の単独進出を恐れたイギリス、フランスが共同介入し、<strong>ナヴァリノの海戦（1827年）</strong>でオスマン海軍を撃破。1829年のアドリアノープル条約、および1830年のロンドン会議で<strong>ギリシアの独立が国際的に承認</strong>され、ウィーン体制の「最初の綻び」となりました。</li>
+                    </ul>
+
+                    <h3>2. エジプト＝トルコ戦争とイギリスの打算</h3>
+                    <p>ギリシアの独立後、今度はオスマン帝国内部での覇権争いに大国が介入しました。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">第1次エジプト＝トルコ戦争（1831〜33年）</div>
+                            <div class="timeline-content">
+                                <p>ギリシア独立戦争での支援の代償としてシリアの割譲を求めたエジプト総督<strong><span class="important-word">ムハンマド＝アリー</span></strong>が、本国（オスマン帝国）に対して挙兵しました。フランスがエジプトを裏で支援したため、本国政府は宿敵<strong>ロシアに救援を要請</strong>。ロシアはこれを奇貨として本国側で参戦し、エジプトを退かせました。<br>
+                                その見返りとして、1833年にロシアはオスマン帝国との間に<strong><span class="important-word">ウンキャル＝スケレッシ条約</span></strong>を締結。両海峡のロシア軍艦の独占的通航権を密かに認めさせ、地中海進出へ最大の足がかりを得ました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">第2次エジプト＝トルコ戦争（1839〜40年）と「中立化」</div>
+                            <div class="timeline-content">
+                                <p>再び両者が衝突すると、ウンキャル＝スケレッシ条約に激怒していたイギリス（パーマストン外相）が猛烈に介入。イギリスは、フランスが支援する強力な近代エジプト国家が東地中海に誕生することを、自国の通商路（のちのスエズ運河ルート）にとって最大の脅威と見なしていました。そのため、あえて<strong>「腐った巨木」であるオスマン帝国を延命</strong>させる戦略をとりました。<br>
+                                イギリスはロシアをも巻き込んで1840年の<strong>ロンドン条約</strong>を結び、エジプトを屈服させ（シリアを放棄させエジプト1代限りの世襲を認める）、さらに1841年の五国海峡条約において「<strong>ボスフォラス・ダーダネルス海峡の外国軍艦の通航禁止（中立化）</strong>」を確定させました。これにより、ロシアの海峡独占権は剥奪され、南下政策は一度完全に挫折しました。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>3. クリミア戦争（1853〜56年）と近代戦の到来</h3>
+                    <p>二月革命（1848年）の混乱が収まると、ロシアは再び南下の機会をうかがいました。今度はパレスチナの「<strong><span class="important-word">聖地管理権</span></strong>」の問題を利用しました。</p>
+
+                    <ul>
+                        <li><strong>戦争の契機</strong>：フランス大統領（のち皇帝）の<strong>ナポレオン3世</strong>は、国内のカトリック教徒の支持（人気取り）を獲得するため、オスマン帝国に対して聖地管理権の譲渡を迫り、これに成功しました。これに激怒したロシアの<strong><span class="important-word">ニコライ1世</span></strong>は、ギリシア正教徒の保護を口実にオスマン帝国に宣戦布告しました（1853年）。</li>
+                        <li><strong>列強の参戦</strong>：ロシアの独走を防ぐため、イギリス（パーマストン内閣）とフランス（ナポレオン3世）、さらには統一運動への支援を取り付けたいイタリアの<strong>サルデーニャ王国</strong>がオスマン帝国側で参戦。戦いの主舞台は黒海のクリミア半島（セヴァストポリ要塞の攻囲戦）となりました。</li>
+                        <li><strong>近代戦の誕生と医療改革</strong>：この戦争は、世界で初めて「従軍記者」による電信を用いたリアルタイムの戦況報道が行われた戦争でした。また、野戦病院の惨状に憤ったイギリスの<strong><span class="important-word">ナイチンゲール</span></strong>が現地（スクタリ）で衛生改革を断行し、近代看護制度の基礎を築き上げました。</li>
+                        <li><strong>ロシアの敗北と<span class="important-word">パリ条約</span>（1856年）</strong>：セヴァストポリ要塞が陥落し、ニコライ1世の急死（のちアレクサンドル2世が即位）も重なってロシアは降伏しました。講和条約であるパリ条約により、<strong><span class="important-word">黒海の中立化（軍事拠点の撤廃）</span></strong>と、両海峡の外国軍艦通航禁止の維持が決定され、ロシアの南下政策は再び手痛い挫折を喫しました。</li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="クリミア戦争の状況とセヴァストポリ要塞">
+                        <div class="img-caption">図1：クリミア戦争の主舞台となった黒海クリミア半島のセヴァストポリ要塞攻囲戦</div>
+                    </div>
+
+                    <h3>4. アレクサンドル2世の「上からの改革」とロシアの苦悩</h3>
+                    <p>クリミア戦争での敗北は、工業化が進む西欧諸国に対する、ロシアの圧倒的な「後進性（遅れ）」を残酷な形で証明しました（未だに中世の農奴制に頼る農本国家、鉄道も大砲も旧式）。新皇帝<strong><span class="important-word">アレクサンドル2世</span></strong>は、国家の生き残りをかけ、「下からの暴力的な革命」が起きる前に「上からの改革」を断行することを決意しました。</p>
+
+                    <h4>① <span class="important-word">農奴解放令</span>の全貌と不徹底な構造的欠陥（1861年）</h4>
+                    <p>ロシアの近代化・産業革命（工場で働く労働力の創出）を阻んでいた最大の要因である「農奴制」を廃止する勅令です。約2000万人の農奴に人格的な自由（結婚、職業選択、財産所有の権利）が与えられました。しかし、この人道的に見える法律の裏には、農民を絶望させる過酷な「罠」が仕掛けられていました。</p>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">項目</th>
+                                <th class="col-text">実態と構造的な限界</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>有償買い戻しの罠</strong></td>
+                                <td class="col-text">農民は自由になりましたが、生活のための土地は「タダ」ではもらえませんでした。地主貴族（国家）から、<b>市場価格よりも大幅に高い価格</b>で土地を買い戻すことが義務付けられました。貧しい農民にそんな大金はあるはずもなく、国が代金を一時肩代わりし、農民は国に対して<b>49年間の「年賦償還（ローン）」</b>を支払うという、新たな奴隷的負債を負うことになりました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>共同体（<span class="important-word">ミール</span>）の呪縛</strong></td>
+                                <td class="col-text">巨額のローン返済を確実にするため、国家は土地を農民個人ではなく、ロシア農村の伝統的な共同体である「<strong><span class="important-word">ミール（農村共同体）</span></strong>」に一括して引き渡しました。ミールは、メンバー全員の納税・返済に対して「連帯責任」を負いました。この結果、農民は個人の意志で土地を売ったり、ミールを離れて都会の工場へ働きに出たりすることが実質的に禁止され、<b>自由になったはずの農民は、今度は「共同体（ミール）」の強い統制下に縛り付けられる</b>ことになりました。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h4>② ナロードニキ運動の悲劇とテロへの傾斜</h4>
+                    <p>この不徹底な改革に憤った都市の知識人階級（<strong><span class="important-word">インテリゲンツィア</span></strong>）の若者たち（大学生や専門職）は、社会主義社会の実現を目指して立ち上がりました。</p>
+                    <ul>
+                        <li><strong><span class="important-word">ナロードニキ（人民主義者）</span></strong>：「<strong><span class="important-word">ヴ＝ナロード（人民の中へ）</span></strong>」をスローガンに掲げ、1870年代に粗末な農民の格好をしてロシア各地の農村へ入り込み、農民の啓蒙と革命の扇動を試みました。</li>
+                        <li><strong>悲劇的な挫折（農民との断絶）</strong>：しかし、何世代にもわたって「皇帝（ツァーリ）は神聖な存在であり、自分たちの父親である」と信じ込まされてきた保守的な農民たちは、突然やってきた都会のインテリたちの「皇帝を倒せ」という急進的な言葉を理解できず、強い不信感を抱きました。結果として、<b>若者たちは農民自身の手によって次々と警察に通報・逮捕される</b>という、極めて残酷な挫折（悲劇）を経験しました。</li>
+                        <li><strong>テロリズムへの先鋭化</strong>：この挫折に絶望した一部のナロードニキは、大衆の啓蒙をあきらめ、暴力によって国家の首脳を直接暗殺するテロ組織（「人民の意志」派など）を組織。1881年、ついに改革派皇帝であった<strong>アレクサンドル2世を爆弾テロによって暗殺</strong>しました。この暗殺は、次のアレクサンドル3世による極めて強権的な憲兵政治（反動・大弾圧）を招き、ロシアの自由主義は完全に窒息しました。</li>
+                    </ul>
+
+                    <div class="img-wrapper vertical-img">
+                        <!-- ナロードニキ運動の絵画などを想定 -->
+                        <img src="" alt="ナロードニキ運動と農村の断絶">
+                        <div class="img-caption">図2：農村に入り込むも、農民の無理解と通報によって警察に逮捕される知識人を描いた絵画「逮捕」（レーピン画）</div>
+                    </div>
+
+                    <h3>5. 露土戦争とベルリン会議（1878年）</h3>
+                    <p>国内の先鋭化する不満をそらすため、またバルカン半島の「パン・スラヴ主義」の熱狂に押され、ロシアは1877年、三度目の南下戦争（<strong><span class="important-word">露土戦争</span></strong>）を開始しました。</p>
+
+                    <ul>
+                        <li><strong>サン＝ステファノ条約（1878年3月）</strong>：オスマン帝国を完膚なきまでに叩きのめしたロシアは、この条約を強要。オスマン帝国自治領として、ロシアの事実上の傀儡（支配下）である巨大な「<strong><span class="important-word">大ブルガリア公国</span></strong>」を建国させ、地中海への出口を確保しました。同時にセルビア、モンテネグロ、ルーマニアの独立も明文化されました。</li>
+                        <li><strong>イギリス・オーストリアの激怒</strong>：ロシアの劇的な南下に、東地中海を守りたいイギリス（ディズレーリ首相）は艦隊を派遣して威嚇。バルカンへの領土拡大を狙うオーストリアも激しく抗議し、ヨーロッパは大戦勃発の危機（危機の一髪）に直面しました。</li>
+                    </ul>
+
+                    <h4>【ビスマルクの「誠実な仲介人」とベルリン会議の冷徹なゲーム】</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1878年6〜7月：ベルリン会議の招集</div>
+                            <div class="timeline-content">
+                                <p>大戦を回避し、自らが構築した「フランス孤立同盟（ビスマルク体制）」を崩壊させないため、ドイツ宰相<strong><span class="important-word">ビスマルク</span></strong>は自らを「<strong><span class="important-word">誠実な仲介人（公正な取引人）</span></strong>」と称して、五大国の代表をベルリンに招集しました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1878年7月：ベルリン条約の締結（ロシアの三度目の敗北）</div>
+                            <div class="timeline-content">
+                                <p>ビスマルクの老獪な司会進行（外交チェス）により、サン＝ステファノ条約は破棄され、新たな<strong>ベルリン条約</strong>が結ばれました。ロシアの不凍港獲得の夢は、ここで再び完全に打ち砕かれました。</p>
+                                <ul>
+                                    <li><strong>大ブルガリア公国の3分割</strong>：ブルガリアの領土は3分の1に縮小され、オスマン帝国の主権下に押し戻されました。これによりロシアの地中海への出口は消滅しました。</li>
+                                    <li><strong>イギリス・オーストリアへの「甘い汁」</strong>：
+                                        <ul>
+                                            <li><strong>イギリス</strong>：地中海の重要島である<strong><span class="important-word">キプロス島</span></strong>の管理権を獲得（のち領有）。</li>
+                                            <li><strong>オーストリア</strong>：オスマン領であった<strong><span class="important-word">ボスニア・ヘルツェゴヴィナ</span>の管理・行政権</strong>を獲得。（※この未回収の土地の領有権をめぐる対立が、のちの「バルカン半島の火薬庫」、そして第一次世界大戦の直接の引き金となります。）</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="" alt="ベルリン会議の状況">
+                        <div class="img-caption">図3：1878年ベルリン会議。中央で握手するビスマルク（「誠実な仲介人」としての外交ゲームの主導）</div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. エジプト＝トルコ戦争とクリミア戦争について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1830年代、エジプト総督の 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="ali">ムハンマド＝アリー</option>
+                                <option value="saladin">サラーフ＝アッディーン</option>
+                            </select> 
+                            がオスマン帝国に対して反乱を起こすと、ロシアはこれに介入し、1833年のウンキャル＝スケレッシ条約で両海峡の通航権を一時獲得した。しかし、イギリス主導のロンドン条約等により、海峡の外国軍艦通航禁止、すなわち「 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="churityuka">中立化（通航禁止）</option>
+                                <option value="dokuzen">ロシアの独占権</option>
+                            </select> 
+                            」が定められ、ロシアの南下は遮断された。1853年には、聖地管理権の対立から 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="crimea">クリミア戦争</option>
+                                <option value="hoppou">北方戦争</option>
+                            </select> 
+                            が勃発。ロシアの南下を恐れるイギリスやフランス（ 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="napoleon3">ナポレオン3世</option>
+                                <option value="louis14">ルイ14世</option>
+                            </select> 
+                            ）らがオスマン帝国側で参戦し、敗れたロシアは1856年のパリ条約で黒海の中立化を余儀なくされた。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. ロシア国内の改革と知識人の運動について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            クリミア戦争の敗北により後進性を痛感した皇帝アレクサンドル2世は、1861年に 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="noudo">農奴解放令</option>
+                                <option value="koujyou">工場法</option>
+                            </select> 
+                            を発布した。しかし、土地は有償で買い戻す必要があり、返済責任のために農民は 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="mir">ミール（農村共同体）</option>
+                                <option value="kolkhoz">コルホーズ</option>
+                            </select> 
+                            と呼ばれる共同体に縛り付けられたため、極めて不徹底な解放となった。この不満から、都市の知識人階級（インテリゲンツィア）の若者たちは「 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="narodniki">ナロードニキ（人民主義者）</option>
+                                <option value="decabrist">デカブリスト</option>
+                            </select> 
+                            」を組織し、「 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="vnarod">ヴ＝ナロード（人民の中へ）</option>
+                                <option value="soviet">すべての権力をソヴィエトへ</option>
+                            </select> 
+                            」を掲げて農村に入り込んだが、農民の無理解と保守性によって挫折し、一部はテロリズムへと走ることとなった。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 露土戦争とベルリン会議について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1877年の露土戦争に大勝したロシアは、1878年のサン＝ステファノ条約で、自らの影響下にある巨大な「 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="bulgaria">大ブルガリア公国</option>
+                                <option value="serbia">セルビア王国</option>
+                            </select> 
+                            」を建てさせて地中海への出口を確保しようとした。これにイギリスやオーストリアが猛反発すると、ドイツ宰相の 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="bismarck">ビスマルク</option>
+                                <option value="metternich">メッテルニヒ</option>
+                            </select> 
+                            は、自らを「 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="seijitsu">誠実な仲介人</option>
+                                <option value="zettai">絶対の調停者</option>
+                            </select> 
+                            」と称して同年のベルリン会議を招集した。会議の結果、ブルガリアの領土は大幅に縮小され、イギリスは 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="cyprus">キプロス島</option>
+                                <option value="malta">マルタ島</option>
+                            </select> 
+                            の管理権を獲得、オーストリアは 
+                            <select class="blank-select" id="q3-e">
+                                <option value="">---</option>
+                                <option value="bosnia">ボスニア・ヘルツェゴヴィナ</option>
+                                <option value="alzas">アルザス・ロレーヌ</option>
+                            </select> 
+                            の管理権を獲得し、ロシアの南下はまたしても挫折に終わった。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'ali', 'q1-b': 'churityuka', 'q1-c': 'crimea', 'q1-d': 'napoleon3' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ムハンマド＝アリーのエジプトとの抗争や、英仏露の思惑から最終的に「外国軍艦の通航禁止（中立化）」に落ち着いた経緯、およびナポレオン3世の人気取りから始まったクリミア戦争の地政学的因果関係は完璧です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>エジプト総督は「ムハンマド＝アリー」。五国海峡条約等による取り決めは「中立化」。聖地管理権の対立による戦争は「クリミア戦争」。フランスの皇帝は「ナポレオン3世」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'noudo', 'q2-b': 'mir', 'q2-c': 'narodniki', 'q2-d': 'vnarod' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>1861年の「農奴解放令」が、高額な償還金のために農民を「ミール（農村共同体）」に縛り付けた構造的な欠陥、および知識人階級（ナロードニキ）による「ヴ＝ナロード（人民の中へ）」運動が農民自身によって通報・拒絶された悲劇の対比は、教採試験でも最も出題されやすい重要ポイントです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>アレクサンドル2世の発布は「農奴解放令」。農村共同体は「ミール」。知識人たちの派閥は「ナロードニキ（人民主義者）」。そのスローガンは「ヴ＝ナロード（人民の中へ）」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'bulgaria', 'q3-b': 'bismarck', 'q3-c': 'seijitsu', 'q3-d': 'cyprus', 'q3-e': 'bosnia' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>サン＝ステファノ条約による「大ブルガリア公国」の誕生、これに危機感を覚えた英墺を前に、ドイツ宰相ビスマルクが「誠実な仲介人」を自任してプロイセン主導の外交チェス（ベルリン会議）を展開し、キプロスやボスニア・ヘルツェゴヴィナを各国に分配してロシアを三度引き下がらせた因果関係が完璧に理解できています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>サン＝ステファノ条約で建国されたのは「大ブルガリア公国」。ドイツの宰相は「ビスマルク」。自称した立場は「誠実な仲介人」。イギリスが獲得したのは「キプロス島」。オーストリアが管理権を得たのは「ボスニア・ヘルツェゴヴィナ」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
