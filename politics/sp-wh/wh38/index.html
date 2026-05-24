@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近代ヨーロッパ史（フランス革命） - 近代ヨーロッパ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <!-- 指導要領から過去問演習へ変更 -->
+            <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 第6章 近代ヨーロッパ
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                近代ヨーロッパ史（フランス革命）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>1789年に勃発した「フランス革命」は、身分制や絶対王政という古い社会秩序（アンシャン＝レジーム）を打ち破り、近代市民社会を誕生させた世界史上の大事件です。不平等な身分社会に対する怒りと、破綻した国家財政、そしてそれを後押しした啓蒙思想が絡み合い、革命は時にコントロールを失いながら急進的な軌跡をたどりました。</p>
+
+                    <h3>1. 旧制度（アンシャン＝レジーム）と財政破綻</h3>
+                    <p>革命前のフランス社会は、特権身分が支配する極めて不条理な階層社会でした。</p>
+
+                    <ul>
+                        <li><strong>不条理な身分構造</strong>：
+                            <ul>
+                                <li><strong>第一身分（聖職者）</strong>：人口のわずか 0.5%（約12万人）。膨大な土地を所有し、免税特権を享受していました。</li>
+                                <li><strong>第二身分（貴族）</strong>：人口のわずか 1.5%（約40万人）。同じく免税特権を持ち、官職や軍職を独占していました。</li>
+                                <li><strong><span class="important-word">第三身分（平民）</span></strong>：人口の 98%（約2480万人）。重い税負担（地代やタイユ税など）を強いられながらも、政治的権利はありませんでした。平民の中には、富を蓄えた都市の商工業者（<strong>ブルジョワジー</strong>）から、極貧の農民や都市の下層労働者（<strong>サン・キュロット</strong>）まで、大きな格差が存在しました。</li>
+                            </ul>
+                        </li>
+                        <li><strong>シェイエスの『第三身分とは何か』</strong>：聖職者であった<strong><span class="important-word">シェイエス</span></strong>は、この不条理を鋭く告発し、「第三身分とは何か。すべてである。彼らは今日まで政治秩序において何であったか。無である」と言い放ち、平民の覚醒を促しました。</li>
+                        <li><strong>王室財政の破綻（デフォルトの連鎖）</strong>：ルイ14世以来の宮廷の浪費と長年の対外戦争に加え、<strong>アメリカ独立戦争への過大な軍事援助</strong>がとどめとなり、フランス王室の財政は実質的に破綻しました。ルイ16世は<strong>テュルゴー</strong>や<strong>ネッケル</strong>などの改革派閣僚を登用し、特権身分（聖職者・貴族）への課税を試みますが、貴族たちの激しい反発に遭って挫折します。貴族側はこれに対抗し、王権の独走を抑えるため、1614年以来閉ざされていた「<strong><span class="important-word">三部会</span></strong>（身分制議会）」の招集を要求しました。</li>
+                    </ul>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="旧制度（アンシャン＝レジーム）を風刺する有名な絵画">
+                        <div class="img-caption">図1：僧侶と貴族の重圧に耐える第三身分を描いた風刺画（アンシャン＝レジームの不条理）</div>
+                    </div>
+
+                    <h3>2. 革命の勃発と国民議会（1789〜1791年）</h3>
+                    <p>1789年5月、ヴェルサイユで三部会が開催されましたが、議決方法（身分ごとにおこなうか、一人一票でおこなうか）をめぐって議会は紛糾しました。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1789年6月：球戯場（テニスコート）の誓い</div>
+                            <div class="timeline-content">
+                                <p>平民議員たちは自らこそが国民を代表する議会であるとして「<strong><span class="important-word">国民議会</span></strong>（憲法制定国民議会）」を結成しました。彼らは憲法が制定されるまで解散しないことを「球戯場（テニスコート）の誓い」として固く誓いました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1789年7月14日：<span class="important-word">バスティーユ牢獄襲撃</span>（開戦）</div>
+                            <div class="timeline-content">
+                                <p>国王ルイ16世が軍隊を集めて国民議会を圧迫し、民衆の絶大な人気を得ていた財務長官ネッケルを罷免したため、パリの群衆の怒りが爆発しました。彼らは武器を求め、専制政治の象徴であった<strong>バスティーユ牢獄を襲撃</strong>しました。これが実質的なフランス革命の勃発日となりました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1789年8月：封建的特権の廃止と人権宣言</div>
+                            <div class="timeline-content">
+                                <p>地方で農民反乱（大恐怖）が広がる中、議会は混乱を鎮めるため<strong>封建的特権の廃止</strong>を決議（ただし領主裁判権などは無償廃止されたものの、地代は有償買い戻しでした）。<br>
+                                さらに8月26日には、ラファイエットらが起草した『<strong><span class="important-word">人権宣言</span></strong>』を採択しました。自由・平等、主権在民、そして有産市民（ブルジョワジー）の関心事である「<strong>私有財産の不可侵</strong>」を厳かに宣言しました。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>その後、国王一家をヴェルサイユからパリへ強制連行した「ヴェルサイユ行進」や、教会財産の没収、労働運動を禁止する「シャプリエ法」の制定など、有産市民主導のブルジョワ的な改革が進められました。</p>
+
+                    <h3>3. 革命の急進化（立憲君主制から王政廃止へ）</h3>
+                    <p>順調に見えた革命ですが、国内外の危機によって急激に血塗られた方向へと進んでいきます。</p>
+
+                    <ul>
+                        <li><strong><span class="important-word">ヴァレンヌ逃亡事件</span>（1791年6月）</strong>：ルイ16世と王妃マリー・アントワネットが、王妃の実家であるオーストリアへの逃亡を企て、国境近くのヴァレンヌで発見され連れ戻されました。これにより、国民の国王に対する信頼は完全に地に落ちました。</li>
+                        <li><strong>立法議会の成立と宣戦布告</strong>：1791年に初の憲法が制定され、制限選挙による「<strong>立法議会</strong>」が成立しました。議会内では、国王を残す「フイヤン派（立憲君主派）」と、穏健な共和政を求める「<strong><span class="important-word">ジロンド派</span></strong>」が対立。フランスを警戒するオーストリア・プロイセンが介入をほのめかすと（ピルニッツ宣言）、ジロンド派内閣は1792年4月、オーストリアへの宣戦布告に踏み切りました。</li>
+                        <li><strong>祖国の危機とラ・マルセイエーズ</strong>：戦争準備不足のフランス軍は連戦連敗し、プロイセン軍が国境を越えて迫りました。この危機に際し、フランス各地から義勇兵がパリに集結しました。このとき、マルセイユの義勇兵が歌いながら行進した軍歌が、のちの国歌「<strong>ラ・マルセイエーズ</strong>」となりました。</li>
+                        <li><strong><span class="important-word">8月10日事件</span>（1792年）と王政の廃止</strong>：怒れるパリの民衆（サン・キュロット）と義勇兵がチュイルリー宮殿を襲撃して王権を停止させ、王政を廃止しました。</li>
+                        <li><strong>ヴァルミーの戦い</strong>：1792年9月20日、フランスの義勇兵を中心とする軍隊が、大国プロイセンの正規軍を大砲の撃ち合いの末に撤退させ、初勝利を挙げました。従軍していたドイツの文豪<strong>ゲーテ</strong>が「この日この場所から、世界史の新しい時代が始まる」と日記に記したことで有名です。</li>
+                    </ul>
+
+                    <h3>4. ジャコバン派の独裁と恐怖政治（ロベスピエールの時代）</h3>
+                    <p>王政廃止に伴い、初の男子普通選挙による「<strong>国民公会</strong>」が招集され、フランスは「第一共和政」となりました。ここから革命は最も血なまぐさい過激な段階に入ります。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1793年1月：ルイ16世の処刑</div>
+                            <div class="timeline-content">
+                                <p>国民公会での僅差の投票により、<strong>ルイ16世がギロチンで処刑</strong>されました。この衝撃に対し、イギリス首相ピットの主導で、周辺の君主国がフランスを包囲する「<strong><span class="important-word">第1回対仏大同盟</span></strong>」を結成しました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1793年6月：ロベスピエール独裁の開始</div>
+                            <div class="timeline-content">
+                                <p>国内外の戦争やインフレ、地方での農民反乱（ヴァンデの乱）などにより危機に陥ったフランスで、急進共和派の<strong><span class="important-word">ロベスピエール</span></strong>率いる<strong><span class="important-word">ジャコバン派</span>（山岳派）</strong>が、穏健なジロンド派を武力で追放し、事実上の独裁権を握りました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1793〜94年：恐怖政治（テロール）の実態</div>
+                            <div class="timeline-content">
+                                <p>公安委員会を拠点としたロベスピエールは、反革命の疑いがある者を容赦なく処刑しました。王妃マリー・アントワネットやジロンド派の指導者のみならず、「女性の権利」をいち早く主張した劇作家の<strong><span class="important-word">オランプ・ド・グージュ</span></strong>（『女性および女性市民の権利宣言』を起草）なども、革命の急進化を批判したとしてギロチンにかけられました。この恐怖政治による犠牲者は数万人に及んだとされます。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>【ロベスピエールが行った画期的な改革と「歴史の皮肉」】</h4>
+                    <p>ロベスピエールは、都市の貧民や農民を味方につけるため、極めて過激で民主的な改革を強行しました。</p>
+                    <ol>
+                        <li><strong><span class="important-word">封建地代の無償廃止</span>（最重要）</strong>：1789年に「有償買い戻し」とされていた地代を、一切の対価なしに完全に廃止しました。これにより、<strong>貧しい小作農たちはついに「自分の土地」を手に入れることができました</strong>。
+                            <ul>
+                                <li>※しかし、ここに大きな歴史の皮肉が生じます。土地を手に入れた農民たちは、「これ以上革命が急進化して、他人の土地まで共有しようと言い出されたら困る」と考えるようになり、一転して<strong>社会の安定を望む「保守派」に変貌</strong>したのです。この農民の保守化が、ロベスピエールが孤立していく最大の構造的要因となりました。</li>
+                            </ul>
+                        </li>
+                        <li><strong>最高価格令</strong>：生活必需品の価格を強制的に固定化し、インフレを抑えようとしました（※しかし、闇市場を形成させ、かえって経済を混乱させました）。</li>
+                        <li><strong>革命暦（フランス共和暦）の採用</strong>：キリスト教的なカレンダーを廃止し、十進法に基づく合理的なカレンダーを導入しました。</li>
+                    </ol>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="" alt="ロベスピエールと恐怖政治">
+                        <div class="img-caption">図2：急進的な改革と恐怖政治を断行し、最後は自らもギロチンに倒れたロベスピエール</div>
+                    </div>
+
+                    <h3>5. 革命の終息（テルミドールからナポレオンへ）</h3>
+                    <p>戦争の危機が去ると、恐怖政治に怯え、また土地を得て満足した人々は、強権的なロベスピエールを排除し、社会の安定（右への揺り戻し）を求めました。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1794年7月：<span class="important-word">テルミドールのクーデタ</span></div>
+                            <div class="timeline-content">
+                                <p>熱月（テルミドール）9日、議会内で孤立したロベスピエールとその一派が逮捕され、翌日ギロチンで処刑されました。これにより恐怖政治は終わりを告げ、ジャコバン派は解散させられました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1795年〜：総裁政府の弱体化</div>
+                            <div class="timeline-content">
+                                <p>1795年憲法に基づき、5人の総裁が行政を担う<strong>総裁政府</strong>が発足しました。しかし、制限選挙を復活させて富裕層を優遇したため、貧民（左派）による<strong>バブーフの陰謀</strong>（私有財産制の廃止を計画）や、右派（王党派）による暴動が頻発し、政府は極めて不安定でした。人々は治安を回復できる「強い指導者」を求め、軍隊の力に依存し始めました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1799年11月：<span class="important-word">ブリュメール18日のクーデタ</span></div>
+                            <div class="timeline-content">
+                                <p>エジプト遠征から独断で帰還し、圧倒的な国民的人気を得ていた天才将軍<strong><span class="important-word">ナポレオン・ボナパルト</span></strong>が、霧月（ブリュメール）18日にクーデタを起こして総裁政府を打倒し、自らが第一統領となる<strong>統領政府</strong>を樹立しました。これにより、10年間に及んだフランス革命は事実上終結し、ナポレオンの独裁時代（軍事独裁）へと移行することになります。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. 革命の勃発と国民議会について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            革命前のフランス社会では、免税特権を持つ僧侶や貴族に対し、人口の98%を占める 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="third">第三身分（平民）</option>
+                                <option value="first">第一身分</option>
+                            </select> 
+                            が重税を強いられていた。これに対し、聖職者であった 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="sieyes">シェイエス</option>
+                                <option value="necker">ネッケル</option>
+                            </select> 
+                            は『第三身分とは何か』を著してその不条理を告発した。1789年7月14日、国王による軍隊の移動とネッケル罷免に怒った民衆が 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="bastille">バスティーユ牢獄</option>
+                                <option value="tuileries">チュイルリー宮殿</option>
+                            </select> 
+                            を襲撃し、実質的な革命が始まった。その後、ラファイエットらが起草した 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="jinken">人権宣言</option>
+                                <option value="kenpou">合衆国憲法</option>
+                            </select> 
+                            が採択され、国民主権や私有財産の不可侵が歌われた。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. 革命の激化と王政廃止について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1191年に国王一家が海外逃亡を企てた 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="varennes">ヴァレンヌ逃亡事件</option>
+                                <option value="anagni">アナーニ事件</option>
+                            </select> 
+                            により、国民の国王に対する信頼は失墜した。1792年に開戦するとフランス軍は敗退を重ねたが、マルセイユから来た義勇兵らが歌った「 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="marseillaise">ラ・マルセイエーズ</option>
+                                <option value="internationale">インターナショナル</option>
+                            </select> 
+                            」はのちにフランス国歌となった。同年9月のヴァルミーの戦いでプロイセン軍に勝利すると、王政廃止が決定され 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="kokuminkoukai">国民公会</option>
+                                <option value="rippou">立法議会</option>
+                            </select> 
+                            が招集された。1793年1月に国王ルイ16世が処刑されると、イギリス首相ピットの主導により、フランスを包囲する 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="taifutsu">第1回対仏大同盟</option>
+                                <option value="hoppou">北方同盟</option>
+                            </select> 
+                            が結成された。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. 恐怖政治とその終焉について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1793年、急進共和派の 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="robes">ロベスピエール</option>
+                                <option value="danton">ダントン</option>
+                            </select> 
+                            らジャコバン派が独裁権を握り、厳しい恐怖政治を行った。彼は農民や貧民を味方にするため、1789年に有償とされていた地代をすべてなくす 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="mushou">封建地代の無償廃止</option>
+                                <option value="encomienda">エンコミエンダ廃止</option>
+                            </select> 
+                            を決断した。これにより自分の土地を手に入れた農民たちは満足し、革命の急進的な進行を望まない 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="hosyu">保守派</option>
+                                <option value="kaikaku">改革派</option>
+                            </select> 
+                            へと変化していった。1794年7月の 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="thermidor">テルミドールのクーデタ</option>
+                                <option value="brumaire">ブリュメール18日のクーデタ</option>
+                            </select> 
+                            によりロベスピエールが処刑されると恐怖政治は終わり、1799年にはエジプト遠征から戻ったナポレオンが 
+                            <select class="blank-select" id="q3-e">
+                                <option value="">---</option>
+                                <option value="brumaire">ブリュメール18日のクーデタ</option>
+                                <option value="thermidor">テルミドールのクーデタ</option>
+                            </select> 
+                            を起こして実権を握り、フランス革命は事実上終結した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'third', 'q1-b': 'sieyes', 'q1-c': 'bastille', 'q1-d': 'jinken' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>第三身分の不条理、シェイエスの活動、革命の引き金となったバスティーユ襲撃、そしてラファイエットらが起草した「人権宣言」はフランス革命初期の極めて重要なキーワードです。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>重税を強いられたのは「第三身分（平民）」。『第三身分とは何か』は「シェイエス」。襲撃されたのは「バスティーユ牢獄」。自由や平等を規定したのは「人権宣言」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'varennes', 'q2-b': 'marseillaise', 'q2-c': 'kokuminkoukai', 'q2-d': 'taifutsu' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>王の裏切り（ヴァレンヌ逃亡事件）、義勇兵の軍歌（ラ・マルセイエーズ）、王政廃止を決めた国民公会、そして国王処刑を機に結成された第1回対仏大同盟の流れは完璧です。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>国王逃亡事件は「ヴァレンヌ逃亡事件」。義勇兵の歌は「ラ・マルセイエーズ」。王政廃止期の議会は「国民公会」。イギリス主導の包囲網は「第1回対仏大同盟」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'robes', 'q3-b': 'mushou', 'q3-c': 'hosyu', 'q3-d': 'thermidor', 'q3-e': 'brumaire' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>ロベスピエールの恐怖政治、「封建地代の無償廃止」がなぜ農民を保守化させたのかという構造的理由、そしてテルミドールとブリュメール18日のクーデタによる収束の歴史的因果関係が完璧に理解できています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>恐怖政治のリーダーは「ロベスピエール」。地代の完全廃止は「封建地代の無償廃止」。地主になった農民は「保守派」になりました。ロベスピエール没落は「テルミドールのクーデタ」、ナポレオン登場は「ブリュメール18日のクーデタ」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
