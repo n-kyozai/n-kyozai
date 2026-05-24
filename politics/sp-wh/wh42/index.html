@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近代ヨーロッパ史（ドイツ・イタリアの統一） - 近代ヨーロッパ - 教員採用試験対策</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #0ea5e9;
+            --correct-color: #10b981;
+            --incorrect-color: #ef4444;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --sidebar-width: 200px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- サイドバー（共通） --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu { padding: 6px 0; }
+        .nav-category {
+            padding: 8px 16px 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 16px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+        .nav-item i { margin-right: 8px; width: 14px; height: 14px; }
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: #e0f2fe;
+            font-weight: bold;
+            border-right: 3px solid var(--accent-color);
+        }
+
+        /* --- モバイル用トグル --- */
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: 10px; left: 10px; z-index: 2000;
+            width: 36px; height: 36px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer; color: var(--primary-color);
+            align-items: center; justify-content: center;
+        }
+        .overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 950; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- メインコンテンツ --- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle-btn { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-header { padding-left: 60px; }
+            .main-content { margin-left: 0; width: 100%; }
+            .page-header { padding-left: 60px !important; }
+            .container { padding: 24px 16px !important; }
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 24px;
+        }
+        .breadcrumb {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .page-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            margin: 0; padding: 24px 32px; flex: 1;
+        }
+
+        /* --- セクションボックス --- */
+        .section-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- まとめコンテンツ --- */
+        .summary-content {
+            padding: 20px;
+            font-size: 0.9rem; 
+            line-height: 1.7;
+        }
+        .summary-content p, .summary-content li, .data-table th, .data-table td {
+            font-size: 1em;
+        }
+        .summary-content h3 {
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        .summary-content h3:first-child { margin-top: 0; }
+        .summary-content h4 {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 16px 0 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .summary-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .summary-content li { margin-bottom: 6px; }
+
+        /* --- 世界史用：年表（タイムライン）デザイン --- */
+        .timeline {
+            border-left: 3px solid var(--accent-color);
+            margin: 20px 0 20px 16px;
+            padding-left: 24px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-content p { margin-bottom: 8px; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .timeline-content ul { margin-bottom: 0; }
+        
+        /* --- 暗記モード対応 --- */
+        .important-word {
+            font-weight: bold;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        body.memorize-mode .important-word {
+            color: transparent;
+            background-color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        body.memorize-mode .important-word.revealed {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
+        /* --- 表のレイアウト最適化 --- */
+        .table-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.6;
+            vertical-align: middle;
+        }
+        .data-table th { 
+            background-color: #f8fafc; 
+            color: var(--primary-color); 
+            font-weight: bold;
+        }
+        .data-table .col-short {
+            white-space: nowrap;
+            text-align: center !important;
+            width: 20%;
+        }
+        .data-table .col-text {
+            min-width: 200px;
+            white-space: normal;
+        }
+
+        /* --- 画像のレスポンシブ対応 --- */
+        .img-wrapper {
+            width: 100%;
+            max-width: 75%;
+            margin: 24px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+        }
+        .img-caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* 画像ギャラリー */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .image-gallery .img-wrapper {
+            flex: 1 1 300px;
+            max-width: calc(50% - 12px);
+            margin: 0;
+        }
+
+        /* ★ 縦長画像（年表など）用の特別クラス ★ */
+        .img-wrapper.vertical-img {
+            max-width: 60%;
+        }
+        .img-wrapper.vertical-img img {
+            max-height: none;
+            width: 100%;
+        }
+
+        /* モバイル（画面幅が狭い場合）の画像サイズ調整 */
+        @media (max-width: 768px) {
+            .img-wrapper {
+                max-width: 100%;
+                margin: 16px 0;
+            }
+            .img-wrapper img {
+                max-height: 50vh;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .image-gallery .img-wrapper {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            
+            /* ★ 縦長画像のモバイル専用調整 ★ */
+            .img-wrapper.vertical-img {
+                max-width: 100%;
+                margin: 24px 0;
+            }
+            .img-wrapper.vertical-img img {
+                width: 100%;
+                max-height: none;
+            }
+        }
+
+        /* --- 基礎問題 UI --- */
+        .quiz-container { padding: 20px; }
+        .quiz-block { margin-bottom: 24px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .quiz-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .quiz-question { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); }
+        
+        .fill-in-blank { line-height: 2.2; font-size: 0.9rem; }
+        select.blank-select {
+            padding: 2px 8px; border: 1px solid #94a3b8; border-radius: 4px;
+            background: white; font-size: 0.9rem; color: var(--primary-color);
+            outline: none; cursor: pointer; margin: 0 4px;
+        }
+        select.blank-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px #e0f2fe; }
+
+        .result-correct {
+            color: var(--correct-color); font-weight: bold; margin: 0 4px;
+            border-bottom: 2px solid var(--correct-color); background-color: #ecfdf5;
+            padding: 0 4px; border-radius: 3px;
+        }
+        .result-incorrect {
+            margin: 0 4px; display: inline-flex; align-items: center; gap: 6px;
+            background-color: #fef2f2; padding: 0 6px; border-radius: 3px;
+            border-bottom: 2px solid var(--incorrect-color);
+        }
+        .result-incorrect .user-answer { color: var(--incorrect-color); text-decoration: line-through; font-size: 0.85rem; }
+        .result-incorrect .correct-answer { color: var(--correct-color); font-weight: bold; }
+
+        .tf-buttons { display: flex; gap: 10px; margin-top: 8px; }
+        .tf-btn {
+            padding: 8px 16px; border: 1px solid #cbd5e1; background: white;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #64748b; transition: all 0.2s;
+            flex: 1; max-width: 150px;
+        }
+        .tf-btn:hover:not(:disabled) { background: #f8fafc; }
+        .tf-btn.selected-true { background: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .tf-btn.selected-false { background: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .tf-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .check-btn, .retry-btn {
+            color: white; border: none; padding: 8px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem;
+            transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .check-btn { background: var(--accent-color); }
+        .check-btn:hover { background: #0284c7; }
+        .retry-btn { background: #64748b; display: none; }
+        .retry-btn:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 16px; padding: 12px 16px; border-radius: 6px;
+            font-size: 0.9rem; display: none; line-height: 1.6;
+        }
+        .feedback.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; display: block; }
+
+        /* --- フローティングアクションボタン (FAB) --- */
+        .fab-container {
+            position: fixed; bottom: 24px; right: 24px; display: flex;
+            flex-direction: column; gap: 12px; z-index: 2000;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; background-color: #4b5563;
+            color: white; border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .fab-btn:hover { background-color: #374151; transform: translateY(-2px); }
+        .fab-btn.active-mode { background-color: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+        .fab-btn i { width: 24px; height: 24px; }
+        .tooltip-text {
+            position: absolute; right: 60px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .fab-btn:hover .tooltip-text { opacity: 1; }
+
+        footer {
+            background-color: white; border-top: 1px solid #e2e8f0;
+            padding: 15px; text-align: center; color: #94a3b8; font-size: 0.7rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle-btn" id="menuToggle">
+        <i data-lucide="menu"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- サイドバー -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><i data-lucide="book-open"></i>メニュー</div>
+       <nav class="nav-menu">
+            <div class="nav-category">MAIN</div>
+            <a href="/n-kyozai/index.html" class="nav-item"><i data-lucide="home"></i>ホーム</a>
+            
+            <div class="nav-category">教養・指導要領</div>
+            <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
+            <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
+            <!-- 指導要領から過去問演習へ変更 -->
+            <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+
+            <div class="nav-category">専門科目</div>
+            <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/n-kyozai/index.html">ホーム</a> ＞ <a href="/n-kyozai/politics/index.html">専門科目</a> ＞ <a href="/n-kyozai/politics/sp-wh/index.html">世界史</a> ＞ 第6章 近代ヨーロッパ
+            </div>
+            <h1 class="page-title">
+                <i data-lucide="globe-2" style="color: var(--accent-color);"></i>
+                近代ヨーロッパ史（ドイツ・イタリアの統一）
+            </h1>
+        </div>
+
+        <div class="container">
+            
+            <!-- 【総復習まとめセクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="book-open"></i> ポイント総復習
+                </div>
+                <div class="summary-content">
+                    <p>19世紀後半、ヨーロッパを揺るがした最大の思想的潮流が「<strong>ナショナリズム（国民主義）</strong>」でした。長年分裂状態にあったイタリア半島とドイツ地方では、それぞれ強力な主導国（サルデーニャ王国とプロイセン王国）が現れ、巧みな外交と一連の戦争（王朝戦争）をくぐり抜けて、悲願であった国家統一を成し遂げました。</p>
+
+                    <h3>1. イタリアの統一（リソルジメント）への軌跡</h3>
+                    <p>かつてメッテルニヒが「イタリアとは単なる地理的呼称にすぎない」と評したように、半島はオーストリアの支配や教皇領、小国家群に分裂していました。この分裂を打破し、国家の復活を求める運動を<strong><span class="important-word">リソルジメント</span>（文芸復興・再興）</strong>と呼びます。</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1831年：マッツィーニと「青年イタリア」</div>
+                            <div class="timeline-content">
+                                <p>かつての秘密結社カルボナリが弾圧・瓦解した後、亡命先のマルセイユで<strong><span class="important-word">マッツィーニ</span></strong>が「<strong><span class="important-word">青年イタリア</span></strong>」を結成しました。1849年の二月革命の波の中で教皇領ローマに「ローマ共和国」を樹立しましたが、教皇を擁護するフランス軍（ルイ＝ナポレオン）の介入によって、わずか数ヶ月で壊滅・亡命を余儀なくされました。（※これにより、共和主義による「下からの統一」の限界が露呈します。）</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1850年代：サルデーニャ王国とカヴールのRealpolitik（現実政治）</div>
+                            <div class="timeline-content">
+                                <p>「下からの統一」の挫折後、代わって統一を主導したのが、北イタリアの立憲君主国<strong>サルデーニャ王国</strong>（国王ヴィクトール＝エマニュエル2世）でした。<br>
+                                1852年に首相に就任した<strong><span class="important-word">カヴール</span></strong>は、内政の近代化を進める一方、大国フランスの軍事力を利用して北イタリアを支配するオーストリアを排除しようと、密かに皇帝ナポレオン3世と<strong><span class="important-word">プロンビエールの密約</span></strong>（1858年）を結びました。（※代償として、自国の領土であるサヴォワとニースをフランスに割譲することを約束しました。）</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1859年：イタリア統一戦争とナポレオン3世の裏切り</div>
+                            <div class="timeline-content">
+                                <p>サルデーニャ・フランス連合軍がオーストリアを撃破する中、プロイセンの動向やフランス国内のカトリック世論の反発に怯えたナポレオン3世は、カヴールに無断でオーストリアと単独で<strong><span class="important-word">ヴィッラフランカの和約</span></strong>を締結し、戦争を一方的に打ち切りました。サルデーニャは<strong><span class="important-word">ロンバルディア</span></strong>の獲得にとどまり、ヴェネツィアはオーストリア領のまま残されましたが、中部の小諸邦でサルデーニャ併合を求める住民投票（ナショナリズムの爆発）が起き、結果として中部イタリアを併合しました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1860年：ガリバルディの赤シャツ隊と「テアーノの会見」</div>
+                            <div class="timeline-content">
+                                <p>「青年イタリア」の出身で共和主義者の武将<strong><span class="important-word">ガリバルディ</span></strong>は、わずか1000人の義勇軍（<strong><span class="important-word">赤シャツ隊 / 千人隊</span></strong>）を率いて急襲。南イタリアの<strong><span class="important-word">シチリア・ナポリ（両シチリア王国）</span></strong>を瞬く間に征服しました。<br>
+                                ガリバルディはそのままローマ教皇領へ進撃しようとしましたが、フランスとの全面戦争（および急進的共和政の成立）を恐れたカヴールは、国王自ら軍を率いて南下させ、両者は<strong>テアーノ</strong>で対峙しました。<br>
+                                <strong>「テアーノの会見（会談）」</strong>において、無私の愛国者であったガリバルディは、内戦を避けるために自らの征服地をすべて国王ヴィクトール＝エマニュエル2世に「献上」するという、世界史上に残る偉大な妥協を行いました。</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">1861年：イタリア王国の成立と領土の完成</div>
+                            <div class="timeline-content">
+                                <p>トリノを臨時首都として、ヴィクトール＝エマニュエル2世を初代国王とする「<strong>イタリア王国</strong>」が成立しました。その後、普墺戦争（1866年）に乗じて<strong>ヴェネツィア</strong>を併合。さらに普仏戦争（1870年）でフランス軍がローマから撤退すると、教皇領（<strong>ローマ</strong>）を占領・併合し、1871年にローマを首都とする統一を完成させました。（※教皇はバチカンに閉じこもり「バチカンの囚人」を自任。イタリア政府との対立は1929年のラテラノ条約まで続きます。）</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="img-wrapper vertical-img">
+                        <img src="sp-wh-44.jpg" alt="イタリア統一のステップ（1858-1870）">
+                        <div class="img-caption">図1：1859年の戦争から1870年のローマ併合に至るイタリア統一のステップ</div>
+                    </div>
+
+                    <h3>2. ドイツ統一前夜とビスマルクの「鉄血政策」</h3>
+                    <p>ドイツ地方は1815年のウィーン会議により、35の主権国家と4つの自由市からなる「ドイツ連邦」に再編されていましたが、中身は極めて緩い連合にすぎませんでした。</p>
+
+                    <ul>
+                        <li><strong><span class="important-word">ドイツ関税同盟（ゾルフェライン）</span>の成立（1834年）</strong>：プロイセン主導で結成。同盟国内の関税を撤廃し、経済的な一体化を進めました。この同盟から<strong>オーストリアが除外</strong>されていたことが、のちの「オーストリア抜きの統一（小ドイツ主義）」の経済的土台となりました。</li>
+                        <li><strong>1848年：フランクフルト国民議会の挫折</strong>：二月革命の波の中で招集され、自由主義的な統一が議論されましたが、「オーストリアを巻き込むか（大ドイツ主義）」か、「排除してプロイセン主導にするか（小ドイツ主義）」で紛糾。結局、プロイセン王が「市民から差し出された冠（下からの王冠）」を拒否したため、議会は解散させられ、自由主義的な統一は完全に失敗に終わりました。</li>
+                        <li><strong>ビスマルクの登場と「鉄血政策」</strong>：1862年、プロイセン国王ヴィルヘルム1世は、軍制改革（軍備拡張）に反対する議会をねじ伏せるため、ユンカー（地主貴族）出身の強硬派<strong><span class="important-word">ビスマルク</span></strong>を首相に起用しました。<br>
+                        彼は議会を完全に無視し、「現下の重大問題は、演説や多数決によってではなく、<strong><span class="important-word">鉄と血（兵器と軍隊）</span></strong>によってのみ解決される」と言い放ち（<strong>鉄血演説</strong>）、強引に軍拡を推し進めました。</li>
+                    </ul>
+
+                    <h3>3. 三つの王朝戦争とドイツ帝国の成立</h3>
+                    <p>軍備を整えたビスマルクは、緻密な外交計算のもとで3つの戦争を引き起こし、ドイツ統一を成し遂げました。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">戦争（時期）</th>
+                                <th class="col-text">原因・結果と、統一への歴史的因果関係</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>デンマーク戦争</strong><br>（1864年）</td>
+                                <td class="col-text">ドイツ系住民の多い国境の<strong>シュレスヴィヒ・ホルシュタイン両公国</strong>の領有権をめぐり、プロイセン・オーストリアが共同でデンマークを破りました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">普墺戦争</span></strong><br>（1866年）</td>
+                                <td class="col-text">上記の領有権の管理をめぐる対立を利用し、オーストリアに宣戦。プロイセンは最新鋭の針打式銃（ドライゼ銃）と迅速な鉄道網を利用し、<strong>サドワ（ケーニヒグレッツ）の戦い</strong>で大勝。オーストリアを「ドイツ連邦」から完全に締め出しました。これによりドイツ連邦は解体され、オーストリアを除外したプロイセン主導の「<strong><span class="important-word">北ドイツ連邦</span></strong>」が結成されました。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong><span class="important-word">普仏戦争</span></strong><br>（1870〜71年）</td>
+                                <td class="col-text">スペイン王位継承問題をめぐり、ビスマルクが国王の電報を改竄してフランスを挑発（<strong><span class="important-word">エムス電報事件</span></strong>）。これに怒ったフランス（ナポレオン3世）が宣戦。プロイセンは南ドイツ諸邦をも巻き込んでフランス軍を圧倒し、<strong>セダンの戦い</strong>でナポレオン3世を捕虜とし、パリを包囲して屈服させました。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p><strong>【ドイツ帝国の成立とヴェルサイユ宮殿（1871年1月18日）】</strong><br>
+                    普仏戦争の最中、いまだパリ包囲が続く1871年1月18日、ナポレオンが建て、フランスの「絶対王政」の象徴であった<strong>ヴェルサイユ宮殿の「鏡の間」</strong>において、プロイセン国王ヴィルヘルム1世の「ドイツ皇帝」戴冠式が挙行され、<strong>ドイツ帝国</strong>が正式に成立しました。<br>
+                    この戴冠は、フランスにとって最大の屈辱であり、さらに講和条約によって鉱山資源が豊富な<strong><span class="important-word">アルザス・ロレーヌ（エルザス・ロートリンゲン）</span></strong>地方を割譲させられたことは、フランス国民の心に猛烈な復讐（リベンジ）心を植え付けることになりました。（※これがのちの第一次世界大戦の遠因となります。）</p>
+
+                    <div class="img-wrapper">
+                        <img src="" alt="ヴェルサイユ宮殿におけるドイツ帝国成立の儀式">
+                        <div class="img-caption">図2：ヴェルサイユ宮殿「鏡の間」で行われたヴィルヘルム1世のドイツ皇帝戴冠式（1871年）</div>
+                    </div>
+
+                    <h3>4. ドイツ帝国の国制とビスマルクの国内政策</h3>
+                    <p>成立したドイツ帝国は、プロイセンが圧倒的な主導権を握る非民主的な連邦国家でした。</p>
+
+                    <ul>
+                        <li><strong>不平等な権力構造</strong>：男性普通選挙による帝国議会（下院）が置かれましたが、その権限は極めて小さく、政府の予算や法律はプロイセンが事実上牛耳る連邦参議院（上院）が圧倒的に優越していました。何より、内閣（帝国宰相）は議会ではなく、<strong>皇帝に対してのみ直接責任を負う</strong>システムでした。</li>
+                        <li><strong><span class="important-word">文化闘争（クルトゥールカンプフ）</span>（1871〜80年）</strong>：ビスマルクは、中央集権的な帝国に抵抗し、バチカン（教皇）を支持する南ドイツのカトリック教徒が結成した「<strong><span class="important-word">中央党</span></strong>」を「帝国の敵」とみなして徹底的に弾圧しました。しかし、彼らの頑強な抵抗に遭い、最終的には妥協を余儀なくされました。</li>
+                        <li><strong>「飴と鞭」の社会主義対策</strong>：ビスマルクがカトリックとの争いを収束させたのは、新たに台頭してきた労働者階級（社会主義運動）に対抗するためでした。
+                            <ul>
+                                <li><strong>鞭（弾圧）</strong>：皇帝暗殺未遂事件を口実に、1878年に<strong><span class="important-word">社会主義者鎮圧法</span></strong>を制定し、社会主義組織の活動を厳しく禁止しました。</li>
+                                <li><strong>飴（懐柔）</strong>：弾圧する一方で、世界に先駆けて疾病保険や労災保険、養老保険といった<strong>社会保険制度（社会保障）を導入</strong>し、労働者たちが社会主義に走るのを防ごうとしました。</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h3>5. 深掘りコラム：フランス国粋主義文学『最後の授業』の歴史的真実</h3>
+                    <p>世界史や国語の教科書で有名なアルフォンス・ドーデの短編小説『<strong>最後の授業</strong>』をご存知でしょうか。普仏戦争でドイツ領に編入されることになったアルザス地方の学校を舞台に、アメル先生が子どもたちに「美しいフランス語」の価値を熱く語り、「今日がフランス語の最後の授業です」と告げる感動的な物語です。</p>
+
+                    <p>しかし、歴史言語学や歴史社会学の観点からこの物語を検証すると、極めて不自然な「フィクション（政治的プロパガンダ）」が浮かび上がってきます。</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <tr>
+                                <th class="col-short">項目</th>
+                                <th class="col-text">歴史的実態とプロパガンダの構造</th>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>アルザスの本来の言語</strong></td>
+                                <td class="col-text">アルザス地方（中心都市ストラスブール）は、1648年の<strong>ウェストファリア条約</strong>でフランス領とされる以前から、歴史的に神聖ローマ帝国（ドイツ語圏）の一部でした。そのため、現地に住む農民や庶民たちが日常的に話していたのはフランス語ではなく、ドイツ語系の方言である「<strong>アルザス語</strong>」でした。日常会話でフランス語を流暢に使っていたのは、ごく一部の特権階級にすぎませんでした。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>小説の不自然さ</strong></td>
+                                <td class="col-text">『最後の授業』に登場する少年フランツやアメル先生は、日常会話や授業を完璧なフランス語で行っていますが、実際当時のアルザスの田舎町でこのような光景はあり得ませんでした。むしろ、彼らにとってドイツ語の導入は「なじみ深い本来の言葉の強制」であり、フランス語の授業こそが「学校という公的な場で教育された第2言語」であったのが実態です。</td>
+                            </tr>
+                            <tr>
+                                <td class="col-short"><strong>ナショナリズムの武器としての「国語」</strong></td>
+                                <td class="col-text">作者のアルフォンス・ドーデは、敗戦の屈辱にまみれたフランス国民の愛国心を鼓舞するため、あえて事実に反する設定を用いてこの美談を書き上げました。19世紀の「国民国家」の建設において、学校教育と単一の「国語」がいかに人々のナショナリズムを呼び起こし、統合するための強力な武器（装置）として使われたかを示す、極めて典型的な歴史資料といえます。</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 【基礎問題セクション】 -->
+            <section class="section-box">
+                <div class="section-header">
+                    <i data-lucide="edit-3"></i> 基礎問題（理解度チェック）
+                </div>
+                <div class="quiz-container">
+                    
+                    <!-- 第1問: 穴埋め -->
+                    <div class="quiz-block" id="q1">
+                        <div class="quiz-question">Q1. イタリアの統一（リソルジメント）について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            1849年にローマ共和国の樹立を試みたものの、フランスの介入で敗れた「青年イタリア」の指導者は 
+                            <select class="blank-select" id="q1-a">
+                                <option value="">---</option>
+                                <option value="mazzini">マッツィーニ</option>
+                                <option value="garibaldi">ガリバルディ</option>
+                            </select> 
+                            であった。その後、サルデーニャ王国の首相 
+                            <select class="blank-select" id="q1-b">
+                                <option value="">---</option>
+                                <option value="cavour">カヴール</option>
+                                <option value="metternich">メッテルニヒ</option>
+                            </select> 
+                            はナポレオン3世と密約を結びオーストリアを撃破した。1860年、共和主義者の 
+                            <select class="blank-select" id="q1-c">
+                                <option value="">---</option>
+                                <option value="garibaldi">ガリバルディ</option>
+                                <option value="mazzini">マッツィーニ</option>
+                            </select> 
+                            が義勇軍（赤シャツ隊）を率いて両シチリア王国を征服したが、「 
+                            <select class="blank-select" id="q1-d">
+                                <option value="">---</option>
+                                <option value="teano">テアーノの会見</option>
+                                <option value="vienna">ウィーンの会見</option>
+                            </select> 
+                            」において、内戦を避けるためすべての征服地をサルデーニャ王に献上した。その後、イタリア王国が成立し、1870年には 
+                            <select class="blank-select" id="q1-e">
+                                <option value="">---</option>
+                                <option value="rome">ローマ</option>
+                                <option value="venezia">ヴェネツィア</option>
+                            </select> 
+                            を併合して遷都し、統一が完成した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q1-check-btn" onclick="checkBlank('q1')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q1-retry-btn" onclick="retryBlank('q1')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q1-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第2問: 穴埋め -->
+                    <div class="quiz-block" id="q2">
+                        <div class="quiz-question">Q2. ドイツの統一とビスマルクの外交について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ドイツ統一に先立ち、プロイセン主導で 
+                            <select class="blank-select" id="q2-a">
+                                <option value="">---</option>
+                                <option value="zollverein">ドイツ関税同盟</option>
+                                <option value="rhein">ライン同盟</option>
+                            </select> 
+                            が結成され、オーストリアを除外した経済の一体化が進んだ。プロイセン首相に就任した 
+                            <select class="blank-select" id="q2-b">
+                                <option value="">---</option>
+                                <option value="bismarck">ビスマルク</option>
+                                <option value="metternich">メッテルニヒ</option>
+                            </select> 
+                            は「鉄血政策」を掲げて軍備を拡張した。彼は1866年の 
+                            <select class="blank-select" id="q2-c">
+                                <option value="">---</option>
+                                <option value="austro">普墺戦争</option>
+                                <option value="franco">普仏戦争</option>
+                            </select> 
+                            に勝利してオーストリアを排除し、さらに1870年の 
+                            <select class="blank-select" id="q2-d">
+                                <option value="">---</option>
+                                <option value="franco">普仏戦争</option>
+                                <option value="austro">普墺戦争</option>
+                            </select> 
+                            でナポレオン3世を捕虜としてフランスを屈服させた。そして1871年1月、フランスの 
+                            <select class="blank-select" id="q2-e">
+                                <option value="">---</option>
+                                <option value="versailles">ヴェルサイユ宮殿</option>
+                                <option value="tuileries">チュイルリー宮殿</option>
+                            </select> 
+                            においてドイツ帝国の成立を宣言した。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q2-check-btn" onclick="checkBlank('q2')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q2-retry-btn" onclick="retryBlank('q2')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q2-feedback" class="feedback"></div>
+                    </div>
+
+                    <!-- 第3問: 穴埋め -->
+                    <div class="quiz-block" id="q3">
+                        <div class="quiz-question">Q3. ドイツ帝国の内政とアルザスをめぐる歴史について、空欄を埋めなさい。</div>
+                        <div class="fill-in-blank">
+                            ドイツ帝国成立後、ビスマルクはカトリック教徒の「中央党」を弾圧する「 
+                            <select class="blank-select" id="q3-a">
+                                <option value="">---</option>
+                                <option value="kulturkampf">文化闘争（クルトゥールカンプフ）</option>
+                                <option value="shakaishugi">社会主義者鎮圧法</option>
+                            </select> 
+                            」を展開した。一方、敗れたフランスは鉱物資源が豊富なアルザス・ロレーヌを割譲させられた。この地は、1648年の 
+                            <select class="blank-select" id="q3-b">
+                                <option value="">---</option>
+                                <option value="westphalia">ウェストファリア条約</option>
+                                <option value="utrecht">ユトレヒト条約</option>
+                            </select> 
+                            でフランス領とされる以前から、本来はドイツ系住民が多数を占めていた。作家 
+                            <select class="blank-select" id="q3-c">
+                                <option value="">---</option>
+                                <option value="daudet">アルフォンス・ドーデ</option>
+                                <option value="goethe">ゲーテ</option>
+                            </select> 
+                            による小説『最後の授業』は、敗戦後のフランス国民の 
+                            <select class="blank-select" id="q3-d">
+                                <option value="">---</option>
+                                <option value="german">ナショナリズム（国民主義）</option>
+                                <option value="liberal">自由主義</option>
+                            </select> 
+                            を鼓舞するための政治的なフィクションとしての側面が強かったことが知られている。
+                        </div>
+                        <div class="action-buttons">
+                            <button class="check-btn" id="q3-check-btn" onclick="checkBlank('q3')"><i data-lucide="check-circle-2"></i> 解答をチェック</button>
+                            <button class="retry-btn" id="q3-retry-btn" onclick="retryBlank('q3')"><i data-lucide="rotate-ccw"></i> 解き直す</button>
+                        </div>
+                        <div id="q3-feedback" class="feedback"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FAB -->
+        <div class="fab-container">
+            <button class="fab-btn" id="memorizeBtn" onclick="toggleMemorizeMode()" title="暗記モード切替">
+                <i data-lucide="eye"></i>
+                <span class="tooltip-text">暗記モード</span>
+            </button>
+            <button class="fab-btn" onclick="scrollToTop()" title="ページ上部へ">
+                <i data-lucide="chevron-up"></i>
+                <span class="tooltip-text">上へ戻る</span>
+            </button>
+        </div>
+
+        <footer>
+            <p>COPYRIGHT 2026 © STUDY PORTAL. ALL RIGHTS RESERVED</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- サイドバー制御 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        const toggleSidebar = () => {
+            const isActive = sidebar.classList.contains('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuToggle.innerHTML = isActive ? '<i data-lucide="menu"></i>' : '<i data-lucide="x"></i>';
+            lucide.createIcons();
+            document.body.style.overflow = isActive ? '' : 'hidden';
+        };
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- FAB ---
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMemorizeMode() {
+            const body = document.body;
+            const btn = document.getElementById('memorizeBtn');
+            
+            body.classList.toggle('memorize-mode');
+            
+            if (body.classList.contains('memorize-mode')) {
+                btn.classList.add('active-mode');
+                btn.innerHTML = '<i data-lucide="eye-off"></i><span class="tooltip-text">通常モード</span>';
+            } else {
+                btn.classList.remove('active-mode');
+                btn.innerHTML = '<i data-lucide="eye"></i><span class="tooltip-text">暗記モード</span>';
+                document.querySelectorAll('.important-word').forEach(el => el.classList.remove('revealed'));
+            }
+            lucide.createIcons();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (document.body.classList.contains('memorize-mode') && e.target.classList.contains('important-word')) {
+                e.target.classList.toggle('revealed');
+            }
+        });
+
+        // --- クイズロジック (穴埋め) ---
+        const blankQuizzes = {
+            'q1': {
+                answers: { 'q1-a': 'mazzini', 'q1-b': 'cavour', 'q1-c': 'garibaldi', 'q1-d': 'teano', 'q1-e': 'rome' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>マッツィーニの共和政による「下からの統一」の挫折から、カヴール首相の現実外交によるサルデーニャ主導の統一、ガリバルディの無私の献身（テアーノの会見）、そしてローマ併合による統一完成という一連のダイナミックな歴史的因果関係を正確に把握できています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>青年イタリアの指導者は「マッツィーニ」。サルデーニャ首相は「カヴール」。南伊を征服したのは「ガリバルディ」。国王に征服地を献上した会見は「テアーノの会見」。最終的に1870年に併合された首都は「ローマ」です。'
+            },
+            'q2': {
+                answers: { 'q2-a': 'zollverein', 'q2-b': 'bismarck', 'q2-c': 'austro', 'q2-d': 'franco', 'q2-e': 'versailles' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>オーストリアを除外した経済の一体化としての「ドイツ関税同盟」、ビスマルクの「鉄血政策」による軍拡、そしてオーストリア（普墺戦争）とフランス（普仏戦争）を次々に破ることで、他国フランスの心臓部である「ヴェルサイユ宮殿」において帝国成立を宣言した屈辱の構造が完璧に理解できています。',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>プロイセン主導の同盟は「ドイツ関税同盟（ゾルフェライン）」。プロイセン首相は「ビスマルク」。1866年の戦争は「普墺（オーストリア）戦争」。1870年の戦争は「普仏（フランス）戦争」。戴冠式が行われたのは「ヴェルサイユ宮殿」です。'
+            },
+            'q3': {
+                answers: { 'q3-a': 'kulturkampf', 'q3-b': 'westphalia', 'q3-c': 'daudet', 'q3-d': 'german' },
+                explanationCorrect: '<strong>正解！完璧です。</strong><br>カトリック中央党との対立である「文化闘争」、アルザス地方の本来のドイツ言語的ルーツ（ウェストファリア条約）、そしてフランス国粋主義作家アルフォンス・ドーデによる『最後の授業』が近代の「国民国家」建設においていかに「国語教育」を媒介した愛国心高揚の装置として機能したかという、一歩進んだ社会史的・ナショナリズム論的な背景を見事に理解できています！',
+                explanationIncorrect: '<strong>惜しい！間違えた箇所があります。</strong><br>赤字の箇所を確認しましょう。<br>カトリックとの戦いは「文化闘争（クルトゥールカンプフ）」。フランス領となるきっかけは1648年の「ウェストファリア条約」。最後の授業の作者は「アルフォンス・ドーデ」。人々を統合しようとする精神は「ナショナリズム（国民主義）」です。'
+            }
+        };
+
+        function checkBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            const feedback = document.getElementById(`${qId}-feedback`);
+            
+            let isAllFilled = true;
+            for (let id of selectIds) {
+                if (!document.getElementById(id).value) {
+                    isAllFilled = false;
+                    break;
+                }
+            }
+            if (!isAllFilled) {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '<strong>未入力があります。</strong>すべての空欄を選択してからチェックしてください。';
+                return;
+            }
+
+            let isAllCorrect = true;
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const userVal = selectEl.value;
+                const userText = selectEl.options[selectEl.selectedIndex].text;
+                const correctVal = quizData.answers[id];
+                const correctText = Array.from(selectEl.options).find(opt => opt.value === correctVal).text;
+                
+                selectEl.style.display = 'none';
+                
+                const resultSpan = document.createElement('span');
+                resultSpan.className = 'blank-result-display';
+                
+                if (userVal === correctVal) {
+                    resultSpan.innerHTML = `<span class="result-correct">${correctText}</span>`;
+                } else {
+                    isAllCorrect = false;
+                    resultSpan.innerHTML = `<span class="result-incorrect"><span class="user-answer">${userText}</span><span class="correct-answer">${correctText}</span></span>`;
+                }
+                selectEl.parentNode.insertBefore(resultSpan, selectEl.nextSibling);
+            });
+
+            if (isAllCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = quizData.explanationCorrect;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = quizData.explanationIncorrect;
+            }
+            feedback.style.display = 'block';
+
+            document.getElementById(`${qId}-check-btn`).style.display = 'none';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'inline-flex';
+        }
+
+        function retryBlank(qId) {
+            const quizData = blankQuizzes[qId];
+            const selectIds = Object.keys(quizData.answers);
+            
+            selectIds.forEach(id => {
+                const selectEl = document.getElementById(id);
+                const resultSpan = selectEl.nextElementSibling;
+                if (resultSpan && resultSpan.classList.contains('blank-result-display')) {
+                    resultSpan.remove();
+                }
+                selectEl.value = '';
+                selectEl.style.display = 'inline-block';
+            });
+
+            document.getElementById(`${qId}-feedback`).style.display = 'none';
+            document.getElementById(`${qId}-check-btn`).style.display = 'inline-flex';
+            document.getElementById(`${qId}-retry-btn`).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
