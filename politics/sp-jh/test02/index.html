@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>復習問題 - 院政と平氏政権</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 日本史・和風の落ち着きをイメージした深緑をテーマカラーに設定 */
+        .theme-bg { background-color: #0b503e; }
+        .theme-bg-hover:hover { background-color: #083d2f; }
+        .theme-text { color: #0b503e; }
+        .theme-border { border-color: #0b503e; }
+        .theme-ring:focus { 
+            --tw-ring-color: #0b503e; 
+            border-color: #0b503e; 
+        }
+
+        /* フォントサイズ手動切り替え用 */
+        :root {
+            --font-scale: 0.85; /* デフォルトを一段階縮小 */
+        }
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen pb-10 fs-base flex flex-col">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="theme-bg text-white p-4 flex justify-between items-center">
+            <span class="font-bold text-lg fs-base">問題一覧</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2 custom-scrollbar">
+            <!-- JSで生成 -->
+        </ul>
+    </nav>
+
+    <!-- スタート画面 -->
+    <div id="start-screen" class="max-w-5xl mx-auto p-4 pt-8 w-full">
+        <div class="bg-white border border-gray-300 shadow-sm mb-6">
+            <table class="w-full border-collapse">
+                <tbody>
+                    <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テストグループ</th><td class="p-3 border border-gray-300 fs-sm">日本史探究基礎</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">院政と平氏政権</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">13点</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">範囲</th><td class="p-3 border border-gray-300 fs-sm">院政の始まり（後三条天皇、白河上皇、延久の荘園整理令、記録荘園券契所、知行国、北面の武士）、保元の乱・平治の乱、平氏政権、日宋貿易、院政期の文化（今様・絵巻物）</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-8 flex justify-center gap-4">
+            <a href="https://n-kyozai.github.io/n-kyozai/politics/sp-jh/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block fs-base flex items-center justify-center">テスト一覧へ</a>
+            <button id="start-btn" class="theme-bg theme-bg-hover text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト開始</button>
+        </div>
+    </div>
+
+    <!-- テスト画面 -->
+    <div id="test-screen" class="hidden max-w-5xl mx-auto p-4 flex-col md:flex-row gap-6 w-full">
+        <!-- 左側：問題リスト (PC用) -->
+        <div class="hidden md:block w-48 shrink-0">
+            <div id="question-nav-list" class="flex flex-col gap-1">
+                <!-- JSで生成 -->
+            </div>
+        </div>
+
+        <!-- 右側：問題エリア -->
+        <div class="flex-grow">
+            <!-- ヘッダー部分 -->
+            <div class="flex justify-between items-center mb-4 bg-white p-3 rounded shadow-sm border border-gray-300">
+                <div class="flex items-center gap-2">
+                    <!-- モバイル用メニュー開閉ボタン -->
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none p-1 border border-gray-300 rounded bg-gray-50 hover:bg-gray-100 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="font-bold text-gray-700 fs-base ml-1">院政と平氏政権</div>
+                </div>
+                
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- フォントサイズ切り替えボタン -->
+                    <button id="font-size-btn" class="border border-gray-400 bg-white rounded px-2 py-1 flex items-center justify-center font-bold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none" style="font-size: 14px; line-height: 1.2;">
+                        ぁあ
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border border-gray-300 rounded shadow-sm bg-white mb-6">
+                <div id="question-number" class="bg-emerald-50 px-4 py-3 border-b border-gray-300 text-gray-800 font-bold fs-base">
+                    <!-- 問題番号 -->
+                </div>
+                <div class="p-6">
+                    <!-- 問題文と、文ごとの解答欄が展開されるエリア -->
+                    <div id="question-content" class="mb-4"></div>
+
+                    <!-- 従来通り、問題文の下にまとめて解答欄を置く場合のエリア -->
+                    <div class="bg-gray-50 p-4 border rounded hidden" id="answer-container"></div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center border-t pt-4">
+                <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition disabled:opacity-50 disabled:cursor-not-allowed fs-base">前へ</button>
+                <div class="flex items-center">
+                    <span id="progress-text" class="mr-6 text-gray-600 font-bold fs-base">1 / 3</span>
+                    <button id="next-btn" class="theme-bg theme-bg-hover text-white font-bold py-2 px-6 rounded transition fs-base">次へ</button>
+                    <button id="finish-btn" class="hidden bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded shadow transition fs-base">テスト提出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 採点結果画面 -->
+    <div id="result-screen" class="hidden max-w-5xl mx-auto p-4 w-full">
+        <h2 class="font-bold mb-6 text-gray-800 border-b-2 theme-border pb-2 fs-2xl">採点結果</h2>
+        
+        <div class="bg-white border border-gray-300 rounded shadow-sm p-6 mb-8 text-center">
+            <p class="text-gray-600 mb-2 fs-lg">あなたの得点</p>
+            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 13点</p>
+        </div>
+
+        <div id="result-list" class="space-y-8">
+            <!-- JSで結果を生成 -->
+        </div>
+
+        <div class="text-center mt-12 mb-8 flex justify-center gap-4">
+            <a href="https://n-kyozai.github.io/n-kyozai/politics/sp-jh/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block fs-base flex items-center justify-center">テスト一覧へ</a>
+            <button id="restart-test-btn" class="theme-bg theme-bg-hover text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">もう一度受ける</button>
+        </div>
+    </div>
+
+    <!-- 確認モーダル -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-auto">
+            <p class="mb-6 text-center font-bold text-gray-800 fs-lg">テストを提出して採点しますか？</p>
+            <div class="flex justify-center gap-4">
+                <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition font-bold fs-base">いいえ</button>
+                <button id="modal-ok-btn" class="px-6 py-2 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 transition font-bold fs-base">はい</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 日本史：院政と平氏政権 問題データ（全13点満点）
+        const originalQuestions = [
+            { 
+                id: 1, 
+                point: 6,
+                pointPerItem: 1,
+                inputCount: 6,
+                ordered: true,
+                labels: ["A", "B", "C", "D", "E", "F"],
+                text: `次の文の（　）に適語を入れよ。`, 
+                subQuestions: [
+                    { 
+                        text: "1068年に即位した（ A ）は、摂関家を外戚とせず、大江匡房らの人材を登用して親政をおこなった。1069年には、基準を明確にして不法な荘園を停廃する延久の（ B ）を出して荘園整理を進め、中央に（ C ）を設置して審査を厳格化した。これによって荘園公領制の形成が促された。", 
+                        inputIndices: [0, 1, 2] 
+                    },
+                    { 
+                        text: "その後、1086年に（ D ）上皇が幼少の堀河天皇を後見して国政を主導する「院政」を開始した。院政期には、一国の支配権と収益権を皇族や大貴族に与える（ E ）制度が広がり、院の知行国などから得た経済力が財源となった。さらに院の軍事的な支え（護衛）として、新たに武士を用いた（ F ）の武士が設置された。", 
+                        inputIndices: [3, 4, 5] 
+                    }
+                ],
+                options: [
+                    ["後三条天皇", "白河天皇", "鳥羽天皇", "後白河天皇"],
+                    ["荘園整理令", "国郡注文", "宣旨枡令", "検地令"],
+                    ["記録荘園券契所", "問注所", "評定衆", "政所"],
+                    ["白河", "後三条", "鳥羽", "後白河"],
+                    ["知行国", "国衙領", "寄進地", "地頭"],
+                    ["北面", "西面", "滝口", "奉公"]
+                ],
+                answer: ["後三条天皇", "荘園整理令", "記録荘園券契所", "白河", "知行国", "北面"],
+                displayAnswer: "A. 後三条天皇\nB. 荘園整理令\nC. 記録荘園券契所\nD. 白河\nE. 知行国\nF. 北面",
+                explanation: "【解説】\n・（A）後三条天皇：藤原頼通の娘に皇子が生まれなかったため、約170年ぶりに藤原氏を外戚としない天皇として即位し、学者の大江匡房らを登用しました。\n・（B・C）延久の荘園整理令・記録荘園券契所：1069年、後三条天皇が発布。基準にあわない摂関家領などの荘園を容赦なく停廃しました。その審査のために中央に置かれたのが「記録荘園券契所（記録所）」です。度量衡を統一するため「宣旨枡（せんじます）」も設定されました。\n・（D）白河上皇：1086年、幼い堀河天皇に譲位したあとも、上皇（のちに出家して法皇）として「院庁」を開いて実権を握り、「院政」の創始者となりました。\n・（E）知行国制度：特定の国（知行国）の支配権・収益権を公家や寺社などに一任する制度で、院や摂関家、大貴族の有力な経済基盤となりました。\n・（F）北面の武士：白河上皇が院の御所の北面を警備させるために組織した武家階級で、平正盛や平忠盛などの軍事貴族（武士）を登用し、院政の強固な軍事基盤としました。"
+            },
+            {
+                id: 2,
+                point: 4,
+                pointPerItem: 1,
+                inputCount: 4,
+                ordered: true,
+                labels: ["①", "②", "③", "④"],
+                text: `次の文の（　）に適語を入れよ。`,
+                subQuestions: [
+                    { 
+                        text: "院政をめぐる対立や皇位継承争いから、京都で武士を巻き込んだ大規模な内乱が勃発した。1156年には崇徳上皇と後白河天皇が争った（ ① ）の乱がおこり、さらに1159年には院近臣の信西（藤原通憲）と藤原信頼が争う（ ② ）の乱が発生した。これらを経て、勝利を収めた伊勢平氏の棟梁・平清盛が急速に政権を掌握していった。", 
+                        inputIndices: [0, 1] 
+                    },
+                    { 
+                        text: "平清盛は1167年に武士として初めて太政大臣に就任。さらに、現在の神戸市にあたる（ ③ ）を修築して、宋（中国）との間で日宋貿易を積極的に推進した。清盛はさらに、娘の（ ④ ）を高倉天皇の中宮として入内させ、生まれた安徳天皇を即位させるなど、摂関家と同様の外戚関係を築いて平氏の全盛期（平氏政権）を築き上げた。", 
+                        inputIndices: [2, 3] 
+                    }
+                ],
+                options: [
+                    ["保元", "平治", "承久", "治承・寿永"],
+                    ["平治", "保元", "観応", "正長の徳政"],
+                    ["大輪田泊", "博多津", "坊津", "難波津"],
+                    ["平徳子（建礼門院）", "平寛子", "北条政子", "藤原薬子"]
+                ],
+                answer: ["保元", "平治", "大輪田泊", "平徳子（建礼門院）"],
+                displayAnswer: "① 保元\n② 平治\n③ 大輪田泊\n④ 平徳子（建礼門院）",
+                explanation: "【解説】\n・（①）保元の乱（1156年）：鳥羽法皇の死後、崇徳上皇と後白河天皇の皇位継承争いや、摂関家の対立に源為義・源義朝の父子、平忠正・平清盛の叔父・甥が巻き込まれ、後白河天皇方が勝利しました。\n・（②）平治の乱（1159年）：保元の乱ののち、院近臣の信西（藤原通憲）と藤原信頼が対立。源義朝が信頼に、平清盛が信西（および後白河法皇）に結びついて衝突し、清盛が圧勝。これにより源氏が凋落し、平氏の優位が確立しました。この2つの乱によって、朝廷内の武力衝突を解決するには「武士の力」が不可欠であることが広く示されることとなりました。\n・（③）大輪田泊：瀬戸内海航路の要衝である現在の神戸市に清盛が人工島（経が島）を築くなどして修築し、日宋貿易の船を直接呼び込み、大量の宋銭などを輸入しました。\n・（④）平徳子：平清盛の娘で、高倉天皇の妃となり、安徳天皇（壇ノ浦の戦いで入水した幼帝）の母となりました。清盛はこのように従来の摂関政治の手法（外戚政治）を模倣して急速に政権を固め、「平氏にあらざればみな人非人なるべし（平家物語）」と言わしめるほどの全盛期を謳歌しました。"
+            },
+            {
+                id: 3,
+                point: 3,
+                pointPerItem: 1,
+                inputCount: 3,
+                ordered: true,
+                labels: ["①", "②", "③"],
+                text: `次の文の（　）に適語を入れよ。`,
+                subQuestions: [
+                    { 
+                        text: "院政期には、貴族文化と庶民の文化が融合した独自の「院政期の文化」が栄えた。仏教では阿弥陀浄土への憧れから、白河・鳥羽上皇らによって建立された「法勝寺」を代表とする（ ① ）と呼ばれる一連の大寺院が作られ、さらには阿弥陀如来のもとを往復する庶民の霊場巡りとして（ ② ）詣が広く大流行した（「蟻の（ ② ）詣」と表現された）。", 
+                        inputIndices: [0, 1] 
+                    },
+                    { 
+                        text: "文学・芸能においては、庶民に親しまれた流行歌集である、後白河法皇が編纂した『（ ③ ）』がある（「今様」と呼ばれる歌謡を収録）。美術ではストーリー性の高い「絵巻物」が流行し、平安初期の政変をリアルに描いた『伴大納言絵巻』や、仏教説話を集めた『信貴山縁起絵巻』、『鳥獣人物戯画』などの傑作が生み出された。", 
+                        inputIndices: [2] 
+                    }
+                ],
+                options: [
+                    ["六勝寺", "五山", "国分寺", "七大寺"],
+                    ["熊野", "伊勢", "高野", "厳島"],
+                    ["梁塵秘抄", "万葉集", "古今和歌集", "閑吟集"]
+                ],
+                answer: ["六勝寺", "熊野", "梁塵秘抄"],
+                displayAnswer: "① 六勝寺\n② 熊野\n③ 梁塵秘抄",
+                explanation: "【解説】\n・（①）六勝寺（ろくしょうじ）：白河・鳥羽・崇徳・近衛天皇（または上皇）らによって、鴨川東岸の岡崎あたりに建立された、名前に「勝」の字がつく6つの巨大寺院（法勝寺・尊勝寺・最勝寺・円勝寺・成勝寺・延勝寺）の総称です。\n・（②）熊野詣（くまのもうで）：紀伊山地の聖地・熊野三山（本宮・新宮・那智）に熱心に参詣すること。上皇・貴族から庶民まで大群列を作って参詣する様子は、まるで蟻が並んで歩くようだと「蟻の熊野詣」と称されました。後白河法皇は生涯に30回以上も熊野詣をおこないました。\n・（③）梁塵秘抄（りょうじんひしょう）：後白河法皇が当時大流行していた歌謡「今様（いまよう）」をこよなく愛し、それらを自ら採録・分類して解説まで付した決定版の歌謡集です。この時代は、貴族が庶民の文化・芸能（今様、田楽、猿楽など）を取り入れるなど、上下の階層文化が活発に混ざり合った「過渡期」の特色を持っています。"
+            }
+        ];
+
+        // 状態変数
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; 
+
+        // フォントサイズ切り替え用の設定
+        const fontSizes = ['normal', 'small', 'xsmall', 'large'];
+        let currentFontSizeIndex = 1;
+
+        // DOMContentLoaded イベントで初期化とイベントリスナーの登録を確実に行う
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM要素の取得
+            const startScreen = document.getElementById('start-screen');
+            const testScreen = document.getElementById('test-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const questionContent = document.getElementById('question-content');
+            const answerContainer = document.getElementById('answer-container');
+            const questionNavList = document.getElementById('question-nav-list');
+            const confirmModal = document.getElementById('confirm-modal');
+            const drawerOverlay = document.getElementById('drawer-overlay');
+            const drawerMenu = document.getElementById('drawer-menu');
+            const drawerList = document.getElementById('drawer-list');
+
+            // --- 関数定義 ---
+            // モバイル用メニューの開閉イベント
+            function openDrawer() {
+                drawerMenu.classList.remove('-translate-x-full');
+                drawerOverlay.classList.remove('hidden');
+            }
+
+            function closeDrawer() {
+                drawerMenu.classList.add('-translate-x-full');
+                drawerOverlay.classList.add('hidden');
+            }
+
+            // テスト開始処理
+            function startTest() {
+                questions = [...originalQuestions];
+                currentQuestionIndex = 0;
+                userAnswers = {};
+                
+                startScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+                testScreen.classList.remove('hidden');
+                testScreen.classList.add('flex');
+
+                renderNavList();
+                renderQuestion();
+            }
+
+            // 左側の問題ナビゲーションとドロワーメニューの生成
+            function renderNavList() {
+                questionNavList.innerHTML = '';
+                drawerList.innerHTML = '';
+
+                questions.forEach((_, index) => {
+                    // PC用
+                    const navItem = document.createElement('div');
+                    navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
+                    navItem.innerText = `【問題${index + 1}】`;
+                    
+                    navItem.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                    });
+                    questionNavList.appendChild(navItem);
+
+                    // モバイル用（ドロワーメニュー内）
+                    const li = document.createElement('li');
+                    li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 font-bold theme-text border border-emerald-400' : 'bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700'}`;
+                    li.innerHTML = `<div class="text-center">【問題${index + 1}】</div>`;
+                    
+                    li.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                        closeDrawer(); // 選択後に閉じる
+                    });
+                    drawerList.appendChild(li);
+                });
+            }
+
+            // セレクトボックス生成
+            function createSelectElement(q, i) {
+                const select = document.createElement('select');
+                select.className = 'answer-input multi-input shadow-sm appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring bg-white cursor-pointer fs-base';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                if (q.inputCount === 1 || !q.ordered) {
+                    defaultOption.text = "選択してください";
+                } else {
+                    let prefix = q.labels ? q.labels[i] : '①②③④⑤⑥⑦⑧⑨⑩'[i];
+                    defaultOption.text = `（${prefix}）を選択してください`;
+                }
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                select.appendChild(defaultOption);
+
+                q.options[i].forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.text = opt;
+                    if (userAnswers[q.id] && userAnswers[q.id][i] === opt) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                return select;
+            }
+
+            // 問題の表示
+            function renderQuestion() {
+                const q = questions[currentQuestionIndex];
+                document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
+                document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
+
+                questionContent.innerHTML = '';
+                answerContainer.innerHTML = '';
+
+                if (q.text) {
+                    const p = document.createElement('div');
+                    p.className = 'mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap font-semibold border-l-4 theme-border pl-3';
+                    p.innerHTML = q.text;
+                    questionContent.appendChild(p);
+                }
+
+                if (q.subQuestions) {
+                    answerContainer.classList.add('hidden');
+
+                    q.subQuestions.forEach((sub, i) => {
+                        let subText = typeof sub === 'string' ? sub : sub.text;
+                        let inputIndices = typeof sub === 'string' ? [i] : sub.inputIndices;
+
+                        const subP = document.createElement('p');
+                        subP.className = 'mb-4 leading-relaxed whitespace-pre-wrap fs-lg text-gray-800 bg-gray-50 p-4 border rounded shadow-sm';
+                        
+                        // （A）や（①）などの記号を少し目立たせる簡易置換
+                        let decoratedText = subText;
+                        if (q.labels) {
+                            q.labels.forEach(lbl => {
+                                decoratedText = decoratedText.replaceAll(`（ ${lbl} ）`, `<span class="px-2 py-0.5 mx-1 rounded bg-yellow-100 border border-yellow-300 font-bold theme-text">${lbl}</span>`);
+                                decoratedText = decoratedText.replaceAll(`（${lbl}）`, `<span class="px-2 py-0.5 mx-1 rounded bg-yellow-100 border border-yellow-300 font-bold theme-text">${lbl}</span>`);
+                            });
+                        }
+                        subP.innerHTML = decoratedText;
+                        questionContent.appendChild(subP);
+
+                        // 解答セレクトボックスの設置
+                        inputIndices.forEach(idx => {
+                            const selectWrap = document.createElement('div');
+                            selectWrap.className = 'mb-6 bg-white p-4 border rounded shadow-sm';
+                            
+                            const label = document.createElement('label');
+                            label.className = 'block font-bold text-gray-700 mb-2 fs-sm flex items-center gap-1';
+                            
+                            let prefix = q.labels ? q.labels[idx] : '①②③④⑤⑥⑦⑧⑨⑩'[idx];
+                            let labelText = (!q.ordered || q.inputCount === 1) ? '解答を選択してください：' : `（${prefix}）に入る語句を選択してください：`;
+                            label.innerHTML = `<span class="inline-block w-6 h-6 rounded-full theme-bg text-white text-center leading-6 text-xs font-bold mr-1">${prefix}</span> ${labelText}`;
+                            selectWrap.appendChild(label);
+
+                            const select = createSelectElement(q, idx);
+                            selectWrap.appendChild(select);
+                            
+                            questionContent.appendChild(selectWrap);
+                        });
+                    });
+                } else {
+                    if (q.inputCount > 0) {
+                        answerContainer.classList.remove('hidden');
+                        const label = document.createElement('label');
+                        label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
+                        label.innerText = '解答を選択してください：';
+                        answerContainer.appendChild(label);
+
+                        for(let i = 0; i < q.inputCount; i++) {
+                            const selectWrap = document.createElement('div');
+                            selectWrap.className = 'mb-3';
+                            const select = createSelectElement(q, i);
+                            selectWrap.appendChild(select);
+                            answerContainer.appendChild(selectWrap);
+                        }
+                    } else {
+                        answerContainer.classList.add('hidden');
+                    }
+                }
+
+                // ナビゲーションの色更新
+                Array.from(questionNavList.children).forEach((el, idx) => {
+                    if (idx === currentQuestionIndex) {
+                        el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-emerald-100 border-emerald-400 theme-text';
+                    } else {
+                        el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-gray-200 border-gray-300 hover:bg-gray-300';
+                    }
+                });
+                Array.from(drawerList.children).forEach((li, idx) => {
+                    if (idx === currentQuestionIndex) {
+                        li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-emerald-100 font-bold theme-text border border-emerald-400';
+                    } else {
+                        li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700';
+                    }
+                });
+
+                // ボタン制御
+                document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+                if (currentQuestionIndex === questions.length - 1) {
+                    document.getElementById('next-btn').classList.add('hidden');
+                    document.getElementById('finish-btn').classList.remove('hidden');
+                } else {
+                    document.getElementById('next-btn').classList.remove('hidden');
+                    document.getElementById('finish-btn').classList.add('hidden');
+                }
+
+                // スクロールリセット
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0; 
+                    document.documentElement.scrollTop = 0;
+                }, 10);
+            }
+
+            function saveAnswer() {
+                const q = questions[currentQuestionIndex];
+                if (q.inputCount) {
+                    const inputs = testScreen.querySelectorAll('.multi-input');
+                    userAnswers[q.id] = Array.from(inputs).map(input => input.value);
+                }
+            }
+
+            function executeScoring() {
+                testScreen.classList.add('hidden');
+                testScreen.classList.remove('flex');
+                resultScreen.classList.remove('hidden');
+                confirmModal.classList.add('hidden');
+
+                let score = 0;
+                let totalPoints = 0;
+                const resultContainer = document.getElementById('result-list');
+                resultContainer.innerHTML = '';
+
+                questions.forEach((q, index) => {
+                    totalPoints += q.point;
+                    let earnedPoint = 0;
+                    let isCorrect = false;
+                    let displayUserAnswer = "";
+
+                    if (q.inputCount) {
+                        const userAnsArray = userAnswers[q.id] || Array(q.inputCount).fill("");
+                        let matchCount = 0;
+
+                        if (q.ordered) {
+                            q.answer.forEach((correctWord, i) => {
+                                if (userAnsArray[i] === correctWord) {
+                                    matchCount++;
+                                }
+                            });
+                        } else {
+                            const normalizedUserAns = [...new Set(userAnsArray.filter(ans => ans !== ''))];
+                            q.answer.forEach(correctWord => {
+                                if (normalizedUserAns.includes(correctWord)) {
+                                    matchCount++;
+                                }
+                            });
+                        }
+                        
+                        earnedPoint = matchCount * q.pointPerItem;
+                        isCorrect = earnedPoint === q.point; 
+
+                        displayUserAnswer = userAnsArray.map((ans, idx) => {
+                            const prefix = (q.inputCount > 1 && q.ordered) ? (q.labels ? q.labels[idx] : `①②③④⑤⑥⑦⑧⑨⑩`[idx]) + " " : "";
+                            return ans.trim() === "" ? `${prefix}<span class='text-gray-400'>未選択</span>` : `${prefix}${ans}`;
+                        }).join('\n');
+                    }
+                    
+                    score += earnedPoint;
+
+                    let markHtml = '';
+                    if (earnedPoint === q.point) {
+                        markHtml = '<span class="text-red-600 font-bold mr-2 text-2xl">○</span>';
+                    } else if (earnedPoint > 0) {
+                        markHtml = '<span class="text-yellow-600 font-bold mr-2 text-2xl">△</span>';
+                    } else {
+                        markHtml = '<span class="text-blue-600 font-bold mr-2 text-2xl">×</span>';
+                    }
+
+                    const explanationHtml = q.explanation ? q.explanation : '';
+                    
+                    let fullTextHtml = `<div class="mb-4 leading-relaxed fs-lg text-gray-800 font-semibold whitespace-pre-wrap">${q.text}</div>`;
+                    if (q.subQuestions) {
+                        const subList = q.subQuestions.map(sq => {
+                            let text = typeof sq === 'string' ? sq : sq.text;
+                            // 採点画面でも穴あきを少し目立たせる
+                            let decoratedText = text;
+                            if (q.labels) {
+                                q.labels.forEach(lbl => {
+                                    decoratedText = decoratedText.replaceAll(`（ ${lbl} ）`, `<span class="px-2 py-0.5 mx-1 rounded bg-yellow-100 border border-yellow-300 font-bold theme-text">${lbl}</span>`);
+                                    decoratedText = decoratedText.replaceAll(`（${lbl}）`, `<span class="px-2 py-0.5 mx-1 rounded bg-yellow-100 border border-yellow-300 font-bold theme-text">${lbl}</span>`);
+                                });
+                            }
+                            return `<p class="mb-3 p-3 bg-gray-50 border rounded text-gray-800 whitespace-pre-wrap fs-lg">${decoratedText}</p>`;
+                        }).join('');
+                        fullTextHtml += `<div class="mb-6">${subList}</div>`;
+                    }
+
+                    const itemHtml = `
+                        <div class="border border-gray-300 rounded shadow-sm bg-white overflow-hidden">
+                            <div class="bg-emerald-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center fs-base">
+                                ${markHtml}
+                                【問題${index + 1}】（${q.point}点）
+                            </div>
+                            <div class="p-4 md:p-6">
+                                ${fullTextHtml}
+                                <table class="w-full border-collapse">
+                                    <tbody>
+                                        <tr>
+                                            <th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left fs-sm">正解</th>
+                                            <td class="p-2 border border-gray-300 font-bold whitespace-pre-wrap fs-sm">${q.displayAnswer}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">あなたの解答</th>
+                                            <td class="p-2 border border-gray-300 whitespace-pre-wrap fs-sm ${isCorrect ? '' : (earnedPoint > 0 ? 'text-yellow-700 font-bold' : 'text-red-600 font-bold')}">${displayUserAnswer}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">得点</th>
+                                            <td class="p-2 border border-gray-300 font-bold fs-sm">${earnedPoint}点 ／ ${q.point}点</td>
+                                        </tr>
+                                        ${explanationHtml ? `
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">解説</th>
+                                            <td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap leading-relaxed fs-sm bg-stone-50">${explanationHtml}</td>
+                                        </tr>` : ''}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    resultContainer.insertAdjacentHTML('beforeend', itemHtml);
+                });
+
+                document.getElementById('total-score').innerText = `${score}点 / ${totalPoints}点`;
+
+                // 一番上へスクロール
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0; 
+                    document.documentElement.scrollTop = 0;
+                }, 10);
+            }
+
+            // --- イベントリスナーの登録 ---
+            
+            // フォントサイズ変更
+            document.getElementById('font-size-btn').addEventListener('click', () => {
+                currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+                const scaleMap = {
+                    'normal': 1,
+                    'small': 0.85,
+                    'xsmall': 0.7,
+                    'large': 1.15
+                };
+                document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+            });
+
+            // ドロワー関連
+            document.getElementById('mobile-menu-btn').addEventListener('click', openDrawer);
+            document.getElementById('close-menu-btn').addEventListener('click', closeDrawer);
+            drawerOverlay.addEventListener('click', closeDrawer);
+
+            // テスト進行関連
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            document.getElementById('restart-test-btn').addEventListener('click', () => {
+                resultScreen.classList.add('hidden');
+                startScreen.classList.remove('hidden');
+            });
+
+            document.getElementById('next-btn').addEventListener('click', () => {
+                saveAnswer();
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    renderQuestion();
+                }
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                saveAnswer();
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    renderQuestion();
+                }
+            });
+
+            testScreen.addEventListener('change', (e) => {
+                if (e.target.classList.contains('answer-input')) {
+                    saveAnswer();
+                }
+            });
+
+            // 提出モーダル関連
+            document.getElementById('finish-btn').addEventListener('click', () => {
+                saveAnswer();
+                confirmModal.classList.remove('hidden');
+            });
+            document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+                confirmModal.classList.add('hidden');
+            });
+            document.getElementById('modal-ok-btn').addEventListener('click', () => {
+                executeScoring();
+            });
+            
+        }); // DOMContentLoaded の終了
+    </script>
+</body>
+</html>
