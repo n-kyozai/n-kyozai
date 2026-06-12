@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本史政権史・極限肉付け完全版データベース</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f7f6f2; /* 落ち着きのある和風の生成り色 */
+        }
+        .font-serif-jp {
+            font-family: 'Shippori Mincho', serif;
+        }
+        /* スムーズなスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #e9e6dd;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #8e806a;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-stone-850 antialiased min-h-screen flex flex-col">
+
+    <!-- ヘッダー -->
+    <header class="border-b-4 border-amber-950 bg-stone-900 text-stone-100 py-5 px-4 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-amber-500 text-xs tracking-widest font-bold block mb-1 font-mono">REGIME MASTER PIECE</span>
+                <h1 class="font-serif-jp text-2xl lg:text-3xl font-bold tracking-tight flex items-center gap-2">
+                    日本史政権史 <span class="bg-amber-800 text-stone-100 text-xs px-2.5 py-1 rounded font-sans font-bold">完全版データベース</span>
+                </h1>
+                <p class="text-stone-400 text-xs mt-1">すべての歴史事象を正確に統合し、出来事の因果関係と記述対策を徹底網羅</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-xs bg-stone-800 border border-stone-700 text-amber-400 font-semibold px-3.5 py-2 rounded-lg shadow-inner">
+                    対象：古代小国分立 〜 現代（小泉内閣・55年体制崩壊以降）
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- 左側：時代・政権切り替え＆タイムライン年表 (lg:col-span-7) -->
+        <section class="lg:col-span-7 flex flex-col h-[calc(100vh-11rem)] min-h-[550px]">
+            
+            <!-- 時代切り替えタブ -->
+            <div class="bg-stone-800 p-2 rounded-t-xl flex flex-wrap gap-1 border-b-2 border-amber-800 shrink-0 shadow-md">
+                <button onclick="switchCategory('ancient')" id="tab-ancient" class="px-3 py-1.5 text-xs rounded font-bold bg-amber-700 text-white transition">古代・ヤマト</button>
+                <button onclick="switchCategory('ritsuryo')" id="tab-ritsuryo" class="px-3 py-1.5 text-xs rounded font-bold text-stone-300 hover:bg-stone-700 transition">律令・奈良平安</button>
+                <button onclick="switchCategory('kamakura')" id="tab-kamakura" class="px-3 py-1.5 text-xs rounded font-bold text-stone-300 hover:bg-stone-700 transition">鎌倉・南北朝</button>
+                <button onclick="switchCategory('muromachi')" id="tab-muromachi" class="px-3 py-1.5 text-xs rounded font-bold text-stone-300 hover:bg-stone-700 transition">室町・戦国</button>
+                <button onclick="switchCategory('edo')" id="tab-edo" class="px-3 py-1.5 text-xs rounded font-bold text-stone-300 hover:bg-stone-700 transition">江戸時代</button>
+                <button onclick="switchCategory('modern')" id="tab-modern" class="px-3 py-1.5 text-xs rounded font-bold text-stone-300 hover:bg-stone-700 transition">明治・大正</button>
+                <button onclick="switchCategory('contemporary')" id="tab-contemporary" class="px-3 py-1.5 text-xs rounded font-bold text-stone-300 hover:bg-stone-700 transition">昭和・平成</button>
+            </div>
+
+            <!-- 検索バー -->
+            <div class="bg-white px-4 py-3 border-x border-stone-200 flex items-center gap-2 shrink-0">
+                <span class="text-stone-400 text-sm">🔍</span>
+                <input type="text" id="timeline-search" oninput="searchTimeline()" placeholder="年号・出来事・人物名で年表内を瞬時に絞り込み..." class="w-full text-sm bg-stone-50 border border-stone-300 rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-amber-800">
+            </div>
+
+            <!-- 年表タイムラインスクロールエリア -->
+            <div class="bg-white border-x border-b border-stone-200 rounded-b-xl shadow-sm overflow-y-auto custom-scrollbar flex-grow p-4 space-y-3" id="timeline-container">
+                <!-- JSで動的に構築 -->
+            </div>
+        </section>
+
+        <!-- 右側：徹底肉付け解説パネル (lg:col-span-5) -->
+        <section class="lg:col-span-5 flex flex-col h-[calc(100vh-11rem)] min-h-[550px]">
+            <div class="bg-stone-900 text-stone-100 rounded-xl shadow-md border-b-4 border-amber-800 flex flex-col h-full overflow-hidden">
+                <div class="bg-stone-850 px-4 py-3.5 border-b border-stone-800 shrink-0 flex items-center justify-between">
+                    <h3 class="font-serif-jp text-sm font-bold text-amber-400 tracking-wider flex items-center gap-1.5">
+                        📜 出来事の構造・徹底肉付け解説
+                    </h3>
+                    <span class="text-[9px] bg-amber-900/40 border border-amber-800 text-amber-300 px-2 py-0.5 rounded uppercase font-bold tracking-wider">Analysis</span>
+                </div>
+                
+                <div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-6" id="detail-pane">
+                    <!-- 初期ガイダンス表示 -->
+                    <div class="text-center py-20 text-stone-400 space-y-4">
+                        <div class="text-5xl">📌</div>
+                        <h4 class="font-serif-jp text-lg font-bold text-stone-200">年表の項目を選択してください</h4>
+                        <p class="text-xs max-w-xs mx-auto leading-relaxed">
+                            左側の年表から出来事を選択すると、そこに隠された「歴史の構造・因果関係・記述試験のポイント」がここにリアルタイムで完全展開されます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-stone-900 text-stone-500 text-center py-4 border-t border-stone-800 text-[10px] shrink-0">
+        <p>© 2026 日本史政権史「完全無欠」マスターデータベース | 教員採用試験・記述対策・史実検証統合システム</p>
+    </footer>
+
+    <!-- JSデータ & 制御スクリプト -->
+    <script>
+        // 完全訂正＆極限肉付け済みの日本史政権史データベース（修正メタ表記をすべて削除したクリーン版）
+        const regimeDatabase = {
+            ancient: [
+                {
+                    year: "前1C頃",
+                    title: "百余国の分立と漢（楽浪郡）への遣使",
+                    regime: "小国分立期",
+                    summary: "『漢書』地理志に記載。倭人が百余りの国に分立し、定期的に楽浪郡を通じて漢（前漢）の朝廷へ使者を送り、先進的な金属器や文化を輸入していた時代。",
+                    meat: [
+                        "<strong>『漢書』地理志の歴史的意義：</strong>当時の日本列島にまだ統一政権が存在せず、各地の首長が独自のクニを統治し、お互いに対立しながら中国の先進的な権威を求めていたことが分かります。",
+                        "<strong>定期的な朝貢：</strong>「歳時をもって来たりて献見す」とあり、定期的にお土産を持って挨拶に行く朝貢外交（ちょうこうがいこう）を通じて、自らのクニの正当性を証明しようとしていました。"
+                    ]
+                },
+                {
+                    year: "57年",
+                    title: "奴国王が後漢に遣使、光武帝より金印を賜る",
+                    regime: "奴国などの首長政権",
+                    summary: "『後漢書』東夷伝に記載。倭の奴国の首長が後漢に使いを送り、光武帝から「漢委奴国王」の金印を授けられ、中国の東の冊封国として認められた出来事。",
+                    meat: [
+                        "<strong>金印『漢委奴国王』の意義：</strong>志賀島（福岡県）で発見されたこの印は、奴国の首長が後漢の冊封（さくほう）体制に入ることで、周囲のライバルのクニに対して圧倒的なハク（正当性と武力的な権威）を示そうとした現れです。",
+                        "<strong>『委（わ）』の文字：</strong>当時の中国は、倭人を東方の異民族として低く見ていた（中華思想）ため、あえて『倭』や『委』といった文字を当てていました。"
+                    ]
+                },
+                {
+                    year: "107年",
+                    title: "倭国王帥升が後漢に遣使、生口を献上",
+                    regime: "倭国王（初期連合）",
+                    summary: "『後漢書』東夷伝に記載。倭国王「帥升（すいしょう）」が後漢の安帝に使者を送り、生口（せいこう：捕虜・奴隷など）160人を献上した出来事。中国の歴史書に初めて日本の個人名が登場した瞬間。",
+                    meat: [
+                        "<strong>倭国王としての自称：</strong>ただの『奴国』などの一首長ではなく『倭国王』を称していることから、2世紀初頭までに日本列島内で広範な小国連合、あるいは支配権の集約化が進み始めていたことが推測されます。",
+                        "<strong>生口の献上：</strong>首長間での小規模な戦争が定着しており、その勝者が敗者を「捕虜（生口）」として中国の皇帝に貢ぐことで、国家関係を円滑に進めようとした生々しい実態が伺えます。"
+                    ]
+                },
+                {
+                    year: "147年頃",
+                    title: "倭国大乱の発生",
+                    regime: "無王期（大規模型内乱）",
+                    summary: "『後漢書』東夷伝に記載。後漢の桓帝・霊帝の時代、日本列島規模で小国間の大連鎖的な覇権争いが発生し、長年にわたって激しい戦闘が繰り返された暗黒期。",
+                    meat: [
+                        "<strong>大乱の原因と背景：</strong>農耕の発展に伴う土地・水資源の争いや、青銅器・鉄器といった金属資源の輸入ルートの独占権をめぐる対立が引き金になりました。各地の遺跡（高地性集落や矢じりの刺さった人骨の急増）からもその凄惨さが証明されています。",
+                        "<strong>共同指導者の擁立へ：</strong>このドロドロの消耗戦に終止符を打つために、各地の首長が共通の利害関係の一致として擁立したのが、宗教的権威をもった女王「卑弥呼」でした。"
+                    ]
+                },
+                {
+                    year: "239年",
+                    title: "卑弥呼が魏に遣使、親魏倭王の称号を賜る",
+                    regime: "邪馬台国連合政権",
+                    summary: "『魏志倭人伝』に記載。約30カ国の小国連合の盟主となった女王卑弥呼が、中国の魏に使いを送り、金印や「親魏倭王」の称号、さらに「銅鏡百枚」などの膨大な下賜品を受け取った外交事件。",
+                    meat: [
+                        "<strong>鬼道（きどう）によるカリスマ統治：</strong>卑弥呼は呪術や占いといった宗教的権威（鬼道）を用いて神託を伝え、弟が実務的な政治や外交を行うという<strong>「共治（きょうじ）」</strong>体制をとっていました。",
+                        "<strong>魏への朝貢の軍事的背景：</strong>南に位置する好戦的な宿敵<strong>「狗奴国（くなこく）」</strong>との激しい戦争を有利に進めるため、魏の皇帝の後ろ盾（最強のバックボーン）を急いで必要としたことが、この積極外交の真の狙いでした。"
+                    ]
+                },
+                {
+                    year: "478年",
+                    title: "倭王武が宋に上表、東国・西国の征服功績を強調",
+                    regime: "ヤマト政権（ワカタケル大王）",
+                    summary: "『宋書』倭国伝に記載。倭王武（雄略天皇 / ワカタケル大王）が南朝の宋に使いを送り、朝鮮半島南部（任那・加羅など）における軍事指揮権の公認を求めて激しい上表文を提出した出来事。",
+                    meat: [
+                        "<strong>上表文に見る武力征服の実態：</strong>『東は毛人を征すること五十五国、西は衆夷を服すること六十六国、渡りて海北を平らげること九十五国...』とあり、ヤマト政権が大王（ワカタケル）の圧倒的な指導力のもと、日本列島内および朝鮮半島への軍事的進出を急激に広げていた強大な実態が記されています。",
+                        "<strong>鉄剣・鉄刀銘文との一致：</strong>埼玉県稲荷山古墳の鉄剣銘や熊本県江田船山古墳の鉄刀銘に『ワカタケル大王』の名が刻まれていることから、5世紀後半にはすでに関東から九州に及ぶ広域な支配体制（氏姓制度の基礎）が確立されていたことがわかります。"
+                    ]
+                },
+                {
+                    year: "527年",
+                    title: "筑紫国造磐井の乱 ＆ 物部麁鹿火による鎮圧",
+                    regime: "継体天皇政権（ヤマト政権転換期）",
+                    summary: "朝鮮半島の新羅と密かに手を結んだ筑紫（福岡県）の強力な豪族・磐井が、ヤマト政権の朝鮮半島出兵（近江毛野の軍）を遮断して抵抗した古代最大の内乱。大連の物部麁鹿火（もののべのあらかひ）が約1年半をかけてようやく鎮圧した。",
+                    meat: [
+                        "<strong>内乱の軍事的・外交的背景：</strong>新羅は磐井に対して多額の賄賂を贈り、ヤマト政権の軍事行動を妨害させました。当時の地方豪族（国造）が、大王（天皇家）の命令を無視して、独自の外交ルートを持つほど強い経済力と独立性を持っていたことが伺えます。",
+                        "<strong>直轄化（屯倉・名代の設置）：</strong>磐井を討伐した結果、ヤマト政権は北部九州の強力な支配権を獲得。各地に直轄地である<strong>『屯倉（みやけ）』</strong>を急速に増やし、地方豪族を屈服させて天皇（大王）の一元支配体制を強固にしました。"
+                    ]
+                }
+            ],
+            ritsuryo: [
+                {
+                    year: "593年",
+                    title: "厩戸王（聖徳太子）の政務参加 ＆ 推進改革",
+                    regime: "推古天皇政権（蘇我馬子・厩戸王）",
+                    summary: "女性初の天皇となった推古天皇のもと、叔父である大臣・蘇我馬子と、甥の厩戸王（聖徳太子）が手を取り合い、豪族連合から「天皇を中心とする中央集権国家」への飛躍に挑んだ共同政権期。",
+                    meat: [
+                        "<strong>冠位十二階（603年）の能力主義：</strong>氏姓制度（生まれの家柄で役職が決まる古い特権システム）を打破し、個人の実力・功績、および天皇への忠誠度に応じて、一世一代の地位（冠位）を授ける官僚制を創始しました。",
+                        "<strong>十七条の憲法（604年）による思想統制：</strong>官吏（役人）としての厳しい道徳・心構えを説いたもので、『天に二日なく、国に二王なし』と、天皇の命令には絶対服従であることを強く叩き込みました。",
+                        "<strong>対等な遣隋使外交（607年）：</strong>小野妹子を隋に派遣。『日出づる処の天子...』という、中国（隋）の冊封を受けない対等な形式の国書を煬帝に送りつけ、当時の大帝国を激怒させました。隋が高句麗との戦争に備えていたため、倭国との断交を避けた絶妙なパワーバランスの上で成立した奇跡的な外交でした。"
+                    ]
+                },
+                {
+                    year: "645年",
+                    title: "乙巳の変 ＆ 大化の改新の開始",
+                    regime: "孝徳天皇政権（中大兄皇子・中臣鎌足）",
+                    summary: "横暴な独裁を強めた蘇我入鹿を、中大兄皇子と中臣鎌足が飛鳥板蓋宮の儀式の最中に急襲して暗殺し、蘇我氏を滅ぼしたクーデター。直後に孝徳天皇を擁立し、大化という日本初の元号を定めて中央集権的な大改革を宣言した。",
+                    meat: [
+                        "<strong>改新の詔（646年）が目指した『公地公民制』：</strong>それまで豪族たちが私有していた土地（部曲・部民）をすべて国家（天皇）の所有物とし、国民全員を戸籍に登録して均等に土地を分ける大改革のグランドデザインを提示しました。",
+                        "<strong>唐の脅威への即応：</strong>この劇的な中央集権化は、中国大陸で唐が誕生し、周囲の国々を圧倒的な軍事力で侵略し始めたことへの極限の危機感から行われました。『急いで日本を近代国家（律令国家）にアップデートしなければ滅ぼされる』という、東アジアの安全保障上の焦りがこの大改革の真のトリガーでした。"
+                    ]
+                },
+                {
+                    year: "672年",
+                    title: "壬申の乱 ＆ 天武天皇の皇親政治の確立",
+                    regime: "天武天皇政権",
+                    summary: "天智天皇の死後、その息子である大友皇子（近江朝）と、天智の弟である大海人皇子（吉野）が皇位をめぐって日本を二分して激突した古代最大の内乱。東国の豪族の武力を完全に掌握した大海人皇子が圧勝し、天武天皇として即位した。",
+                    meat: [
+                        "<strong>豪族を排除した皇親（こうしん）政治：</strong>大乱に勝利して絶対的なカリスマとなった天武天皇は、これまでの有力豪族（蘇我・大伴・物部など）を一切要職（大臣など）に置かず、自分の皇后（持統天皇）や皇子たちだけで身内政治を固めました。これが天皇の絶対神格化へのステップです。",
+                        "<strong>国号『日本』と『天皇』称号の誕生：</strong>この天武・持統天皇の時代に、それまでの『倭』から<strong>『日本』</strong>へと国号を正式に変更し、さらに大王（おおきみ）から<strong>『天皇』</strong>という独自の宇宙最高位の君主称号を使い始めました。中国（唐）に対して一歩も引かない独立国家としてのプライドを示すためでした。"
+                    ]
+                },
+                {
+                    year: "701年",
+                    title: "大宝律令の制定（律令国家の完成）",
+                    regime: "文武天皇政権（藤原不比等）",
+                    summary: "天武・持統天皇の意志を継ぎ、藤原不比等や刑部親王らが中国（唐）の法典をベースにして、日本で初めてとなる刑法（律）と行政法・民法（令）を完全にセットにした「大宝律令」を完成させた。",
+                    meat: [
+                        "<strong>二官八省の独特な構造：</strong>神事を司る<strong>「神祇官」</strong>を、国の政治全般を行う最高機関<strong>「太政官」</strong>と並ぶ地位（またはそれ以上）として独立させた点が、唐の律令をそのまま模倣しない日本の絶対的なこだわり（神の国としてのプライド）でした。",
+                        "<strong>班田収授の法による完封納税：</strong>全国民を戸籍に漏れなく登録し、6歳以上の男女に国から口分田を貸し与え、死んだら確実に国へ回収する。その代わりに、お米（租）、絹や特産物（調）、京都での労働（庸）に加え、死の労働である『防人（さきもり）』などの兵役を課す、完璧な中央集権の集金システムが稼働し始めました。"
+                    ]
+                },
+                {
+                    year: "743年",
+                    title: "墾田永年私財法の制定 ＆ 大仏造立の詔",
+                    regime: "聖武天皇政権（橘諸兄）",
+                    summary: "人口増加により口分田が不足し、班田収授制が機能停止しかけたため、『新しく自分で開墾した土地は、永久に私有財産として持ってよい』と認めた法律（墾田永年私財法）。同時に、相次ぐ天災や疫病（天然痘の大流行）から国を救うため、聖武天皇が「大仏造立の詔」を出した。",
+                    meat: [
+                        "<strong>公地公民の崩壊と荘園の萌芽：</strong>『新開地は永久私有OK』とした墾田永年私財法は、律令制の基本である「公地公民」の建前を完全に破壊しました。これにより、おカネと労働力を持つ大寺社（東大寺など）や有力貴族（藤原氏）が大規模な開墾を進め、のちに貴族の経済基盤となる<strong>「初期荘園（寺社荘園）」</strong>が乱立する原因となりました。",
+                        "<strong>鎮護国家（ちんごこっか）思想：</strong>天然痘で藤原四子が全滅し、反乱が多発する混沌とした世の中を、仏教の絶対的な功徳によって救おうとする国を挙げたスピリチュアルな国家プロジェクトが、全国の国分寺建立と巨大な大仏造立の真実でした。"
+                    ]
+                },
+                {
+                    year: "810年",
+                    title: "薬子の変 ＆ 蔵人頭・検非違使の設置による嵯峨天皇親政",
+                    regime: "嵯峨天皇政権（藤原冬嗣）",
+                    summary: "平城太上天皇と、その愛妾・藤原薬子、兄の藤原仲成らが、嵯峨天皇に対して平城京への再遷都を要求して反乱を企てるも、嵯峨天皇が先手を打って軍事的に鎮圧した事件。",
+                    meat: [
+                        "<strong>最高機密ポスト「蔵人所（くろうどどころ）」の設置：</strong>事件の際、天皇の極秘命令が敵方に漏れないよう、嵯峨天皇は臨時の超秘書室として蔵人所を急設。その初代トップ（蔵人頭）に、最も信頼できる実務派の<strong>藤原冬嗣</strong>を抜擢しました。これが藤原北家が天皇家と癒着し、摂関政治を始める直接的なきっかけとなりました。",
+                        "<strong>治安のプロ「検非違使（けびいし）」：</strong>京都の治安維持や警察・裁判権を一手に握る新しい役職。これらは律令にない新しいポスト（<strong>令外官</strong>）であり、古くなった法律（律令）の建前を捨て、現実に即した強力な官僚政治を行うための嵯峨天皇のチート技でした。"
+                    ]
+                },
+                {
+                    year: "866年",
+                    title: "応天門の変 ＆ 藤原良房の正式な摂政就任",
+                    regime: "清和天皇政権（藤原良房）",
+                    summary: "平安京の応天門が深夜に放火される怪事件が発生。大納言の伴善男（古代の超名門貴族）が犯人として疑われ流罪となるも、実際は藤原良房がライバルを他氏排斥するために仕組んだ、あるいは利用した大陰謀事件。良房はこの事件で敵を一掃し、臣下として初の正式な摂政に上り詰めた。",
+                    meat: [
+                        "<strong>他氏排斥（たしはいせき）の狡猾なストーリー：</strong>藤原氏は、天皇家と血縁を結ぶ「外戚（がいせき）」になることで権力を握ろうとしましたが、そのためには古代からの名門（伴氏・紀氏・橘氏など）が邪魔でした。良房は応天門放火という国家テロを逆手に取り、すべてのライバルを『犯人の一味』として政界から完全追放しました。",
+                        "<strong>人臣初の摂政：</strong>これまで皇族以外には許されなかった『摂政』に、臣下である藤原良房が就任。天皇がまだ9歳と幼いことを大義名分として、すべての政治の最高決定権を藤原氏が丸抱えする<strong>摂関政治</strong>への道を開きました。"
+                    ]
+                }
+            ],
+            kamakura: [
+                {
+                    year: "1069年",
+                    title: "延久の荘園整理令 ＆ 記録荘園券契所の設置",
+                    regime: "後三条天皇政権（親政・脱藤原）",
+                    summary: "藤原氏（摂関家）を親戚に持たない250年ぶりの天皇として即位した後三条天皇が、藤原氏の最大の弱点である『不正な荘園』を没収するため、中央に「記録荘園券契所（記録所）」を設置して徹底的に契約書の真偽を書類審査した大改革。",
+                    meat: [
+                        "<strong>忖度のない審査基準：</strong>それまでの荘園整理令は現地の「国司」に任せていたため、国司が藤原氏の権威を恐れて骨抜きになっていました。後三条は中央の役所で、天皇自らが厳密に審査。基準は『契約書が不鮮明なもの』および『国政の邪魔（公領の税金を減らしているもの）』の2点。これにより、藤原氏の広大な領地を容赦なく没収しました。",
+                        "<strong>院政の経済的バックボーン：</strong>没収された土地は、天皇家（のちの上皇）の直轄領となりました。これにより、藤原氏に頼らなくても天皇独自で莫大な資金を調達できるようになり、息子の白河天皇がのちに始める<strong>院政（いんせい）</strong>の強固な土台が完成しました。"
+                    ]
+                },
+                {
+                    year: "1159年",
+                    title: "平治の乱 ＆ 平清盛の圧倒的勝利",
+                    regime: "後白河院政期（信西）",
+                    summary: "後白河上皇の絶対的側近であった「少納言信西（藤原通憲）」の独裁政治に怒った藤原信頼が、源氏のトップ・源義朝と手を組んで京都で起こしたクーデター。留守（熊野詣）から急いで引き返した平清盛が反乱軍を徹底的に破り、義朝を滅ぼした事件。",
+                    meat: [
+                        "<strong>武士の価値の再発見：</strong>保元の乱（1156年）に続き、この乱でも貴族たちは自分たちでは指一本動かせず、武士の圧倒的な力（清盛の軍事力）によって勝敗が決まりました。『我ら武士の力こそが、この国の主導権を握るのだ』と武士たちが覚醒し、これ以降<strong>「武者の世」</strong>への急加速が始まりました。",
+                        "<strong>清盛のライバル一掃：</strong>源義朝は暗殺され、まだ13歳だった息子の<strong>源頼朝</strong>は奇跡的に死刑を免れて伊豆へ流されました。これにより、源氏の武力集団は中央政界から完全に追放され、平清盛の平氏一族による初の武家政権（平氏政権）へと進んでいくことになります。"
+                    ]
+                },
+                {
+                    year: "1185年",
+                    title: "壇ノ浦の戦い（平氏滅亡）＆ 諸国への守護・地頭の設置",
+                    regime: "源頼朝政権（鎌倉幕府の事実上の稼働）",
+                    summary: "山口県関門海峡で行われた源平最終決戦。源義経の水軍が、安徳天皇を抱える平氏一族を海へ追い詰め、平氏は滅亡。同年、頼朝は朝廷（後白河法皇）に対して、全国各地の国ごとに「守護」、荘園ごとに「地頭」を配置し、その徴収権を認めることを強制した。",
+                    meat: [
+                        "<strong>設置の大義名分と真の狙い：</strong>頼朝は『反逆者である弟の源義経を捕まえるため』という口実で守護・地頭の設置を朝廷に承認させました。しかし、<strong>真の狙いは、5年間に及ぶ源平合戦の混乱に乗じて、日本各地で勝手に貴族の土地を乗っ取り、武装暴走していたコントロール不可能な地方の武士（野良武士）たちを、幕府の統制下（御家人）に登録しておとなしくさせるため</strong>でした。つまり、国内の武力を幕府が一元管理するための治安維持システムでした。"
+                    ]
+                },
+                {
+                    year: "1221年",
+                    title: "承久の乱 ＆ 京都への六波羅探題の設置",
+                    regime: "北条義時・北条政子政権（執権政治の全盛）",
+                    summary: "源氏の正統な将軍が3代で途絶えた好機に、後鳥羽上皇が「幕府を倒せ！」と執権・北条義時討伐の院宣を出して挙兵するも、尼将軍・北条政子の伝説の大演説で大団結した東国御家人軍が京都へ攻め上り、朝廷軍を蹂躙して圧勝した事件。",
+                    meat: [
+                        "<strong>西面の武士（さいめんのぶし）：</strong>後鳥羽上皇が、白河上皇が作った『北面の武士』に加えて新設した独自の対幕府軍事組織。これが乱の直接的な火種。試験ではこの二つの設置上皇の入れ替えが超頻出です（『西に沈んだ後鳥羽が西面』）。",
+                        "<strong>新補率法（しんぽりっぽう）：</strong>敗北した朝廷側の貴族から、約3000箇所もの西日本の土地を没収。そこに新しく配置した「新補地頭」の給与基準を法文化したもの。これにより、それまで東国ローカル政権だった鎌倉幕府の支配力が、西日本全域へと一気に拡大し、実質的な日本全土の武力統治が確立しました。"
+                    ]
+                },
+                {
+                    year: "1246年",
+                    title: "後嵯峨上皇の院政開始 ＆ 得宗専制の足がかり",
+                    regime: "北条時頼政権（北条本家による政治独占）",
+                    summary: "後嵯峨上皇の院政開始をバックアップした5代執権・北条時頼が、有力な御家人である三浦泰村の一族を滅ぼし（1247年宝治合戦）、北条氏の本家（得宗：とくそう）への権力集中を一気に加速させた出来事。",
+                    meat: [
+                        "<strong>得宗（とくそう）専制への足がかり：</strong>時頼は幕府の役職である「執権」を形式的に他者に譲った後も、北条本家の家長（得宗）として、プライベートな裏側から幕府の全権力をコントロールし続けました。他の名門御家人（三浦氏・安達氏など）との合議制（話し合い）を徐々に骨抜きにするためのシステムでした。"
+                    ]
+                },
+                {
+                    year: "1333年",
+                    title: "鎌倉幕府滅亡 ＆ 建武の新政の開始（足利尊氏の台頭）",
+                    regime: "後醍醐天皇政権（復古的天皇親政）",
+                    summary: "元寇の恩賞不足によって幕府（北条氏）への不満を最高潮に高めていた御家人たちを味方につけた後醍醐天皇が、倒幕を呼びかけ、足利尊氏（高氏から改名）が京都の六波羅探題を、新田義貞が鎌倉を急襲して150年の歴史を持つ鎌倉幕府を滅亡させた出来事。",
+                    meat: [
+                        "<strong>『高』から『尊』への改名プロセス：</strong>足利尊氏は、当初は北条の得宗・高時の一字をもらって『高氏』と名乗っていました。しかし、幕府を裏切って天皇の最大の功労者となったのち、後醍醐天皇（尊治）から一字を授かり、武士としての格を最大に高めた『尊氏』と名乗るようになりました。",
+                        "<strong>建武の新政の致命的な破綻：</strong>後醍醐天皇は、命をかけて戦った武士（御家人）たちの土地支配権や恩賞を無視し、まったく戦っていない京都の貴族（公家）ばかりを極端に優遇。怒り狂った武士たちの不満を足利尊氏がすくい取ることで、次の室町幕府へのバトンが渡されます。"
+                    ]
+                }
+            ],
+            muromachi: [
+                {
+                    year: "1352年",
+                    title: "観応の擾乱の泥沼化 ＆ 守護の権限を爆発させた「半済令」の初制定",
+                    regime: "足利尊氏政権（室町幕府初期）",
+                    summary: "足利尊氏（と執事・高師直）の武家派 vs 弟の足利直義の官僚派が対立した、日本全国を巻き込む泥沼の内乱（観応の擾乱）。戦費と武士の恩賞を捻出するため、幕府が「半済令」を認め、守護の地方における権限を急激に引き上げた。",
+                    meat: [
+                        "<strong>半済令（はんぜいれい）の本質的な恐怖：</strong>当初は戦乱の激しい3カ国（近江・美濃・尾張）に限定し、『1年限定で、国内の荘園の年貢の半分を勝手に徴収し、味方の武士に与えてよい』という応急措置の法律でした。しかし、これが恒久化・全国化（1368年応安の半済令）されたことで、守護は地方の貴族や寺社の領地そのものを半分に分割（下地中分）し、完全に自分の領地へと乗っ取りました。これが地方大名（<strong>守護大名</strong>）の台頭と荘園制崩壊の決定打です。"
+                    ]
+                },
+                {
+                    year: "1358年",
+                    title: "2代将軍・足利義詮の即位と南北朝の平定プロセス",
+                    regime: "足利義詮政権（室町幕府基礎構築期）",
+                    summary: "足利尊氏の死後、子の足利義詮（よしあきら）が2代将軍に即位。南朝による一時的な京都奪還を再度押し戻すなど、執拗な消耗戦の中で幕府の統治機構を実務的に整備した時代。",
+                    meat: [
+                        "<strong>3代義満の全盛期へ向けた橋渡し：</strong>義詮は、南北朝の動乱という絶え間ない軍事危機の中で、のちの『管領（かんれい）』制度の母体となる補佐役を設置するなど、将軍一元支配の枠組みを地道に強化しました。彼の地味ながらも堅実な統治があったからこそ、子の義満の時代に一気に天下統一が実現しました。"
+                    ]
+                },
+                {
+                    year: "1441年",
+                    title: "嘉吉の変 ＆ 嘉吉の徳政一揆（将軍権威の失墜）",
+                    regime: "足利義勝政権（室町幕府中期・守護の暴走期）",
+                    summary: "『万人恐怖（ばんにんきょうふ）』と呼ばれる恐怖独裁で守護大名たちを次々と罠にかけ、処刑した6代将軍・足利義教が、播磨の守護・赤松満祐に暗殺された大事件（嘉吉の変）。直後、将軍不在の混乱に乗じた数万人の百姓が京都を完全包囲し、幕府に対して「徳政（借金帳消し）」を認めさせた（嘉吉の徳政一揆）。",
+                    meat: [
+                        "<strong>将軍の絶対的権威の消滅：</strong>『神罰』を盾にして独裁を行った将軍が、いち守護大名の手によって簡単に暗殺されたことは、足利幕府の支配力を根底から崩壊させました。さらに、徳政令を要求して実力で京都を占領した百姓（一揆）のパワーに屈し、幕府が公式に『借金をチャラにする法律』を発給せざるを得なくなったことは、室町社会が<strong>実力主義（下剋上）</strong>へと移行する決定的な分岐点でした。"
+                    ]
+                },
+                {
+                    year: "1467年",
+                    title: "応仁・文明の乱の勃発 ＆ 11年間に及ぶドロドロの全貌",
+                    regime: "足利義政・義尚政権（室町幕府末期・戦国時代の開幕）",
+                    summary: "8代将軍・足利義政の跡継ぎ争いに、妻の日野富子、さらに幕府のツートップである有力守護大名の細川勝元（東軍）と山名持豊（西軍）の権力争いが合流し、全国25万の大名軍勢が京都に集結して戦った、11年間に及ぶ未曾有の大内乱。",
+                    meat: [
+                        "<strong>なぜ11年間も終わらなかったのか？（戦争のビジネス化）：</strong>守護大名たちは、自らの国（領地）に長期間不在になると、地方でくすぶっている実力派の家臣（国人）や一揆農民に領土を乗っ取られる（下剋上）リスクを常に抱えていました。そのため、彼らは『自領に帰るのが怖いので京都に居座り、大義名分を掲げて京都の関所の通行税や商業利権を奪い合って軍資金を現地調達し、戦争を延々と続けました』。つまり、戦争そのものが利権を生むシステムになってしまったため、誰も戦争を終わらせるインセンティブを持たなかったのです。結果、京都は完全に焦土と化し、日本は実力のみが支配する『戦国時代』へと完全に突入しました。"
+                    ]
+                }
+            ],
+            edo: [
+                {
+                    year: "1612年",
+                    title: "幕領への禁教令の布告 ＆ 徳川秀忠による全国拡大",
+                    regime: "徳川家康・秀忠政権（江戸幕府初期・大名支配確立期）",
+                    summary: "1612年に江戸幕府の直轄地（幕領）に対して最初に出されたキリスト教禁止令。翌1613年には全国の大名領へ拡大。1615年には豊臣家を滅ぼした直後、大名を締め付ける「武家諸法度」や天皇を政治から排除する「禁中並公家諸法度」を同時に制定した。",
+                    meat: [
+                        "<strong>キリスト教徹底排除の真意：</strong>一揆農民が『神の前ではみな平等』という教えのもとに結束し、幕府の厳格な身分制度（士農工商）を脅かすことを極限まで恐れました。のちに起きた<strong>『島原の乱（1637年）』</strong>は、この恐怖を確信に変え、完全な貿易制限（鎖国）への最終ステップとなりました。",
+                        "<strong>武家諸法度（1615年）の冷酷なルール：</strong>『勝手にお城を修理してはならない（軍事力増強の禁止）』『勝手に大名同士で結婚してはならない（大名同士の同盟禁止）』。このルールを少しでも破った大名は、どれほどの名門（福島正則など）であっても容赦なく領地を没収（改易）され、徳川の絶対支配が確立しました。"
+                    ]
+                },
+                {
+                    year: "1716年",
+                    title: "徳川吉宗、8代将軍となり享保の改革を開始",
+                    regime: "徳川吉宗政権（三大改革①・米将軍の執念）",
+                    summary: "5代綱吉の「生類憐みの令」や贅沢による財政悪化を打開するため、紀伊藩主から8代将軍に抜擢された徳川吉宗が、お米の増収と徹底的な緊縮財政、裁判基準の整備を進めた、江戸時代で最初の大規模な幕政改革。",
+                    meat: [
+                        "<strong>享保の改革の4大ウルトラ技：</strong>①大名からお米を強制的に提出させる代わりに江戸での滞在期間を半分にする『<strong>上げ米の制</strong>』、②不作凶作に関わらず毎年一定の税率をかける『<strong>定免法（じょうめんほう）</strong>』、③実務能力の高い有能な人材を登用するため役職の給料不足分を在職中のみ補填する『<strong>足高の制</strong>』、④公正な裁判を行うために制定された日本初の成文判例集『<strong>公事方御定書（くじがたおさだめがき）</strong>』。",
+                        "これら実務的で合理的な手法により、幕府の財政は一度奇跡的にV字回復し、以降の改革のすべてのお手本となりました。"
+                    ]
+                },
+                {
+                    year: "1787年",
+                    title: "松平定信、老中首座となり寛政の改革を開始",
+                    regime: "徳川家斉政権（松平定信・三大改革②・理想主義への回帰）",
+                    summary: "賄賂の横行や、未曾有の『天明の飢饉』により社会が大混乱に陥った田沼意次の政治が失脚した後、吉宗の孫である松平定信が老中に就任。『吉宗おじいちゃんの享保の改革に戻れ！』と、徹底的な贅沢の禁止、武士への借金帳消し、学問の思想統制を行った改革。",
+                    meat: [
+                        "<strong>寛政の改革の3大強硬策：</strong>①大名や旗本たちの借金を強制的にゼロ（棒引き）にさせる『<strong>棄捐令（きえんれい）</strong>』、②天皇や将軍への絶対忠誠を説く朱子学以外の講義を一切禁止した『<strong>寛政異学の禁</strong>』、③飢饉に備えて各地に強制的に米を備蓄させる『<strong>囲米の制</strong>』。",
+                        "しかし、あまりにも現実を無視した厳格すぎる節約と学問の自由奪取により、世の中は『白河の 清きに魚の すみかねて もとの濁りの 田沼こひしき』と落首で皮肉られるほど冷え込み、わずか6年で定信は失脚しました。"
+                    ]
+                },
+                {
+                    year: "1841年",
+                    title: "水野忠邦、天保の改革を開始 ➔ 2年で大失敗",
+                    regime: "徳川家慶政権（水野忠邦・三大改革③・焦燥の崩壊）",
+                    summary: "外国船の日本近海への襲来、国内での『天保の飢饉』や『大塩平八郎の乱』の発生など、幕府崩壊のカウントダウンが迫るなか、老中・水野忠邦が行った最後の強硬的な幕政改革。しかし猛烈な反発を食らい、わずか2年で水野は罷免された。",
+                    meat: [
+                        "<strong>あまりにも強引な自爆政策：</strong>物価を下げるために、商業の独占組合であった<strong>『株仲間（かぶなかま）の解散』</strong>を命じましたが、逆に流通網が完全に破壊されて大インフレが発生。さらに、江戸や大坂の周囲の大名・旗本たちの豊かな土地を『幕府の直轄地にするからすべて差し出せ』と命じた<strong>『上知令（あげちれい）』</strong>は、徳川の身内からすら激怒され、猛反発で撤回に追い込まれました。この改革の自滅により幕府の権威は完全にストップし、薩摩や長州が独自の経済改革（財政再建）で大金持ちになって倒幕へと突き進む原因を作りました。"
+                    ]
+                }
+            ],
+            modern: [
+                {
+                    year: "1873年",
+                    title: "地租改正の実施 ＆ 徴兵令の施行",
+                    regime: "明治新政府（大久保利通・木戸孝允ら）",
+                    summary: "明治新政府が、国の経済的・軍事的な基盤を固めるために断行した近代国家への2大超重要政策。それまでの江戸時代のお米での税制を廃止し、20歳以上の全男子に兵役義務を課した。",
+                    meat: [
+                        "<strong>地租改正（1873年）の画期的な本質：</strong>それまでの『豊作・凶作によって毎年激しく税収が変わる不安定なお米での納税』を廃止。<strong>『土地の価格（地価）の3％を、作物の出来に関係なく毎年一定の現金（紙幣）で納めさせる』</strong>ことに変更しました。これにより、政府は毎年の予算（近代化・富国強兵の費用）を事前に完全に予測・確定させることができるようになりました。近代的な大蔵省予算編成の基礎です。",
+                        "<strong>士族の不満と地租2.5％への減税：</strong>『税金が重すぎる』と農民一揆が多発し、さらに仕事もプライド（廃刀令など）も失った元武士（士族）たちの不満と合流することを防ぐため、政府は1877年に地租を『2.5％』へと減税。この絶妙な妥協政策が明治初期の危機を乗り切るキーとなりました。"
+                    ]
+                },
+                {
+                    year: "1877年",
+                    title: "西南戦争（最後の武力士族反乱）の勃発 ＆ 西郷隆盛の敗死",
+                    regime: "明治政府（大久保利通・山県有朋）",
+                    summary: "新政府の急激な四民平等（武士の廃止）、徴兵令、秩禄処分（給料の廃止）に激怒した不平士族たちが、新政府を去ったカリスマ・西郷隆盛を大将に擁立して鹿児島で起こした、日本国内における最後の最大規模の武力内乱。",
+                    meat: [
+                        "<strong>近代軍隊の絶対的勝利：</strong>政府の徴兵令によってかき集められた、元百姓や農民からなる『一般人の近代軍隊（大砲や小銃などの近代兵器）』が、命がけで日本刀を振りかざして突撃してくるプロの武士（士族軍）を実力で完全に撃破・鎮圧しました。これにより、<strong>『もはや武力によって政府に抵抗しても、絶対に勝つことはできない』</strong>という現実を身をもって証明しました。",
+                        "<strong>自由民権運動（言論の力）への完全シフト：</strong>西南戦争の武力鎮圧以降、不平知識人や元武士たちは、武力ではなく『国会を開け！』『憲法を作れ！』と言葉（新聞、演説、政党づくり）で抗議し、世論を味方につけて新政府を包囲する<strong>「自由民権運動」</strong>へと一気に舵を切ることになります。"
+                    ]
+                },
+                {
+                    year: "1889年",
+                    title: "大日本帝国憲法の発布",
+                    regime: "黒田清隆内閣（藩閥・超然主義内閣）",
+                    summary: "伊藤博文がドイツ（プロイセン）憲法を徹底的に研究してお手本とし、アジアで初となる近代的な立憲君主制の「大日本帝国憲法」を天皇自らが国民へ授ける形で発布した歴史的瞬間。",
+                    meat: [
+                        "<strong>超然主義（ちょうぜんしゅぎ）の徹底：</strong>黒田清隆首相は、憲法発布の翌日、大名や官僚を集めて『政府の政治方針は、国会（選挙で選ばれた政党）の意見や議決に一切左右されず、独自の立場を貫き通す（超然とする）』という大演説を行いました。天皇から権限を信託された新政府の官僚（藩閥）が、民衆の政党に政治の主導権を奪われないための絶対的な防壁、それが超然主義の本質でした。"
+                    ]
+                }
+            ],
+            contemporary: [
+                {
+                    year: "1918年",
+                    title: "米騒動の発生 ＆ 日本初の本格的政党内閣（原敬内閣）の樹立",
+                    regime: "原敬内閣（立憲政友会・平民宰相）",
+                    summary: "シベリア出兵を見越した悪質な商人たちの買い占めにより、米価が急騰。富山県の主婦たちの抗議から始まった「米騒動」が全国の主要都市に拡大し、軍隊が動員される大パニックとなった。引責辞任した寺内正毅に代わり、爵位を持たない衆議院のボス・原敬が首相となった。",
+                    meat: [
+                        "<strong>平民宰相（へいみんさいしょう）：</strong>原敬は華族の爵位を持たない衆議院議員。彼は陸相・海相・外相以外の閣僚をすべて自らの所属政党「立憲政友会」の党員で固めた、<strong>日本初となる『本格的な政党内閣』</strong>を組織しました。これは、藩の生まれ（藩閥）やエリート官僚だけで政治を牛耳っていた中世的支配から、国民の選挙を基盤とする民主的な政治スタイル（大正デモクラシー）へと歴史が完全にアップデートされた瞬間でした。"
+                    ]
+                },
+                {
+                    year: "1932年",
+                    title: "五・一五事件の勃発 ＆ 政党政治（憲政の常道）の完全な死",
+                    regime: "犬養毅内閣 ➔ 斉藤実内閣（挙国一致）",
+                    summary: "海軍の若手青年将校たちが首相官邸を突撃襲撃し、犬養毅首相を暗殺した凄惨なテロクーデター事件。事件後、政友会と民政党が交互に組閣する「憲政の常道」が途絶え、軍人（斉藤実）を中心とする「挙国一致内閣」が発足した。",
+                    meat: [
+                        "<strong>デモクラシーの終焉と軍部暴走の開幕：</strong>1924年の加藤高明内閣から約8年間、当然のルールとして続いていた政党政治の憲則は、この事件で完全に破壊されました。テロを恐れた元老や政界は、民意による政党からの組閣を諦め、軍部やエリート官僚、政党をブレンドした『挙国一致内閣』を組織。これにより、軍部の暴走を政治的にチェック（コントロール）する機能が完全に失われ、日本は十五年戦争、太平洋戦争という破滅への道へと急激に突き進むことになりました。"
+                    ]
+                },
+                {
+                    year: "1955年",
+                    title: "55年体制の確立（自由民主党の結成 ＆ 社会党統一）",
+                    regime: "鳩山一郎内閣（自由民主党の創設）",
+                    summary: "分裂していた左右の社会党が統一して「日本社会党」を結成。これに危機感を抱いた保守系の自由党と日本民主党が合併（保守合同）し、マンモス与党「自由民主党（自民党）」が誕生した。ここに『55年体制』と呼ばれる保守対革新の絶対的対立枠組みが完成した。",
+                    meat: [
+                        "<strong>55年体制の本質（1.5大政党制）：</strong>常に政権を握って高度経済成長を引っ張る保守の<strong>自民党（議席の3分の2）</strong>と、憲法改正などを阻止するために反対し続ける革新の<strong>社会党（議席の3分の1）</strong>という、絶対に自民党が勝つことが約束された、冷戦構造を背景とする日本特有の政治の枠組みです。この体制は、1993年に細川非自民連立内閣が成立するまで、なんと<strong>38年間</strong>も機能し続けました。日本の高度成長期の安定を政治から支えた強力なシステムでした。"
+                    ]
+                }
+            ]
+        };
+
+        let currentCategory = 'ancient';
+
+        // タイムライン描画処理
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
+            
+            const list = regimeDatabase[currentCategory];
+            const searchQuery = document.getElementById('timeline-search').value.toLowerCase();
+
+            // 検索・絞り込みの適用
+            const filteredList = list.filter(item => {
+                return (
+                    item.year.toLowerCase().includes(searchQuery) ||
+                    item.title.toLowerCase().includes(searchQuery) ||
+                    item.regime.toLowerCase().includes(searchQuery) ||
+                    item.summary.toLowerCase().includes(searchQuery)
+                );
+            });
+
+            if (filteredList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-stone-400">
+                        <p class="font-serif-jp text-lg font-bold">該当する年号・事件が見つかりません</p>
+                        <p class="text-xs mt-1">検索キーワードを変えるか、他のカテゴリーに切り替えてみてください。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredList.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `p-4 mb-3 bg-stone-50 border-2 border-stone-200 rounded-lg cursor-pointer transition-all duration-250 transform hover:-translate-y-0.5 hover:shadow hover:border-amber-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-3`;
+                itemDiv.onclick = () => selectRegimeEvent(item);
+
+                itemDiv.innerHTML = `
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <span class="font-mono text-sm font-bold bg-stone-200 text-stone-800 px-2.5 py-1 rounded text-center shrink-0 min-w-[75px]">
+                            ${item.year}
+                        </span>
+                        <div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="text-[9px] bg-stone-700 text-stone-200 px-2 py-0.5 rounded font-bold">${item.regime}</span>
+                            </div>
+                            <h4 class="font-serif-jp text-base font-bold tracking-tight text-stone-900 mt-1">${item.title}</h4>
+                        </div>
+                    </div>
+                    <div class="text-xs text-stone-500 max-w-sm md:text-right font-medium">
+                        ${item.summary.substring(0, 48)}...
+                    </div>
+                `;
+
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // カテゴリー（時代）切り替え
+        function switchCategory(category) {
+            currentCategory = category;
+            
+            // タブのアクティブ化表示
+            const categories = ['ancient', 'ritsuryo', 'kamakura', 'muromachi', 'edo', 'modern', 'contemporary'];
+            categories.forEach(cat => {
+                const tab = document.getElementById(`tab-${cat}`);
+                if (cat === category) {
+                    tab.className = "px-3 py-1.5 text-xs rounded font-bold bg-amber-700 text-white transition shadow-sm";
+                } else {
+                    tab.className = "px-3 py-1.5 text-xs rounded font-bold text-stone-300 hover:bg-stone-700 transition";
+                }
+            });
+
+            document.getElementById('timeline-search').value = ''; // 検索クリア
+            renderTimeline();
+        }
+
+        // 検索処理
+        function searchTimeline() {
+            renderTimeline();
+        }
+
+        // 出来事選択時の詳細パネル更新
+        function selectRegimeEvent(item) {
+            const detailPane = document.getElementById('detail-pane');
+
+            // 💡 肉付け解説のHTML構築
+            let meatHtml = item.meat.map(m => `
+                <li class="flex items-start gap-2.5 bg-stone-850 p-3.5 rounded-lg border-l-4 border-amber-600 shadow-sm">
+                    <span class="text-amber-500 font-bold shrink-0 text-base">◆</span>
+                    <p class="text-stone-200 leading-relaxed text-xs font-medium">${m}</p>
+                </li>
+            `).join('');
+
+            detailPane.innerHTML = `
+                <div class="space-y-6 animate-fadeIn">
+                    <!-- 年号と出来事タイトル -->
+                    <div class="border-b border-stone-800 pb-4">
+                        <div class="flex justify-between items-center gap-2 mb-2">
+                            <span class="font-mono text-amber-500 text-lg font-bold">${item.year}</span>
+                            <span class="text-[9px] bg-stone-800 border border-stone-700 text-stone-300 px-2.5 py-0.5 rounded font-bold">${item.regime}</span>
+                        </div>
+                        <h2 class="font-serif-jp text-lg md:text-xl font-bold text-stone-500 text-amber-100 tracking-tight leading-snug">${item.title}</h2>
+                    </div>
+
+                    <!-- 基本概要 -->
+                    <div class="space-y-1.5">
+                        <span class="text-[9px] tracking-wider text-stone-500 font-bold block uppercase">【基本概要】</span>
+                        <p class="text-stone-300 text-xs leading-relaxed bg-stone-950 p-3.5 rounded-lg border border-stone-850">
+                            ${item.summary}
+                        </p>
+                    </div>
+
+                    <!-- 💡 徹底肉付け解説 -->
+                    <div class="space-y-2.5">
+                        <span class="text-[9px] tracking-wider text-amber-400 font-bold block uppercase">【因果関係 ＆ 記述・一問一答対策】</span>
+                        <ul class="space-y-2.5">
+                            ${meatHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // モバイル時の画面スクロール
+            if (window.innerWidth < 1024) {
+                detailPane.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 初期ロード
+        window.onload = function() {
+            renderTimeline();
+        };
+    </script>
+
+    <!-- フェードインアニメーション用 -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+    </style>
+</body>
+</html>
