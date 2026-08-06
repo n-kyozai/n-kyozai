@@ -1,4 +1,3 @@
-<!-- Canvas: ON, Preview: ON -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -225,6 +224,65 @@
         .status-active { background-color: #a0c832; }
         .status-prep { background-color: #4bc0c8; }
 
+        /* ページネーション */
+        .pagination-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding: 8px 4px 0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pagination-info {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border: 1px solid #cbd5e1;
+            background-color: white;
+            color: #334155;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .page-btn:hover:not(:disabled):not(.active) {
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+            color: var(--accent-color);
+        }
+
+        .page-btn.active {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: #f8fafc;
+        }
+
         /* リンクスタイル */
         .content-link {
             color: #2563eb;
@@ -419,7 +477,7 @@
             <div class="nav-category">教養・指導要領</div>
             <a href="/n-kyozai/general/index.html" class="nav-item"><i data-lucide="graduation-cap"></i>一般教養</a>
             <a href="/n-kyozai/pedagogy/index.html" class="nav-item"><i data-lucide="users"></i>教職教養</a>
-            <a href="/n-kyozai/past-exams/index.html" class="nav-item"><i data-lucide="file-text"></i>過去問演習</a>
+            <a href="/n-kyozai/past-exams/index.html" class="nav-item active"><i data-lucide="file-text"></i>過去問演習</a>
 
             <div class="nav-category">専門科目</div>
             <a href="/n-kyozai/politics/index.html" class="nav-item"><i data-lucide="book-open"></i>専門科目</a>
@@ -467,6 +525,12 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- ページネーションUI -->
+                <div class="pagination-container">
+                    <div class="pagination-info" id="paginationInfo">全0件中 0 - 0件を表示</div>
+                    <div class="pagination-buttons" id="paginationButtons"></div>
+                </div>
             </section>
         </div>
 
@@ -498,7 +562,10 @@
         /**
          * 【データ定義】
          * - status: "active" (受付中) または "prep" (準備中) 
-         * - pdfStatus: "active" (PDF公開中) または "prep" (PDF準備中)
+         * - pdfStatus: 
+         *     "active" : PDF公開中（ボタン表示）
+         *     "prep"   : PDF準備中（グレーアウトボタン表示）
+         *     "none"   : PDFなし（ボタン描写なし）
          */
         const testsData = [
             { 
@@ -632,7 +699,7 @@
                 name: "【暗記】中学校学習指導要領 前文・総則抜粋", 
                 status: "active", 
                 link: "./test15/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none",
                 pdfLink: "#",
                 updatedAt: "2026/05/07"
             },
@@ -641,7 +708,7 @@
                 name: "教採演習（学習指導要領 変遷・総則）【1】～【5】", 
                 status: "active", 
                 link: "./test16/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none",
                 pdfLink: "#",
                 updatedAt: "2026/05/08" 
             },
@@ -650,7 +717,7 @@
                 name: "教採演習（学習指導要領 変遷・総則）【6】～【10】", 
                 status: "active", 
                 link: "./test17/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none",
                 pdfLink: "#",
                 updatedAt: "2026/05/18" 
             },
@@ -659,7 +726,7 @@
                 name: "教採演習（学習指導要領 変遷・総則）【11】～【15】", 
                 status: "active", 
                 link: "./test18/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none",
                 pdfLink: "#",
                 updatedAt: "2026/05/18" 
             },
@@ -668,7 +735,7 @@
                 name: "教採演習（学習指導要領 変遷・総則）【16】～【20】", 
                 status: "active", 
                 link: "./test19/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none",
                 pdfLink: "#",
                 updatedAt: "2026/05/18" 
             },
@@ -677,7 +744,7 @@
                 name: "教採演習（学習指導要領 変遷・総則）【21】～【25】", 
                 status: "active", 
                 link: "./test20/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none",
                 pdfLink: "#",
                 updatedAt: "2026/05/18" 
             },
@@ -686,7 +753,7 @@
                 name: "教採演習（学習指導要領 道徳・特活・総探）【1】～【5】", 
                 status: "active", 
                 link: "./test21/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none",
                 pdfLink: "#",
                 updatedAt: "2026/05/18" 
             },
@@ -695,19 +762,46 @@
                 name: "教採演習（学習指導要領 道徳・特活・総探）【6】～【10】", 
                 status: "active", 
                 link: "./test22/index.html", 
-                pdfStatus: "prep",
+                pdfStatus: "none", // サンプル: PDFなし
                 pdfLink: "#",
                 updatedAt: "2026/05/18" 
+            },
+            { 
+                id: 23, 
+                name: "教採演習 日本国憲法", 
+                status: "prep", 
+                link: "./test23/index.html", 
+                pdfStatus: "prep",
+                pdfLink: "#",
+                updatedAt: "2026/08/06" 
             }
         ];
 
         // テーブル描画ロジック
         const tbody = document.getElementById('test-list-body');
+        const paginationInfo = document.getElementById('paginationInfo');
+        const paginationButtons = document.getElementById('paginationButtons');
+
+        let currentPage = 1;
+        const itemsPerPage = 10;
 
         function renderTable() {
             tbody.innerHTML = ''; 
 
-            testsData.forEach(test => {
+            // 古いものは下、新しいものは上に並ぶようにソート（ID降順）
+            const sortedTests = [...testsData].sort((a, b) => b.id - a.id);
+
+            const totalItems = sortedTests.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const pagedTests = sortedTests.slice(startIndex, endIndex);
+
+            pagedTests.forEach(test => {
                 const tr = document.createElement('tr');
 
                 // --- テストのステータス ---
@@ -715,17 +809,21 @@
                 const statusLabel = isActive ? "テスト受付中" : "テスト準備中";
                 const statusClass = isActive ? "status-active" : "status-prep";
                 
-                // --- PDFのステータス ---
-                const isPdfActive = test.pdfStatus === "active";
+                // --- PDFのステータス判定 ---
+                // active: 公開中, prep: 準備中, none: PDFなし
+                let pdfBtnHtml = '';
+                if (test.pdfStatus === "active") {
+                    pdfBtnHtml = `<a href="${test.pdfLink}" target="_blank" class="btn-pdf active" title="PDFを開く">PDF</a>`;
+                } else if (test.pdfStatus === "prep") {
+                    pdfBtnHtml = `<span class="btn-pdf disabled" title="PDF準備中">PDF</span>`;
+                } else if (test.pdfStatus === "none") {
+                    pdfBtnHtml = ''; // PDFなしの場合はボタンをレンダリングしない
+                }
                 
                 // リンクと各種ボタンの生成
                 const linkHtml = isActive 
                     ? `<a href="${test.link}" class="content-link">${test.name}</a>` 
                     : `<span class="content-link disabled">${test.name}</span>`;
-
-                const pdfBtnHtml = isPdfActive
-                    ? `<a href="${test.pdfLink}" target="_blank" class="btn-pdf active" title="PDFを開く">PDF</a>`
-                    : `<span class="btn-pdf disabled" title="PDF準備中">PDF</span>`;
 
                 const btnHtml = isActive
                     ? `<a href="${test.link}" class="btn-action">テスト実施</a>`
@@ -743,9 +841,61 @@
 
                 tbody.appendChild(tr);
             });
+
+            // ページネーション情報の更新
+            if (totalItems > 0) {
+                paginationInfo.textContent = `全${totalItems}件中 ${startIndex + 1} - ${endIndex}件を表示`;
+            } else {
+                paginationInfo.textContent = 'データがありません';
+            }
+
+            renderPagination(totalPages);
             
             // DOM更新後にスクロールバーを初期化・更新
             setTimeout(updateScrollThumb, 100);
+        }
+
+        function renderPagination(totalPages) {
+            paginationButtons.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // 前へボタン
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '‹';
+            prevBtn.title = '前のページ';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.addEventListener('click', () => changePage(currentPage - 1));
+            paginationButtons.appendChild(prevBtn);
+
+            // ページ番号ボタン
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => changePage(i));
+                paginationButtons.appendChild(pageBtn);
+            }
+
+            // 次へボタン
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '›';
+            nextBtn.title = '次のページ';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.addEventListener('click', () => changePage(currentPage + 1));
+            paginationButtons.appendChild(nextBtn);
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            renderTable();
+            // ページ切り替え時にテーブル上部へスムーズスクロール
+            const sectionBox = document.querySelector('.section-box');
+            if (sectionBox) {
+                sectionBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         // --- カスタムスクロールバーの制御 ---
