@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教員採用試験対策：教育基本法クイズ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* フォントサイズ手動切り替え用のスケール変数 */
+        :root {
+            --font-scale: 1;
+        }
+        /* htmlの基本フォントサイズをスケールさせることで、Tailwindのrem単位が全体的に拡大縮小する */
+        html {
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        /* ヘッダーやアクセントのカラー */
+        .header-bg { background-color: #0f5132; } /* ディープグリーン */
+        
+        /* タイマー枠の固定 */
+        .timer-box {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 記述式の入力欄スタイル */
+        .blank-input {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 8px 12px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 4px;
+            outline: none;
+            color: #333;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .blank-input:focus {
+            border-color: #0f5132;
+            box-shadow: 0 0 0 2px rgba(15, 81, 50, 0.2);
+        }
+
+        /* 選択式のセレクトボックススタイル */
+        .blank-select {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 8px 32px 8px 12px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 4px;
+            outline: none;
+            color: #333;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .blank-select:focus {
+            border-color: #0f5132;
+        }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Typography classes */
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
+
+        /* 採点結果画面用のフォントサイズ設定 */
+        .result-screen-font {
+            font-size: calc(0.875rem * var(--font-scale)) !important;
+            line-height: calc(1.35rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .res-title {
+            font-size: calc(1.25rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .res-score {
+            font-size: calc(2.5rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .res-lbl {
+            font-size: calc(1rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .fs-lg {
+            font-size: calc(0.95rem * var(--font-scale)) !important;
+            line-height: calc(1.4rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .fs-sm {
+            font-size: calc(0.8rem * var(--font-scale)) !important;
+            line-height: calc(1.15rem * var(--font-scale)) !important;
+        }
+        .result-screen-font h4 {
+            font-size: calc(0.95rem * var(--font-scale)) !important;
+        }
+    </style>
+</head>
+<body class="bg-[#f1f5f9] text-gray-800 font-sans min-h-screen flex flex-col fs-base transition-none">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="header-bg text-white p-4 flex justify-between items-center">
+            <span class="font-bold fs-base">問題リスト</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2 custom-scrollbar">
+            <!-- JSでリストを生成 -->
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="flex-1 py-8 px-4 md:px-8 max-w-5xl mx-auto w-full">
+        
+        <!-- ================= スタート画面 ================= -->
+        <section id="start-screen" class="w-full mx-auto">
+            <div class="bg-white border border-gray-300 w-full mb-6 flex flex-col shadow-sm rounded-lg overflow-hidden">
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#0f5132] text-white p-3 font-bold flex items-center fs-sm">テスト名</div>
+                    <div class="w-2/3 md:w-3/4 p-3 font-bold fs-sm">教員採用試験対策：教育基本法 穴埋めクイズ</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#0f5132] text-white p-3 font-bold flex items-center fs-sm">テスト範囲</div>
+                    <div class="w-2/3 md:w-3/4 p-3 leading-relaxed fs-sm">教育基本法（前文、第1章 教育の目的及び理念、第2章 教育の実施に関する基本、第3章 教育行政など全条文）</div>
+                </div>
+                <!-- 出題数のプルダウン選択 -->
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#0f5132] text-white p-3 font-bold flex items-center fs-sm">出題数</div>
+                    <div class="w-2/3 md:w-3/4 p-3 fs-sm">
+                        <select id="question-count-select" class="border border-gray-300 rounded p-1.5 focus:border-[#0f5132] outline-none fs-sm">
+                            <option value="5">5問</option>
+                            <option value="10" selected>10問</option>
+                            <option value="20">20問</option>
+                            <option value="30">30問</option>
+                            <option value="all">全問</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#0f5132] text-white p-3 font-bold flex items-center fs-sm">満点</div>
+                    <div id="display-score" class="w-2/3 md:w-3/4 p-3 fs-sm">計算中...</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#0f5132] text-white p-3 font-bold flex items-center fs-sm">テスト時間</div>
+                    <div id="display-test-time" class="w-2/3 md:w-3/4 p-3 fs-sm">計算中...</div>
+                </div>
+                <div class="flex">
+                    <div class="w-1/3 md:w-1/4 bg-[#0f5132] text-white p-3 font-bold flex items-center fs-sm">問題出題形式</div>
+                    <div class="w-2/3 md:w-3/4 p-3 fs-sm">ランダム</div>
+                </div>
+            </div>
+
+            <div class="mb-8 flex justify-center gap-6 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                <span class="font-bold text-gray-700 fs-base">解答形式：</span>
+                <label class="flex items-center cursor-pointer">
+                    <input type="radio" name="test-mode" value="descriptive" class="w-4 h-4 text-[#0f5132] focus:ring-[#0f5132]" checked>
+                    <span class="ml-2 text-gray-800 font-medium fs-base">記述式（直接入力）</span>
+                </label>
+                <label class="flex items-center cursor-pointer">
+                    <input type="radio" name="test-mode" value="multiple-choice" class="w-4 h-4 text-[#0f5132] focus:ring-[#0f5132]">
+                    <span class="ml-2 text-gray-800 font-medium fs-base">選択式（ドロップダウン）</span>
+                </label>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-2.5 px-6 rounded shadow transition fs-base inline-block">
+                    テスト一覧へ
+                </a>
+                <button id="start-btn" class="header-bg hover:bg-[#062c1b] text-white font-bold py-2.5 px-8 rounded shadow transition fs-base">
+                    テスト開始
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= テスト画面 ================= -->
+        <section id="test-screen" class="hidden flex-col md:flex-row gap-4 lg:gap-8 items-start w-full">
+            
+            <!-- デスクトップ用 左サイドバー -->
+            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-48 shrink-0 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-8">
+                <!-- JSでサイドバーのボタンを生成 -->
+            </div>
+
+            <!-- 右側 メインエリア -->
+            <div class="flex-1 w-full flex flex-col">
+                
+                <!-- ヘッダーバー (科目・タイトル & 残り時間) -->
+                <div class="bg-[#e2e8f0] p-2 md:p-3 rounded-lg border border-gray-300 mb-4 flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <!-- モバイル用メニューボタン -->
+                        <button id="menu-btn" class="md:hidden p-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition" aria-label="メニューを開く">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <span class="font-bold text-gray-700 ml-1 fs-base">教育基本法</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <!-- フォントサイズ切り替えボタン -->
+                        <button id="font-size-btn" class="border border-gray-400 bg-white rounded px-2 py-1 flex items-center justify-center font-bold text-gray-700 shadow-sm hover:bg-gray-100 focus:outline-none transition" style="font-size: 14px; line-height: 1.2;">
+                            ぁあ
+                        </button>
+                        
+                        <!-- 残り時間表示 -->
+                        <div class="bg-white px-3 py-1 rounded border border-gray-300 font-bold text-gray-800 flex items-center justify-center timer-container tabular-nums w-32 md:w-40 shrink-0 fs-lg">
+                            残り時間 <span id="timer-text" class="ml-1 md:ml-2 font-mono">00:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 問題枠 -->
+                <div class="bg-white rounded-lg border border-gray-300 shadow-sm flex flex-col mb-4 overflow-hidden">
+                    <!-- タイトル -->
+                    <div class="bg-[#d1fae5] p-3 md:p-4 border-b border-gray-300">
+                        <h2 id="question-number-title" class="font-bold text-gray-800 fs-base">
+                            <!-- JSで生成 -->
+                        </h2>
+                    </div>
+                    <!-- 問題文と解答欄 -->
+                    <div class="p-6 md:p-8 flex flex-col gap-6 md:gap-8">
+                        <div id="question-body" class="text-gray-800 leading-relaxed min-h-[60px] fs-lg">
+                            <!-- JSで生成 -->
+                        </div>
+                        
+                        <!-- 解答エリア (グレー枠) -->
+                        <div class="bg-[#f8fafc] border border-gray-200 rounded-lg p-4 md:p-6">
+                            <p id="input-instruction" class="text-gray-700 mb-3 font-medium fs-sm">（　　　）に入る言葉を記述してください：</p>
+                            <div id="input-area">
+                                <!-- JSで input/select を挿入 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- フッターナビゲーション -->
+                <div class="flex justify-between items-center mt-2">
+                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-8 rounded-lg shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed fs-base">
+                        前へ
+                    </button>
+                    <div class="flex items-center gap-6">
+                        <span id="question-progress" class="text-gray-600 font-bold fs-base">1 / 10</span>
+                        <button id="next-btn" class="header-bg hover:bg-[#062c1b] text-white font-bold py-2 px-8 rounded-lg shadow-sm transition fs-base">
+                            次へ
+                        </button>
+                        <button id="submit-confirm-btn" class="bg-[#d97706] hover:bg-[#b45309] text-white font-bold py-2 px-8 rounded-lg shadow-sm transition hidden fs-base">
+                            テスト提出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 確認モーダル ================= -->
+        <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center backdrop-blur-sm px-4">
+            <div class="bg-white rounded-lg p-8 max-w-sm w-full shadow-2xl text-center mx-4 border border-gray-200">
+                <p class="font-bold text-gray-800 mb-8 fs-lg">テストを提出して採点しますか？</p>
+                <div class="flex justify-center gap-4">
+                    <button id="modal-cancel-btn" class="bg-[#cbd5e1] hover:bg-[#94a3b8] text-gray-800 font-bold py-2.5 px-8 rounded-lg transition fs-base">
+                        いいえ
+                    </button>
+                    <button id="modal-submit-btn" class="bg-[#f59e0b] hover:bg-[#d97706] text-white font-bold py-2.5 px-8 rounded-lg transition fs-base">
+                        はい
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 結果画面 ================= -->
+        <section id="result-screen" class="hidden result-screen-font">
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8 text-center mb-6 border border-gray-200">
+                <h2 class="font-bold text-gray-800 mb-2 border-b-2 border-[#0f5132] pb-2 res-title">採点結果</h2>
+                <p class="text-gray-600 mb-1 mt-6 res-lbl">あなたの得点</p>
+                <div class="font-bold text-[#0f5132] mb-3 res-score" id="score-display">
+                    -- / --
+                </div>
+                <p id="time-taken" class="text-gray-600 mb-4 font-medium res-lbl">所要時間: --分 --秒</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4 md:p-6 mb-8 border border-gray-200">
+                <h3 class="font-bold border-b border-gray-300 pb-2 mb-4 res-title">解説・詳細</h3>
+                <div id="result-details" class="flex flex-col gap-4">
+                    <!-- JSで結果詳細を生成 -->
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <a href="https://n-kyozai.github.io/n-kyozai/past-exams/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow transition fs-base inline-block">
+                    テスト一覧へ
+                </a>
+                <button onclick="location.reload();" class="header-bg hover:bg-[#062c1b] text-white font-bold py-3 px-8 rounded-lg shadow transition fs-base">
+                    もう一度挑戦する
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- 教育基本法 穴埋め問題データベース（PDF資料より全条文から抽出） ---
+        const baseQuestions = [
+            // 前文
+            { title: "教育基本法 前文", text: "我々日本国民は、たゆまぬ努力によって築いてきた民主的で[HOLE]な国家を更に発展させるとともに、世界の平和と人類の福祉の向上に貢献することを願うものである。", correctAnswer: "文化的" },
+            { title: "教育基本法 前文", text: "我々は、この理想を実現するため、個人の[HOLE]を重んじ、真理と正義を希求し、公共の精神を尊び、豊かな人間性と創造性を備えた人間の育成を期するとともに、伝統を継承し、新しい文化の創造を目指す教育を推進する。", correctAnswer: "尊厳" },
+            { title: "教育基本法 前文", text: "我々は、この理想を実現するため、個人の尊厳を重んじ、[HOLE]と正義を希求し、公共の精神を尊び、豊かな人間性と創造性を備えた人間の育成を期するとともに、…", correctAnswer: "真理" },
+            { title: "教育基本法 前文", text: "我々は、この理想を実現するため、個人の尊厳を重んじ、真理と正義を希求し、[HOLE]を尊び、豊かな人間性と創造性を備えた人間の育成を期するとともに、…", correctAnswer: "公共の精神" },
+            { title: "教育基本法 前文", text: "…豊かな人間性と[HOLE]を備えた人間の育成を期するとともに、伝統を継承し、新しい文化の創造を目指す教育を推進する。", correctAnswer: "創造性" },
+            { title: "教育基本法 前文", text: "…豊かな人間性と創造性を備えた人間の育成を期するとともに、[HOLE]を継承し、新しい文化の創造を目指す教育を推進する。", correctAnswer: "伝統" },
+
+            // 第一章 教育の目的及び理念
+            // 第1条
+            { title: "教育基本法 第1条（教育の目的）", text: "教育は、[HOLE]の完成を目指し、平和で民主的な国家及び社会の形成者として必要な資質を備えた心身ともに健康な国民の育成を期して行われなければならない。", correctAnswer: "人格" },
+            { title: "教育基本法 第1条（教育の目的）", text: "教育は、人格の完成を目指し、平和で[HOLE]な国家及び社会の形成者として必要な資質を備えた心身ともに健康な国民の育成を期して行われなければならない。", correctAnswer: "民主的" },
+            
+            // 第2条
+            { title: "教育基本法 第2条第1号（教育の目標）", text: "幅広い知識と[HOLE]を身に付け、真理を求める態度を養い、豊かな情操と道徳心を培うとともに、健やかな身体を養うこと。", correctAnswer: "教養" },
+            { title: "教育基本法 第2条第1号（教育の目標）", text: "幅広い知識と教養を身に付け、真理を求める態度を養い、豊かな[HOLE]と道徳心を培うとともに、健やかな身体を養うこと。", correctAnswer: "情操" },
+            { title: "教育基本法 第2条第2号（教育の目標）", text: "個人の[HOLE]を尊重して、その能力を伸ばし、創造性を培い、自主及び自律の精神を養うとともに、職業及び生活との関連を重視し、勤労を重んずる態度を養うこと。", correctAnswer: "価値" },
+            { title: "教育基本法 第2条第2号（教育の目標）", text: "個人の価値を尊重して、その能力を伸ばし、創造性を培い、[HOLE]及び自律の精神を養うとともに、職業及び生活との関連を重視し、勤労を重んずる態度を養うこと。", correctAnswer: "自主" },
+            { title: "教育基本法 第2条第3号（教育の目標）", text: "正義と責任、[HOLE]の平等、自他の敬愛と協力を重んずるとともに、公共の精神に基づき、主体的に社会の形成に参画し、その発展に寄与する態度を養うこと。", correctAnswer: "男女" },
+            { title: "教育基本法 第2条第4号（教育の目標）", text: "[HOLE]を尊び、自然を大切にし、環境の保全に寄与する態度を養うこと。", correctAnswer: "生命" },
+            { title: "教育基本法 第2条第5号（教育の目標）", text: "伝統と文化を尊重し、それらをはぐくんできた我が国と[HOLE]を愛するとともに、他国を尊重し、国際社会の平和と発展に寄与する態度を養うこと。", correctAnswer: "郷土" },
+
+            // 第3条
+            { title: "教育基本法 第3条（生涯学習の理念）", text: "国民一人一人が、自己の人格を磨き、豊かな人生を送ることができるよう、その[HOLE]にわたって、あらゆる機会に、あらゆる場所において学習することができ、その成果を適切に生かすことのできる社会の実現が図られなければならない。", correctAnswer: "生涯" },
+            { title: "教育基本法 第3条（生涯学習の理念）", text: "…あらゆる機会に、あらゆる場所において学習することができ、その[HOLE]を適切に生かすことのできる社会の実現が図られなければならない。", correctAnswer: "成果" },
+
+            // 第4条
+            { title: "教育基本法 第4条第1項（機会均等）", text: "すべて国民は、ひとしく、その[HOLE]に応じた教育を受ける機会を与えられなければならず、人種、信条、性別、社会的身分、経済的地位又は門地によって、教育上差別されない。", correctAnswer: "能力" },
+            { title: "教育基本法 第4条第1項（機会均等）", text: "すべて国民は、ひとしく、その能力に応じた教育を受ける機会を与えられなければならず、人種、信条、性別、[HOLE]、経済的地位又は門地によって、教育上差別されない。", correctAnswer: "社会的身分" },
+            { title: "教育基本法 第4条第2項（機会均等）", text: "国及び地方公共団体は、[HOLE]のある者が、その障害の状態に応じ、十分な教育を受けられるよう、教育上必要な支援を講じなければならない。", correctAnswer: "障害" },
+            { title: "教育基本法 第4条第3項（機会均等）", text: "国及び地方公共団体は、能力があるにもかかわらず、[HOLE]理由によって修学が困難な者に対して、奨学の措置を講じなければならない。", correctAnswer: "経済的" },
+            { title: "教育基本法 第4条第3項（機会均等）", text: "国及び地方公共団体は、能力があるにもかかわらず、経済的理由によって修学が困難な者に対して、[HOLE]の措置を講じなければならない。", correctAnswer: "奨学" },
+
+            // 第二章 教育の実施に関する基本
+            // 第5条
+            { title: "教育基本法 第5条第1項（義務教育）", text: "国民は、その保護する子に、別に法律で定めるところにより、[HOLE]を受けさせる義務を負う。", correctAnswer: "普通教育" },
+            { title: "教育基本法 第5条第2項（義務教育）", text: "義務教育として行われる普通教育は、各個人の有する能力を伸ばしつつ社会において[HOLE]的に生きる基礎を培い、また、国家及び社会の形成者として必要とされる基本的な資質を養うことを目的として行われるものとする。", correctAnswer: "自立" },
+            { title: "教育基本法 第5条第4項（義務教育）", text: "国又は地方公共団体の設置する学校における義務教育については、[HOLE]を徴収しない。", correctAnswer: "授業料" },
+
+            // 第6条〜第8条
+            { title: "教育基本法 第6条第1項（学校教育）", text: "法律に定める学校は、[HOLE]の性質を有するものであって、国、地方公共団体及び法律に定める法人のみが、これを設置することができる。", correctAnswer: "公" },
+            { title: "教育基本法 第6条第2項（学校教育）", text: "…この場合において、教育を受ける者が、学校生活を営む上で必要な[HOLE]を重んずるとともに、自ら進んで学習に取り組む意欲を高めることを重視して行われなければならない。", correctAnswer: "規律" },
+            { title: "教育基本法 第7条第1項（大学）", text: "大学は、[HOLE]の中心として、高い教養と専門的能力を培うとともに、深く真理を探究して新たな知見を創造し、これらの成果を広く社会に提供することにより、社会の発展に寄与するものとする。", correctAnswer: "学術" },
+            { title: "教育基本法 第8条（私立学校）", text: "私立学校の有する公の性質及び学校教育において果たす重要な役割にかんがみ、国及び地方公共団体は、その[HOLE]性を尊重しつつ、助成その他の適当な方法によって私立学校教育の振興に努めなければならない。", correctAnswer: "自主" },
+
+            // 第9条
+            { title: "教育基本法 第9条第1項（教員）", text: "法律に定める学校の教員は、自己の崇高な[HOLE]を深く自覚し、絶えず研究と修養に励み、その職責の遂行に努めなければならない。", correctAnswer: "使命" },
+            { title: "教育基本法 第9条第1項（教員）", text: "法律に定める学校の教員は、自己の崇高な使命を深く自覚し、絶えず[HOLE]に励み、その職責の遂行に努めなければならない。", correctAnswer: "研究と修養" },
+            { title: "教育基本法 第9条第2項（教員）", text: "前項の教員については、その使命と職責の重要性にかんがみ、その身分は尊重され、[HOLE]の適正が期せられるとともに、養成と研修の充実が図られなければならない。", correctAnswer: "待遇" },
+
+            // 第10条〜第13条
+            { title: "教育基本法 第10条第1項（家庭教育）", text: "父母その他の保護者は、子の教育について[HOLE]的責任を有するものであって、生活のために必要な習慣を身に付けさせるとともに、自立心を育成し、心身の調和のとれた発達を図るよう努めるものとする。", correctAnswer: "第一義" },
+            { title: "教育基本法 第10条第1項（家庭教育）", text: "父母その他の保護者は、子の教育について第一義的責任を有するものであって、生活のために必要な[HOLE]を身に付けさせるとともに、自立心を育成し、心身の調和のとれた発達を図るよう努めるものとする。", correctAnswer: "習慣" },
+            { title: "教育基本法 第10条第2項（家庭教育）", text: "国及び地方公共団体は、家庭教育の[HOLE]性を尊重しつつ、保護者に対する学習の機会及び情報の提供その他の家庭教育を支援するために必要な施策を講ずるよう努めなければならない。", correctAnswer: "自主" },
+            { title: "教育基本法 第11条（幼児期の教育）", text: "幼児期の教育は、生涯にわたる[HOLE]の基礎を培う重要なものであることにかんがみ、国及び地方公共団体は、幼児の健やかな成長に資する良好な環境の整備その他適当な方法によって、その振興に努めなければならない。", correctAnswer: "人格形成" },
+            { title: "教育基本法 第13条（連携協力）", text: "学校、家庭及び地域住民その他の関係者は、教育におけるそれぞれの役割と責任を自覚するとともに、相互の[HOLE]に努めるものとする。", correctAnswer: "連携及び協力" },
+
+            // 第14条・第15条
+            { title: "教育基本法 第14条第2項（政治教育）", text: "法律に定める学校は、特定の[HOLE]を支持し、又はこれに反対するための政治教育その他政治的活動をしてはならない。", correctAnswer: "政党" },
+            { title: "教育基本法 第15条第2項（宗教教育）", text: "国及び地方公共団体が設置する学校は、特定の[HOLE]のための宗教教育その他宗教的活動をしてはならない。", correctAnswer: "宗教" },
+
+            // 第三章 教育行政
+            // 第16条
+            { title: "教育基本法 第16条第1項（教育行政）", text: "教育は、[HOLE]な支配に服することなく、この法律及び他の法律の定めるところにより行われるべきものであり、教育行政は、国と地方公共団体との適切な役割分担及び相互の協力の下、公正かつ適正に行われなければならない。", correctAnswer: "不当" },
+            { title: "教育基本法 第16条第2項（教育行政）", text: "国は、全国的な教育の機会均等と[HOLE]を図るため、教育に関する施策を総合的に策定し、実施しなければならない。", correctAnswer: "教育水準の維持向上" },
+            { title: "教育基本法 第16条第2項（教育行政）", text: "国は、全国的な[HOLE]と教育水準の維持向上を図るため、教育に関する施策を総合的に策定し、実施しなければならない。", correctAnswer: "教育の機会均等" },
+            { title: "教育基本法 第16条第3項（教育行政）", text: "地方公共団体は、その地域における教育の振興を図るため、その[HOLE]に応じた教育に関する施策を策定し、実施しなければならない。", correctAnswer: "実情" },
+
+            // 第17条
+            { title: "教育基本法 第17条第1項（教育振興基本計画）", text: "政府は、教育の振興に関する施策の総合的かつ計画的な推進を図るため、教育の振興に関する施策についての基本的な方針及び講ずべき施策その他必要な事項について、基本的な計画を定め、これを[HOLE]に報告するとともに、公表しなければならない。", correctAnswer: "国会" },
+            { title: "教育基本法 第17条第2項（教育振興基本計画）", text: "地方公共団体は、前項の計画を[HOLE]し、その地域の実情に応じ、当該地方公共団体における教育の振興のための施策に関する基本的な計画を定めるよう努めなければならない。", correctAnswer: "参酌" }
+        ];
+
+        // --- 設定値 ---
+        const TIME_PER_QUESTION = 15; // 1問あたりの秒数
+
+        // --- グローバル変数 ---
+        let testMode = 'descriptive'; 
+        let parsedQuestions = [];     
+        let userAnswers = [];         
+        let currentQuestionIndex = 0; 
+        let timerInterval = null;     
+        let totalTimeLimit = 0;
+        let timeLeft = 0;             
+
+        // フォントサイズ切り替え用の設定
+        const fontSizes = ['normal', 'small', 'xsmall', 'large'];
+        let currentFontSizeIndex = 0; 
+
+        // --- DOM要素 ---
+        const screens = {
+            start: document.getElementById('start-screen'),
+            test: document.getElementById('test-screen'),
+            result: document.getElementById('result-screen')
+        };
+        const els = {
+            qCountSelect: document.getElementById('question-count-select'),
+            displayScore: document.getElementById('display-score'),
+            displayTestTime: document.getElementById('display-test-time'),
+            
+            menuBtn: document.getElementById('menu-btn'),
+            fontSizeBtn: document.getElementById('font-size-btn'),
+            timerContainer: document.querySelector('.timer-container'),
+            timerText: document.getElementById('timer-text'),
+            drawerOverlay: document.getElementById('drawer-overlay'),
+            drawerMenu: document.getElementById('drawer-menu'),
+            drawerList: document.getElementById('drawer-list'),
+            closeMenuBtn: document.getElementById('close-menu-btn'),
+            
+            desktopSidebar: document.getElementById('desktop-sidebar'),
+            qNumberTitle: document.getElementById('question-number-title'),
+            qBody: document.getElementById('question-body'),
+            inputArea: document.getElementById('input-area'),
+            inputInstruction: document.getElementById('input-instruction'),
+            qProgress: document.getElementById('question-progress'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            submitConfirmBtn: document.getElementById('submit-confirm-btn'),
+            
+            submitModal: document.getElementById('submit-modal'),
+            modalCancelBtn: document.getElementById('modal-cancel-btn'),
+            modalSubmitBtn: document.getElementById('modal-submit-btn'),
+            
+            scoreDisplay: document.getElementById('score-display'),
+            timeTaken: document.getElementById('time-taken'),
+            resultDetails: document.getElementById('result-details')
+        };
+
+        // --- 初期化 ---
+        function initApp() {
+            const allOpt = els.qCountSelect.querySelector('option[value="all"]');
+            if (allOpt) {
+                allOpt.textContent = `全問（${baseQuestions.length}問）`;
+            }
+
+            els.qCountSelect.addEventListener('change', updateStartScreen);
+            updateStartScreen();
+
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            els.prevBtn.addEventListener('click', () => navigateQuestion(-1));
+            els.nextBtn.addEventListener('click', () => navigateQuestion(1));
+            
+            els.submitConfirmBtn.addEventListener('click', () => {
+                els.submitModal.classList.remove('hidden');
+            });
+            els.modalCancelBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+            });
+            els.modalSubmitBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+                finishTest();
+            });
+            
+            els.menuBtn.addEventListener('click', openDrawer);
+            els.closeMenuBtn.addEventListener('click', closeDrawer);
+            els.drawerOverlay.addEventListener('click', closeDrawer);
+
+            els.fontSizeBtn.addEventListener('click', () => {
+                currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+                const scaleMap = {
+                    'normal': 1,
+                    'small': 0.85,
+                    'xsmall': 0.7,
+                    'large': 1.15
+                };
+                document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+            });
+        }
+
+        // --- スタート画面更新 ---
+        function updateStartScreen() {
+            const val = els.qCountSelect.value;
+            const count = val === 'all' ? baseQuestions.length : parseInt(val, 10);
+            
+            els.displayScore.textContent = `${count}点`;
+            
+            totalTimeLimit = count * TIME_PER_QUESTION;
+            const minutes = Math.floor(totalTimeLimit / 60);
+            const seconds = totalTimeLimit % 60;
+            els.displayTestTime.textContent = `${minutes}分${seconds > 0 ? seconds + '秒' : ''}`;
+        }
+
+        // --- テスト開始 ---
+        function startTest() {
+            const modeRadios = document.getElementsByName('test-mode');
+            for (const radio of modeRadios) {
+                if (radio.checked) testMode = radio.value;
+            }
+
+            generateQuestions();
+
+            if (parsedQuestions.length === 0) {
+                alert("出題可能な問題がありません。");
+                return;
+            }
+
+            screens.start.classList.add('hidden');
+            screens.test.classList.remove('hidden');
+            screens.test.classList.add('flex');
+
+            currentQuestionIndex = 0;
+            renderQuestion(currentQuestionIndex);
+            updateNavigations();
+            
+            startTimer();
+        }
+
+        // --- 問題生成 ---
+        function generateQuestions() {
+            parsedQuestions = [];
+            userAnswers = [];
+
+            const allAnswersArray = Array.from(new Set(baseQuestions.map(q => q.correctAnswer)));
+
+            const val = els.qCountSelect.value;
+            const count = val === 'all' ? baseQuestions.length : parseInt(val, 10);
+
+            const shuffledData = [...baseQuestions].sort(() => Math.random() - 0.5);
+            const selectedData = shuffledData.slice(0, count);
+
+            selectedData.forEach((q) => {
+                let options = [];
+                if (q.options) {
+                    options = [...q.options];
+                } else {
+                    options = [q.correctAnswer];
+                    const dummyOptions = allAnswersArray.filter(a => a !== q.correctAnswer).sort(() => Math.random() - 0.5);
+                    options = options.concat(dummyOptions.slice(0, 3)); 
+                    options.sort(() => Math.random() - 0.5); 
+                }
+
+                parsedQuestions.push({
+                    title: q.title,
+                    text: q.text,
+                    correctAnswer: q.correctAnswer,
+                    options: options,
+                    forceSelect: q.forceSelect || false
+                });
+                
+                userAnswers.push(""); 
+            });
+        }
+
+        // --- 画面描画 ---
+        function renderQuestion(index) {
+            const q = parsedQuestions[index];
+            
+            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="text-sm ml-2 font-normal text-gray-700">（1点）- ${q.title}</span>`;
+            const displayText = q.text.replace('[HOLE]', `<span class="font-bold px-1 text-emerald-900">（　　　）</span>`).replace(/\n/g, '<br>');
+            els.qBody.innerHTML = displayText;
+            els.qProgress.textContent = `${index + 1} / ${parsedQuestions.length}`;
+
+            els.inputArea.innerHTML = '';
+            
+            if (testMode === 'descriptive' && !q.forceSelect) {
+                els.inputInstruction.textContent = "（　　　）に入る言葉を記述してください：";
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'blank-input fs-base';
+                input.placeholder = "ここに入力";
+                input.value = userAnswers[index];
+                
+                input.addEventListener('input', (e) => {
+                    userAnswers[index] = e.target.value;
+                    updateNavigations();
+                });
+                els.inputArea.appendChild(input);
+            } else {
+                els.inputInstruction.textContent = "（　　　）に入る言葉を選択してください：";
+                const select = document.createElement('select');
+                select.className = 'blank-select fs-base';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                defaultOption.textContent = "選択してください";
+                select.appendChild(defaultOption);
+
+                q.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    if (userAnswers[index] === opt) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', (e) => {
+                    userAnswers[index] = e.target.value;
+                    updateNavigations();
+                });
+                els.inputArea.appendChild(select);
+            }
+
+            els.prevBtn.disabled = index === 0;
+            if (index === parsedQuestions.length - 1) {
+                els.nextBtn.classList.add('hidden');
+                els.submitConfirmBtn.classList.remove('hidden');
+            } else {
+                els.nextBtn.classList.remove('hidden');
+                els.submitConfirmBtn.classList.add('hidden');
+            }
+        }
+
+        function navigateQuestion(step) {
+            const newIndex = currentQuestionIndex + step;
+            if (newIndex >= 0 && newIndex < parsedQuestions.length) {
+                currentQuestionIndex = newIndex;
+                renderQuestion(currentQuestionIndex);
+                updateNavigations(); 
+            }
+        }
+
+        function updateNavigations() {
+            updateSidebarList();
+            updateDrawerList();
+        }
+
+        function updateSidebarList() {
+            els.desktopSidebar.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const button = document.createElement('button');
+                const isActive = idx === currentQuestionIndex;
+                const isAnswered = userAnswers[idx].trim() !== "";
+                
+                let baseClass = "text-center px-4 py-2.5 rounded font-medium transition border shadow-sm fs-base ";
+                if (isActive) {
+                    baseClass += "bg-[#a7f3d0] text-black border-[#6ee7b7] font-bold"; 
+                } else if (isAnswered) {
+                    baseClass += "bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200";
+                } else {
+                    baseClass += "bg-[#e2e8f0] text-gray-700 border-[#cbd5e1] hover:bg-[#cbd5e1]";
+                }
+                
+                button.className = baseClass;
+                button.innerHTML = `【問題${idx + 1}】`;
+                
+                button.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    updateNavigations();
+                });
+                
+                els.desktopSidebar.appendChild(button);
+            });
+        }
+
+        function updateDrawerList() {
+            els.drawerList.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const li = document.createElement('li');
+                const isActive = idx === currentQuestionIndex;
+                const isAnswered = userAnswers[idx].trim() !== "";
+                
+                let bgClass = isActive 
+                    ? 'bg-[#a7f3d0] font-bold text-black border border-[#6ee7b7]' 
+                    : isAnswered 
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
+                        : 'bg-[#e2e8f0] border border-[#cbd5e1] text-gray-700 hover:bg-[#cbd5e1]';
+
+                li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${bgClass}`;
+                li.innerHTML = `<div class="text-center">【問題${idx + 1}】</div>`;
+                
+                li.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    closeDrawer(); 
+                    updateNavigations();
+                });
+                
+                els.drawerList.appendChild(li);
+            });
+        }
+
+        function openDrawer() {
+            els.drawerMenu.classList.remove('-translate-x-full');
+            els.drawerOverlay.classList.remove('hidden');
+        }
+
+        function closeDrawer() {
+            els.drawerMenu.classList.add('-translate-x-full');
+            els.drawerOverlay.classList.add('hidden');
+        }
+
+        // --- タイマー ---
+        function startTimer() {
+            timeLeft = totalTimeLimit; 
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 10) {
+                    els.timerContainer.classList.add('text-red-600');
+                    els.timerContainer.classList.remove('text-gray-800');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    els.submitModal.classList.add('hidden');
+                    alert("制限時間終了です！自動的に採点します。");
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(Math.max(0, timeLeft) / 60).toString().padStart(2, '0');
+            const s = (Math.max(0, timeLeft) % 60).toString().padStart(2, '0');
+            els.timerText.textContent = `${m}:${s}`;
+        }
+
+        function normalizeString(str) {
+            if (!str) return "";
+            return str.replace(/[\s　]/g, '').toLowerCase();
+        }
+
+        // --- 採点・結果表示 ---
+        function finishTest() {
+            clearInterval(timerInterval);
+            
+            let correctCount = 0;
+            els.resultDetails.innerHTML = '';
+
+            parsedQuestions.forEach((q, idx) => {
+                const userAnswer = userAnswers[idx];
+                const isCorrect = normalizeString(userAnswer) === normalizeString(q.correctAnswer);
+                if (isCorrect) correctCount++;
+
+                const resultCard = document.createElement('div');
+                resultCard.className = `p-4 rounded-lg border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
+                
+                const icon = isCorrect 
+                    ? `<span class="text-green-600 font-bold fs-xl">○ 正解</span>` 
+                    : `<span class="text-red-600 font-bold fs-xl">× 不正解</span>`;
+
+                const correctHtmlText = q.text.replace('[HOLE]', `<span class="font-bold border-b-2 border-emerald-700 px-1 text-emerald-900">（ ${q.correctAnswer} ）</span>`).replace(/\n/g, '<br>');
+
+                const displayUserAnswer = userAnswer.trim() === "" ? "（未解答）" : userAnswer;
+
+                resultCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-gray-800 fs-base">問題 ${idx + 1}: <span class="font-normal text-gray-600 fs-sm">${q.title}</span></h4>
+                        ${icon}
+                    </div>
+                    <div class="text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2 fs-lg">
+                        ${correctHtmlText}
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-2 fs-sm">
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                            <span class="text-gray-500 block fs-sm">あなたの解答</span>
+                            <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'}">${displayUserAnswer}</span>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                            <span class="text-gray-500 block fs-sm">正解</span>
+                            <span class="font-bold text-emerald-700">${q.correctAnswer}</span>
+                        </div>
+                    </div>
+                `;
+                els.resultDetails.appendChild(resultCard);
+            });
+
+            els.scoreDisplay.textContent = `${correctCount}点 / ${parsedQuestions.length}点`;
+            
+            const timeTakenSec = totalTimeLimit - Math.max(0, timeLeft);
+            const tm = Math.floor(timeTakenSec / 60);
+            const ts = timeTakenSec % 60;
+            els.timeTaken.textContent = `所要時間: ${tm}分 ${ts}秒`;
+
+            screens.test.classList.add('hidden');
+            screens.test.classList.remove('flex');
+            screens.result.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
